@@ -63,7 +63,12 @@ def main():
                 continue
             reftyp = refs[name][off]
             if isinstance(reftyp, str):
-                print(f'  {name}+0x{off:X}: {typ} is an offset/pointer in the file (manual fix needed)')
+                # A file offset the console turns into a pointer in place: keep it a 32-bit BE offset on PC.
+                if typ.rstrip().endswith('*'):
+                    s0 = f.start(3)
+                    edits[(s0, s0 + len(f.group(3)))] = 'OFFSET_PTR_V0'
+                else:
+                    print(f'  {name}+0x{off:X}: {typ} vs {reftyp}; skipped')
                 continue
             base, stars = reftyp
             const = ''

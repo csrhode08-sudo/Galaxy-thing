@@ -44,3 +44,8 @@ bool pc_isGameHeapPtr(const void* p);
 
 // Functions whose bodies are PowerPC assembly on the console and C on PC.
 #define ASM
+
+// CodeWarrior runtime helper used by decompiled code.
+inline unsigned long long __cvt_dbl_usll(double d) {
+    return (unsigned long long)d;
+}

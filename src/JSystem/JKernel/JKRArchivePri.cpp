@@ -30,7 +30,30 @@ JKRArchive::JKRArchive(s32 entryNum, EMountMode mountMode) {
 }
 
 JKRArchive::~JKRArchive() {
+#ifdef TARGET_PC
+    releaseFileDataTable();
+#endif
 }
+
+#ifdef TARGET_PC
+#include <cstdlib>
+
+void*& JKRArchive::fileData(const SDIFileEntry* pEntry) const {
+    if (mFileDataPtrsFor != mFiles) {
+        std::free(mFileDataPtrs);
+        u32 n = mInfoBlock != nullptr ? (u32)mInfoBlock->mNrFiles : 0;
+        mFileDataPtrs = static_cast< void** >(std::calloc(n + 1, sizeof(void*)));
+        mFileDataPtrsFor = mFiles;
+    }
+    return mFileDataPtrs[pEntry - mFiles];
+}
+
+void JKRArchive::releaseFileDataTable() {
+    std::free(mFileDataPtrs);
+    mFileDataPtrs = nullptr;
+    mFileDataPtrsFor = nullptr;
+}
+#endif
 
 bool JKRArchive::isSameName(CArcName& rName, u32 nameOffset, u16 hash) const {
     if (rName.mHash != hash) {
@@ -63,8 +86,8 @@ JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name, u32 directo
     SDIFileEntry* fileEntry = mFiles + dirEntry->mFirstFileIndex;
 
     for (int i = 0; i < dirEntry->mNrFiles; i++) {
-        if (isSameName(arcName, fileEntry->mNameOffset, fileEntry->mHash)) {
-            if ((fileEntry->mFlag) & 2) {
+        if (isSameName(arcName, fileEntry->getNameOffset(), fileEntry->mHash)) {
+            if ((fileEntry->getFlag()) & 2) {
                 return findDirectory(name, fileEntry->mDataOffset);
             }
             break;
@@ -86,7 +109,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findTypeResource(u32 a1, const char* pName
             SDIFileEntry* current = &mFiles[dir->mFirstFileIndex];
 
             for (s32 i = 0; i < dir->mNrFiles; i++) {
-                if (isSameName(name, current->mNameOffset, current->mHash)) {
+                if (isSameName(name, current->getNameOffset(), current->mHash)) {
                     return current;
                 }
 
@@ -105,8 +128,8 @@ JKRArchive::SDIFileEntry* JKRArchive::findFsResource(const char* name, u32 direc
         SDIFileEntry* fileEntry = mFiles + dirEntry->mFirstFileIndex;
 
         for (int i = 0; i < dirEntry->mNrFiles; i++) {
-            if (isSameName(arcName, fileEntry->mNameOffset, fileEntry->mHash)) {
-                if ((fileEntry->mFlag) & 2) {
+            if (isSameName(arcName, fileEntry->getNameOffset(), fileEntry->mHash)) {
+                if ((fileEntry->getFlag()) & 2) {
                     return findFsResource(name, fileEntry->mDataOffset);
                 }
 
@@ -137,7 +160,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findNameResource(const char* pName) const 
     CArcName name;
     name.store(pName);
     for (s32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-        if (isSameName(name, current->mNameOffset, current->mHash)) {
+        if (isSameName(name, current->getNameOffset(), current->mHash)) {
             return current;
         }
 
@@ -150,7 +173,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findNameResource(const char* pName) const 
 JKRArchive::SDIFileEntry* JKRArchive::findPtrResource(const void* pResource) const {
     SDIFileEntry* current = mFiles;
     for (s32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-        if (current->mFileData == pResource) {
+        if (JKAR_FILEDATA(current) == pResource) {
             return current;
         }
 
@@ -165,12 +188,12 @@ JKRArchive::SDIFileEntry* JKRArchive::findIdResource(u16 fileID) const {
         SDIFileEntry* current = mFiles;
         SDIFileEntry* indexed = &mFiles[fileID];
 
-        if (indexed->mFileID == fileID && (indexed->mFlag & FILE_FLAG_FILE) != 0) {
+        if (indexed->mFileID == fileID && (indexed->getFlag() & FILE_FLAG_FILE) != 0) {
             return indexed;
         }
 
         for (s32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-            if (current->mFileID == fileID && (current->mFlag & FILE_FLAG_FILE) != 0) {
+            if (current->mFileID == fileID && (current->getFlag() & FILE_FLAG_FILE) != 0) {
                 return current;
             }
 

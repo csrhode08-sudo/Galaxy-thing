@@ -87,7 +87,12 @@ namespace nw4r {
             }
 
             inline s32 GetSignatureInt(const char sig[4]) {
+#ifdef TARGET_PC
+                const u8* b = reinterpret_cast< const u8* >(sig);
+                return s32((u32(b[0]) << 24) | (u32(b[1]) << 16) | (u32(b[2]) << 8) | u32(b[3]));
+#else
                 return *reinterpret_cast< const s32* >(sig);
+#endif
             }
 
             inline u8 GetVtxColorElement(const ut::Color* pColors, u32 idx) {

@@ -14,7 +14,7 @@ void JASHeap::initRootHeap(void* pBase, u32 size) {
     OSLockMutex(&mMutex);
     mBase = (u8*)OSRoundUp32B(pBase);
     mHeap = nullptr;
-    mSize = size - (u32(mBase) - u32(pBase));
+    mSize = size - (u32)(uintptr_t(mBase) - uintptr_t(pBase));
     OSUnlockMutex(&mMutex);
 }
 
@@ -47,7 +47,7 @@ bool JASHeap::alloc(JASHeap* pParent, u32 size) {
             break;
         }
 
-        u32 gapSize = u32(it->mBase) - u32(pCurrent);
+        u32 gapSize = (u32)(uintptr_t(it->mBase) - uintptr_t(pCurrent));
         if (gapSize >= size && gapSize < smallestGap) {
             pNext = &*it;
             pAddress = pCurrent;

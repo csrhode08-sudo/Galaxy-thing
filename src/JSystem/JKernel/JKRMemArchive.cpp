@@ -54,11 +54,11 @@ void JKRMemArchive::fixedInit(s32 entryNum) {
 }
 
 bool JKRMemArchive::mountFixed(void* a1, JKRMemBreakFlag breakFlag) {
-    if (check_mount_already(reinterpret_cast< s32 >(a1)) != nullptr) {
+    if (check_mount_already((s32)reinterpret_cast< uintptr_t >(a1)) != nullptr) {
         return false;
     }
 
-    fixedInit(reinterpret_cast< s32 >(a1));
+    fixedInit((s32)reinterpret_cast< uintptr_t >(a1));
 
     if (!open(a1, 0xFFFF, breakFlag)) {
         return false;
@@ -141,15 +141,15 @@ bool JKRMemArchive::open(void* pData, u32 a2, JKRMemBreakFlag breakFlag) {
 }
 
 void* JKRMemArchive::fetchResource(SDIFileEntry* pFile, u32* pSize) {
-    if (pFile->mFileData == nullptr) {
-        pFile->mFileData = mFileDataStart + pFile->mDataOffset;
+    if (JKAR_FILEDATA(pFile) == nullptr) {
+        JKAR_FILEDATA(pFile) = mFileDataStart + pFile->mDataOffset;
     }
 
     if (pSize != nullptr) {
         *pSize = pFile->mDataSize;
     }
 
-    return pFile->mFileData;
+    return JKAR_FILEDATA(pFile);
 }
 
 void* JKRMemArchive::fetchResource(void* pData, u32 dataSize, SDIFileEntry* pFile, u32* pSize) {
@@ -159,14 +159,14 @@ void* JKRMemArchive::fetchResource(void* pData, u32 dataSize, SDIFileEntry* pFil
         size = dataSize;
     }
 
-    if (pFile->mFileData != nullptr) {
-        memcpy(pData, pFile->mFileData, size);
+    if (JKAR_FILEDATA(pFile) != nullptr) {
+        memcpy(pData, JKAR_FILEDATA(pFile), size);
     } else {
         s32 compression;
 
-        if ((pFile->mFlag & FILE_FLAG_COMPRESSED) == 0) {
+        if ((pFile->getFlag() & FILE_FLAG_COMPRESSED) == 0) {
             compression = JKR_COMPRESSION_NONE;
-        } else if ((pFile->mFlag & FILE_FLAG_IS_YAZ0) != 0) {
+        } else if ((pFile->getFlag() & FILE_FLAG_IS_YAZ0) != 0) {
             compression = JKR_COMPRESSION_SZS;
         } else {
             compression = JKR_COMPRESSION_SZP;
@@ -194,8 +194,8 @@ void JKRMemArchive::removeResourceAll() {
     SDIFileEntry* current = mFiles;
 
     for (s32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-        if (current->mFileData != nullptr) {
-            current->mFileData = nullptr;
+        if (JKAR_FILEDATA(current) != nullptr) {
+            JKAR_FILEDATA(current) = nullptr;
         }
     }
 }
@@ -207,7 +207,7 @@ bool JKRMemArchive::removeResource(void* pResource) {
         return false;
     }
 
-    file->mFileData = nullptr;
+    JKAR_FILEDATA(file) = nullptr;
     return true;
 }
 
@@ -222,7 +222,7 @@ s32 JKRMemArchive::fetchResource_subroutine(unsigned char* pSrc, u32 srcSize, un
 
         return srcSize;
     case JKR_COMPRESSION_SZP:
-    case JKR_COMPRESSION_SZS:
+    case JKR_COMPRESSION_SZS: {
         u32 size = JKRDecompExpandSize(pSrc);
 
         if (size > dstSize) {
@@ -231,6 +231,7 @@ s32 JKRMemArchive::fetchResource_subroutine(unsigned char* pSrc, u32 srcSize, un
 
         JKRDecomp::orderSync(pSrc, pDst, size, 0);
         return size;
+    }
     default:
         JUTException::panic(__FILE__, 723, "??? bad sequence\n");
         break;
@@ -246,7 +247,7 @@ u32 JKRMemArchive::getExpandedResSize(const void* pResource) const {
         return -1;
     }
 
-    if ((file->mFlag & FILE_FLAG_COMPRESSED) == 0) {
+    if ((file->getFlag() & FILE_FLAG_COMPRESSED) == 0) {
         return getResSize(pResource);
     }
 

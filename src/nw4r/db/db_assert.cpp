@@ -41,6 +41,16 @@ namespace nw4r {
             }
         }
 
+#ifdef TARGET_PC
+        __declspec(weak) void VPanic(const char* file, int line, const char* fmt, va_list vlist, bool halt) {
+            OSReport("%s:%d Panic:", file, line);
+            OSVReport(fmt, vlist);
+            OSReport("\n");
+            if (halt) {
+                PPCHalt();
+            }
+        }
+#else
         static void ShowStack_(u32 sp) {
             Assertion_Printf_("-------------------------------- TRACE\n");
             u32 i;
@@ -99,6 +109,8 @@ namespace nw4r {
                 PPCHalt();
             }
         }
+
+#endif
 
         __declspec(weak) void Panic(const char* file, int line, const char* fmt, ...) {
             va_list vlist;

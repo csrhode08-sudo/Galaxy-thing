@@ -54,7 +54,7 @@ void RSO::setupRsoHomeButtonMenu() {
             for (i = 0; i < ARRAY_SIZE(exp_tbl); i++) {
                 pTbl = &exp_tbl[i];
                 RSOFindExportSymbolAddr(rsoPtr, pTbl->symbol_name);
-                *(pTbl->symbol_ptr) = (u32)RSOFindExportSymbolAddr(rsoPtr, pTbl->symbol_name);
+                *(pTbl->symbol_ptr) = (u32)(uintptr_t)RSOFindExportSymbolAddr(rsoPtr, pTbl->symbol_name);
             }
         }
     }

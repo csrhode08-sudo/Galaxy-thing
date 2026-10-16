@@ -2,6 +2,9 @@
 #ifndef PC_REVOLUTION_THP_H
 #define PC_REVOLUTION_THP_H
 #include <revolution/types.h>
+#ifdef __cplusplus
+#include "pc/endian.h"
+#endif
 #include <dolphin/thp.h>
 #include <revolution/gx.h>
 #include <revolution/dvd.h>
@@ -67,7 +70,7 @@ void THPGXRestore(void);
 void THPGXYuv2RgbSetup(const GXRenderModeObj* rmode);
 void THPGXYuv2RgbDraw(u8* y_data, u8* u_data, u8* v_data, s16 x, s16 y, s16 textureWidth, s16 textureHeight, s16 polygonWidth,
                       s16 polygonHeight);
-void THPGXSetTexObjFilter(GXTexFilter minFilter, GXTexFilter magFilter);
+void THPGXSetTexObjFilter(GXTexFilter filter);
 void THPGXGetTexObjFilter(GXTexFilter* minFilter, GXTexFilter* magFilter);
 
 #ifdef __cplusplus

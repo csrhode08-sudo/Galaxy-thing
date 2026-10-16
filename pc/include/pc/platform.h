@@ -1,5 +1,6 @@
 // Galaxy PC platform layer: shared state and logging helpers.
 #pragma once
+#include <cstdlib>
 
 #include <cstdio>
 
@@ -27,4 +28,9 @@ void pc_log(const char* fmt, ...);
         }                                                            \
     } while (0)
 
+#define CRASH(msg)                                \
+    do {                                          \
+        pc_log("[fatal] %s\n", msg);              \
+        std::abort();                             \
+    } while (0)
 #define ZoneScoped

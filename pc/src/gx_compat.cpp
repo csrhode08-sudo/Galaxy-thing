@@ -115,7 +115,7 @@ int stricmp(const char* a, const char* b) {
 void THPGXRestore(void) {}
 void THPGXYuv2RgbSetup(const GXRenderModeObj*) { STUB_LOG(); }
 void THPGXYuv2RgbDraw(u8*, u8*, u8*, s16, s16, s16, s16, s16, s16) { STUB_LOG(); }
-void THPGXSetTexObjFilter(GXTexFilter, GXTexFilter) {}
+void THPGXSetTexObjFilter(GXTexFilter) {}
 void THPGXGetTexObjFilter(GXTexFilter* minFilter, GXTexFilter* magFilter) {
     if (minFilter) *minFilter = GX_LINEAR;
     if (magFilter) *magFilter = GX_LINEAR;

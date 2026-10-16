@@ -7,6 +7,7 @@
 
 #include <dolphin/dolphin.h>
 #include <dolphin/os.h>
+#include <cstdlib>
 #include <cstring>
 
 #ifdef __cplusplus

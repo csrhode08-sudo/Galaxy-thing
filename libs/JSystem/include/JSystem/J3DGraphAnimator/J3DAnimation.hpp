@@ -6,6 +6,13 @@
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include <revolution.h>
 
+#ifdef TARGET_PC
+// File offsets that the console rewrites into pointers in place stay 32-bit big-endian offsets on PC.
+#define OFFSET_PTR_V0 BE(u32)
+#else
+#define OFFSET_PTR_V0 void*
+#endif
+
 struct JUTDataBlockHeader {
     /* 0x0 */ BE(u32) mType;
     /* 0x4 */ BE(u32) mSize;
@@ -57,7 +64,7 @@ struct J3DAnmColorKeyTable {
 
 struct J3DAnmVtxColorIndexData {
     /* 0x00 */ BE(u16) mNum;
-    /* 0x04 */ void* mpData;
+    /* 0x04 */ OFFSET_PTR_V0 mpData;
 };
 
 struct J3DAnmColorFullTable {
@@ -72,8 +79,8 @@ struct J3DAnmColorFullTable {
 };  // Size = 0x10
 
 struct J3DAnmVisibilityFullTable {
-    u16 mMaxFrame;
-    u16 mOffset;
+    BE(u16) mMaxFrame;
+    BE(u16) mOffset;
 };  // Size = 0x4
 
 struct J3DAnmTransformKeyTable {
@@ -137,13 +144,13 @@ struct J3DAnmVtxColorFullData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) mAnmTableNum[2];
     /* 0x10 */ u8 field_0x10[0x18 - 0x10];
-    /* 0x18 */ void* mTableOffsets[2];
-    /* 0x20 */ void* mVtxColorIndexDataOffsets[2];
-    /* 0x28 */ void* mVtxColorIndexPointerOffsets[2];
-    /* 0x30 */ void* mRValuesOffset;
-    /* 0x34 */ void* mGValuesOffset;
-    /* 0x38 */ void* mBValuesOffset;
-    /* 0x3C */ void* mAValuesOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mTableOffsets[2];
+    /* 0x20 */ OFFSET_PTR_V0 mVtxColorIndexDataOffsets[2];
+    /* 0x28 */ OFFSET_PTR_V0 mVtxColorIndexPointerOffsets[2];
+    /* 0x30 */ OFFSET_PTR_V0 mRValuesOffset;
+    /* 0x34 */ OFFSET_PTR_V0 mGValuesOffset;
+    /* 0x38 */ OFFSET_PTR_V0 mBValuesOffset;
+    /* 0x3C */ OFFSET_PTR_V0 mAValuesOffset;
 };  // Size = 0x40
 
 struct J3DAnmVisibilityFullData {
@@ -153,8 +160,8 @@ struct J3DAnmVisibilityFullData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) field_0xc;
     /* 0x0E */ BE(u16) field_0xe;
-    /* 0x10 */ void* mTableOffset;
-    /* 0x14 */ void* mValuesOffset;
+    /* 0x10 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mValuesOffset;
 };  // Size = 0x18
 
 struct J3DAnmTransformFullData {
@@ -164,10 +171,10 @@ struct J3DAnmTransformFullData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) field_0xc;
     /* 0x0E */ u8 field_0xe[0x14 - 0xe];
-    /* 0x14 */ void* mTableOffset;
-    /* 0x18 */ void* mScaleValOffset;
-    /* 0x1C */ void* mRotValOffset;
-    /* 0x20 */ void* mTransValOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mScaleValOffset;
+    /* 0x1C */ OFFSET_PTR_V0 mRotValOffset;
+    /* 0x20 */ OFFSET_PTR_V0 mTransValOffset;
 };  // Size = 0x24
 
 struct J3DAnmColorKeyData {
@@ -180,13 +187,13 @@ struct J3DAnmColorKeyData {
     /* 0x12 */ BE(u16) field_0x12;
     /* 0x14 */ BE(u16) field_0x14;
     /* 0x16 */ BE(u16) field_0x16;
-    /* 0x18 */ void* mTableOffset;
-    /* 0x1C */ void* mUpdateMaterialIDOffset;
-    /* 0x20 */ void* mNameTabOffset;
-    /* 0x24 */ void* mRValOffset;
-    /* 0x28 */ void* mGValOffset;
-    /* 0x2C */ void* mBValOffset;
-    /* 0x30 */ void* mAValOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x1C */ OFFSET_PTR_V0 mUpdateMaterialIDOffset;
+    /* 0x20 */ OFFSET_PTR_V0 mNameTabOffset;
+    /* 0x24 */ OFFSET_PTR_V0 mRValOffset;
+    /* 0x28 */ OFFSET_PTR_V0 mGValOffset;
+    /* 0x2C */ OFFSET_PTR_V0 mBValOffset;
+    /* 0x30 */ OFFSET_PTR_V0 mAValOffset;
 };  // Size = 0x34
 
 struct J3DAnmTextureSRTKeyData {
@@ -198,26 +205,26 @@ struct J3DAnmTextureSRTKeyData {
     /* 0x0E */ BE(u16) field_0xe;
     /* 0x10 */ BE(u16) field_0x10;
     /* 0x12 */ BE(u16) field_0x12;
-    /* 0x14 */ void* mTableOffset;
-    /* 0x18 */ void* mUpdateMatIDOffset;
-    /* 0x1C */ void* mNameTab1Offset;
-    /* 0x20 */ void* mUpdateTexMtxIDOffset;
-    /* 0x24 */ void* unkOffset;
-    /* 0x28 */ void* mScaleValOffset;
-    /* 0x2C */ void* mRotValOffset;
-    /* 0x30 */ void* mTransValOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mUpdateMatIDOffset;
+    /* 0x1C */ OFFSET_PTR_V0 mNameTab1Offset;
+    /* 0x20 */ OFFSET_PTR_V0 mUpdateTexMtxIDOffset;
+    /* 0x24 */ OFFSET_PTR_V0 unkOffset;
+    /* 0x28 */ OFFSET_PTR_V0 mScaleValOffset;
+    /* 0x2C */ OFFSET_PTR_V0 mRotValOffset;
+    /* 0x30 */ OFFSET_PTR_V0 mTransValOffset;
     /* 0x34 */ BE(u16) field_0x34;
     /* 0x36 */ BE(u16) field_0x36;
     /* 0x38 */ BE(u16) field_0x38;
     /* 0x3A */ BE(u16) field_0x3a;
-    /* 0x3C */ void* mInfoTable2Offset;
-    /* 0x40 */ void* field_0x40;
-    /* 0x44 */ void* mNameTab2Offset;
-    /* 0x48 */ void* field_0x48;
-    /* 0x4C */ void* field_0x4c;
-    /* 0x50 */ void* field_0x50;
-    /* 0x54 */ void* field_0x54;
-    /* 0x58 */ void* field_0x58;
+    /* 0x3C */ OFFSET_PTR_V0 mInfoTable2Offset;
+    /* 0x40 */ OFFSET_PTR_V0 field_0x40;
+    /* 0x44 */ OFFSET_PTR_V0 mNameTab2Offset;
+    /* 0x48 */ OFFSET_PTR_V0 field_0x48;
+    /* 0x4C */ OFFSET_PTR_V0 field_0x4c;
+    /* 0x50 */ OFFSET_PTR_V0 field_0x50;
+    /* 0x54 */ OFFSET_PTR_V0 field_0x54;
+    /* 0x58 */ OFFSET_PTR_V0 field_0x58;
     /* 0x5C */ BE(s32) field_0x5c;
 };  // Size = 0x60
 
@@ -228,13 +235,13 @@ struct J3DAnmVtxColorKeyData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) mAnmTableNum[2];
     /* 0x10 */ u8 field_0x10[0x18 - 0x10];
-    /* 0x18 */ void* mTableOffsets[2];
-    /* 0x20 */ void* mVtxColoIndexDataOffset[2];
-    /* 0x28 */ void* mVtxColoIndexPointerOffset[2];
-    /* 0x30 */ void* mRValOffset;
-    /* 0x34 */ void* mGValOffset;
-    /* 0x38 */ void* mBValOffset;
-    /* 0x3C */ void* mAValOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mTableOffsets[2];
+    /* 0x20 */ OFFSET_PTR_V0 mVtxColoIndexDataOffset[2];
+    /* 0x28 */ OFFSET_PTR_V0 mVtxColoIndexPointerOffset[2];
+    /* 0x30 */ OFFSET_PTR_V0 mRValOffset;
+    /* 0x34 */ OFFSET_PTR_V0 mGValOffset;
+    /* 0x38 */ OFFSET_PTR_V0 mBValOffset;
+    /* 0x3C */ OFFSET_PTR_V0 mAValOffset;
 };  // Size = 0x40
 
 struct J3DAnmTexPatternFullData {
@@ -244,10 +251,10 @@ struct J3DAnmTexPatternFullData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) field_0xc;
     /* 0x0E */ BE(u16) field_0xe;
-    /* 0x10 */ void* mTableOffset;
-    /* 0x14 */ void* mValuesOffset;
-    /* 0x18 */ void* mUpdateMaterialIDOffset;
-    /* 0x1C */ void* mNameTabOffset;
+    /* 0x10 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mValuesOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mUpdateMaterialIDOffset;
+    /* 0x1C */ OFFSET_PTR_V0 mNameTabOffset;
 };  // Size = 0x20
 
 struct J3DAnmTevRegKeyData {
@@ -265,20 +272,20 @@ struct J3DAnmTevRegKeyData {
     /* 0x1A */ BE(u16) field_0x1a;
     /* 0x1C */ BE(u16) field_0x1c;
     /* 0x1E */ BE(u16) field_0x1e;
-    /* 0x20 */ void* mCRegTableOffset;
-    /* 0x24 */ void* mKRegTableOffset;
-    /* 0x28 */ void* mCRegUpdateMaterialIDOffset;
-    /* 0x2C */ void* mKRegUpdateMaterialIDOffset;
-    /* 0x30 */ void* mCRegNameTabOffset;
-    /* 0x34 */ void* mKRegNameTabOffset;
-    /* 0x38 */ void* mCRValuesOffset;
-    /* 0x3C */ void* mCGValuesOffset;
-    /* 0x40 */ void* mCBValuesOffset;
-    /* 0x44 */ void* mCAValuesOffset;
-    /* 0x48 */ void* mKRValuesOffset;
-    /* 0x4C */ void* mKGValuesOffset;
-    /* 0x50 */ void* mKBValuesOffset;
-    /* 0x54 */ void* mKAValuesOffset;
+    /* 0x20 */ OFFSET_PTR_V0 mCRegTableOffset;
+    /* 0x24 */ OFFSET_PTR_V0 mKRegTableOffset;
+    /* 0x28 */ OFFSET_PTR_V0 mCRegUpdateMaterialIDOffset;
+    /* 0x2C */ OFFSET_PTR_V0 mKRegUpdateMaterialIDOffset;
+    /* 0x30 */ OFFSET_PTR_V0 mCRegNameTabOffset;
+    /* 0x34 */ OFFSET_PTR_V0 mKRegNameTabOffset;
+    /* 0x38 */ OFFSET_PTR_V0 mCRValuesOffset;
+    /* 0x3C */ OFFSET_PTR_V0 mCGValuesOffset;
+    /* 0x40 */ OFFSET_PTR_V0 mCBValuesOffset;
+    /* 0x44 */ OFFSET_PTR_V0 mCAValuesOffset;
+    /* 0x48 */ OFFSET_PTR_V0 mKRValuesOffset;
+    /* 0x4C */ OFFSET_PTR_V0 mKGValuesOffset;
+    /* 0x50 */ OFFSET_PTR_V0 mKBValuesOffset;
+    /* 0x54 */ OFFSET_PTR_V0 mKAValuesOffset;
 };  // Size = 0x58
 
 struct J3DAnmColorFullData { /* PlaceHolder Structure */
@@ -288,13 +295,13 @@ struct J3DAnmColorFullData { /* PlaceHolder Structure */
     /* 0x0C */ BE(s16) mFrameMax;
     /* 0x0E */ BE(u16) mUpdateMaterialNum;
     /* 0x10 */ u8 field_0x10[0x18 - 0x10];
-    /* 0x18 */ void* mTableOffset;
-    /* 0x1C */ void* mUpdateMaterialIDOffset;
-    /* 0x20 */ void* mNameTabOffset;
-    /* 0x24 */ void* mRValuesOffset;
-    /* 0x28 */ void* mGValuesOffset;
-    /* 0x2C */ void* mBValuesOffset;
-    /* 0x30 */ void* mAValuesOffset;
+    /* 0x18 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x1C */ OFFSET_PTR_V0 mUpdateMaterialIDOffset;
+    /* 0x20 */ OFFSET_PTR_V0 mNameTabOffset;
+    /* 0x24 */ OFFSET_PTR_V0 mRValuesOffset;
+    /* 0x28 */ OFFSET_PTR_V0 mGValuesOffset;
+    /* 0x2C */ OFFSET_PTR_V0 mBValuesOffset;
+    /* 0x30 */ OFFSET_PTR_V0 mAValuesOffset;
 };  // Size = 0x34
 
 struct J3DAnmClusterKeyTable {
@@ -308,10 +315,10 @@ struct J3DAnmTransformKeyData {
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) field_0xc;
     /* 0x10 */ BE(int) field_0x10;
-    /* 0x14 */ void* mTableOffset;
-    /* 0x18 */ void* field_0x18;
-    /* 0x1c */ void* field_0x1c;
-    /* 0x20 */ void* field_0x20;
+    /* 0x14 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x18 */ OFFSET_PTR_V0 field_0x18;
+    /* 0x1c */ OFFSET_PTR_V0 field_0x1c;
+    /* 0x20 */ OFFSET_PTR_V0 field_0x20;
 };
 
 struct J3DAnmClusterKeyData {
@@ -319,8 +326,8 @@ struct J3DAnmClusterKeyData {
     /* 0x08 */ u8 field_0x8;
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(s32) field_0xc;
-    /* 0x10 */ void* mTableOffset;
-    /* 0x14 */ void* mWeightOffset;
+    /* 0x10 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mWeightOffset;
 };
 
 struct J3DAnmClusterFullData {
@@ -328,8 +335,8 @@ struct J3DAnmClusterFullData {
     /* 0x08 */ u8 field_0x8;
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(s32) field_0xc;
-    /* 0x10 */ void* mTableOffset;
-    /* 0x14 */ void* mWeightOffset;
+    /* 0x10 */ OFFSET_PTR_V0 mTableOffset;
+    /* 0x14 */ OFFSET_PTR_V0 mWeightOffset;
 };
 
 struct J3DAnmClusterFullTable {
@@ -494,13 +501,13 @@ public:
     /* 0x16 */ u16 mScaleNum;
     /* 0x18 */ u16 mRotNum;
     /* 0x1A */ u16 mTransNum;
-    /* 0x1C */ BE(f32)* mScaleData;
-    /* 0x20 */ BE(s16)* mRotData;
-    /* 0x24 */ BE(f32)* mTransData;
+    /* 0x1C */ f32* mScaleData;
+    /* 0x20 */ s16* mRotData;
+    /* 0x24 */ f32* mTransData;
     /* 0x28 */ u8* mUpdateTexMtxID;
-    /* 0x2C */ BE(u16)* mUpdateMaterialID;
+    /* 0x2C */ u16* mUpdateMaterialID;
     /* 0x30 */ JUTNameTab mUpdateMaterialName;
-    /* 0x40 */ BE(Vec)* mSRTCenter;
+    /* 0x40 */ Vec* mSRTCenter;
     /* 0x44 */ u16 field_0x44;
     /* 0x46 */ u16 field_0x46;
     /* 0x48 */ u16 field_0x48;
@@ -510,9 +517,9 @@ public:
     /* 0x54 */ void* field_0x54;
     /* 0x58 */ void* field_0x58;
     /* 0x5C */ u8* mPostUpdateTexMtxID;
-    /* 0x60 */ BE(u16)* mPostUpdateMaterialID;
+    /* 0x60 */ u16* mPostUpdateMaterialID;
     /* 0x64 */ JUTNameTab mPostUpdateMaterialName;
-    /* 0x74 */ BE(Vec)* mPostSRTCenter;
+    /* 0x74 */ Vec* mPostSRTCenter;
     /* 0x78 */ u32 mTexMtxCalcType;
 };  // Size: 0x7C
 
@@ -531,7 +538,7 @@ public:
         return 1.0f;
     }
 
-    /* 0x0C */ BE(f32)* mWeight;
+    /* 0x0C */ f32* mWeight;
 };  // Size: 0x10
 class J3DAnmClusterFull : public J3DAnmCluster {
 public:
@@ -577,6 +584,14 @@ public:
 
     /* 0x0C */ u16 mAnmTableNum[2];
     /* 0x10 */ J3DAnmVtxColorIndexData* mAnmVtxColorIndexData[2];
+#ifdef TARGET_PC
+    // mpData stays a u16 index into these tables (the file is not patched in place on PC).
+    u16* colorAddressBase[2];
+
+    u16* offsetColorIndexAddress(u8 index, u32 ptr) const {
+        return colorAddressBase[index] + ptr;
+    }
+#endif
 };  // Size: 0x18
 class J3DAnmVtxColorFull : public J3DAnmVtxColor {
 public:
@@ -641,7 +656,7 @@ public:
     /* 0x10 */ u16 field_0x10;
     /* 0x12 */ u16 field_0x12;
     /* 0x14 */ u16 mUpdateMaterialNum;
-    /* 0x18 */ BE(u16)* mUpdateMaterialID;
+    /* 0x18 */ u16* mUpdateMaterialID;
     /* 0x1C */ JUTNameTab mUpdateMaterialName;
 };  // Size: 0x2C
 class J3DAnmColorFull : public J3DAnmColor {
@@ -672,10 +687,10 @@ public:
     }
     virtual void getColor(u16, GXColor*) const;
 
-    /* 0x2C */ BE(s16)* mColorR;
-    /* 0x30 */ BE(s16)* mColorG;
-    /* 0x34 */ BE(s16)* mColorB;
-    /* 0x38 */ BE(s16)* mColorA;
+    /* 0x2C */ s16* mColorR;
+    /* 0x30 */ s16* mColorG;
+    /* 0x34 */ s16* mColorB;
+    /* 0x38 */ s16* mColorA;
     /* 0x3C */ J3DAnmColorKeyTable* mAnmTable;
 };
 class J3DAnmTevRegKey : public J3DAnmBase {
@@ -730,20 +745,20 @@ public:
     /* 0x1A */ u16 mKRegDataCountG;
     /* 0x1C */ u16 mKRegDataCountB;
     /* 0x1E */ u16 mKRegDataCountA;
-    /* 0x20 */ BE(u16)* mCRegUpdateMaterialID;
+    /* 0x20 */ u16* mCRegUpdateMaterialID;
     /* 0x24 */ JUTNameTab mCRegUpdateMaterialName;
-    /* 0x34 */ BE(u16)* mKRegUpdateMaterialID;
+    /* 0x34 */ u16* mKRegUpdateMaterialID;
     /* 0x38 */ JUTNameTab mKRegUpdateMaterialName;
     /* 0x48 */ J3DAnmCRegKeyTable* mAnmCRegKeyTable;
     /* 0x4C */ J3DAnmKRegKeyTable* mAnmKRegKeyTable;
-    /* 0x50 */ BE(s16)* mAnmCRegDataR;
-    /* 0x54 */ BE(s16)* mAnmCRegDataG;
-    /* 0x58 */ BE(s16)* mAnmCRegDataB;
-    /* 0x5C */ BE(s16)* mAnmCRegDataA;
-    /* 0x60 */ BE(s16)* mAnmKRegDataR;
-    /* 0x64 */ BE(s16)* mAnmKRegDataG;
-    /* 0x68 */ BE(s16)* mAnmKRegDataB;
-    /* 0x6C */ BE(s16)* mAnmKRegDataA;
+    /* 0x50 */ s16* mAnmCRegDataR;
+    /* 0x54 */ s16* mAnmCRegDataG;
+    /* 0x58 */ s16* mAnmCRegDataB;
+    /* 0x5C */ s16* mAnmCRegDataA;
+    /* 0x60 */ s16* mAnmKRegDataR;
+    /* 0x64 */ s16* mAnmKRegDataG;
+    /* 0x68 */ s16* mAnmKRegDataB;
+    /* 0x6C */ s16* mAnmKRegDataA;
 };  // Size: 0x70
 class J3DAnmTexPattern : public J3DAnmBase {
 public:
@@ -771,11 +786,11 @@ public:
         return mAnmTable;
     }
 
-    /* 0x0C */ BE(u16)* mTextureIndex;
+    /* 0x0C */ u16* mTextureIndex;
     /* 0x10 */ J3DAnmTexPatternFullTable* mAnmTable;
     /* 0x14 */ u16 field_0x14;
     /* 0x16 */ u16 mUpdateMaterialNum;
-    /* 0x18 */ BE(u16)* mUpdateMaterialID;
+    /* 0x18 */ u16* mUpdateMaterialID;
     /* 0x1C */ JUTNameTab mUpdateMaterialName;
 };  // Size: 0x2C
 

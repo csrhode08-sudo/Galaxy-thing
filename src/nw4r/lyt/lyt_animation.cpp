@@ -12,6 +12,12 @@
 const f32 R_SAME_TOLERANCE = 1.0e-5F;
 const f32 R_FRAME_TOLERANCE = 0.001F;
 
+#ifdef TARGET_PC
+namespace pc::lyt {
+    void swapAnimation(const void*);
+}
+#endif
+
 namespace nw4r {
     namespace lyt {
         namespace {
@@ -396,6 +402,9 @@ namespace nw4r {
 
         void AnimResource::Set(const void* anmResBuf) {
             Init();
+#ifdef TARGET_PC
+            pc::lyt::swapAnimation(anmResBuf);
+#endif
 
             const res::BinaryFileHeader* const pFileHeader = static_cast< const res::BinaryFileHeader* >(anmResBuf);
             if (!detail::TestFileHeader(*pFileHeader, res::FILESIGNATURE_RLAN)) {

@@ -67,6 +67,7 @@ u32 OSGetEuRgb60Mode(void);
 typedef void (*OSPowerCallback)(void);
 OSPowerCallback OSSetPowerCallback(OSPowerCallback callback);
 void OSRebootSystem(void);
+void OSSleepTicks(OSTime ticks);
 
 #ifdef __cplusplus
 }

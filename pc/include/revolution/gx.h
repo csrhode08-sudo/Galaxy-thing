@@ -3,6 +3,9 @@
 #define PC_REVOLUTION_GX_H
 
 #include <revolution/types.h>
+#ifdef __cplusplus
+#include <type_traits>
+#endif
 #include <dolphin/gx.h>
 #include <dolphin/gd.h>
 
@@ -39,13 +42,14 @@ inline void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf
     GXSetCopyFilter(aa, const_cast<u8(*)[2]>(sample_pattern), vf, const_cast<u8*>(vfilter));
 }
 
-// Typed matrix overloads so classes convertible to Mtx (e.g. nw4r::math::MTX34) resolve unambiguously.
-inline void GXLoadPosMtxImm(const f32 (*m)[4], u32 id) { GXLoadPosMtxImm(static_cast<const void*>(m), id); }
-inline void GXLoadPosMtxImm(f32 (*m)[4], u32 id) { GXLoadPosMtxImm(static_cast<const void*>(m), id); }
-inline void GXLoadNrmMtxImm(const f32 (*m)[4], u32 id) { GXLoadNrmMtxImm(static_cast<const void*>(m), id); }
-inline void GXLoadNrmMtxImm(f32 (*m)[4], u32 id) { GXLoadNrmMtxImm(static_cast<const void*>(m), id); }
-inline void GXLoadTexMtxImm(const f32 (*m)[4], u32 id, GXTexMtxType t) { GXLoadTexMtxImm(static_cast<const void*>(m), id, t); }
-inline void GXLoadTexMtxImm(f32 (*m)[4], u32 id, GXTexMtxType t) { GXLoadTexMtxImm(static_cast<const void*>(m), id, t); }
+// Class types convertible to a matrix pointer (e.g. nw4r::math::MTX34, which converts to several pointer types)
+// would be ambiguous against the `const void*` entry points; these templates take them by exact match.
+template <class M, class = std::enable_if_t<std::is_class_v<M>>>
+inline void GXLoadPosMtxImm(M& m, u32 id) { GXLoadPosMtxImm(static_cast<const void*>(static_cast<const f32(*)[4]>(m)), id); }
+template <class M, class = std::enable_if_t<std::is_class_v<M>>>
+inline void GXLoadNrmMtxImm(M& m, u32 id) { GXLoadNrmMtxImm(static_cast<const void*>(static_cast<const f32(*)[4]>(m)), id); }
+template <class M, class = std::enable_if_t<std::is_class_v<M>>>
+inline void GXLoadTexMtxImm(M& m, u32 id, GXTexMtxType t) { GXLoadTexMtxImm(static_cast<const void*>(static_cast<const f32(*)[4]>(m)), id, t); }
 
 // Wii signature: GXGetCPUFifo(GXFifoObj* out).
 inline void GXGetCPUFifo(GXFifoObj* out) {

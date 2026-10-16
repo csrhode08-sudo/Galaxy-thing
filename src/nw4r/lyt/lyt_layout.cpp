@@ -27,6 +27,12 @@ namespace {
     }
 }  // namespace
 
+#ifdef TARGET_PC
+namespace pc::lyt {
+    void swapLayout(const void*);
+}
+#endif
+
 namespace nw4r {
     namespace lyt {
         namespace {
@@ -79,6 +85,9 @@ namespace nw4r {
         }
 
         bool Layout::Build(const void* lytResBuf, ResourceAccessor* pResAcsr) {
+#ifdef TARGET_PC
+            pc::lyt::swapLayout(lytResBuf);
+#endif
             const res::BinaryFileHeader* const pFileHead = static_cast< const res::BinaryFileHeader* >(lytResBuf);
             if (!detail::TestFileHeader(*pFileHead, 'RLYT')) {
                 return false;

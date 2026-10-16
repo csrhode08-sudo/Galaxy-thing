@@ -22,6 +22,31 @@ namespace nw4r {
                 *this = color;
             }
 
+#ifdef TARGET_PC
+            // 0xRRGGBBAA, independent of host byte order.
+            Color& operator=(u32 color) {
+                r = u8(color >> 24);
+                g = u8(color >> 16);
+                b = u8(color >> 8);
+                a = u8(color);
+                return *this;
+            }
+
+            Color& operator=(const GXColor& color) {
+                r = color.r;
+                g = color.g;
+                b = color.b;
+                a = color.a;
+                return *this;
+            }
+
+            ~Color() {
+            }
+
+            operator u32() const {
+                return (u32(r) << 24) | (u32(g) << 16) | (u32(b) << 8) | u32(a);
+            }
+#else
             Color& operator=(u32 color) {
                 ToU32ref() = color;
                 return *this;
@@ -37,6 +62,7 @@ namespace nw4r {
             operator u32() const {
                 return ToU32ref();
             }
+#endif
 
             u32& ToU32ref() {
                 return *reinterpret_cast< u32* >(this);

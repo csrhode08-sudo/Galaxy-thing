@@ -790,7 +790,7 @@ s32 JASSeqParser::cmdPrintf(JASTrack* track, u32* args) {
         values[i] = track->getSeqCtrl()->readByte();
         switch (formatTypes[i]) {
         case 2:
-            values[i] = (u32)track->getSeqCtrl()->getAddr(values[i]);
+            values[i] = (u32)(uintptr_t)track->getSeqCtrl()->getAddr(values[i]);
             break;
         case 3:
         case 4:

@@ -15,6 +15,7 @@
 #include <SDL3/SDL.h>
 
 #include <chrono>
+#include <thread>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -106,6 +107,16 @@ void OSReturnToDataManager(void) { OSShutdownSystem(); }
 BOOL OSIsRestart(void) { return FALSE; }
 
 u8 OSGetLanguage(void) { return 0; }
+
+void PPCHalt(void) {
+    pc_log("[halt] PPCHalt called; aborting\n");
+    std::abort();
+}
+
+void OSSleepTicks(OSTime ticks) {
+    if (ticks <= 0) return;
+    std::this_thread::sleep_for(std::chrono::nanoseconds((long long)((double)ticks * 1e9 / OS_TIMER_CLOCK)));
+}
 u32 OSGetEuRgb60Mode(void) { return 0; }
 
 }  // extern "C"

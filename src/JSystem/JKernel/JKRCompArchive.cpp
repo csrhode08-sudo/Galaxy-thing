@@ -35,8 +35,8 @@ JKRCompArchive::~JKRCompArchive() {
     if (mInfoBlock != NULL) {
         SDIFileEntry* file = mFiles;
         for (int i = 0; i < mInfoBlock->mNrFiles; i++) {
-            if ((file->mFlag & FILE_FLAG_MRAM) == 0 && file->mFileData != NULL) {
-                JKRFreeToHeap(mHeap, file->mFileData);
+            if ((file->getFlag() & FILE_FLAG_MRAM) == 0 && JKAR_FILEDATA(file) != NULL) {
+                JKRFreeToHeap(mHeap, JKAR_FILEDATA(file));
             }
 
             file++;
@@ -174,7 +174,7 @@ bool JKRCompArchive::open(s32 entryNum) {
         u8 compressedFiles = 0;
         SDIFileEntry* fileEntry = mFiles;
         for (int i = 0; i < mInfoBlock->mNrFiles; i++) {
-            u8 flag = fileEntry->mFlag;
+            u8 flag = fileEntry->getFlag();
             if (((flag & 0x1) != 0) && (((flag) & 0x10) == 0)) {
                 compressedFiles |= (flag & 4);
             }
@@ -207,23 +207,23 @@ bool JKRCompArchive::open(s32 entryNum) {
 void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize) {
     u32 ptrSize;
     u32 size = fileEntry->mDataSize;
-    int compression = JKRConvertAttrToCompressionType(u8(fileEntry->mFlag));
+    int compression = JKRConvertAttrToCompressionType(u8(fileEntry->getFlag()));
 
     if (pSize == NULL) {
         pSize = &ptrSize;  // this makes barely any sense but ok
     }
 
-    if (fileEntry->mFileData == NULL) {
-        u32 flag = fileEntry->mFlag;
+    if (JKAR_FILEDATA(fileEntry) == NULL) {
+        u32 flag = fileEntry->getFlag();
         if (flag & 0x10) {
-            fileEntry->mFileData = (void*)(field_0x64 + fileEntry->mDataOffset);
+            JKAR_FILEDATA(fileEntry) = (void*)(field_0x64 + fileEntry->mDataOffset);
             *pSize = size;
         } else if (flag & 0x20) {
             u8* data;
             size = JKRAramArchive::fetchResource_subroutine(fileEntry->mDataOffset + mAramPart->getAddress() - mSizeOfMemPart, size, mHeap,
                                                             compression, &data);
             *pSize = size;
-            fileEntry->mFileData = data;
+            JKAR_FILEDATA(fileEntry) = data;
             if (compression == COMPRESSION_YAZ0) {
                 setExpandSize(fileEntry, *pSize);
             }
@@ -234,7 +234,7 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize) {
             if (pSize != NULL) {
                 *pSize = resSize;
             }
-            fileEntry->mFileData = data;
+            JKAR_FILEDATA(fileEntry) = data;
             if (compression == COMPRESSION_YAZ0) {
                 setExpandSize(fileEntry, *pSize);
             }
@@ -244,17 +244,17 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize) {
             *pSize = fileEntry->mDataSize;
         }
     }
-    return fileEntry->mFileData;
+    return JKAR_FILEDATA(fileEntry);
 }
 
 void* JKRCompArchive::fetchResource(void* data, u32 compressedSize, SDIFileEntry* fileEntry, u32* pSize) {
     u32 size = 0;
     u32 fileSize = fileEntry->mDataSize;
     u32 alignedSize = ALIGN_NEXT(fileSize, 32);
-    u32 fileFlag = fileEntry->mFlag;
+    u32 fileFlag = fileEntry->getFlag();
     int compression = JKRConvertAttrToCompressionType(u8(fileFlag));
 
-    if (fileEntry->mFileData != NULL) {
+    if (JKAR_FILEDATA(fileEntry) != NULL) {
         if (compression == COMPRESSION_YAZ0) {
             u32 expandSize = getExpandSize(fileEntry);
             if (expandSize != 0) {
@@ -266,7 +266,7 @@ void* JKRCompArchive::fetchResource(void* data, u32 compressedSize, SDIFileEntry
             fileSize = compressedSize;
         }
 
-        JKRHeap::copyMemory(data, fileEntry->mFileData, fileSize);
+        JKRHeap::copyMemory(data, JKAR_FILEDATA(fileEntry), fileSize);
         size = fileSize;
     } else {
         if (fileFlag & 0x10) {
@@ -293,14 +293,14 @@ void JKRCompArchive::removeResourceAll() {
     if (mInfoBlock != NULL && mMountMode != 1) {
         SDIFileEntry* fileEntry = mFiles;
         for (int i = 0; i < mInfoBlock->mNrFiles; i++) {
-            int tmp = fileEntry->mFlag;
+            int tmp = fileEntry->getFlag();
 
-            if (fileEntry->mFileData != NULL) {
+            if (JKAR_FILEDATA(fileEntry) != NULL) {
                 if (!(tmp & 0x10)) {
-                    JKRFreeToHeap(mHeap, fileEntry->mFileData);
+                    JKRFreeToHeap(mHeap, JKAR_FILEDATA(fileEntry));
                 }
 
-                fileEntry->mFileData = NULL;
+                JKAR_FILEDATA(fileEntry) = NULL;
             }
         }
         fileEntry++;
@@ -312,12 +312,12 @@ bool JKRCompArchive::removeResource(void* resource) {
     if (!fileEntry)
         return false;
 
-    u32 flags = fileEntry->mFlag;
+    u32 flags = fileEntry->getFlag();
     if ((flags & 0x10) == 0) {
         JKRFreeToHeap(mHeap, resource);
     }
 
-    fileEntry->mFileData = NULL;
+    JKAR_FILEDATA(fileEntry) = NULL;
     return true;
 }
 
@@ -331,7 +331,7 @@ u32 JKRCompArchive::getExpandedResSize(const void* resource) const {
         return 0xffffffff;
     }
 
-    u8 flags = fileEntry->mFlag;
+    u8 flags = fileEntry->getFlag();
     if ((flags & 4) == 0) {  // not compressed
         return getResSize(resource);
     }

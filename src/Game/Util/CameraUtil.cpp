@@ -142,7 +142,7 @@ namespace MR {
     }
 
     void loadProjectionMtx() {
-        GXSetProjection(::getCameraContext()->mProjection, (GXProjectionType) nullptr);
+        GXSetProjection(::getCameraContext()->mProjection, (GXProjectionType) 0);
     }
 
     void loadViewMtx() {

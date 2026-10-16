@@ -34,48 +34,69 @@ public:
         FILE_FLAG_IS_YAZ0 = 1 << FILE_FLAG_IS_YAZ0_SHIFT
     };
 
+    // RARC structures are read in place from big-endian archive files.
     struct RarcHeader {
-        /* 0x00 */ u32 mMagic;
-        /* 0x04 */ u32 mFileSize;
-        /* 0x08 */ u32 mHeaderSize;
-        /* 0x0C */ u32 mFileDataOffset;
-        /* 0x10 */ u32 mTotalDataSize;
-        /* 0x14 */ u32 mMRamDataSize;
-        /* 0x18 */ u32 mARamDataSize;
-        /* 0x1C */ u32 _1C;
+        /* 0x00 */ BE(u32) mMagic;
+        /* 0x04 */ BE(u32) mFileSize;
+        /* 0x08 */ BE(u32) mHeaderSize;
+        /* 0x0C */ BE(u32) mFileDataOffset;
+        /* 0x10 */ BE(u32) mTotalDataSize;
+        /* 0x14 */ BE(u32) mMRamDataSize;
+        /* 0x18 */ BE(u32) mARamDataSize;
+        /* 0x1C */ BE(u32) _1C;
     };
 
     struct RarcInfoBlock {
-        /* 0x00 */ u32 mNrDirs;
-        /* 0x04 */ u32 mDirOffset;
-        /* 0x08 */ u32 mNrFiles;
-        /* 0x0C */ u32 mFileOffset;
-        /* 0x10 */ u32 mStringTableSize;
-        /* 0x14 */ u32 mStringTableOffset;
-        /* 0x18 */ u16 mNextAvailableFileID;
-        /* 0x1A */ u16 mFileIDIsIndex;
-        /* 0x1C */ u32 _1C;
+        /* 0x00 */ BE(u32) mNrDirs;
+        /* 0x04 */ BE(u32) mDirOffset;
+        /* 0x08 */ BE(u32) mNrFiles;
+        /* 0x0C */ BE(u32) mFileOffset;
+        /* 0x10 */ BE(u32) mStringTableSize;
+        /* 0x14 */ BE(u32) mStringTableOffset;
+        /* 0x18 */ BE(u16) mNextAvailableFileID;
+        /* 0x1A */ BE(u16) mFileIDIsIndex;
+        /* 0x1C */ BE(u32) _1C;
     };
 
     struct SDIFileEntry {
-        /* 0x00 */ u16 mFileID;
-        /* 0x02 */ u16 mHash;
+        /* 0x00 */ BE(u16) mFileID;
+        /* 0x02 */ BE(u16) mHash;
+#ifdef TARGET_PC
+        /* 0x04 */ BE(u32) mFlagAndNameOffset;
+        u8 getFlag() const {
+            return (u32)mFlagAndNameOffset >> 24;
+        }
+        u32 getNameOffset() const {
+            return (u32)mFlagAndNameOffset & 0xFFFFFF;
+        }
+#else
         /* 0x04 */ u32 mFlag : 8;
         /* 0x05 */ u32 mNameOffset : 24;
+        u8 getFlag() const {
+            return mFlag;
+        }
+        u32 getNameOffset() const {
+            return mNameOffset;
+        }
+#endif
         union {
-            /* 0x08 */ u32 mDataOffset;
-            /* 0x08 */ u32 mDirIndex;
+            /* 0x08 */ BE(u32) mDataOffset;
+            /* 0x08 */ BE(u32) mDirIndex;
         };
-        /* 0x0C */ u32 mDataSize;
+        /* 0x0C */ BE(u32) mDataSize;
+#ifdef TARGET_PC
+        /* 0x10 */ u32 mFileDataUnused;  // a pointer on the console; see JKRArchive::fileData()
+#else
         /* 0x10 */ void* mFileData;
+#endif
     };
 
     struct SDIDirEntry {
-        /* 0x0 */ u32 mID;
-        /* 0x4 */ u32 mNameOffset;
-        /* 0x8 */ u16 mHash;
-        /* 0xA */ u16 mNrFiles;
-        /* 0xC */ u32 mFirstFileIndex;
+        /* 0x0 */ BE(u32) mID;
+        /* 0x4 */ BE(u32) mNameOffset;
+        /* 0x8 */ BE(u16) mHash;
+        /* 0xA */ BE(u16) mNrFiles;
+        /* 0xC */ BE(u32) mFirstFileIndex;
     };
 
     struct SDirEntry {
@@ -160,4 +181,18 @@ public:
     /* 0x58 */ u32 _58;
     /* 0x5C */ int _5C;
     /* 0x60 */ EMountDirection mMountDir;
+
+#ifdef TARGET_PC
+    // Loaded-file pointers live outside the (32-bit) file entries on PC.
+    void*& fileData(const SDIFileEntry* pEntry) const;
+    void releaseFileDataTable();
+    mutable void** mFileDataPtrs = nullptr;
+    mutable const SDIFileEntry* mFileDataPtrsFor = nullptr;
+#endif
 };
+
+#ifdef TARGET_PC
+#define JKAR_FILEDATA(entry) fileData(entry)
+#else
+#define JKAR_FILEDATA(entry) (entry)->mFileData
+#endif

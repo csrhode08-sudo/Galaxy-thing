@@ -4,6 +4,7 @@
 // The OSThread struct layout is preserved so game code can read its fields.
 // A side-table stores the native std::thread and synchronization primitives.
 
+#include "pc/platform.h"
 #include <dolphin/dolphin.h>
 #include <dolphin/os.h>
 
@@ -17,7 +18,6 @@
 #include <cstdlib>
 #include <memory>
 
-#include "JSystem/JKernel/JKRHeap.hpp"
 #include "pc/platform.h"
 
 #if _WIN32
@@ -472,7 +472,7 @@ void OSExitThread(void* val) {
 }
 
 void OSCancelThread(OSThread* thread) {
-    CRASH("OSCancelThread not implemented");
+    pc_log("[os] OSCancelThread: thread is only marked as finished\n");
     if (!thread) return;
 
     if (thread->attr & OS_THREAD_ATTR_DETACH) {
@@ -486,7 +486,7 @@ void OSCancelThread(OSThread* thread) {
 }
 
 void OSDetachThread(OSThread* thread) {
-    CRASH("OSDetachThread not implemented");
+
     if (!thread) return;
     thread->attr |= OS_THREAD_ATTR_DETACH;
 

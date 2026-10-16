@@ -14,7 +14,6 @@
 #include <memory>
 #include <cstdlib>
 
-#include "JSystem/JKernel/JKRHeap.hpp"
 
 // ============================================================================
 // Side-table: native mutex per OSMutex

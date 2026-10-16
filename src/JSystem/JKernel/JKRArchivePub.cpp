@@ -123,9 +123,9 @@ bool JKRArchive::getDirEntry(SDirEntry* pDir, u32 fileIndex) const {
         return false;
     }
 
-    pDir->mFileFlag = file->mFlag;
+    pDir->mFileFlag = file->getFlag();
     pDir->mFileID = file->mFileID;
-    pDir->mName = mStringTable + file->mNameOffset;
+    pDir->mName = mStringTable + file->getNameOffset();
 
     return true;
 }
@@ -237,9 +237,9 @@ void JKRArchive::removeResourceAll() {
     if (mInfoBlock != nullptr && mMountMode != MOUNT_MODE_MEM) {
         SDIFileEntry* current = mFiles;
         for (u32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-            if (current->mFileData != nullptr) {
-                JKRHeap::free(current->mFileData, mHeap);
-                current->mFileData = nullptr;
+            if (JKAR_FILEDATA(current) != nullptr) {
+                JKRHeap::free(JKAR_FILEDATA(current), mHeap);
+                JKAR_FILEDATA(current) = nullptr;
             }
 
             current++;
@@ -254,7 +254,7 @@ bool JKRArchive::removeResource(void* pResource) {
         return false;
     }
 
-    file->mFileData = nullptr;
+    JKAR_FILEDATA(file) = nullptr;
     JKRHeap::free(pResource, mHeap);
 
     return true;
@@ -267,7 +267,7 @@ bool JKRArchive::detachResource(void* pResource) {
         return false;
     }
 
-    file->mFileData = nullptr;
+    JKAR_FILEDATA(file) = nullptr;
 
     return true;
 }
@@ -286,7 +286,7 @@ u32 JKRArchive::countResource() const {
     u32 count = 0;
 
     for (u32 i = 0; i < mInfoBlock->mNrFiles; i++) {
-        if ((mFiles[i].mFlag & FILE_FLAG_FILE) != 0) {
+        if ((mFiles[i].getFlag() & FILE_FLAG_FILE) != 0) {
             count++;
         }
     }
@@ -342,7 +342,7 @@ u32 JKRArchive::getFileAttribute(u32 fileIndex) const {
     SDIFileEntry* file = findIdxResource(fileIndex);
 
     if (file != nullptr) {
-        return file->mFlag;
+        return file->getFlag();
     }
 
     return 0;

@@ -1044,6 +1044,7 @@ bool KCollisionServer::KCHitSphereWithThickness(KC_PrismData* pPrism, Fxyz* pCen
     }
 
     f32 nn;
+    f32 distance;
 
     if (distances[1] > distances[2]) {
         if (!(distances[1] > distances[3])) {
@@ -1199,7 +1200,7 @@ edgeFinish: {
 }
 
 finish:
-    f32 distance = MR::sqrt(*pDist);
+    distance = MR::sqrt(*pDist);
 
     if (distances[0] + distance < 0.0f) {
         *pFlag = 0;
