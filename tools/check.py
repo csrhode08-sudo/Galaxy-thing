@@ -12,7 +12,7 @@ outdir = os.path.join(build, 'errs'); os.makedirs(outdir, exist_ok=True)
 def run(e):
     args = shlex.split(e['command'])
     i = args.index('-o'); del args[i:i+2]
-    args += ['-fsyntax-only', '-ferror-limit=0', '-w']
+    args += ['-fsyntax-only', '-ferror-limit=0', '-Wno-everything', '-Werror=return-type']
     p = subprocess.run(args, cwd=e['directory'], capture_output=True, text=True)
     return e['file'], p.returncode, p.stderr
 msgs = collections.Counter(); locs = collections.Counter(); bad = 0

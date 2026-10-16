@@ -303,7 +303,13 @@ void J3DShapeMtxConcatView::loadMtxConcatView_PNCPU(int slot, u16 drw) const {
 void J3DShapeMtxConcatView::loadMtxConcatView_PNGP_LOD(int slot, u16 drw) const {
     Mtx m;
     PSMTXConcat(*j3dSys.getShapePacket()->getBaseMtxPtr(), j3dSys.getModelDrawMtx(drw), m);
+#ifdef TARGET_PC
+    Mtx invMtx;
+    j3dSys.getModel()->getModelData()->getInvJointMtx(drw).to_host(invMtx);
+    PSMTXConcat(m, invMtx, m);
+#else
     PSMTXConcat(m, j3dSys.getModel()->getModelData()->getInvJointMtx(drw), m);
+#endif
     J3DDifferedTexMtx::load(m);
     J3DFifoLoadPosMtxImm(m, slot * 3);
     loadNrmMtx(slot, drw, m);
@@ -342,7 +348,7 @@ void J3DShapeMtxConcatView::loadNrmMtx(int param_0, u16 param_1, MtxPtr param_2)
             J3DFifoLoadNrmMtxImm(param_2, 0);
         } else {
             Mtx33 mtx;
-            Vec* scale = j3dSys.getNBTScale();
+            BE(Vec)* scale = j3dSys.getNBTScale();
             J3DPSMtx33CopyFrom34(param_2, mtx);
             J3DScaleNrmMtx33(mtx, *scale);
             J3DFifoLoadNrmMtxImm3x3(mtx, 0);
@@ -357,7 +363,7 @@ void J3DShapeMtxConcatView::loadNrmMtx(int param_0, u16 param_1, MtxPtr param_2)
         if (!sNBTFlag) {
             J3DFifoLoadNrmMtxImm3x3(mtx, 0);
         } else {
-            Vec* scale = j3dSys.getNBTScale();
+            BE(Vec)* scale = j3dSys.getNBTScale();
             J3DScaleNrmMtx33(mtx, *scale);
             J3DFifoLoadNrmMtxImm3x3(mtx, 0);
         }
@@ -432,7 +438,7 @@ void J3DShapeMtxMultiConcatView::loadNrmMtx(int param_0, u16 param_1, MtxPtr par
         if (!sNBTFlag) {
             J3DFifoLoadNrmMtxImm(param_2, param_0 * 3);
         } else {
-            Vec* nbt_scale = j3dSys.getNBTScale();
+            BE(Vec)* nbt_scale = j3dSys.getNBTScale();
             J3DPSMtx33CopyFrom34(param_2, mtx1);
             J3DScaleNrmMtx33(mtx1, *nbt_scale);
             J3DFifoLoadNrmMtxImm3x3(mtx1, 0);
@@ -445,7 +451,7 @@ void J3DShapeMtxMultiConcatView::loadNrmMtx(int param_0, u16 param_1, MtxPtr par
         if (!sNBTFlag) {
             J3DFifoLoadNrmMtxImm3x3(mtx2, param_0 * 3);
         } else {
-            Vec* nbt_scale = j3dSys.getNBTScale();
+            BE(Vec)* nbt_scale = j3dSys.getNBTScale();
             J3DScaleNrmMtx33(mtx2, *nbt_scale);
             J3DFifoLoadNrmMtxImm3x3(mtx2, param_0 * 3);
         }
@@ -475,7 +481,7 @@ void J3DShapeMtxBBoardConcatView::load() const {
     if (!sNBTFlag) {
         J3DFifoLoadNrmMtxImm(mtx, 0);
     } else {
-        Vec* nbt_scale = j3dSys.getNBTScale();
+        BE(Vec)* nbt_scale = j3dSys.getNBTScale();
         J3DScaleNrmMtx(mtx, *nbt_scale);
         J3DFifoLoadNrmMtxImm(mtx, 0);
     }
@@ -499,7 +505,7 @@ void J3DShapeMtxYBBoardConcatView::load() const {
         if (!sNBTFlag) {
             J3DFifoLoadNrmMtxImm(mtx1, 0);
         } else {
-            Vec* nbt_scale = j3dSys.getNBTScale();
+            BE(Vec)* nbt_scale = j3dSys.getNBTScale();
             J3DScaleNrmMtx(mtx1, *nbt_scale);
             J3DFifoLoadNrmMtxImm(mtx1, 0);
         }
@@ -508,7 +514,7 @@ void J3DShapeMtxYBBoardConcatView::load() const {
         if (!sNBTFlag) {
             J3DFifoLoadNrmMtxImm3x3(mtx2, 0);
         } else {
-            Vec* nbt_scale = j3dSys.getNBTScale();
+            BE(Vec)* nbt_scale = j3dSys.getNBTScale();
             J3DScaleNrmMtx33(mtx2, *nbt_scale);
             J3DFifoLoadNrmMtxImm3x3(mtx2, 0);
         }
@@ -545,6 +551,8 @@ void J3DPSMtx33Copy(Mtx3P src, Mtx3P dst) {
         psq_st fr1, 0x18(destination), 0, 0
         stfs fr0, 0x20(destination)
     }
+#else
+    __builtin_memcpy(dst, src, sizeof(Mtx33));
 #endif
 }
 
@@ -564,6 +572,12 @@ void J3DPSMtx33CopyFrom34(__REGISTER MtxPtr src, __REGISTER Mtx3P dst) {
         stfs w, 20(dst)
         psq_st u, 24(dst), 0, 0
         stfs v, 32(dst)
+    }
+#else
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            dst[i][j] = src[i][j];
+        }
     }
 #endif
 }

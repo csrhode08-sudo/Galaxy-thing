@@ -9,14 +9,14 @@ class JKRHeap;
 struct JPABaseShapeData {
     // Common header.
     /* 0x00 */ u8 mMagic[4];
-    /* 0x04 */ u32 mSize;
+    /* 0x04 */ BE(u32) mSize;
 
-    /* 0x08 */ u32 mFlags;
-    /* 0x0C */ s16 mClrPrmAnmOffset;
-    /* 0x0E */ s16 mClrEnvAnmOffset;
-    /* 0x10 */ f32 mBaseSizeX;
-    /* 0x14 */ f32 mBaseSizeY;
-    /* 0x18 */ u16 mBlendModeCfg;
+    /* 0x08 */ BE(u32) mFlags;
+    /* 0x0C */ BE(s16) mClrPrmAnmOffset;
+    /* 0x0E */ BE(s16) mClrEnvAnmOffset;
+    /* 0x10 */ BE(f32) mBaseSizeX;
+    /* 0x14 */ BE(f32) mBaseSizeY;
+    /* 0x18 */ BE(u16) mBlendModeCfg;
     /* 0x1A */ u8 mAlphaCompareCfg;
     /* 0x1B */ u8 mAlphaRef0;
     /* 0x1C */ u8 mAlphaRef1;
@@ -27,7 +27,7 @@ struct JPABaseShapeData {
     /* 0x21 */ u8 mClrFlg;
     /* 0x22 */ u8 mClrPrmKeyNum;
     /* 0x23 */ u8 mClrEnvKeyNum;
-    /* 0x24 */ s16 mClrAnmFrmMax;
+    /* 0x24 */ BE(s16) mClrAnmFrmMax;
     /* 0x26 */ GXColor mClrPrm;
     /* 0x2A */ GXColor mClrEnv;
     /* 0x2E */ u8 mAnmRndm;
@@ -246,7 +246,7 @@ public:
 };
 
 struct JPAClrAnmKeyData {
-    /* 0x0 */ s16 index;
+    /* 0x0 */ BE(s16) index;
     /* 0x2 */ GXColor color;
 };
 

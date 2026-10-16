@@ -180,8 +180,8 @@ static f32 J3DUnit01[] = {0.0f, 1.0f};
 #ifdef TARGET_PC
 void J3DMtxBuffer::calcWeightEnvelopeMtx() {
     s32 max = mJointTree->getWEvlpMtxNum();
-    u16* indices = mJointTree->getWEvlpMixMtxIndex();
-    f32* weights = mJointTree->getWEvlpMixWeight();
+    BE(u16)* indices = mJointTree->getWEvlpMixMtxIndex();
+    BE(f32)* weights = mJointTree->getWEvlpMixWeight();
 
     for (s32 i = 0; i < max; i++) {
         u8* pScale = &mpEvlpScaleFlagArr[i];
@@ -198,7 +198,9 @@ void J3DMtxBuffer::calcWeightEnvelopeMtx() {
             u16 idx = *indices++;
             f32 weight = *weights++;
             Mtx mtx;
-            PSMTXConcat(mpAnmMtx[idx], mJointTree->getInvJointMtx(idx), mtx);
+            Mtx invMtx;
+            mJointTree->getInvJointMtx(idx).to_host(invMtx);
+            PSMTXConcat(mpAnmMtx[idx], invMtx, mtx);
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 4; c++) {
                     weightAnmMtx[r][c] += mtx[r][c] * weight;

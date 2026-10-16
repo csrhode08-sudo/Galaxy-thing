@@ -612,6 +612,13 @@ public:
 
 class J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    // Number of texture slots (mTexNo entries); textures are bound with texture objects on PC.
+    virtual u32 getTexNoSlotNum() const {
+        return 0;
+    }
+    void loadTexture();
+#endif
     virtual void reset(J3DTevBlock*) {
     }
 
@@ -857,6 +864,11 @@ public:
 
 class J3DTevBlockPatched : public J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    virtual u32 getTexNoSlotNum() const {
+        return 8;
+    }
+#endif
     J3DTevBlockPatched() {
         initialize();
     }
@@ -1010,6 +1022,11 @@ public:
 
 class J3DTevBlock1 : public J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    virtual u32 getTexNoSlotNum() const {
+        return 1;
+    }
+#endif
     J3DTevBlock1() {
         initialize();
     }
@@ -1112,6 +1129,11 @@ public:
 
 class J3DTevBlock2 : public J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    virtual u32 getTexNoSlotNum() const {
+        return 2;
+    }
+#endif
     J3DTevBlock2() {
         initialize();
     }
@@ -1303,6 +1325,11 @@ public:
  */
 class J3DTevBlock4 : public J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    virtual u32 getTexNoSlotNum() const {
+        return 4;
+    }
+#endif
     J3DTevBlock4() {
         initialize();
     }
@@ -1490,6 +1517,11 @@ public:
 
 class J3DTevBlock16 : public J3DTevBlock {
 public:
+#ifdef TARGET_PC
+    virtual u32 getTexNoSlotNum() const {
+        return 8;
+    }
+#endif
     J3DTevBlock16() {
         initialize();
     }

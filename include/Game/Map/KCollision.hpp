@@ -24,6 +24,28 @@ public:
     f32 x, y, z;
 };
 
+#ifdef TARGET_PC
+// Host-side collision header. Collision files keep 32-bit offsets in their header that the console patches into
+// pointers in place; on PC the file is converted to host byte order and described by this separately allocated
+// header (see KCollisionServer::setData).
+struct KCLFile {
+    static const u32 HOST_MAGIC = 0x4B434C68;  // 'KCLh'
+
+    /* 0x00 */ u32 mHostMagic = HOST_MAGIC;
+    /* 0x08 */ TVec3f* mPos = nullptr;
+    /* 0x10 */ TVec3f* mNorms = nullptr;
+    /* 0x18 */ KC_PrismData* mPrisms = nullptr;
+    /* 0x20 */ void* mOctree = nullptr;
+    /* 0x28 */ f32 mThickness = 0.0f;
+    /* 0x2C */ TVec3f mMin;
+    /* 0x38 */ s32 mXMask = 0;
+    /* 0x3C */ s32 mYMask = 0;
+    /* 0x40 */ s32 mZMask = 0;
+    /* 0x44 */ s32 mBlockWidthShift = 0;
+    /* 0x48 */ s32 mBlockXShift = 0;
+    /* 0x4C */ s32 mBlockXYShift = 0;
+};
+#else
 struct KCLFile {
     union {
         /* 0x00 */ TVec3f* mPos;
@@ -50,6 +72,8 @@ struct KCLFile {
     /* 0x30 */ s32 mBlockXShift;
     /* 0x34 */ s32 mBlockXYShift;
 };
+
+#endif
 
 class KCollisionServer {
 public:

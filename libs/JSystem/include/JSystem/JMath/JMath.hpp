@@ -20,6 +20,8 @@ inline f32 JMAFastSqrt(__REGISTER const f32 input) {
     } else {
         return input;
     }
+#else
+    return input > 0.0f ? __builtin_sqrtf(input) : input;
 #endif
 }
 
@@ -52,6 +54,16 @@ inline f32 JMAHermiteInterpolation(__REGISTER f32 p1, __REGISTER f32 p2, __REGIS
     }
     // clang-format on
     return ff25;
+#else
+    f32 a = p1 - p2;
+    f32 b = a * (1.0f / (p5 - p2));
+    f32 c = b - 1.0f;
+    f32 d = (3.0f + -2.0f * b) * (b * b);
+    f32 cab = (c * a * b);
+    f32 coeffx3 = cab * p7;
+    f32 cca = (c * c * a);
+    f32 coeffc2 = cca * p4;
+    return ((1.0f - d) * p3 + (d * p6)) + coeffc2 + coeffx3;
 #endif
 }
 
@@ -81,6 +93,8 @@ namespace JMath {
             psq_st x, 0(dest), 0, 0
             stfs y, 8(dest)
         }
+#else
+        __builtin_memcpy(dest, src, 3 * sizeof(f32));
 #endif
     }
 
@@ -95,6 +109,8 @@ namespace JMath {
             psq_st y, 8(dest), 0, 0
             psq_st z, 16(dest), 0, 0
         }
+#else
+        __builtin_memcpy(dest, src, 6 * sizeof(f32));
 #endif
     }
 
@@ -117,6 +133,8 @@ namespace JMath {
                 psq_st    f_5, 0x28(pDest), 0, 0
         }
         ;
+#else
+        __builtin_memcpy(pDest, pSrc, 12 * sizeof(f32));
 #endif
     }
 
@@ -143,6 +161,8 @@ namespace JMath {
                 psq_st    f_7, 0x38(pDest), 0, 0
         }
         ;
+#else
+        __builtin_memcpy(pDest, pSrc, 16 * sizeof(f32));
 #endif
     }
 };  // namespace JMath

@@ -10,7 +10,7 @@ Mtx J3DSys::mCurrentMtx;
 Vec J3DSys::mCurrentS;
 Vec J3DSys::mParentS;
 
-static u8 NullTexData[0x10] ATTRIBUTE_ALIGN(32) = {0};
+static u8 NullTexData[0x20] ATTRIBUTE_ALIGN(32) = {0};  // 0x10 in the original (too small for a 4x4 IA8 texture)
 
 J3DTexCoordScaleInfo J3DSys::sTexCoordScaleTable[8];
 

@@ -85,6 +85,10 @@ void JMAVECLerp(__REGISTER const Vec* a, __REGISTER const Vec* b, __REGISTER Vec
         psq_st bxy, 0(dst), 0, 0
         stfs bz, 8(dst)
     }
+#else
+    dst->x = a->x + (b->x - a->x) * t;
+    dst->y = a->y + (b->y - a->y) * t;
+    dst->z = a->z + (b->z - a->z) * t;
 #endif
 }
 

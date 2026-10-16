@@ -40,12 +40,20 @@ void J3DDeformer::deform(J3DVertexBuffer* buffer, u16 param_1) {
     }
 }
 
+#ifdef TARGET_PC
+// Cluster (blend-shape) deformation is never set up by Super Mario Galaxy: there is no cluster loader in the game.
+void J3DDeformer::deform_VtxPosF32(J3DVertexBuffer*, J3DCluster*, J3DClusterKey*, f32*) {
+}
+
+void J3DDeformer::deform_VtxNrmF32(J3DVertexBuffer*, J3DCluster*, J3DClusterKey*, f32*) {
+}
+#else
 void J3DDeformer::deform_VtxPosF32(J3DVertexBuffer* i_buffer, J3DCluster* i_cluster, J3DClusterKey* i_key, f32* i_weights) {
     J3DClusterKey* key;
     int posNum = i_cluster->mPosNum;
     int keyNum = i_cluster->mKeyNum;
     f32* vtxPosArray = (f32*)i_buffer->getVtxPosArrayPointer(0);
-    f32* deformVtxPos = mDeformData->getVtxPos();
+    BE(f32)* deformVtxPos = mDeformData->getVtxPos();
     u16* iVar9 = i_cluster->field_0x18;
 
     for (int i = 0; i < posNum; i++) {
@@ -83,7 +91,7 @@ void J3DDeformer::deform_VtxPosF32(J3DVertexBuffer* i_buffer, J3DCluster* i_clus
 #pragma global_optimizer off
 void J3DDeformer::deform_VtxNrmF32(J3DVertexBuffer* i_buffer, J3DCluster* i_cluster, J3DClusterKey* i_key, f32* i_weights) {
     f32* vtxNrmArray = (f32*)i_buffer->getVtxNrmArrayPointer(0);
-    f32* deformVtxNrm = mDeformData->getVtxNrm();
+    BE(f32)* deformVtxNrm = mDeformData->getVtxNrm();
     f32* iVar13 = field_0xc;
     u16 keyNum = i_cluster->mKeyNum;
     int uVar2 = i_cluster->field_0x16;
@@ -175,6 +183,7 @@ void J3DDeformer::deform_VtxNrmF32(J3DVertexBuffer* i_buffer, J3DCluster* i_clus
         }
     }
 }
+#endif
 #pragma pop
 
 void J3DDeformer::deform(J3DVertexBuffer* i_buffer, u16 param_1, f32* i_weights) {

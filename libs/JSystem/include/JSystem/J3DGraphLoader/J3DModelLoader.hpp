@@ -2,6 +2,8 @@
 
 #include <revolution.h>
 
+class J3DVertexData;
+
 class J3DModelData;
 class J3DMaterialTable;
 class J3DModelHierarchy;
@@ -47,147 +49,147 @@ enum J3DModelLoaderFlagTypes {
 };
 
 struct J3DModelBlock {
-    /* 0x0 */ u32 mBlockType;
-    /* 0x4 */ u32 mBlockSize;
+    /* 0x0 */ BE(u32) mBlockType;
+    /* 0x4 */ BE(u32) mBlockSize;
 };
 
 struct J3DModelFileData {
-    /* 0x00 */ u32 mMagic1;
-    /* 0x04 */ u32 mMagic2;
+    /* 0x00 */ BE(u32) mMagic1;
+    /* 0x04 */ BE(u32) mMagic2;
     /* 0x08 */ u8 _8[4];
-    /* 0x0C */ u32 mBlockNum;
+    /* 0x0C */ BE(u32) mBlockNum;
     /* 0x10 */ u8 _10[0x10];
     /* 0x20 */ J3DModelBlock mBlocks[1];
 };
 
 struct J3DModelInfoBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mFlags;
-    /* 0x0C */ u32 mPacketNum;
-    /* 0x10 */ u32 mVtxNum;
-    /* 0x14 */ void* mpHierarchy;
+    /* 0x08 */ BE(u16) mFlags;
+    /* 0x0C */ BE(u32) mPacketNum;
+    /* 0x10 */ BE(u32) mVtxNum;
+    /* 0x14 */ OFFSET_PTR_V0 mpHierarchy;
 };
 
 struct J3DVertexBlock : public J3DModelBlock {
-    /* 0x08 */ void* mpVtxAttrFmtList;
-    /* 0x0C */ void* mpVtxPosArray;
-    /* 0x10 */ void* mpVtxNrmArray;
-    /* 0x14 */ void* mpVtxNBTArray;
-    /* 0x18 */ void* mpVtxColorArray[2];
-    /* 0x20 */ void* mpVtxTexCoordArray[8];
+    /* 0x08 */ OFFSET_PTR_V0 mpVtxAttrFmtList;
+    /* 0x0C */ OFFSET_PTR_V0 mpVtxPosArray;
+    /* 0x10 */ OFFSET_PTR_V0 mpVtxNrmArray;
+    /* 0x14 */ OFFSET_PTR_V0 mpVtxNBTArray;
+    /* 0x18 */ OFFSET_PTR_V0 mpVtxColorArray[2];
+    /* 0x20 */ OFFSET_PTR_V0 mpVtxTexCoordArray[8];
 };
 
 struct J3DEnvelopeBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mWEvlpMtxNum;
-    /* 0x0C */ void* mpWEvlpMixMtxNum;
-    /* 0x10 */ void* mpWEvlpMixIndex;
-    /* 0x14 */ void* mpWEvlpMixWeight;
-    /* 0x18 */ void* mpInvJointMtx;
+    /* 0x08 */ BE(u16) mWEvlpMtxNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpWEvlpMixMtxNum;
+    /* 0x10 */ OFFSET_PTR_V0 mpWEvlpMixIndex;
+    /* 0x14 */ OFFSET_PTR_V0 mpWEvlpMixWeight;
+    /* 0x18 */ OFFSET_PTR_V0 mpInvJointMtx;
 };
 
 struct J3DDrawBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mMtxNum;
-    /* 0x0C */ void* mpDrawMtxFlag;
-    /* 0x10 */ void* mpDrawMtxIndex;
+    /* 0x08 */ BE(u16) mMtxNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpDrawMtxFlag;
+    /* 0x10 */ OFFSET_PTR_V0 mpDrawMtxIndex;
 };
 
 struct J3DJointBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mJointNum;
-    /* 0x0C */ void* mpJointInitData;
-    /* 0x10 */ void* mpIndexTable;
-    /* 0x14 */ void* mpNameTable;
+    /* 0x08 */ BE(u16) mJointNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpJointInitData;
+    /* 0x10 */ OFFSET_PTR_V0 mpIndexTable;
+    /* 0x14 */ OFFSET_PTR_V0 mpNameTable;
 };  // size 0x18
 
 struct J3DMaterialBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mMaterialNum;
-    /* 0x0C */ void* mpMaterialInitData;
-    /* 0x10 */ void* mpMaterialID;
-    /* 0x14 */ void* mpNameTable;
-    /* 0x18 */ void* mpIndInitData;
-    /* 0x1C */ void* mpCullMode;
-    /* 0x20 */ void* mpMatColor;
-    /* 0x24 */ void* mpColorChanNum;
-    /* 0x28 */ void* mpColorChanInfo;
-    /* 0x2C */ void* mpAmbColor;
-    /* 0x30 */ void* mpLightInfo;
-    /* 0x34 */ void* mpTexGenNum;
-    /* 0x38 */ void* mpTexCoordInfo;
-    /* 0x3C */ void* mpTexCoord2Info;
-    /* 0x40 */ void* mpTexMtxInfo;
-    /* 0x44 */ void* field_0x44;
-    /* 0x48 */ void* mpTexNo;
-    /* 0x4C */ void* mpTevOrderInfo;
-    /* 0x50 */ void* mpTevColor;
-    /* 0x54 */ void* mpTevKColor;
-    /* 0x58 */ void* mpTevStageNum;
-    /* 0x5C */ void* mpTevStageInfo;
-    /* 0x60 */ void* mpTevSwapModeInfo;
-    /* 0x64 */ void* mpTevSwapModeTableInfo;
-    /* 0x68 */ void* mpFogInfo;
-    /* 0x6C */ void* mpAlphaCompInfo;
-    /* 0x70 */ void* mpBlendInfo;
-    /* 0x74 */ void* mpZModeInfo;
-    /* 0x78 */ void* mpZCompLoc;
-    /* 0x7C */ void* mpDither;
-    /* 0x80 */ void* mpNBTScaleInfo;
+    /* 0x08 */ BE(u16) mMaterialNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpMaterialInitData;
+    /* 0x10 */ OFFSET_PTR_V0 mpMaterialID;
+    /* 0x14 */ OFFSET_PTR_V0 mpNameTable;
+    /* 0x18 */ OFFSET_PTR_V0 mpIndInitData;
+    /* 0x1C */ OFFSET_PTR_V0 mpCullMode;
+    /* 0x20 */ OFFSET_PTR_V0 mpMatColor;
+    /* 0x24 */ OFFSET_PTR_V0 mpColorChanNum;
+    /* 0x28 */ OFFSET_PTR_V0 mpColorChanInfo;
+    /* 0x2C */ OFFSET_PTR_V0 mpAmbColor;
+    /* 0x30 */ OFFSET_PTR_V0 mpLightInfo;
+    /* 0x34 */ OFFSET_PTR_V0 mpTexGenNum;
+    /* 0x38 */ OFFSET_PTR_V0 mpTexCoordInfo;
+    /* 0x3C */ OFFSET_PTR_V0 mpTexCoord2Info;
+    /* 0x40 */ OFFSET_PTR_V0 mpTexMtxInfo;
+    /* 0x44 */ OFFSET_PTR_V0 field_0x44;
+    /* 0x48 */ OFFSET_PTR_V0 mpTexNo;
+    /* 0x4C */ OFFSET_PTR_V0 mpTevOrderInfo;
+    /* 0x50 */ OFFSET_PTR_V0 mpTevColor;
+    /* 0x54 */ OFFSET_PTR_V0 mpTevKColor;
+    /* 0x58 */ OFFSET_PTR_V0 mpTevStageNum;
+    /* 0x5C */ OFFSET_PTR_V0 mpTevStageInfo;
+    /* 0x60 */ OFFSET_PTR_V0 mpTevSwapModeInfo;
+    /* 0x64 */ OFFSET_PTR_V0 mpTevSwapModeTableInfo;
+    /* 0x68 */ OFFSET_PTR_V0 mpFogInfo;
+    /* 0x6C */ OFFSET_PTR_V0 mpAlphaCompInfo;
+    /* 0x70 */ OFFSET_PTR_V0 mpBlendInfo;
+    /* 0x74 */ OFFSET_PTR_V0 mpZModeInfo;
+    /* 0x78 */ OFFSET_PTR_V0 mpZCompLoc;
+    /* 0x7C */ OFFSET_PTR_V0 mpDither;
+    /* 0x80 */ OFFSET_PTR_V0 mpNBTScaleInfo;
 };
 
 struct J3DMaterialBlock_v21 : public J3DModelBlock {
-    /* 0x08 */ u16 mMaterialNum;
-    /* 0x0C */ void* mpMaterialInitData;
-    /* 0x10 */ void* mpMaterialID;
-    /* 0x14 */ void* mpNameTable;
-    /* 0x18 */ void* mpCullMode;
-    /* 0x1C */ void* mpMatColor;
-    /* 0x20 */ void* mpColorChanNum;
-    /* 0x24 */ void* mpColorChanInfo;
-    /* 0x28 */ void* mpTexGenNum;
-    /* 0x2C */ void* mpTexCoordInfo;
-    /* 0x30 */ void* mpTexCoord2Info;
-    /* 0x34 */ void* mpTexMtxInfo;
-    /* 0x38 */ void* field_0x38;
-    /* 0x3C */ void* mpTexNo;
-    /* 0x40 */ void* mpTevOrderInfo;
-    /* 0x44 */ void* mpTevColor;
-    /* 0x48 */ void* mpTevKColor;
-    /* 0x4C */ void* mpTevStageNum;
-    /* 0x50 */ void* mpTevStageInfo;
-    /* 0x54 */ void* mpTevSwapModeInfo;
-    /* 0x58 */ void* mpTevSwapModeTableInfo;
-    /* 0x5C */ void* mpFogInfo;
-    /* 0x60 */ void* mpAlphaCompInfo;
-    /* 0x64 */ void* mpBlendInfo;
-    /* 0x68 */ void* mpZModeInfo;
-    /* 0x6C */ void* mpZCompLoc;
-    /* 0x70 */ void* mpDither;
-    /* 0x74 */ void* mpNBTScaleInfo;
+    /* 0x08 */ BE(u16) mMaterialNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpMaterialInitData;
+    /* 0x10 */ OFFSET_PTR_V0 mpMaterialID;
+    /* 0x14 */ OFFSET_PTR_V0 mpNameTable;
+    /* 0x18 */ OFFSET_PTR_V0 mpCullMode;
+    /* 0x1C */ OFFSET_PTR_V0 mpMatColor;
+    /* 0x20 */ OFFSET_PTR_V0 mpColorChanNum;
+    /* 0x24 */ OFFSET_PTR_V0 mpColorChanInfo;
+    /* 0x28 */ OFFSET_PTR_V0 mpTexGenNum;
+    /* 0x2C */ OFFSET_PTR_V0 mpTexCoordInfo;
+    /* 0x30 */ OFFSET_PTR_V0 mpTexCoord2Info;
+    /* 0x34 */ OFFSET_PTR_V0 mpTexMtxInfo;
+    /* 0x38 */ OFFSET_PTR_V0 field_0x38;
+    /* 0x3C */ OFFSET_PTR_V0 mpTexNo;
+    /* 0x40 */ OFFSET_PTR_V0 mpTevOrderInfo;
+    /* 0x44 */ OFFSET_PTR_V0 mpTevColor;
+    /* 0x48 */ OFFSET_PTR_V0 mpTevKColor;
+    /* 0x4C */ OFFSET_PTR_V0 mpTevStageNum;
+    /* 0x50 */ OFFSET_PTR_V0 mpTevStageInfo;
+    /* 0x54 */ OFFSET_PTR_V0 mpTevSwapModeInfo;
+    /* 0x58 */ OFFSET_PTR_V0 mpTevSwapModeTableInfo;
+    /* 0x5C */ OFFSET_PTR_V0 mpFogInfo;
+    /* 0x60 */ OFFSET_PTR_V0 mpAlphaCompInfo;
+    /* 0x64 */ OFFSET_PTR_V0 mpBlendInfo;
+    /* 0x68 */ OFFSET_PTR_V0 mpZModeInfo;
+    /* 0x6C */ OFFSET_PTR_V0 mpZCompLoc;
+    /* 0x70 */ OFFSET_PTR_V0 mpDither;
+    /* 0x74 */ OFFSET_PTR_V0 mpNBTScaleInfo;
 };
 
 struct J3DMaterialDLBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mMaterialNum;
-    /* 0x0C */ void* mpDisplayListInit;
-    /* 0x10 */ void* mpPatchingInfo;
-    /* 0x14 */ void* mpCurrentMtxInfo;
-    /* 0x18 */ void* mpMaterialMode;
-    /* 0x1C */ void* _1C;
-    /* 0x20 */ void* mpNameTable;
+    /* 0x08 */ BE(u16) mMaterialNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpDisplayListInit;
+    /* 0x10 */ OFFSET_PTR_V0 mpPatchingInfo;
+    /* 0x14 */ OFFSET_PTR_V0 mpCurrentMtxInfo;
+    /* 0x18 */ OFFSET_PTR_V0 mpMaterialMode;
+    /* 0x1C */ OFFSET_PTR_V0 _1C;
+    /* 0x20 */ OFFSET_PTR_V0 mpNameTable;
 };
 
 struct J3DShapeBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mShapeNum;
-    /* 0x0C */ void* mpShapeInitData;
-    /* 0x10 */ void* mpIndexTable;
-    /* 0x14 */ void* mpNameTable;
-    /* 0x18 */ void* mpVtxDescList;
-    /* 0x1C */ void* mpMtxTable;
-    /* 0x20 */ void* mpDisplayListData;
-    /* 0x24 */ void* mpMtxInitData;
-    /* 0x28 */ void* mpDrawInitData;
+    /* 0x08 */ BE(u16) mShapeNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpShapeInitData;
+    /* 0x10 */ OFFSET_PTR_V0 mpIndexTable;
+    /* 0x14 */ OFFSET_PTR_V0 mpNameTable;
+    /* 0x18 */ OFFSET_PTR_V0 mpVtxDescList;
+    /* 0x1C */ OFFSET_PTR_V0 mpMtxTable;
+    /* 0x20 */ OFFSET_PTR_V0 mpDisplayListData;
+    /* 0x24 */ OFFSET_PTR_V0 mpMtxInitData;
+    /* 0x28 */ OFFSET_PTR_V0 mpDrawInitData;
 };
 
 struct J3DTextureBlock : public J3DModelBlock {
-    /* 0x08 */ u16 mTextureNum;
-    /* 0x0C */ void* mpTextureRes;
-    /* 0x10 */ void* mpNameTable;
+    /* 0x08 */ BE(u16) mTextureNum;
+    /* 0x0C */ OFFSET_PTR_V0 mpTextureRes;
+    /* 0x10 */ OFFSET_PTR_V0 mpNameTable;
 };
 
 class J3DModelLoader {
@@ -227,6 +229,9 @@ public:
 
     void readInformation(J3DModelInfoBlock const*, u32);
     void readVertex(J3DVertexBlock const*);
+#ifdef TARGET_PC
+    void readVertexData(const J3DVertexBlock&, J3DVertexData&);
+#endif
     void readEnvelop(J3DEnvelopeBlock const*);
     void readDraw(J3DDrawBlock const*);
     void readJoint(J3DJointBlock const*);

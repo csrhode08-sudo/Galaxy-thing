@@ -357,3 +357,10 @@ constexpr void be_swap(Mtx& val) noexcept {
 #define BE(T) T
 #define BE_HOST(T) (T)
 #endif
+
+// File offsets that the console rewrites into pointers in place stay 32-bit big-endian offsets on PC.
+#ifdef TARGET_PC
+#define OFFSET_PTR_V0 BE(u32)
+#else
+#define OFFSET_PTR_V0 void*
+#endif

@@ -915,7 +915,16 @@ void JPAResource::setPTev() {
         if (mpExTexShape->isUseIndirect()) {
             GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP2);
             GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
+#ifdef TARGET_PC
+            f32 indMtx[2][3];
+            const BE(f32)* src = mpExTexShape->getIndTexMtx();
+            for (int k = 0; k < 6; k++) {
+                indMtx[k / 3][k % 3] = src[k];
+            }
+            GXSetIndTexMtx(GX_ITM_0, indMtx, mpExTexShape->getExpScale());
+#else
             GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])mpExTexShape->getIndTexMtx(), mpExTexShape->getExpScale());
+#endif
             GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
             ind_stages++;
             tex_gens++;

@@ -90,4 +90,10 @@ static inline void GXCmd1f32(f32 v) {
 #define GX_WRITE_U32(v) GXCmd1u32((u32)(v))
 #define GX_WRITE_F32(v) do { f32 _f = (v); u32 _u; memcpy(&_u, &_f, 4); GXCmd1u32(_u); } while (0)
 
+#ifdef __cplusplus
+extern "C++" {
+#include "pc/endian_gx.hpp"
+}
+#endif
+
 #endif

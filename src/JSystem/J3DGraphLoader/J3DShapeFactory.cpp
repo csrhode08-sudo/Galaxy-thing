@@ -5,6 +5,9 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JSupport/JSupport.hpp"
 #include <stdint.h>
+#ifdef TARGET_PC
+#include "pc/j3d.h"
+#endif
 
 enum {
     J3DMdlDataFlag_ConcatView = 0x10,
@@ -19,12 +22,32 @@ enum {
 
 J3DShapeFactory::J3DShapeFactory(J3DShapeBlock const& block) {
     mShapeInitData = JSUConvertOffsetToPtr< J3DShapeInitData >(&block, (uintptr_t)block.mpShapeInitData);
-    mIndexTable = JSUConvertOffsetToPtr< u16 >(&block, (uintptr_t)block.mpIndexTable);
+    mIndexTable = JSUConvertOffsetToPtr< BE(u16) >(&block, (uintptr_t)block.mpIndexTable);
     mVtxDescList = JSUConvertOffsetToPtr< GXVtxDescList >(&block, (uintptr_t)block.mpVtxDescList),
-    mMtxTable = JSUConvertOffsetToPtr< u16 >(&block, (uintptr_t)block.mpMtxTable);
+    mMtxTable = JSUConvertOffsetToPtr< BE(u16) >(&block, (uintptr_t)block.mpMtxTable);
     mDisplayListData = JSUConvertOffsetToPtr< u8 >(&block, (uintptr_t)block.mpDisplayListData),
     mMtxInitData = JSUConvertOffsetToPtr< J3DShapeMtxInitData >(&block, (uintptr_t)block.mpMtxInitData),
     mDrawInitData = JSUConvertOffsetToPtr< J3DShapeDrawInitData >(&block, (uintptr_t)block.mpDrawInitData), mVcdVatCmdBuffer = NULL;
+
+#ifdef TARGET_PC
+    if (pc::j3d::gConvert) {
+        // The vertex descriptor lists are shared by shapes; convert every list up to the last one used.
+        int maxStart = 0;
+        for (int shapeIdx = 0; shapeIdx < block.mShapeNum; shapeIdx++) {
+            int start = mShapeInitData[mIndexTable[shapeIdx]].mVtxDescListIndex / sizeof(GXVtxDescList);
+            if (start > maxStart) {
+                maxStart = start;
+            }
+        }
+        GXVtxDescList* lastEntry = mVtxDescList + maxStart;
+        while (lastEntry->attr != BE(GXAttr)::swap(GX_VA_NULL)) {
+            lastEntry++;
+        }
+        for (GXVtxDescList* entry = mVtxDescList; entry <= lastEntry; entry++) {
+            *entry = BE(GXVtxDescList)::swap(*entry);
+        }
+    }
+#endif
 }
 
 J3DShape* J3DShapeFactory::create(int no, u32 flag, GXVtxDescList* vtxDesc) {
@@ -95,7 +118,12 @@ J3DShapeMtx* J3DShapeFactory::newShapeMtx(u32 flag, int shapeNo, int mtxGroupNo)
 J3DShapeDraw* J3DShapeFactory::newShapeDraw(int shapeNo, int mtxGroupNo) const {
     J3DShapeInitData& shapeInitData = mShapeInitData[mIndexTable[shapeNo]];
     const J3DShapeDrawInitData& drawInitData = (&mDrawInitData[shapeInitData.mDrawInitDataIndex])[mtxGroupNo];
+#ifdef TARGET_PC
+    return new (JKRHeapToken::Dummy)
+        J3DShapeDraw(&mDisplayListData[drawInitData.mDisplayListIndex], drawInitData.mDisplayListSize, getVtxDescList(shapeNo));
+#else
     return new (JKRHeapToken::Dummy) J3DShapeDraw(&mDisplayListData[drawInitData.mDisplayListIndex], drawInitData.mDisplayListSize);
+#endif
 }
 
 void J3DShapeFactory::allocVcdVatCmdBuffer(u32 count) {

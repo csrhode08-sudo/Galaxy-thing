@@ -47,7 +47,7 @@ list(FILTER JSYSTEM_SRC EXCLUDE REGEX "JAudio2/(dsptask|osdsp|osdsp_task|dspproc
 set(AURORA_LIBS aurora::core aurora::gx aurora::gd aurora::vi aurora::pad aurora::mtx aurora::os aurora::dvd aurora::thp aurora::main)
 
 # Game code: C++ semantics close to CodeWarrior's (no strict two-phase lookup, 16-bit wchar_t).
-set(GAME_CXX_FLAGS -fdelayed-template-parsing -fshort-wchar)
+set(GAME_CXX_FLAGS -fdelayed-template-parsing -fshort-wchar -Werror=return-type)
 
 foreach (lib game jsystem nw4r pc)
     string(TOUPPER ${lib} _u)

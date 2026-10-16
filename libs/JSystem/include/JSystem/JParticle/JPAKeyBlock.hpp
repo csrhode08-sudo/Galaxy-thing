@@ -11,5 +11,5 @@ struct JPAKeyBlock {
     }
 
     const u8* mDataStart;
-    const f32* field_0x4;
+    const BE(f32)* field_0x4;
 };
