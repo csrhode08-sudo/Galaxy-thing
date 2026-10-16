@@ -236,12 +236,22 @@ namespace JGadget {
             return iterator(TNodeLinkList::Insert((TNodeLinkList::iterator&)pos, Element_toNode(element)));
         }
 
+        // An offset of 1 means "-offsetof(T, mNode)", resolved once T is complete (the console build
+        // hard-codes offsets that don't hold with 64-bit pointers).
+        static intptr_t NodeOffset() {
+            if constexpr (NODE_OFFSET == 1) {
+                return -(intptr_t)offsetof(T, mNode);
+            } else {
+                return NODE_OFFSET;
+            }
+        }
+
         static TLinkListNode* Element_toNode(T* element) {
-            return (TLinkListNode*)((u8*)element - NODE_OFFSET);
+            return (TLinkListNode*)((u8*)element - NodeOffset());
         }
 
         static T* Element_toValue(TLinkListNode* element) {
-            return (T*)((u8*)element + NODE_OFFSET);
+            return (T*)((u8*)element + NodeOffset());
         }
 
         T& front() {

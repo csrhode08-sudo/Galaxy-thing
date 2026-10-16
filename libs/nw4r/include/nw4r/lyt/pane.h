@@ -34,7 +34,7 @@ namespace nw4r {
 #ifdef __MWERKS__
         typedef ut::LinkList< Pane, offsetof(detail::PaneBase, mLink) > PaneList;
 #else
-        typedef ut::LinkList< Pane, 0 > PaneList;
+        typedef ut::LinkList< Pane, -1 > PaneList;
 #endif
 
         class Pane : public detail::PaneBase {

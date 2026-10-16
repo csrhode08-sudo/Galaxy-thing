@@ -48,7 +48,7 @@ struct JASTrack : public JASPoolAllocObject_MultiThreaded< JASTrack > {
     };
 
     struct TList {
-        typedef JGadget::TLinkList< JASTrack, -0x248 > TrackList;
+        typedef JGadget::TLinkList< JASTrack, 1 /* -offsetof(JASTrack, mNode) */ > TrackList;
         typedef TrackList::iterator iterator;
         TList() : mCallbackRegistered() {
         }

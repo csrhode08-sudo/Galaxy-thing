@@ -19,8 +19,10 @@ JKRExpHeap* JKRExpHeap::createRoot(int heapNum, bool errorFlag) {
         char* arena;
         u32 arenaSize;
         JKRHeap::initArena(&arena, &arenaSize, heapNum);
-        char* area = arena + 0x90;
-        u32 size = arenaSize - 0x90;
+        // 0x90 on the Wii; the heap object is larger with 64-bit pointers.
+        const u32 headerSize = ALIGN_NEXT(sizeof(JKRExpHeap), 0x20);
+        char* area = arena + headerSize;
+        u32 size = arenaSize - headerSize;
         heap = new (JKRHeapToken::Dummy, arena) JKRExpHeap(area, size, nullptr, errorFlag);
         JKRHeap::sRootHeap = heap;
     }

@@ -43,7 +43,8 @@
 #define ROUND_UP(x, align) (((x) + (align) - 1) & (-(align)))
 #define ROUND_UP_PTR(x, align) ((void*)((((uintptr_t)(x)) + (align) - 1) & (~((uintptr_t)(align) - 1))))
 
-#define ALIGN_PREV(X, N) ((X) & ~((N) - 1))
+// The mask takes the wider of the two operand types, so pointer-sized values keep their upper bits.
+#define ALIGN_PREV(X, N) ((X) & ~((N) - 1 + 0 * (X)))
 #define ALIGN_NEXT(X, N) ALIGN_PREV(((X) + (N) - 1), N)
 
 #define ARRAY_SIZE(o) (s32)(sizeof(o) / sizeof(o[0]))

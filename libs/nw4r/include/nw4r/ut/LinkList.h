@@ -382,18 +382,28 @@ namespace nw4r {
                 return mSize;
             }
 
+            // An offset of -1 means "offsetof(T, mLink)", resolved once T is complete; the hard-coded
+            // offsets of the console build don't hold with 64-bit pointers.
+            static IntPtr NodeOffset() {
+                if constexpr (TNOffset == -1) {
+                    return offsetof(T, mLink);
+                } else {
+                    return TNOffset;
+                }
+            }
+
             static const_pointer GetPointerFromNode(const Node* p) {
                 NW4R_NULL_ASSERT_AT(578, p);
-                return reinterpret_cast< const_pointer >(reinterpret_cast< IntPtr >(p) - TNOffset);
+                return reinterpret_cast< const_pointer >(reinterpret_cast< IntPtr >(p) - NodeOffset());
             }
 
             static pointer GetPointerFromNode(Node* p) {
                 NW4R_NULL_ASSERT_AT(573, p);
-                return reinterpret_cast< pointer >(reinterpret_cast< IntPtr >(p) - TNOffset);
+                return reinterpret_cast< pointer >(reinterpret_cast< IntPtr >(p) - NodeOffset());
             }
 
             static Node* GetNodeFromPointer(pointer p) {
-                return reinterpret_cast< Node* >(reinterpret_cast< IntPtr >(p) + TNOffset);
+                return reinterpret_cast< Node* >(reinterpret_cast< IntPtr >(p) + NodeOffset());
             }
         };
     };  // namespace ut

@@ -172,7 +172,7 @@ public:
         }
 
         bool checkArea(const void* ptr) const {
-            return (u8*)this + 0xc <= (u8*)ptr && (u8*)ptr < (u8*)this + (0xc + ChunkSize);
+            return mBuffer <= (const u8*)ptr && (const u8*)ptr < mBuffer + ChunkSize;
         }
 
         MemoryChunk* getNextChunk() {

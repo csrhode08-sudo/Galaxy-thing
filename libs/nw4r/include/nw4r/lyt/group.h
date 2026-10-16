@@ -17,7 +17,7 @@ namespace nw4r {
 #ifdef __MWERKS__
         typedef ut::LinkList< detail::PaneLink, offsetof(detail::PaneLink, mLink) > PaneLinkList;
 #else
-        typedef ut::LinkList< detail::PaneLink, 0 > PaneLinkList;
+        typedef ut::LinkList< detail::PaneLink, -1 > PaneLinkList;
 #endif
 
         class Group {
@@ -52,7 +52,7 @@ namespace nw4r {
 #ifdef __MWERKS__
         typedef ut::LinkList< Group, offsetof(Group, mLink) > GroupList;
 #else
-        typedef ut::LinkList< Group, 0 > GroupList;
+        typedef ut::LinkList< Group, -1 > GroupList;
 #endif
 
         class GroupContainer {

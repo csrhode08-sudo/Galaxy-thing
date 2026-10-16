@@ -65,7 +65,7 @@ public:
         /* 0x12 */ u8 mNoteRangeStart;
     };
 
-    struct TList : JGadget::TLinkList< AudMeTrack, -384 > {
+    struct TList : JGadget::TLinkList< AudMeTrack, 1 /* -offsetof(AudMeTrack, mNode) */ > {
         TList() : mCallbackRegistered(false) {
         }
 

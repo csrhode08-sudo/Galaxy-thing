@@ -120,11 +120,7 @@ public:
 
     static JUTConsoleManager* createManager(JKRHeap*);
 
-#ifdef __MWERKS__
     typedef JGadget::TLinkList< JUTConsole, -offsetof(JUTConsole, mListNode) > ConsoleList;
-#else
-    typedef JGadget::TLinkList< JUTConsole, 0 > ConsoleList;
-#endif
 
     /* 0x00 */ ConsoleList mList;
     /* 0x0C */ JUTConsole* mActiveConsole;

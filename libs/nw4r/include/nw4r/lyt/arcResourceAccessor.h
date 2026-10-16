@@ -27,7 +27,7 @@ namespace nw4r {
             #ifdef __MWERKS__
             typedef ut::LinkList<FontRefLink, offsetof(FontRefLink, mLink)>  FontRefList;
             #else
-            typedef ut::LinkList<FontRefLink, 0> FontRefList;
+            typedef ut::LinkList<FontRefLink, -1> FontRefList;
             #endif
         };
 

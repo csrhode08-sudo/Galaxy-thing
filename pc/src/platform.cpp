@@ -201,3 +201,27 @@ void frameEnd() {
 }
 
 }  // namespace pc
+
+// ---- OS reporting (declared weak by the SDK headers; the game expects the platform to provide them) --------
+
+extern "C" void OSVReport(const char* fmt, va_list args) {
+    std::vfprintf(stderr, fmt, args);
+}
+
+extern "C" void OSReport(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    std::vfprintf(stderr, fmt, args);
+    va_end(args);
+}
+
+extern "C" void OSPanic(const char* file, int line, const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    std::fprintf(stderr, "[PANIC] %s:%d: ", file, line);
+    std::vfprintf(stderr, fmt, args);
+    std::fprintf(stderr, "\n");
+    va_end(args);
+    std::fflush(stderr);
+    std::abort();
+}

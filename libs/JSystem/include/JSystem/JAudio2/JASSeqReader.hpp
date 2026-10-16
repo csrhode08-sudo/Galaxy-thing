@@ -40,11 +40,14 @@ public:
     u8 getByte(u32 param_0) const {
         return *(mSeqBuff + param_0);
     }
+    // Sequence data is big-endian.
     u16 get16(u32 param_0) const {
-        return *(u16*)(mSeqBuff + param_0);
+        const u8* p = mSeqBuff + param_0;
+        return (u16)((p[0] << 8) | p[1]);
     }
     u32 get32(u32 param_0) const {
-        return *(u32*)(mSeqBuff + param_0);
+        const u8* p = mSeqBuff + param_0;
+        return ((u32)p[0] << 24) | ((u32)p[1] << 16) | ((u32)p[2] << 8) | p[3];
     }
     u8* getCur() {
         return mSeqCursor;
@@ -56,9 +59,9 @@ public:
 #ifdef __MWERKS__
         return *((u16*)mSeqCursor)++;
 #else
-        u16* value = (u16*)mSeqCursor;
+        u32 value = (mSeqCursor[0] << 8) | mSeqCursor[1];
         mSeqCursor += 2;
-        return *value;
+        return value;
 #endif
     }
     u32 read24() {
@@ -66,9 +69,9 @@ public:
 #ifdef __MWERKS__
         return (*((u32*)mSeqCursor)++) & 0x00ffffff;
 #else
-        u32* value = (u32*)mSeqCursor;
+        u32 value = ((u32)mSeqCursor[1] << 16) | ((u32)mSeqCursor[2] << 8) | mSeqCursor[3];
         mSeqCursor += 4;
-        return *value & 0x00ffffff;
+        return value;
 #endif
     }
     u16 getLoopCount() const {
