@@ -34,7 +34,7 @@ public:
     }
 
     /* 0x00 */ u16 mGroupNum;
-    /* 0x04 */ const u32* mSoundTableOffsets;
+    /* 0x04 */ const BE(u32)* mSoundTableOffsets;
     /* 0x08 */ const JAUSeqCollectionData* mCollectionData;
     /* 0x0C */ u32 mFileSize;
 };

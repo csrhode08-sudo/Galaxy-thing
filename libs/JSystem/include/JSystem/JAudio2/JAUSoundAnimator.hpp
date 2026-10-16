@@ -94,9 +94,9 @@ public:
     }
 
     /* 0x00 */ JAISoundID mSoundID;
-    /* 0x04 */ f32 mNoteOnTime;
-    /* 0x08 */ f32 mNoteOffTime;
-    /* 0x0C */ f32 mBasePitch;
+    /* 0x04 */ BE(f32) mNoteOnTime;
+    /* 0x08 */ BE(f32) mNoteOffTime;
+    /* 0x0C */ BE(f32) mBasePitch;
     /* 0x10 */  // u32 mFlags;
     union {
         /* 0x10 */ struct {
@@ -150,8 +150,8 @@ public:
         }
     }
 
-    /* 0x0 */ u16 mNumSounds;
-    /* 0x4 */ JAUSoundAnimationControl* mControl;
+    /* 0x0 */ BE(u16) mNumSounds;
+    /* 0x4 */ OFFSET_PTR_V0 mControl;
     /* 0x8 */ JAUSoundAnimationSound mSounds;
 };
 
