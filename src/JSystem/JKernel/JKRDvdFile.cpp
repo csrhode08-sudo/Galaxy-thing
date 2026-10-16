@@ -98,7 +98,8 @@ s32 JKRDvdFile::sync(void) {
 }
 
 void JKRDvdFile::doneProcess(s32 id, DVDFileInfo* fileInfo) {
-    JKRDvdFile* dvdFile = *(JKRDvdFile**)((u8*)fileInfo + 0x3c);
+    // The console reads the mDvdFile field stored after the DVDFileInfo (offset 0x3C there).
+    JKRDvdFile* dvdFile = *(JKRDvdFile**)((u8*)fileInfo + (offsetof(JKRDvdFile, mDvdFile) - offsetof(JKRDvdFile, mFileInfo)));
     OSSendMessage(&dvdFile->mMessageQueue2, (OSMessage)(intptr_t)id, OS_MESSAGE_NOBLOCK);
 }
 

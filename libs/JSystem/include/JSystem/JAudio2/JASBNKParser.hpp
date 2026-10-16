@@ -57,28 +57,28 @@ namespace JASBNKParser {
 
         struct TRandData {
             /* 0x00 */ u8 mType;
-            /* 0x04 */ f32 mBase;
-            /* 0x08 */ f32 mRange;
+            /* 0x04 */ BE(f32) mBase;
+            /* 0x08 */ BE(f32) mRange;
         };
 
         struct TSenseData {
             /* 0x00 */ u8 mType;
             /* 0x01 */ u8 mSenseType;
             /* 0x02 */ u8 mMaxPoint;
-            /* 0x04 */ f32 mStartLvl;
-            /* 0x08 */ f32 mEndLvl;
+            /* 0x04 */ BE(f32) mStartLvl;
+            /* 0x08 */ BE(f32) mEndLvl;
         };
 
         struct TVeloData {
             /* 0x00 */ u8 _0;
-            /* 0x04 */ u32 _4;
-            /* 0x08 */ f32 mVolume;
-            /* 0x0C */ f32 mPitch;
+            /* 0x04 */ BE(u32) _4;
+            /* 0x08 */ BE(f32) mVolume;
+            /* 0x0C */ BE(f32) mPitch;
         };
 
         struct TInstData {
-            /* 0x00 */ f32 mVolume;
-            /* 0x04 */ f32 mPitch;
+            /* 0x00 */ BE(f32) mVolume;
+            /* 0x04 */ BE(f32) mPitch;
         };
 
         TChunk* findChunk(void const*, u32);
@@ -179,7 +179,7 @@ namespace JASBNKParser {
     JASBasicBank* createBasicBank(void const*, JKRHeap*);
 
     inline u32 getBankNumber(const void* param_0) {
-        u32* ptr = (u32*)param_0;
+        const BE(u32)* ptr = (const BE(u32)*)param_0;
         return ptr[2];
     }
 

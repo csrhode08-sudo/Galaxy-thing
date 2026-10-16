@@ -146,7 +146,7 @@ void HeapMemoryWatcher::createRootHeap() {
 void HeapMemoryWatcher::createHeaps() {
     MR::CurrentHeapRestorer heapRestorer = MR::CurrentHeapRestorer(JKRHeap::sRootHeap);
     ::createExpHeap(PC_HEAP_SCALE(0x40000), JKRHeap::sRootHeap, false)->becomeSystemHeap();
-    mAudSystemHeap = ::createSolidHeap(PC_HEAP_SCALE(0x1E0000), JKRHeap::sRootHeap);
+    mAudSystemHeap = ::createSolidHeap(PC_HEAP_SCALE(0x1E0000) * 2, JKRHeap::sRootHeap);
     mStationedHeapNapa = ::createExpHeap(PC_HEAP_SCALE(0x900000), JKRHeap::sRootHeap, false);
     JKRHeap* pRootHeapGDDR = HeapMemoryWatcher::sRootHeapGDDR3;
     u32 wpadHeapSize = OSRoundUp32B(WPADGetWorkMemorySize()) + 0xD0;

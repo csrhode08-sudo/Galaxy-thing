@@ -28,7 +28,8 @@ public:
     }
 
     u32 readU32_() {
-        u32 temp = *(u32*)mReadPtr;
+        // Big-endian command stream.
+        u32 temp = ((u32)mReadPtr[0] << 24) | ((u32)mReadPtr[1] << 16) | ((u32)mReadPtr[2] << 8) | mReadPtr[3];
         mReadPtr += 4;
         return temp;
     }

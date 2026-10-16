@@ -25,7 +25,8 @@ public:
     }
 
     u32 get24(u32 param_0) const {
-        return (*(u32*)(mSeqBuff + param_0 - 1)) & 0xffffff;
+        const u8* p = mSeqBuff + param_0;
+        return ((u32)p[0] << 16) | ((u32)p[1] << 8) | p[2];
     }
 
     u32* getBase() {

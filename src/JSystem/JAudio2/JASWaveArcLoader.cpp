@@ -1,3 +1,4 @@
+#include <revolution/dvd.h>
 #include "JSystem/JAudio2/JASWaveArcLoader.hpp"
 #include "JSystem/JAudio2/JASDvdThread.hpp"
 #include "JSystem/JAudio2/JASMutex.hpp"
@@ -73,9 +74,25 @@ bool JASWaveArc::eraseSetup() {
 void JASWaveArc::loadToAramCallback(void* this_) {
     loadToAramCallbackParams* tmp = (loadToAramCallbackParams*)this_;
     JASWaveArc* wavArc = tmp->mWavArc;
+#ifdef TARGET_PC
+    // Wave memory is host memory on PC; read the .aw file straight into it.
+    {
+        DVDFileInfo info;
+        if (!DVDFastOpen(tmp->mEntryNum, &info)) {
+            return;
+        }
+        const s32 length = (s32)info.length;
+        const s32 read = DVDReadPrio(&info, reinterpret_cast< void* >(tmp->mBase), length, 0, 2);
+        DVDClose(&info);
+        if (read < 0) {
+            return;
+        }
+    }
+#else
     if (JKRDvdAramRipper::loadToAram(tmp->mEntryNum, tmp->mBase, EXPAND_SWITCH_UNKNOWN0, 0, 0, nullptr) == nullptr) {
         return;
     }
+#endif
     wavArc->_5A--;
     if (wavArc->loadSetup(tmp->_C)) {
         wavArc->onLoadDone();

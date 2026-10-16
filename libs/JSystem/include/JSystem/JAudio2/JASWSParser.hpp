@@ -23,10 +23,10 @@ public:
     struct TCtrlWave {
         union {
             struct {
-                /* 0x0 */ u16 mWaveGroupId;
-                /* 0x2 */ u16 mWaveId;
+                /* 0x0 */ BE(u16) mWaveGroupId;
+                /* 0x2 */ BE(u16) mWaveId;
             };
-            /* 0x0 */ u32 mData;
+            /* 0x0 */ BE(u32) mData;
         };
     };
 
@@ -53,7 +53,7 @@ public:
 
     struct TWaveArchiveBank {
         /* 0x0 */ BE(char) mMagic[4];
-        /* 0x4 */ int mWaveGroupCount;
+        /* 0x4 */ BE(int) mWaveGroupCount;
         /* 0x8 */ TOffset< TWaveArchive > mArchiveOffsets[0];
     };
 

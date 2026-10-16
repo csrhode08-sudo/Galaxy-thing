@@ -1,3 +1,4 @@
+#include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JAIStream.hpp"
 #include "JSystem/JAudio2/JAIAudience.hpp"
 #include "JSystem/JAudio2/JAISoundChild.hpp"
@@ -54,7 +55,12 @@ bool JAIStream::prepare_prepareStream_() {
 
         streamAramAddr = streamAramMgr->newStreamAram(&local_28);
         if (streamAramAddr != nullptr) {
+#ifdef TARGET_PC
+            // Stream buffers live in the emulated audio memory; the DSP addresses them as offsets into it.
+            inner_.aramStream.init((u32)((uintptr_t)streamAramAddr - JASKernel::sAramBase), local_28, &JAIStream_JASAramStreamCallback_, this);
+#else
             inner_.aramStream.init((u32)(uintptr_t)streamAramAddr, local_28, &JAIStream_JASAramStreamCallback_, this);
+#endif
             mPrepareState = 1;
             mPrepareCount = 0;
         } else {

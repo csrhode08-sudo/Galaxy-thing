@@ -1,3 +1,4 @@
+#include <cstring>
 #include "JSystem/JAudio2/JASAramStream.hpp"
 #include "JSystem/JAudio2/JASAiCtrl.hpp"
 #include "JSystem/JAudio2/JASChannel.hpp"
@@ -313,11 +314,17 @@ bool JASAramStream::load() {
 
     u32 sp08 = _148 + _10C * sBlockSize;
     for (int i = 0; i < mChannelNum; i++) {
+#ifdef TARGET_PC
+        // Audio "ARAM" is host memory on PC (JASKernel::sAramBase); copy the block straight in.
+        memcpy(reinterpret_cast< u8* >(JASKernel::sAramBase) + sp08 + sBlockSize * _160 * i, sReadBuffer + sizeof(BlockHeader) + bhead->_4 * i,
+               bhead->_4);
+#else
         if (!JKRAram::mainRamToAram(sReadBuffer + sizeof(BlockHeader) + bhead->_4 * i, sp08 + sBlockSize * _160 * i, bhead->_4,
                                     EXPAND_SWITCH_UNKNOWN0, 0, nullptr, -1, nullptr)) {
             UNK_BOOL_B = 1;
             return false;
         }
+#endif
     }
 
     _10C++;

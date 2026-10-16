@@ -28,7 +28,7 @@ Dusklight (CC0) for reference PC fixes to the shared JSystem/nw4r code.
 | J3D animations | J3DAnimation.hpp, J3DAnmLoader | BE pointers for most; transform keys swapped in place once |
 | JPA particles | JParticle | BE headers/keys |
 | KCL collision | Game/Map/KCollision.cpp | swapped in place once, host-side KCLFile header |
-| JAudio (BAA/BMS/AW) | JAudio2 | TODO; DSP mixer from Dusklight (same TChannel layout) |
+| JAudio (BAA/BNK/WSYS/BMS) | JAudio2 | BE structs; sequence reads BE (JASSeqReader); CPU DSP mixer + SDL3 output in pc/src/audio (from Dusklight) |
 
 ## Runtime
 - Disc: a WBFS/ISO/RVZ image via nod, or a directory of extracted files (`aurora_dvd_open_directory`,
@@ -37,3 +37,11 @@ Dusklight (CC0) for reference PC fixes to the shared JSystem/nw4r code.
 - Unavailable Wii services return "not available": Miis, WiiConnect24 messages, HOME menu module (RSO).
 - Fixed-size heaps are scaled x2 (`PC_HEAP_SCALE`, HeapMemoryWatcher.cpp).
 - `tools/run_cloud.sh` runs under Xvfb with Mesa llvmpipe.
+- DOL data tables (galaxy info, story progress, error-message archive) are copied out of the disc's main.dol at
+  startup (pc/src/dol_assets.cpp), so no game data is compiled into the executable.
+- `overlay/` next to the executable (or `--overlay <dir>`) adds/replaces disc files; with `UsEnglish/` present the
+  language switches to English.
+- 64-bit pitfalls found at runtime: hard-coded object sizes (root heap header), intrusive-list node offsets
+  (nw4r LinkList `-1` / JGadget TLinkList `1` = resolve from the real layout), alignment masks that drop the upper
+  pointer bits (ALIGN_PREV), NULL `%s` (CodeWarrior printed nothing).
+- Windows: clang-cl, Dawn prebuilt; built by .github/workflows/windows.yml.

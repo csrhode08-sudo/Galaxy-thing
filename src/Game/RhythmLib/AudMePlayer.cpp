@@ -341,7 +341,7 @@ s32 AudMeMgr::getSeqStartPos(u32 meId) {
         return -1;
     }
 
-    s32* pStartPos = mMeSeq->mSeqStartPos;
+    const BE(s32)* pStartPos = mMeSeq->mSeqStartPos;
     if (meId >= mMeSeq->mNumEntries) {
         return -1;
     }

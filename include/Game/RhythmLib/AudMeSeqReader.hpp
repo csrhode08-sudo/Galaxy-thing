@@ -38,16 +38,20 @@ public:
         return *(mSeqBuff + addr);
     }
 
+    // Sequence data is big-endian.
     u16 get16(u32 addr) const {
-        return *(u16*)(mSeqBuff + addr);
+        const u8* p = mSeqBuff + addr;
+        return (u16)((p[0] << 8) | p[1]);
     }
 
     u32 get24(u32 addr) const {
-        return (*(u32*)(mSeqBuff + addr - 1)) & 0xffffff;
+        const u8* p = mSeqBuff + addr;
+        return ((u32)p[0] << 16) | ((u32)p[1] << 8) | p[2];
     }
 
     u32 get32(u32 addr) const {
-        return *(u32*)(mSeqBuff + addr);
+        const u8* p = mSeqBuff + addr;
+        return ((u32)p[0] << 24) | ((u32)p[1] << 16) | ((u32)p[2] << 8) | p[3];
     }
 
     u8* getCur() {
