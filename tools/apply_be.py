@@ -30,12 +30,34 @@ def struct_bodies(src):
         yield m.group(1), m.end(), j
 
 
+def top_level(src, a, b):
+    """Yields (start, end) spans of [a, b) that are not inside nested braces (nested structs, function bodies)."""
+    depth = 0
+    start = a
+    for i in range(a, b):
+        c = src[i]
+        if c == '{':
+            if depth == 0 and i > start:
+                yield start, i
+            depth += 1
+        elif c == '}':
+            depth -= 1
+            if depth == 0:
+                start = i + 1
+    if depth == 0 and start < b:
+        yield start, b
+
+
+def field_matches(src, a, b):
+    for s0, s1 in top_level(src, a, b):
+        yield from FIELD_RE.finditer(src, s0, s1)
+
+
 def be_fields(src):
     out = {}
     for name, a, b in struct_bodies(src):
-        body = src[a:b]
         fields = {}
-        for f in FIELD_RE.finditer(body):
+        for f in field_matches(src, a, b):
             typ = f.group(3).strip()
             mm = re.match(r'(?:const\s+)?BE[(<]\s*([\w\s:]+?)\s*[)>]\s*(\**)$', typ)
             if mm:
@@ -56,7 +78,7 @@ def main():
     for name, a, b in struct_bodies(src):
         if name not in refs:
             continue
-        for f in FIELD_RE.finditer(src, a, b):
+        for f in field_matches(src, a, b):
             off = int(f.group(2), 16)
             typ = f.group(3).strip()
             if off not in refs[name] or 'BE(' in typ or 'BE<' in typ:
