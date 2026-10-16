@@ -1,0 +1,185 @@
+diff --git a/include/aurora/dvd.h b/include/aurora/dvd.h
+index a352797..be57656 100644
+--- a/include/aurora/dvd.h
++++ b/include/aurora/dvd.h
+@@ -98,6 +98,14 @@ typedef struct AuroraOverlayCallbacks {
+  */
+ void aurora_dvd_overlay_callbacks(const AuroraOverlayCallbacks* callbacks);
+ 
++/**
++ * \brief Uses a host directory of extracted disc files instead of a disc image (Galaxy PC addition).
++ *
++ * @param root Directory corresponding to the disc's root ("files" folder of an extracted disc).
++ * @param gameId Six-character game ID, e.g. "RMGK01" (may be NULL).
++ */
++bool aurora_dvd_open_directory(const char* root, const char* gameId);
++
+ /**
+  * \brief Specify a set of overlay files to be used by the DVD layer.
+  *
+diff --git a/lib/dolphin/dvd/dvd.cpp b/lib/dolphin/dvd/dvd.cpp
+index 94481a4..3284480 100644
+--- a/lib/dolphin/dvd/dvd.cpp
++++ b/lib/dolphin/dvd/dvd.cpp
+@@ -1,3 +1,5 @@
++#include <filesystem>
++#include <memory>
+ #include <aurora/dvd.h>
+ #include <dolphin/dvd.h>
+ 
+@@ -29,6 +31,7 @@ using namespace aurora::dvd::impl;
+ 
+ namespace aurora::dvd::impl {
+   NodHandle* s_partition = nullptr;
++  bool s_directoryMode = false;
+   std::vector<FSTEntry> s_fstEntries;
+   // Map from public FST entryNums (matching base disc, Aurora-assigned for new overlay entries)
+   // To the current FST indexes (that we use for navigating the tree).
+@@ -108,6 +111,7 @@ void clearState() {
+   s_currentPath = "/";
+   s_diskID = {};
+   s_initialized = false;
++  s_directoryMode = false;
+ }
+ 
+ bool isValidEntryNum(s32 entry) {
+@@ -709,6 +713,94 @@ bool aurora_dvd_open(const char* disc_path) {
+   return true;
+ }
+ 
++// Directory-backed "disc": every file below `root` is served as an overlay file. Used for extracted game files.
++namespace {
++struct DirFile {
++  std::string path;
++};
++
++void* dirOpen(void* userData) {
++  auto* file = static_cast<DirFile*>(userData);
++  return SDL_IOFromFile(file->path.c_str(), "rb");
++}
++
++void dirClose(void* handle) { SDL_CloseIO(static_cast<SDL_IOStream*>(handle)); }
++
++int64_t dirRead(void* handle, uint8_t* buf, size_t len) {
++  auto* io = static_cast<SDL_IOStream*>(handle);
++  size_t total = 0;
++  while (total < len) {
++    const size_t n = SDL_ReadIO(io, buf + total, len - total);
++    if (n == 0) {
++      break;
++    }
++    total += n;
++  }
++  return static_cast<int64_t>(total);
++}
++
++int64_t dirSeek(void* handle, int64_t offset, int32_t whence) {
++  const SDL_IOWhence w = whence == 1 ? SDL_IO_SEEK_CUR : whence == 2 ? SDL_IO_SEEK_END : SDL_IO_SEEK_SET;
++  return SDL_SeekIO(static_cast<SDL_IOStream*>(handle), offset, w);
++}
++
++std::vector<std::unique_ptr<DirFile>> s_dirFiles;
++}  // namespace
++
++bool aurora_dvd_open_directory(const char* root, const char* gameId) {
++  namespace fs = std::filesystem;
++  std::error_code ec;
++  if (root == nullptr || !fs::is_directory(root, ec)) {
++    return false;
++  }
++
++  s_worker.stop();
++  clearState();
++  s_directoryMode = true;
++
++  if (gameId != nullptr) {
++    std::memcpy(s_diskID.gameName, gameId, std::min<size_t>(4, std::strlen(gameId)));
++    if (std::strlen(gameId) >= 6) {
++      std::memcpy(s_diskID.company, gameId + 4, 2);
++    }
++    std::memcpy(aurora::g_gameName, s_diskID.gameName, sizeof(s_diskID.gameName));
++  }
++
++  static const AuroraOverlayCallbacks callbacks{
++      .open = dirOpen,
++      .close = dirClose,
++      .read = dirRead,
++      .seek = dirSeek,
++  };
++  aurora_dvd_overlay_callbacks(&callbacks);
++
++  s_dirFiles.clear();
++  std::vector<AuroraOverlayFile> files;
++  std::vector<std::string> names;
++  const fs::path base(root);
++  for (auto it = fs::recursive_directory_iterator(base, ec); it != fs::recursive_directory_iterator(); it.increment(ec)) {
++    if (ec || !it->is_regular_file(ec)) {
++      continue;
++    }
++    std::string rel = "/" + fs::relative(it->path(), base, ec).generic_string();
++    auto file = std::make_unique<DirFile>();
++    file->path = it->path().string();
++    names.push_back(rel);
++    files.push_back(AuroraOverlayFile{nullptr, file.get(), static_cast<size_t>(it->file_size(ec))});
++    s_dirFiles.push_back(std::move(file));
++  }
++  for (size_t i = 0; i < files.size(); i++) {
++    files[i].fileName = names[i].c_str();
++  }
++  aurora_dvd_overlay_files(files.data(), files.size(), nullptr);
++
++  s_currentDir = 0;
++  s_currentPath = "/";
++  s_initialized = true;
++  s_worker.start();
++  return true;
++}
++
+ void aurora_dvd_close(void) {
+   s_worker.stop();
+   clearState();
+@@ -1062,7 +1154,7 @@ BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
+ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
+   std::lock_guard lock(s_fstLock);
+ 
+-  if (!s_initialized || fileInfo == nullptr || !isValidEntryNum(entrynum) || s_partition == nullptr) {
++  if (!s_initialized || fileInfo == nullptr || !isValidEntryNum(entrynum) || (s_partition == nullptr && !s_directoryMode)) {
+     return FALSE;
+   }
+ 
+diff --git a/lib/dolphin/dvd/dvd.hpp b/lib/dolphin/dvd/dvd.hpp
+index 13cb73a..f7d69b4 100644
+--- a/lib/dolphin/dvd/dvd.hpp
++++ b/lib/dolphin/dvd/dvd.hpp
+@@ -51,6 +51,7 @@ struct IterateContext {
+ };
+ 
+ extern NodHandle* s_partition;
++extern bool s_directoryMode;  // files come from a host directory (overlay files only, no disc image)
+ extern std::vector<FSTEntry> s_fstEntries;
+ // Map from public FST entryNums (matching base disc, Aurora-assigned for new overlay files)
+ // To the current FST indexes (that we use for navigating the tree).
+diff --git a/lib/dolphin/dvd/fst.cpp b/lib/dolphin/dvd/fst.cpp
+index c416f8a..62e09f0 100644
+--- a/lib/dolphin/dvd/fst.cpp
++++ b/lib/dolphin/dvd/fst.cpp
+@@ -247,7 +247,7 @@ namespace aurora::dvd::impl {
+ bool rebuildFST() {
+   using namespace std::string_literals;
+ 
+-  if (s_partition == nullptr) {
++  if (s_partition == nullptr && !s_directoryMode) {
+     return false;
+   }
+ 
+@@ -265,7 +265,9 @@ bool rebuildFST() {
+   ctx.root = std::make_shared<IterateNode>(""s, true, 0, 0);
+   ctx.dirStack.emplace_back(ctx.root, std::numeric_limits<u32>::max());
+ 
+-  nod_partition_iterate_fst(s_partition, fstCallback, &ctx);
++  if (s_partition != nullptr) {
++    nod_partition_iterate_fst(s_partition, fstCallback, &ctx);
++  }
+   s_baseEntryCount = calcEntryCount(*ctx.root);
+   syncOverlayEntryAllocator();
+   mergeOverlayFilesIntoContext(ctx);

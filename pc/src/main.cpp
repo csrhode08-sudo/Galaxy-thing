@@ -101,7 +101,11 @@ int main(int argc, char* argv[]) {
     AuroraInfo info = aurora_initialize(argc, argv, &config);
     (void)info;
 
-    if (discPath.empty() || !aurora_dvd_open(discPath.c_str())) {
+    std::error_code dirEc;
+    const bool isDir = !discPath.empty() && std::filesystem::is_directory(discPath, dirEc);
+    // A directory of extracted disc files (its "files" folder) also works, e.g. for development.
+    const bool opened = isDir ? aurora_dvd_open_directory(discPath.c_str(), "RMGK01") : (!discPath.empty() && aurora_dvd_open(discPath.c_str()));
+    if (!opened) {
         std::string msg = discPath.empty()
                               ? "Couldn't find the game disc.\n\nPut your Super Mario Galaxy disc image (the Korean version, RMGK01, as "
                                 ".wbfs/.iso/.rvz) next to SuperMarioGalaxy.exe, or pass its path on the command line."
