@@ -17,7 +17,7 @@ bool beginConvert(const void* file) {
         return false;
     }
     std::lock_guard<std::mutex> lk(sLock);
-    uint8_t* tail = static_cast<uint8_t*>(const_cast<void*>(file)) + 0x1C;  // last word of the header padding
+    uint8_t* tail = static_cast<uint8_t*>(const_cast<void*>(file)) + 0x18;  // header padding (0x1C holds an SE table offset in some BCKs)
     if (std::memcmp(tail, kMarker, 4) == 0) {
         return false;
     }

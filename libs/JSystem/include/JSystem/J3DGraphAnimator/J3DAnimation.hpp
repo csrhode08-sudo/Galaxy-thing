@@ -308,7 +308,9 @@ struct J3DAnmTransformKeyData {
     /* 0x09 */ u8 field_0x9;
     /* 0x0A */ BE(s16) mFrameMax;
     /* 0x0C */ BE(u16) field_0xc;
-    /* 0x10 */ BE(int) field_0x10;
+    /* 0x0E */ BE(u16) mSCount;
+    /* 0x10 */ BE(u16) mRCount;
+    /* 0x12 */ BE(u16) mTCount;
     /* 0x14 */ OFFSET_PTR_V0 mTableOffset;
     /* 0x18 */ OFFSET_PTR_V0 field_0x18;
     /* 0x1c */ OFFSET_PTR_V0 field_0x1c;

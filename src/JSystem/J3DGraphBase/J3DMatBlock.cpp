@@ -1900,3 +1900,22 @@ void J3DTexGenBlockPatched::calcPostTexMtxWithoutViewMtx(f32 const (*param_0)[4]
         }
     }
 }
+
+#ifdef TARGET_PC
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "JSystem/J3DGraphBase/J3DTexture.hpp"
+
+void J3DTevBlock::loadTexture() {
+    J3DTexture* texture = j3dSys.getTexture();
+    if (texture == nullptr) {
+        return;
+    }
+    u32 num = getTexNoSlotNum();
+    for (u32 i = 0; i < num; i++) {
+        u16 texNo = getTexNo(i);
+        if (texNo != 0xFFFF && texNo < texture->getNum()) {
+            texture->loadGX(texNo, GXTexMapID(GX_TEXMAP0 + i));
+        }
+    }
+}
+#endif

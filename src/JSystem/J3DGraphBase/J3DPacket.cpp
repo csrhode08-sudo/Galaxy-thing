@@ -166,10 +166,16 @@ bool J3DMatPacket::isSame(J3DMatPacket* pOther) const {
 }
 
 void J3DMatPacket::draw() {
+#ifdef TARGET_PC
+    j3dSys.setTexture(mpTexture);
+#endif
     mpMaterial->load();
     callDL();
 
     J3DShapePacket* packet = getShapePacket();
+#ifdef TARGET_PC
+    packet->mpModel->getVertexBuffer()->setArray();
+#endif
     packet->getShape()->loadPreDrawSetting();
 
     while (packet != NULL) {

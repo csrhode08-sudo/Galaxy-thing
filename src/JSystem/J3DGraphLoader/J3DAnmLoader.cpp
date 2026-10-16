@@ -1,3 +1,6 @@
+#ifdef TARGET_PC
+#include "pc/j3d.h"
+#endif
 #include "JSystem/J3DGraphLoader/J3DAnmLoader.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/JSupport/JSupport.hpp"
@@ -6,6 +9,9 @@ J3DAnmBase* J3DAnmLoaderDataBase::load(const void* i_data, J3DAnmLoaderDataBaseF
     if (!i_data) {
         return NULL;
     }
+#ifdef TARGET_PC
+    pc::j3d::ConvertScope convert(i_data);
+#endif
     const JUTDataFileHeader* header = (const JUTDataFileHeader*)i_data;
     if (header->mMagic == 'J3D1') {
         switch (header->mType) {
@@ -167,6 +173,16 @@ void J3DAnmFullLoader_v15::setAnmTransform(J3DAnmTransformFull* param_1, const J
     param_1->mScaleData = JSUConvertOffsetToPtr< f32 >(param_2, param_2->mScaleValOffset);
     param_1->mRotData = JSUConvertOffsetToPtr< s16 >(param_2, param_2->mRotValOffset);
     param_1->mTransData = JSUConvertOffsetToPtr< f32 >(param_2, param_2->mTransValOffset);
+#ifdef TARGET_PC
+    if (pc::j3d::gConvert) {
+        u32 scaleNum = ((u32)param_2->mRotValOffset - (u32)param_2->mScaleValOffset) / sizeof(f32);
+        u32 rotNum = ((u32)param_2->mTransValOffset - (u32)param_2->mRotValOffset) / sizeof(s16);
+        u32 transNum = ((u32)param_2->mHeader.mNextOffset - (u32)param_2->mTransValOffset) / sizeof(f32);
+        for (u32 i = 0; i < scaleNum; i++) be_swap(param_1->mScaleData[i]);
+        for (u32 i = 0; i < rotNum; i++) be_swap(param_1->mRotData[i]);
+        for (u32 i = 0; i < transNum; i++) be_swap(param_1->mTransData[i]);
+    }
+#endif
 }
 
 void J3DAnmFullLoader_v15::setAnmColor(J3DAnmColorFull* param_1, const J3DAnmColorFullData* param_2) {
@@ -315,6 +331,14 @@ void J3DAnmKeyLoader_v15::setAnmTransform(J3DAnmTransformKey* param_1, const J3D
     param_1->mScaleData = JSUConvertOffsetToPtr< f32 >(param_2, param_2->field_0x18);
     param_1->mRotData = JSUConvertOffsetToPtr< s16 >(param_2, param_2->field_0x1c);
     param_1->mTransData = JSUConvertOffsetToPtr< f32 >(param_2, param_2->field_0x20);
+#ifdef TARGET_PC
+    // Transform keys are read as native arrays; convert them in place once.
+    if (pc::j3d::gConvert) {
+        for (int i = 0; i < param_2->mSCount; i++) be_swap(param_1->mScaleData[i]);
+        for (int i = 0; i < param_2->mRCount; i++) be_swap(param_1->mRotData[i]);
+        for (int i = 0; i < param_2->mTCount; i++) be_swap(param_1->mTransData[i]);
+    }
+#endif
 }
 
 void J3DAnmKeyLoader_v15::setAnmTextureSRT(J3DAnmTextureSRTKey* param_1, const J3DAnmTextureSRTKeyData* param_2) {
