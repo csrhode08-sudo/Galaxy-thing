@@ -121,6 +121,36 @@ void J3DLoadCPCmd(u8 addr, u32 val) {
     GXCmd1u32(val);
 }
 
+#ifdef TARGET_PC
+// Aurora needs a host pointer and a size for each vertex array (from Dusklight, CC0).
+static void J3DLoadArrayBasePtr(GXAttr attr, void* data, u32 size, bool le) {
+    u32 idx = (attr == GX_VA_NBT) ? 1 : (attr - GX_VA_POS);
+    GXCmd1u8(GX_AURORA);
+    GXCmd1u16(GX_AURORA_LOAD_ARRAYBASE | idx);
+    GXCmd1u64((u64)(uintptr_t)data);
+    GXCmd1u32(size);
+    GXCmd1u8(le ? 1 : 0);
+}
+
+void J3DShape::loadVtxArray() const {
+    // The model's own arrays are already bound by the shape's VCD/VAT display list; only rebind replacements
+    // (skinned or deformed copies, which are host-endian like the converted model arrays).
+    if (j3dSys.getVtxPos() != mVertexData->getVtxPosArray()) {
+        u32 num = j3dSys.mVtxPosNum != 0 ? j3dSys.mVtxPosNum : mVertexData->getVtxNum();
+        J3DLoadArrayBasePtr(GX_VA_POS, j3dSys.getVtxPos(), num * sizeof(Vec), true);
+    }
+
+    if (!mHasNBT && j3dSys.getVtxNrm() != mVertexData->getVtxNrmArray()) {
+        u32 num = j3dSys.mVtxNrmNum != 0 ? j3dSys.mVtxNrmNum : mVertexData->getNrmNum();
+        J3DLoadArrayBasePtr(GX_VA_NRM, j3dSys.getVtxNrm(), num * sizeof(Vec), true);
+    }
+
+    if (j3dSys.getVtxCol() != mVertexData->getVtxColorArray(0)) {
+        u32 num = j3dSys.mVtxColNum != 0 ? j3dSys.mVtxColNum : mVertexData->getColNum();
+        J3DLoadArrayBasePtr(GX_VA_CLR0, j3dSys.getVtxCol(), num * sizeof(GXColor), true);
+    }
+}
+#else
 static void J3DLoadArrayBasePtr(GXAttr attr, void* data) {
     u32 idx = (attr == GX_VA_NBT) ? 1 : (attr - GX_VA_POS);
     J3DLoadCPCmd(0xA0 + idx, ((uintptr_t)data & 0x7FFFFFFF));
@@ -135,6 +165,7 @@ void J3DShape::loadVtxArray() const {
 
     J3DLoadArrayBasePtr(GX_VA_CLR0, j3dSys.getVtxCol());
 }
+#endif
 
 bool J3DShape::isSameVcdVatCmd(J3DShape* other) {
     u8* a = (u8*)other->getVcdVatCmd();
@@ -215,12 +246,24 @@ void J3DShape::makeVtxArrayCmd() {
         }
     }
 
+#ifdef TARGET_PC
+    for (u32 i = 0; i < 12; i++) {
+        GXAttr attr = GXAttr(i + GX_VA_POS);
+        if (array[i] != nullptr && attr == GX_VA_NRM && mHasNBT)
+            GDSetArraySized(attr, array[i], mVertexData->mNBTArrNum * mVertexData->mNBTArrStride, mVertexData->mNBTArrStride, true);
+        else if (array[i] != nullptr)
+            GDSetArraySized(attr, array[i], mVertexData->getVtxArrByteSize(attr), mVertexData->getVtxArrStride(attr), true);
+        else
+            GDSetArraySized(attr, nullptr, 0, mVertexData->getVtxArrStride(attr), true);
+    }
+#else
     for (u32 i = 0; i < 12; i++) {
         if (array[i] != 0)
             GDSetArray((GXAttr)(i + GX_VA_POS), array[i], stride[i]);
         else
             GDSetArrayRaw((GXAttr)(i + GX_VA_POS), 0, stride[i]);
     }
+#endif
 }
 
 void J3DShape::makeVcdVatCmd() {

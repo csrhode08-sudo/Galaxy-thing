@@ -10,6 +10,16 @@
 #include "JSystem/JSupport/JSupport.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include <stdint.h>
+#ifdef TARGET_PC
+#include "pc/j3d.h"
+#endif
+
+// Material IDs are derived from addresses; keep the top bits clear as they would be on the console.
+#ifdef TARGET_PC
+#define MATERIAL_ID(ptr, offset) ((u32)((uintptr_t(ptr) >> 4) & 0x3FFFFFFF) + (offset))
+#else
+#define MATERIAL_ID(ptr, offset) ((uintptr_t(ptr) >> 4) + (offset))
+#endif
 
 J3DModelLoader::J3DModelLoader()
     : mpModelData(NULL), mpMaterialTable(NULL), mpShapeBlock(NULL), mpMaterialBlock(NULL), mpModelHierarchy(NULL), field_0x18(0), mEnvelopeSize(0) {
@@ -20,14 +30,15 @@ J3DModelData* J3DModelLoaderDataBase::load(void const* i_data, u32 i_flags) {
     if (i_data == NULL) {
         return NULL;
     }
-    if (*(u32*)i_data == 'J3D1' && *(u32*)((uintptr_t)i_data + 4) == 'bmd1') {
+    const J3DModelFileData* header = (const J3DModelFileData*)i_data;
+    if (header->mMagic1 == 'J3D1' && header->mMagic2 == 'bmd1') {
         return NULL;
     }
-    if (*(u32*)i_data == 'J3D2' && *(u32*)((uintptr_t)i_data + 4) == 'bmd2') {
+    if (header->mMagic1 == 'J3D2' && header->mMagic2 == 'bmd2') {
         J3DModelLoader_v21 loader;
         return loader.load(i_data, i_flags);
     }
-    if (*(u32*)i_data == 'J3D2' && *(u32*)((uintptr_t)i_data + 4) == 'bmd3') {
+    if (header->mMagic1 == 'J3D2' && header->mMagic2 == 'bmd3') {
         J3DModelLoader_v26 loader;
         return loader.load(i_data, i_flags);
     }
@@ -38,7 +49,8 @@ J3DMaterialTable* J3DModelLoaderDataBase::loadMaterialTable(const void* data) {
     if (data == NULL) {
         return NULL;
     }
-    if (reinterpret_cast< const u32* >(data)[0] == 'J3D2' && reinterpret_cast< const u32* >(data)[1] == 'bmt3') {
+    const J3DModelFileData* header = (const J3DModelFileData*)data;
+    if (header->mMagic1 == 'J3D2' && header->mMagic2 == 'bmt3') {
         J3DModelLoader_v26 loader;
         return loader.loadMaterialTable(data);
     }
@@ -49,8 +61,8 @@ J3DModelData* J3DModelLoaderDataBase::loadBinaryDisplayList(const void* data, u3
     if (data == NULL) {
         return NULL;
     }
-    if (reinterpret_cast< const u32* >(data)[0] == 'J3D2' &&
-        (reinterpret_cast< const u32* >(data)[1] == 'bdl3' || reinterpret_cast< const u32* >(data)[1] == 'bdl4')) {
+    const J3DModelFileData* header = (const J3DModelFileData*)data;
+    if (header->mMagic1 == 'J3D2' && (header->mMagic2 == 'bdl3' || header->mMagic2 == 'bdl4')) {
         J3DModelLoader_v26 loader;
         return loader.loadBinaryDisplayList(data, flags);
     }
@@ -58,6 +70,9 @@ J3DModelData* J3DModelLoaderDataBase::loadBinaryDisplayList(const void* data, u3
 }
 
 J3DModelData* J3DModelLoader::load(void const* i_data, u32 i_flags) {
+#ifdef TARGET_PC
+    pc::j3d::ConvertScope convert(i_data);
+#endif
     JKRGetCurrentHeap()->getTotalFreeSize();
     mpModelData = new (JKRHeapToken::Dummy) J3DModelData();
     mpModelData->clear();
@@ -114,6 +129,9 @@ J3DModelData* J3DModelLoader::load(void const* i_data, u32 i_flags) {
 }
 
 J3DMaterialTable* J3DModelLoader::loadMaterialTable(void const* i_data) {
+#ifdef TARGET_PC
+    pc::j3d::ConvertScope convert(i_data);
+#endif
     mpMaterialTable = new (JKRHeapToken::Dummy) J3DMaterialTable();
     mpMaterialTable->clear();
     J3DModelFileData const* data = (J3DModelFileData*)i_data;
@@ -141,6 +159,9 @@ J3DMaterialTable* J3DModelLoader::loadMaterialTable(void const* i_data) {
 }
 
 J3DModelData* J3DModelLoader::loadBinaryDisplayList(void const* i_data, u32 i_flags) {
+#ifdef TARGET_PC
+    pc::j3d::ConvertScope convert(i_data);
+#endif
     mpModelData = new (JKRHeapToken::Dummy) J3DModelData();
     mpModelData->clear();
     mpModelData->mpRawData = i_data;
@@ -206,7 +227,7 @@ void J3DModelLoader::setupBBoardInfo() {
         J3DMaterial* mesh = mpModelData->getJointNodePointer(i)->getMesh();
         if (mesh != NULL) {
             u32 shape_index = mesh->getShape()->getIndex();
-            u16* index_table = JSUConvertOffsetToPtr< u16 >(mpShapeBlock, (uintptr_t)mpShapeBlock->mpIndexTable);
+            BE(u16)* index_table = JSUConvertOffsetToPtr< BE(u16) >(mpShapeBlock, (uintptr_t)mpShapeBlock->mpIndexTable);
             J3DShapeInitData* shape_init_data = JSUConvertOffsetToPtr< J3DShapeInitData >(mpShapeBlock, (uintptr_t)mpShapeBlock->mpShapeInitData);
             J3DJoint* joint;
             switch (shape_init_data[index_table[shape_index]].mShapeMtxType) {
@@ -254,6 +275,9 @@ void J3DModelLoader::readInformation(J3DModelInfoBlock const* i_block, u32 i_fla
     mpModelData->getVertexData().mPacketNum = i_block->mPacketNum;
     mpModelData->getVertexData().mVtxNum = i_block->mVtxNum;
     mpModelData->setHierarchy(JSUConvertOffsetToPtr< J3DModelHierarchy >(i_block, i_block->mpHierarchy));
+#ifdef TARGET_PC
+    mpModelData->getVertexData().mHasReadInformation = true;
+#endif
 }
 
 inline J3DMtxCalcNoAnmBase::J3DMtxCalcNoAnmBase() {
@@ -280,6 +304,17 @@ void J3DModelLoader::readVertex(J3DVertexBlock const* i_block) {
     for (int i = 0; i < 8; i++) {
         vertex_data.mVtxTexCoordArray[i] = JSUConvertOffsetToPtr< void >(i_block, i_block->mpVtxTexCoordArray[i]);
     }
+
+#ifdef TARGET_PC
+    if (pc::j3d::gConvert) {
+        for (GXVtxAttrFmtList* attrFmt = vertex_data.mVtxAttrFmtList;; attrFmt++) {
+            *attrFmt = BE< GXVtxAttrFmtList >::swap(*attrFmt);
+            if (attrFmt->attr == GX_VA_NULL) {
+                break;
+            }
+        }
+    }
+#endif
 
     GXCompType nrm_type = getFmtType(vertex_data.mVtxAttrFmtList, GX_VA_NRM);
     u32 nrm_size = nrm_type == GX_F32 ? 12 : 6;
@@ -321,14 +356,134 @@ void J3DModelLoader::readVertex(J3DVertexBlock const* i_block) {
     } else {
         vertex_data.mTexCoordNum = (i_block->mBlockSize - (uintptr_t)i_block->mpVtxTexCoordArray[0]) / 8 + 1;
     }
+
+#ifdef TARGET_PC
+    readVertexData(*i_block, vertex_data);
+#endif
 }
+
+#ifdef TARGET_PC
+// Vertex arrays are byte-swapped in place according to their component size; strides and counts are recorded
+// so that the renderer knows the array sizes. Approach from Dusklight (CC0).
+namespace {
+    GXVtxAttrFmtList getFmt(GXVtxAttrFmtList* i_fmtList, GXAttr i_attr) {
+        for (; i_fmtList->attr != GX_VA_NULL; i_fmtList++) {
+            if (i_fmtList->attr == i_attr) {
+                return *i_fmtList;
+            }
+        }
+        GXVtxAttrFmtList none = {i_attr, GX_POS_XYZ, GX_F32, 0};
+        return none;
+    }
+
+    void FixArrayEndian(void* arrayStart, void* arrayEnd, u32 stride) {
+        u8* p = static_cast< u8* >(arrayStart);
+        u8* e = static_cast< u8* >(arrayEnd);
+        switch (stride) {
+        case 2:
+            for (; p + 2 <= e; p += 2) {
+                u8 t = p[0];
+                p[0] = p[1];
+                p[1] = t;
+            }
+            break;
+        case 4:
+            for (; p + 4 <= e; p += 4) {
+                u8 t0 = p[0], t1 = p[1];
+                p[0] = p[3];
+                p[1] = p[2];
+                p[2] = t1;
+                p[3] = t0;
+            }
+            break;
+        default:  // 1-byte components (and 3/4-byte colours) are stored byte-wise already
+            break;
+        }
+    }
+
+    const GXAttr VertexBlockAttrOrder[13] = {
+        GX_VA_POS,  GX_VA_NRM,  GX_VA_NBT,  GX_VA_CLR0, GX_VA_CLR1, GX_VA_TEX0, GX_VA_TEX1,
+        GX_VA_TEX2, GX_VA_TEX3, GX_VA_TEX4, GX_VA_TEX5, GX_VA_TEX6, GX_VA_TEX7,
+    };
+
+    void* GetDataEnd(const J3DVertexBlock& block, int start) {
+        const BE(u32)* attrPtrBase = &block.mpVtxPosArray;
+        for (int i = start + 1; i < 13; i++) {
+            if (attrPtrBase[i] != 0) {
+                return JSUConvertOffsetToPtr< void >(&block, attrPtrBase[i]);
+            }
+        }
+        return JSUConvertOffsetToPtr< void >(&block, block.mBlockSize);
+    }
+
+    // Returns {component count, bytes per component}.
+    void StrideForData(GXAttr attr, GXCompType type, GXCompCnt cnt, u32* compCnt, u32* compStride) {
+        if (attr >= GX_VA_CLR0 && attr <= GX_VA_CLR1) {
+            switch (type) {
+            case GX_RGB565:
+            case GX_RGBA4:
+                *compCnt = 1;
+                *compStride = 2;
+                return;
+            case GX_RGB8:
+            case GX_RGBA6:
+                *compCnt = 3;
+                *compStride = 1;
+                return;
+            default:  // GX_RGBX8, GX_RGBA8
+                *compCnt = 4;
+                *compStride = 1;
+                return;
+            }
+        }
+        if (attr == GX_VA_POS) {
+            *compCnt = cnt == GX_POS_XY ? 2 : 3;
+        } else if (attr == GX_VA_NRM || attr == GX_VA_NBT) {
+            *compCnt = cnt == GX_NRM_XYZ ? 3 : 9;
+        } else {
+            *compCnt = cnt == GX_TEX_S ? 1 : 2;
+        }
+        *compStride = type == GX_F32 ? 4 : (type == GX_U16 || type == GX_S16) ? 2 : 1;
+    }
+}  // namespace
+
+void J3DModelLoader::readVertexData(const J3DVertexBlock& block, J3DVertexData& data) {
+    const BE(u32)* attrPtrBase = &block.mpVtxPosArray;
+    for (int i = 0; i < 13; i++) {
+        GXAttr attr = VertexBlockAttrOrder[i];
+        if (attrPtrBase[i] == 0) {
+            continue;
+        }
+
+        // NBT data uses the normal's format.
+        GXVtxAttrFmtList fmt = getFmt(data.mVtxAttrFmtList, attr == GX_VA_NBT ? GX_VA_NRM : attr);
+        void* startAddr = JSUConvertOffsetToPtr< void >(&block, attrPtrBase[i]);
+        void* endAddr = GetDataEnd(block, i);
+        u32 compCnt, compStride;
+        StrideForData(attr, fmt.type, fmt.cnt, &compCnt, &compStride);
+        u32 vertStride = compStride * compCnt;
+        u32 num = u32((u8*)endAddr - (u8*)startAddr) / vertStride;
+
+        if (attr != GX_VA_NBT) {
+            data.mVtxArrStride[attr - GX_VA_POS] = vertStride;
+            data.mVtxArrNum[attr - GX_VA_POS] = num;
+        } else {
+            data.mNBTArrStride = vertStride;
+            data.mNBTArrNum = num;
+        }
+        if (pc::j3d::gConvert) {
+            FixArrayEndian(startAddr, endAddr, compStride);
+        }
+    }
+}
+#endif
 
 void J3DModelLoader::readEnvelop(J3DEnvelopeBlock const* i_block) {
     mpModelData->getJointTree().mWEvlpMtxNum = i_block->mWEvlpMtxNum;
     mpModelData->getJointTree().mWEvlpMixMtxNum = JSUConvertOffsetToPtr< u8 >(i_block, i_block->mpWEvlpMixMtxNum);
-    mpModelData->getJointTree().mWEvlpMixMtxIndex = JSUConvertOffsetToPtr< u16 >(i_block, i_block->mpWEvlpMixIndex);
-    mpModelData->getJointTree().mWEvlpMixWeight = JSUConvertOffsetToPtr< f32 >(i_block, i_block->mpWEvlpMixWeight);
-    mpModelData->getJointTree().mInvJointMtx = JSUConvertOffsetToPtr< Mtx >(i_block, i_block->mpInvJointMtx);
+    mpModelData->getJointTree().mWEvlpMixMtxIndex = JSUConvertOffsetToPtr< BE(u16) >(i_block, i_block->mpWEvlpMixIndex);
+    mpModelData->getJointTree().mWEvlpMixWeight = JSUConvertOffsetToPtr< BE(f32) >(i_block, i_block->mpWEvlpMixWeight);
+    mpModelData->getJointTree().mInvJointMtx = JSUConvertOffsetToPtr< BE(Mtx) >(i_block, i_block->mpInvJointMtx);
 }
 
 void J3DModelLoader::readDraw(J3DDrawBlock const* i_block) {
@@ -378,7 +533,7 @@ void J3DModelLoader_v26::readMaterial(J3DMaterialBlock const* i_block, u32 i_fla
     if (i_flags & 0x200000) {
         for (u16 i = 0; i < mpMaterialTable->mUniqueMatNum; i++) {
             factory.create(&mpMaterialTable->field_0x10[i], J3DMaterialFactory::MATERIAL_TYPE_NORMAL, i, i_flags);
-            mpMaterialTable->field_0x10[i].mDiffFlag = (uintptr_t)&mpMaterialTable->field_0x10[i] >> 4;
+            mpMaterialTable->field_0x10[i].mDiffFlag = MATERIAL_ID(&mpMaterialTable->field_0x10[i], 0);
         }
     }
     for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
@@ -386,12 +541,12 @@ void J3DModelLoader_v26::readMaterial(J3DMaterialBlock const* i_block, u32 i_fla
     }
     if (i_flags & 0x200000) {
         for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
-            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = (uintptr_t)&mpMaterialTable->field_0x10[factory.getMaterialID(i)] >> 4;
+            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = MATERIAL_ID(&mpMaterialTable->field_0x10[factory.getMaterialID(i)], 0);
             mpMaterialTable->mMaterialNodePointer[i]->mpOrigMaterial = &mpMaterialTable->field_0x10[factory.getMaterialID(i)];
         }
     } else {
         for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
-            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = ((uintptr_t)mpMaterialTable->mMaterialNodePointer >> 4) + factory.getMaterialID(i);
+            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = MATERIAL_ID(mpMaterialTable->mMaterialNodePointer, factory.getMaterialID(i));
         }
     }
 }
@@ -414,7 +569,7 @@ void J3DModelLoader_v21::readMaterial_v21(J3DMaterialBlock_v21 const* i_block, u
     if (i_flags & 0x200000) {
         for (u16 i = 0; i < mpMaterialTable->mUniqueMatNum; i++) {
             factory.create(&mpMaterialTable->field_0x10[i], i, i_flags);
-            mpMaterialTable->field_0x10[i].mDiffFlag = (uintptr_t)&mpMaterialTable->field_0x10[i] >> 4;
+            mpMaterialTable->field_0x10[i].mDiffFlag = MATERIAL_ID(&mpMaterialTable->field_0x10[i], 0);
         }
     }
     for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
@@ -422,7 +577,7 @@ void J3DModelLoader_v21::readMaterial_v21(J3DMaterialBlock_v21 const* i_block, u
     }
     if (i_flags & 0x200000) {
         for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
-            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = (uintptr_t)&mpMaterialTable->field_0x10[factory.getMaterialID(i)] >> 4;
+            mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = MATERIAL_ID(&mpMaterialTable->field_0x10[factory.getMaterialID(i)], 0);
             mpMaterialTable->mMaterialNodePointer[i]->mpOrigMaterial = &mpMaterialTable->field_0x10[factory.getMaterialID(i)];
         }
     } else {
@@ -496,7 +651,7 @@ void J3DModelLoader_v21::readMaterialTable_v21(J3DMaterialBlock_v21 const* i_blo
         mpMaterialTable->mMaterialNodePointer[i] = factory.create(NULL, i, i_flags);
     }
     for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
-        mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = ((uintptr_t)mpMaterialTable->mMaterialNodePointer >> 4) + factory.getMaterialID(i);
+        mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = MATERIAL_ID(mpMaterialTable->mMaterialNodePointer, factory.getMaterialID(i));
     }
 }
 
@@ -525,7 +680,7 @@ void J3DModelLoader::readPatchedMaterial(J3DMaterialBlock const* i_block, u32 i_
     mpMaterialTable->field_0x10 = NULL;
     for (u16 i = 0; i < mpMaterialTable->mMaterialNum; i++) {
         mpMaterialTable->mMaterialNodePointer[i] = factory.create(NULL, J3DMaterialFactory::MATERIAL_TYPE_PATCHED, i, i_flags);
-        mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = ((uintptr_t)mpMaterialTable->mMaterialNodePointer >> 4) + factory.getMaterialID(i);
+        mpMaterialTable->mMaterialNodePointer[i]->mDiffFlag = MATERIAL_ID(mpMaterialTable->mMaterialNodePointer, factory.getMaterialID(i));
     }
 }
 

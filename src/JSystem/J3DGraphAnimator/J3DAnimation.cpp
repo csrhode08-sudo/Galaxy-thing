@@ -548,8 +548,22 @@ inline f32 J3DHermiteInterpolation(__REGISTER f32 pp1, __REGISTER s16 const* pp2
     }
 
     return value;
+#else
+    return JMAHermiteInterpolation(pp1, *pp2, *pp3, *pp4, *pp5, *pp6, *pp7);
 #endif
 }
+
+#ifdef TARGET_PC
+inline f32 J3DHermiteInterpolation(f32 p1, BE(f32) const* p2, BE(f32) const* p3, BE(f32) const* p4, BE(f32) const* p5, BE(f32) const* p6,
+                                   BE(f32) const* p7) {
+    return JMAHermiteInterpolation(p1, *p2, *p3, *p4, *p5, *p6, *p7);
+}
+
+inline f32 J3DHermiteInterpolation(f32 pp1, BE(s16) const* pp2, BE(s16) const* pp3, BE(s16) const* pp4, BE(s16) const* pp5, BE(s16) const* pp6,
+                                   BE(s16) const* pp7) {
+    return JMAHermiteInterpolation(pp1, *pp2, *pp3, *pp4, *pp5, *pp6, *pp7);
+}
+#endif
 
 template < typename T >
 f32 J3DGetKeyFrameInterpolation(f32 frame, J3DAnmKeyTableBase* pKeyTable, T* pData) {
@@ -1362,6 +1376,6 @@ void J3DAnmTevRegKey::searchUpdateMaterialID(J3DModelData* pModelData) {
     searchUpdateMaterialID(&pModelData->getMaterialTable());
 }
 
-void J3DAnimation_FORCE_EMIT(s16 frameMax, f32* pWeight) {
+void J3DAnimation_FORCE_EMIT(s16 frameMax, BE(f32)* pWeight) {
     J3DAnmCluster cluster(frameMax, pWeight);
 }

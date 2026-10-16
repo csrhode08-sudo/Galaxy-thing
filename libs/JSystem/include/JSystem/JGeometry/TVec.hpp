@@ -442,6 +442,10 @@ namespace JGeometry {
             stfs b_x, 8(v_b)
             }
             ;
+#else
+            x = vec.x;
+            y = vec.y;
+            z = vec.z;
 #endif
         }
 
@@ -690,6 +694,8 @@ namespace JGeometry {
             }
 
             return _fp1;
+#else
+            return x * rOther.x + y * rOther.y + z * rOther.z;
 #endif
         }
 

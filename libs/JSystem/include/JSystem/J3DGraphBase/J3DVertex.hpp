@@ -114,6 +114,30 @@ public:
     /* 0x50 */ GXCompType mVtxPosType;
     /* 0x54 */ u8 mVtxNrmFrac;
     /* 0x58 */ GXCompType mVtxNrmType;
+
+#ifdef TARGET_PC
+public:
+    // Per-attribute array strides and element counts, recorded while byte-swapping the vertex arrays.
+    u32 getVtxArrNum(GXAttr attr) const {
+        return mVtxArrNum[attr - GX_VA_POS];
+    }
+    u32 getVtxArrStride(GXAttr attr) const {
+        return mVtxArrStride[attr - GX_VA_POS];
+    }
+    u32 getVtxArrByteSize(GXAttr attr) const {
+        return getVtxArrNum(attr) * getVtxArrStride(attr);
+    }
+
+    u32 getColNum() const {
+        return mColNum;
+    }
+
+    bool mHasReadInformation = false;
+    u32 mVtxArrStride[12] = {};
+    u32 mVtxArrNum[12] = {};
+    u32 mNBTArrStride = 0;
+    u32 mNBTArrNum = 0;
+#endif
 };
 
 class J3DVertexBuffer {

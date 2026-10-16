@@ -1174,6 +1174,13 @@ f32 PSVECKillElement(__REGISTER const Vec* pSrc, __REGISTER const Vec* pKill, __
         psq_st     f2, 4(pDst),  0, 0
     }  // clang-format on
     return dot;
+#else
+    f32 dot = pSrc->x * pKill->x + pSrc->y * pKill->y + pSrc->z * pKill->z;
+    Vec* dst = const_cast< Vec* >(pDst);
+    dst->x = pSrc->x - dot * pKill->x;
+    dst->y = pSrc->y - dot * pKill->y;
+    dst->z = pSrc->z - dot * pKill->z;
+    return dot;
 #endif
 }
 
@@ -1201,6 +1208,11 @@ namespace MR {
             psq_st f2, 8(pA1), 1, 0
         }
 
+#else
+        TVec3f* dst = const_cast< TVec3f* >(pA1);
+        dst->x += pA2->x * a3;
+        dst->y += pA2->y * a3;
+        dst->z += pA2->z * a3;
 #endif
     }
 
@@ -1219,6 +1231,10 @@ namespace MR {
             psq_st    f3, 8(pA3), 1, 0
         }
 
+#else
+        pA3->x = pA1->x * a4 + pA2->x * a5;
+        pA3->y = pA1->y * a4 + pA2->y * a5;
+        pA3->z = pA1->z * a4 + pA2->z * a5;
 #endif
     }
 

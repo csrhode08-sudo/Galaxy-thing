@@ -333,9 +333,13 @@ J3DFogInfo const j3dDefaultFogInfo = {
 
 J3DNBTScaleInfo const j3dDefaultNBTScaleInfo = {
     0x00,
+#ifdef TARGET_PC
+    {1.0f, 1.0f, 1.0f},
+#else
     1.0f,
     1.0f,
     1.0f,
+#endif
 };
 
 const J3DColorChanInfo j3dDefaultColorChanInfo = {

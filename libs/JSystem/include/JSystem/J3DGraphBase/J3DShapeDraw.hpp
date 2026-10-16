@@ -7,6 +7,9 @@ public:
     u32 countVertex(u32);
     void addTexMtxIndexInDL(u32, u32, u32);
     J3DShapeDraw(u8 const*, u32);
+#ifdef TARGET_PC
+    J3DShapeDraw(u8 const*, u32, const GXVtxDescList*);
+#endif
     void draw() const;
 
     virtual ~J3DShapeDraw();

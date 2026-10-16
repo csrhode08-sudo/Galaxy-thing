@@ -54,7 +54,7 @@ typedef void (J3DShapeMtxConcatView::*J3DShapeMtxConcatView_LoadFunc)(int, u16) 
 
 class J3DShapeMtxMulti : public J3DShapeMtx {
 public:
-    J3DShapeMtxMulti(u16 useMtxIndex, u16 useMtxNum, u16* useMtxIndexTable)
+    J3DShapeMtxMulti(u16 useMtxIndex, u16 useMtxNum, BE(u16)* useMtxIndexTable)
         : J3DShapeMtx(useMtxIndex), mUseMtxNum(useMtxNum), mUseMtxIndexTable(useMtxIndexTable) {
     }
 
@@ -74,7 +74,7 @@ public:
 
 private:
     /* 0x8 */ u16 mUseMtxNum;
-    /* 0xC */ u16* mUseMtxIndexTable;
+    /* 0xC */ BE(u16)* mUseMtxIndexTable;
 };
 
 class J3DShapeMtxConcatView : public J3DShapeMtx {
@@ -105,7 +105,7 @@ public:
 
 class J3DShapeMtxMultiConcatView : public J3DShapeMtxConcatView {
 public:
-    J3DShapeMtxMultiConcatView(u16 useMtxIndex, u16 useMtxNum, u16* useMtxIndexTable)
+    J3DShapeMtxMultiConcatView(u16 useMtxIndex, u16 useMtxNum, BE(u16)* useMtxIndexTable)
         : J3DShapeMtxConcatView(useMtxIndex), mUseMtxNum(useMtxNum), mUseMtxIndexTable(useMtxIndexTable) {
     }
 
@@ -127,7 +127,7 @@ public:
 
 private:
     /* 0x8 */ u16 mUseMtxNum;
-    /* 0xC */ u16* mUseMtxIndexTable;
+    /* 0xC */ BE(u16)* mUseMtxIndexTable;
 };
 
 class J3DShapeMtxBBoardConcatView : public J3DShapeMtxConcatView {

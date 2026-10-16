@@ -85,6 +85,12 @@ struct J3DTextureSRTInfo {
             psq_st xy, 0(dst), 0, 0
         }
         ;
+#else
+        mScaleX = other.mScaleX;
+        mScaleY = other.mScaleY;
+        mRotation = other.mRotation;
+        mTranslationX = other.mTranslationX;
+        mTranslationY = other.mTranslationY;
 #endif
     }
 };  // Size: 0x14
@@ -152,7 +158,7 @@ struct J3DNBTScaleInfo {
     J3DNBTScaleInfo& operator=(J3DNBTScaleInfo const&);
 
     /* 0x0 */ u8 mbHasScale;
-    /* 0x4 */ Vec mScale;
+    /* 0x4 */ BE(Vec) mScale;
 };  // Size: 0x10
 
 struct J3DTevOrderInfo {

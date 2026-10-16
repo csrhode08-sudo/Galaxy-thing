@@ -57,7 +57,7 @@ public:
     /* 0x10C */ void* mVtxPos;
     /* 0x110 */ void* mVtxNrm;
     /* 0x114 */ GXColor* mVtxCol;
-    /* 0x118 */ Vec* mNBTScale;
+    /* 0x118 */ BE(Vec)* mNBTScale;
 
     J3DSys();
 
@@ -98,23 +98,38 @@ public:
     void* getVtxPos() {
         return mVtxPos;
     }
-    void setVtxPos(void* pVtxPos) {
+    void setVtxPos(void* pVtxPos, int num = 0) {
         mVtxPos = pVtxPos;
+#ifdef TARGET_PC
+        mVtxPosNum = num;
+#endif
     }
 
     void* getVtxNrm() {
         return mVtxNrm;
     }
-    void setVtxNrm(void* pVtxNrm) {
+    void setVtxNrm(void* pVtxNrm, int num = 0) {
         mVtxNrm = pVtxNrm;
+#ifdef TARGET_PC
+        mVtxNrmNum = num;
+#endif
     }
 
     void* getVtxCol() {
         return mVtxCol;
     }
-    void setVtxCol(GXColor* pVtxCol) {
+    void setVtxCol(GXColor* pVtxCol, int num = 0) {
         mVtxCol = pVtxCol;
+#ifdef TARGET_PC
+        mVtxColNum = num;
+#endif
     }
+#ifdef TARGET_PC
+    // Element counts of the current vertex arrays (0 = same as the model's), needed to bind them on PC.
+    int mVtxPosNum = 0;
+    int mVtxNrmNum = 0;
+    int mVtxColNum = 0;
+#endif
 
     void setModelDrawMtx(Mtx* pMtxArr) {
         mModelDrawMtx = pMtxArr;
@@ -126,10 +141,10 @@ public:
         GXSETARRAY(GX_NRM_MTX_ARRAY, mModelNrmMtx, 10 * sizeof(Mtx33), sizeof(*mModelNrmMtx), true);
     }
 
-    void setNBTScale(Vec* scale) {
+    void setNBTScale(BE(Vec)* scale) {
         mNBTScale = scale;
     }
-    Vec* getNBTScale() {
+    BE(Vec)* getNBTScale() {
         return mNBTScale;
     }
 
