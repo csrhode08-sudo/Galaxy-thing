@@ -22,6 +22,10 @@ u16 ATTRIBUTE_ALIGN(32) JASDsp::SEND_TABLE[] = {
 u32 JASWaveInfo::one = 1;
 
 void JASDsp::boot(void (*param_0)(void*)) {
+#ifdef TARGET_PC
+    // The DSP is emulated on the CPU (pc/src/audio); there is no microcode to boot.
+    return;
+#endif
     static bool sDspInit = true;
     if (sDspInit) {
         DspBoot(param_0);
@@ -31,6 +35,9 @@ void JASDsp::boot(void (*param_0)(void*)) {
 }
 
 void JASDsp::releaseHalt(u32 param_0) {
+#ifdef TARGET_PC
+    return;
+#endif
     DSPReleaseHalt2(param_0);
 }
 
@@ -110,12 +117,14 @@ u32 const ATTRIBUTE_ALIGN(32) JASDsp::DSPRES_FILTER[320] = {
 void JASDsp::initBuffer() {
     CH_BUF = new (JKRHeapToken::Dummy, JASDram, 0x20) TChannel[64];
     FX_BUF = new (JKRHeapToken::Dummy, JASDram, 0x20) FxBuf[4];
-    JASCalc::bzero(CH_BUF, 0x6000);
+    JASCalc::bzero(CH_BUF, sizeof(TChannel) * DSP_CHANNELS);
     JASCalc::bzero(FX_BUF, sizeof(FxBuf) * 4);
     for (u8 i = 0; i < 4; i++) {
         setFXLine(i, NULL, NULL);
     }
+#ifndef TARGET_PC
     DsetupTable(0x40, (u32)uintptr_t(CH_BUF), (u32)uintptr_t(&DSPRES_FILTER), (u32)uintptr_t(&DSPADPCM_FILTER), (u32)uintptr_t(FX_BUF));
+#endif
     flushBuffer();
 }
 
@@ -154,23 +163,26 @@ void JASDsp::TChannel::init() {
     mIsFinished = 0;
     mForcedStop = 0;
     mIsActive = 0;
-    _58 = 0;
-    _68 = 0;
+    mAutoMixerBeenSet = 0;
+    mSamplePosition = 0;
+#ifdef TARGET_PC
+    mAramBaseAddress = nullptr;
+#endif
     initFilter();
 }
 
 void JASDsp::TChannel::playStart() {
-    _10C = 0;
-    _60 = 0;
-    _8 = 1;
-    _66 = 0;
+    field_0x10c = 0;
+    field_0x060 = 0;
+    mResetFlag = 1;
+    field_0x066 = 0;
     int i;
     for (i = 0; i < 4; i++) {
-        _78[i] = 0;
-        _A8[i] = 0;
+        field_0x078[i] = 0;
+        field_0x0a8[i] = 0;
     }
     for (i = 0; i < 20; i++) {
-        _80[i] = 0;
+        field_0x080[i] = 0;
     }
     mIsActive = 1;
 }
@@ -198,67 +210,67 @@ bool JASDsp::TChannel::isFinish() const {
 
 void JASDsp::TChannel::setWaveInfo(JASWaveInfo const& waveInfo, u32 param_1, u32 param_2) {
     int i;
-    _118 = param_1;
+    mWaveAramAddress = param_1;
     static const u8 COMP_BLOCKSAMPLES[8] = {0x10, 0x10, 0x01, 0x01, 0x01, 0x10, 0x10, 0x01};
-    _64 = COMP_BLOCKSAMPLES[waveInfo.mFormat];
+    mSamplesPerBlock = COMP_BLOCKSAMPLES[waveInfo.mFormat];
     static const u8 COMP_BLOCKBYTES[8] = {0x09, 0x05, 0x08, 0x10, 0x01, 0x01, 0x01, 0x01};
-    _100 = COMP_BLOCKBYTES[waveInfo.mFormat];
-    _68 = 0;
-    if (_100 >= 4) {
-        _11C = waveInfo.mSampleCount;
-        _102 = waveInfo.mLoopFlags;
-        if (_102 != 0) {
+    mBytesPerBlock = COMP_BLOCKBYTES[waveInfo.mFormat];
+    mSamplePosition = 0;
+    if (mBytesPerBlock >= 4) {
+        mSampleCount = waveInfo.mSampleCount;
+        mLoopFlag = waveInfo.mLoopFlags;
+        if (mLoopFlag != 0) {
             if (param_2 == 1) {
                 param_2 = waveInfo.mSampleLoopStart;
             }
-            _110 = waveInfo.mSampleLoopStart;
-            _114 = waveInfo.mSampleLoopEnd;
-            _104 = waveInfo.mpLastSample;
-            _106 = waveInfo.mpPenultSample;
+            mLoopStartSample = waveInfo.mSampleLoopStart;
+            mEndSample = waveInfo.mSampleLoopEnd;
+            mpLast = waveInfo.mpLastSample;
+            mpPenult = waveInfo.mpPenultSample;
         } else {
-            _114 = _11C;
+            mEndSample = mSampleCount;
         }
-        if (param_2 && _114 > param_2) {
+        if (param_2 && mEndSample > param_2) {
             switch (waveInfo.mFormat) {
             case 0:
             case 1:
-                _68 = param_2;
-                _118 += param_2 * _100 >> 4;
-                _110 -= param_2;
-                _114 -= param_2;
+                mSamplePosition = param_2;
+                mWaveAramAddress += param_2 * mBytesPerBlock >> 4;
+                mLoopStartSample -= param_2;
+                mEndSample -= param_2;
                 break;
             case 2:
             case 3:
-                _68 = param_2;
+                mSamplePosition = param_2;
                 break;
             }
         }
         for (i = 0; i < 16; i++) {
-            _B0[i] = 0;
+            field_0x0b0[i] = 0;
         }
     }
 }
 
 void JASDsp::TChannel::setOscInfo(u32 param_0) {
-    _118 = 0;
-    _64 = 16;
-    _100 = param_0;
+    mWaveAramAddress = 0;
+    mSamplesPerBlock = 16;
+    mBytesPerBlock = param_0;
 }
 
 void JASDsp::TChannel::initAutoMixer() {
-    if (_58) {
-        _54 = _56;
+    if (mAutoMixerBeenSet) {
+        mAutoMixerInitVolume = mAutoMixerVolume;
     } else {
-        _54 = 0;
-        _58 = 1;
+        mAutoMixerInitVolume = 0;
+        mAutoMixerBeenSet = 1;
     }
 }
 
 void JASDsp::TChannel::setAutoMixer(u16 param_0, u8 param_1, u8 param_2, u8 param_3, u8 param_4) {
-    _50 = (param_1 << 8) | param_2;
-    _52 = param_3 << 8 | param_3 << 1;
-    _56 = param_0;
-    _58 = 1;
+    mAutoMixerPanDolby = (param_1 << 8) | param_2;
+    mAutoMixerFxMix = param_3 << 8 | param_3 << 1;
+    mAutoMixerVolume = param_0;
+    mAutoMixerBeenSet = 1;
 }
 
 void JASDsp::TChannel::setPitch(u16 pitch) {
@@ -269,18 +281,17 @@ void JASDsp::TChannel::setPitch(u16 pitch) {
 }
 
 void JASDsp::TChannel::setMixerInitVolume(u8 param_0, s16 param_1) {
-    u16* tmp = _10[param_0];
-    tmp[2] = param_1;
-    tmp[1] = param_1;
-    tmp[3] = 0;
+    OutputChannelConfig& cfg = mOutputChannels[param_0];
+    cfg.mCurrentVolume = param_1;
+    cfg.mTargetVolume = param_1;
+    cfg.mVolumeProgress = 0;
 }
 
 void JASDsp::TChannel::setMixerVolume(u8 param_0, s16 param_1) {
-    u16* tmp;
     if (mForcedStop == 0) {
-        tmp = _10[param_0];
-        tmp[1] = param_1;
-        tmp[3] &= 0xff;
+        OutputChannelConfig& cfg = mOutputChannels[param_0];
+        cfg.mTargetVolume = param_1;
+        cfg.mVolumeProgress &= 0xff;
     }
 }
 
@@ -333,13 +344,13 @@ void JASDsp::TChannel::setDistFilter(s16 param_0) {
 }
 
 void JASDsp::TChannel::setBusConnect(u8 param_0, u8 param_1) {
-    u16* tmp = _10[param_0];
+    OutputChannelConfig& cfg = mOutputChannels[param_0];
     static u16 const connect_table[12] = {
         0x0000, 0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80, 0x0EE0, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0,
     };
     u16 r30 = 0;
     r30 = connect_table[param_1];
-    tmp[0] = r30;
+    cfg.mBusConnect = r30;
 }
 
 u16 DSP_CreateMap2(u32 param_0) {

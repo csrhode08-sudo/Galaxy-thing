@@ -406,10 +406,10 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
 
         break;
     case JASChannel::CB_PLAY:
-        if (i_dspChannel->_8 == 0) {
+        if (i_dspChannel->mResetFlag == 0) {
             if (i_channel == mUpdateChannel) {
                 _12C = 0;
-                u32 sp28 = i_dspChannel->_74 + i_dspChannel->_64;
+                u32 sp28 = i_dspChannel->mSamplesLeft + i_dspChannel->mSamplesPerBlock;
                 if (sp28 <= _0B4) {
                     _0B8 += _0B4 - sp28;
                 } else if (!_0C0) {
@@ -417,10 +417,10 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
                     _0B8 += block_samples * mBufCount - sp28;
                 } else {
                     _0B8 += _0B4;
-                    _0B8 += block_samples * mBufCount - sp28 - i_dspChannel->_110;
+                    _0B8 += block_samples * mBufCount - sp28 - i_dspChannel->mLoopStartSample;
                     _0B8 -= mLoopEnd;
                     _0B8 += mLoopStart;
-                    i_dspChannel->_110 = 0;
+                    i_dspChannel->mLoopStartSample = 0;
                     _120 = 0;
                     _12C |= 2;
                     if (_0C4 < 0xffffffff) {
@@ -449,23 +449,23 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
                             uvar5 = 0;
                         }
 
-                        i_dspChannel->_110 = mLoopStart % block_samples + uvar5 * block_samples;
-                        _120 = i_dspChannel->_110;
+                        i_dspChannel->mLoopStartSample = mLoopStart % block_samples + uvar5 * block_samples;
+                        _120 = i_dspChannel->mLoopStartSample;
                         _12C |= 2;
                     } else {
-                        i_dspChannel->_102 = 0;
+                        i_dspChannel->mLoopFlag = 0;
                         _128 = 0;
                         _12C |= 8;
                     }
 
-                    i_dspChannel->_74 -= block_samples * mBufCount - _0BC * block_samples - mLoopEnd % block_samples;
-                    _11C = i_dspChannel->_74;
+                    i_dspChannel->mSamplesLeft -= block_samples * mBufCount - _0BC * block_samples - mLoopEnd % block_samples;
+                    _11C = i_dspChannel->mSamplesLeft;
                     _12C |= 1;
                     _0BC += (mLoopEnd - 1) / block_samples - mLoopStart / block_samples + 1;
                     _0C0 = true;
                 }
 
-                u32 uvar4 = i_dspChannel->_70 - i_channel->mWavePtr;
+                u32 uvar4 = i_dspChannel->mAramStreamPosition - i_channel->mWavePtr;
                 if (uvar4 != 0) {
                     uvar4--;
                 }
@@ -495,25 +495,25 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
                         _0BC -= mBufCount;
                         if (_0AD) {
                             if (!_0C0) {
-                                i_dspChannel->_74 += block_samples;
-                                _11C = i_dspChannel->_74;
+                                i_dspChannel->mSamplesLeft += block_samples;
+                                _11C = i_dspChannel->mSamplesLeft;
                                 _12C |= 1;
                             }
 
-                            i_dspChannel->_114 += block_samples;
-                            _124 = i_dspChannel->_114;
+                            i_dspChannel->mEndSample += block_samples;
+                            _124 = i_dspChannel->mEndSample;
                             _12C |= 4;
                             mBufCount = _160;
                             _0AD = false;
                         } else {
                             if (mBufCount != _160 - 1) {
                                 mBufCount = _160 - 1;
-                                i_dspChannel->_114 -= block_samples;
-                                _124 = i_dspChannel->_114;
+                                i_dspChannel->mEndSample -= block_samples;
+                                _124 = i_dspChannel->mEndSample;
                                 _12C |= 4;
                                 if (!_0C0) {
-                                    i_dspChannel->_74 -= block_samples;
-                                    _11C = i_dspChannel->_74;
+                                    i_dspChannel->mSamplesLeft -= block_samples;
+                                    _11C = i_dspChannel->mSamplesLeft;
                                     _12C |= 1;
                                 }
                             }
@@ -526,25 +526,25 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
                     }
                 }
 
-                _0B4 = i_dspChannel->_74 + i_dspChannel->_64;
+                _0B4 = i_dspChannel->mSamplesLeft + i_dspChannel->mSamplesPerBlock;
                 if (_118 >= _160 - 2) {
                     _0AE |= (u8)4;
                 }
             } else {
                 if (_12C & 1) {
-                    i_dspChannel->_74 = _11C;
+                    i_dspChannel->mSamplesLeft = _11C;
                 }
 
                 if (_12C & 2) {
-                    i_dspChannel->_110 = _120;
+                    i_dspChannel->mLoopStartSample = _120;
                 }
 
                 if (_12C & 4) {
-                    i_dspChannel->_114 = _124;
+                    i_dspChannel->mEndSample = _124;
                 }
 
                 if (_12C & 8) {
-                    i_dspChannel->_102 = _128;
+                    i_dspChannel->mLoopFlag = _128;
                 }
             }
 
@@ -555,8 +555,8 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
                 }
             }
 
-            i_dspChannel->_104 = (s16)_130[ch];
-            i_dspChannel->_106 = (s16)_13C[ch];
+            i_dspChannel->mpLast = (s16)_130[ch];
+            i_dspChannel->mpPenult = (s16)_13C[ch];
         }
 
         break;

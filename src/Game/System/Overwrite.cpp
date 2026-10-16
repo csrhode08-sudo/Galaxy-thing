@@ -42,6 +42,9 @@
 
 #include <cstdarg>
 #include <revolution/sc.h>
+#ifdef TARGET_PC
+#include "pc/audio.h"
+#endif
 
 void Overwrite_FORCE_MATCH_SDATA2() {
     (void)-2607.5945f;
@@ -1089,7 +1092,7 @@ void JKRAramPiece::startDMA(JKRAMCommand* pCommand) {
 }
 
 void JAU_JASInitializer::initJASystem(JKRSolidHeap* pHeap) {
-    if (JASAudioThread::getThreadPointer() == nullptr && JASDvd::getThreadPointer() == nullptr) {
+    if (JASDvd::getThreadPointer() == nullptr) {
         JASKernel::setupRootHeap(pHeap, heapSize_);
         if (audioMemory_ == 0) {
             audioMemory_ = JKRAram::getManager()->getAudioMemory();
@@ -1106,14 +1109,19 @@ void JAU_JASInitializer::initJASystem(JKRSolidHeap* pHeap) {
         }
 
         JASDvd::createThread(dvdThreadPriority_, 0x100, 0x8000);
+#ifdef TARGET_PC
+        // Mixing happens on the host audio callback instead of a DSP-driven audio thread.
+        pc::audio::Initialize();
+#else
         JASAudioThread::create(audioThreadPriority_);
+#endif
         JKRThreadSwitch* pThreadSwitch = JKRThreadSwitch::getManager();
         if (pThreadSwitch != nullptr) {
             if (dvdThreadId_ >= 0) {
                 pThreadSwitch->enter(JASDvd::getThreadPointer(), dvdThreadId_);
             }
 
-            if (audioThreadId_ >= 0) {
+            if (audioThreadId_ >= 0 && JASAudioThread::getThreadPointer() != nullptr) {
                 pThreadSwitch->enter(JASAudioThread::getThreadPointer(), audioThreadId_);
             }
         }
