@@ -78,5 +78,5 @@ CameraTargetObj* CameraTripodPlanet::calc() {
 }
 
 CamTranslatorBase* CameraTripodPlanet::createTranslator() {
-    return new CamTranslatorTripodPlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTripodPlanet(this);
 }

@@ -63,7 +63,7 @@ bool CameraParamChunkID::equals(s32 zoneID, const char* pName) const {
 }
 
 char* CameraParamChunkID::getBuffer(u32 length) {
-    return new char[length];
+    return new (JKRHeapToken::Dummy) char[length];
 }
 
 void CameraParamChunkID::createCubeID(s32 zoneID, u16 id) {

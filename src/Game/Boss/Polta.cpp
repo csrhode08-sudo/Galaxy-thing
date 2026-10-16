@@ -38,7 +38,7 @@ BombTeresaHolder::BombTeresaHolder() : DeriveActorGroup< BombTeresa >("ボムテ
     BombTeresa* bombTeresa;
 
     for (int i = 0; i < ::sBombTeresaBufferSize; i++) {
-        bombTeresa = new BombTeresa("ポルタ用ボムテレサ");
+        bombTeresa = new (JKRHeapToken::Dummy) BombTeresa("ポルタ用ボムテレサ");
         bombTeresa->initWithoutIter();
         bombTeresa->makeActorDead();
         bombTeresa->_EF = true;
@@ -59,7 +59,7 @@ void Polta::init(const JMapInfoIter& rIter) {
     initPartsModel();
     initBombTeresaHolder();
     initSensor();
-    mSequencer = new PoltaActionSequencer(this, rIter);
+    mSequencer = new (JKRHeapToken::Dummy) PoltaActionSequencer(this, rIter);
     initEffectKeeper(0, nullptr, false);
     initSound(12, false);
     initCamera(rIter);
@@ -81,8 +81,8 @@ void Polta::init(const JMapInfoIter& rIter) {
 
 void Polta::initArm() {
     calcAnim();
-    mLeftArm = new PoltaArm("左腕", "PoltaLeftArm", getBaseMtx());
-    mRightArm = new PoltaArm("右腕", "PoltaRightArm", getBaseMtx());
+    mLeftArm = new (JKRHeapToken::Dummy) PoltaArm("左腕", "PoltaLeftArm", getBaseMtx());
+    mRightArm = new (JKRHeapToken::Dummy) PoltaArm("右腕", "PoltaRightArm", getBaseMtx());
     mLeftArm->initWithoutIter();
     mRightArm->initWithoutIter();
 }
@@ -108,7 +108,7 @@ void Polta::initCamera(const JMapInfoIter& rIter) {
         MR::declareCameraRegisterVec(this, cameraRegisterIndex, &mPosition);
     }
 
-    mCameraInfo = new ActorCameraInfo(rIter);
+    mCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     MR::initAnimCamera(this, mCameraInfo, "OpeningDemo");
     MR::initAnimCamera(this, mCameraInfo, "PowerUpDemo");
     MR::initAnimCamera(this, mCameraInfo, "DownDemo");
@@ -147,15 +147,15 @@ Polta::Polta(const char* pName)
 }
 
 void Polta::initSensor() {
-    mSensorCtrl = new PoltaSensorCtrl(this);
+    mSensorCtrl = new (JKRHeapToken::Dummy) PoltaSensorCtrl(this);
     initHitSensor(mSensorCtrl->getSensorCount());
     mSensorCtrl->initSensor();
 }
 
 void Polta::initBombTeresaHolder() {
-    mBombTeresaHolder = new BombTeresaHolder();
-    mRockHolder = new PoltaRockHolder();
-    mGroundRockHolder = new PoltaGroundRockHolder();
+    mBombTeresaHolder = new (JKRHeapToken::Dummy) BombTeresaHolder();
+    mRockHolder = new (JKRHeapToken::Dummy) PoltaRockHolder();
+    mGroundRockHolder = new (JKRHeapToken::Dummy) PoltaGroundRockHolder();
 }
 
 void Polta::appearBreakModel(const TVec3f&, const char* pName) {

@@ -57,7 +57,7 @@ namespace MR {
 };  // namespace MR
 
 WarpPodMgr::WarpPodMgr(const char* pName) : NameObj(pName) {
-    _10 = new LiveActorGroup("ワープポッド群", 128);
+    _10 = new (JKRHeapToken::Dummy) LiveActorGroup("ワープポッド群", 128);
     _C = nullptr;
     _14 = 0;
 
@@ -142,7 +142,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoGroupID(rIter, &groupId);
 
     if (groupId >= 0) {
-        mJMapIdInfo = new JMapIdInfo(groupId, rIter);
+        mJMapIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(groupId, rIter);
     }
 
     mGroupId = groupId;
@@ -170,7 +170,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
         mArg7 = false;
     }
 
-    mCamInfo = new ActorCameraInfo(rIter);
+    mCamInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
 
     s32 arg0;
     MR::getJMapInfoArg0WithInit(rIter, &arg0);
@@ -179,7 +179,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     sprintf(eventCameraName, "ワープカメラ %d-%c", groupId, arg0 + 65);
     MR::declareEventCamera(mCamInfo, eventCameraName);
 
-    mEventCameraName = new char[strlen(eventCameraName) + 1];
+    mEventCameraName = new (JKRHeapToken::Dummy) char[strlen(eventCameraName) + 1];
     strcpy(mEventCameraName, eventCameraName);
 
     if (mVisibilityState == 0) {
@@ -307,7 +307,7 @@ void WarpPod::initPair() {
     char buf[256];
     sprintf(buf, "wPod出現カメラ %d", mGroupId);
 
-    _9C = new char[strlen(buf) + 1];
+    _9C = new (JKRHeapToken::Dummy) char[strlen(buf) + 1];
     strcpy(_9C, buf);
 
     MR::declareEventCamera(mCamInfo, _9C);
@@ -488,7 +488,7 @@ void WarpPod::initDraw() {
     f32 startAngle = -halfAngle;
     u16 count = 60;
     u16 remaining = count;
-    _C4 = new TVec3f[count];
+    _C4 = new (JKRHeapToken::Dummy) TVec3f[count];
     _C8 = count;
 
     for (u32 i = 0; i < count; remaining--, i++) {
@@ -506,8 +506,8 @@ void WarpPod::initDraw() {
         _C4[i] = position + up * 200.0f;
     }
 
-    _D4 = new JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestColor.bti"), 0);
-    _D8 = new JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestMask.bti"), 0);
+    _D4 = new (JKRHeapToken::Dummy) JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestColor.bti"), 0);
+    _D8 = new (JKRHeapToken::Dummy) JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestMask.bti"), 0);
 }
 
 void WarpPod::drawCylinder(u32) const {

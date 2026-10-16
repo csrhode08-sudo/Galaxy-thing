@@ -223,7 +223,7 @@ namespace MR {
         iter.getValue("PosName", ppName);
         getJMapInfoTrans(iter, pPosition);
         getJMapInfoRotate(iter, pRotation);
-        *ppLinkInfo = new JMapLinkInfo(iter, false);
+        *ppLinkInfo = new (JKRHeapToken::Dummy) JMapLinkInfo(iter, false);
     }
 
     s32 getChildObjNum(const JMapInfoIter& rIter) {

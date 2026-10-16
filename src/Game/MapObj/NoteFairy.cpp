@@ -143,7 +143,7 @@ void NoteFairy::init(const JMapInfoIter& rIter) {
         }
     }
 
-    mNoteArray = new Note*[mMelodyNoteNum];
+    mNoteArray = new (JKRHeapToken::Dummy) Note*[mMelodyNoteNum];
 
     for (s32 i = 0; i < mMelodyNoteNum; i++) {
         TVec3f stack_24;
@@ -155,7 +155,7 @@ void NoteFairy::init(const JMapInfoIter& rIter) {
             MR::moveCoord(this, mNoteCoord);
         }
 
-        mNoteArray[i] = new Note("音符", MR::getRailDirection(this), this);
+        mNoteArray[i] = new (JKRHeapToken::Dummy) Note("音符", MR::getRailDirection(this), this);
         mNoteArray[i]->mPosition.set(stack_24);
         mNoteArray[i]->initWithoutIter();
         mNoteArray[i]->mCounter = mTimeLimit;

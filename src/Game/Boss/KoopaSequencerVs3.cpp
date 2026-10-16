@@ -62,21 +62,21 @@ void KoopaSequencerVs3::init(Koopa* pKoopa, const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(KoopaSequencerVs3, KoopaSequencerVs3NrvWaitPlayer));
     KoopaFunction::initKoopaVs3(mKoopa);
 
-    mBattleStairs = new KoopaBattleStairsVs3(mKoopa);
+    mBattleStairs = new (JKRHeapToken::Dummy) KoopaBattleStairsVs3(mKoopa);
 
-    mDemoFallToPlanetLv2 = new KoopaDemoFallToPlanetVs3Lv2(mKoopa);
+    mDemoFallToPlanetLv2 = new (JKRHeapToken::Dummy) KoopaDemoFallToPlanetVs3Lv2(mKoopa);
     mDemoFallToPlanetLv2->init();
 
-    mDemoFallToPlanetLv3 = new KoopaDemoFallToPlanetVs3Lv3(mKoopa);
+    mDemoFallToPlanetLv3 = new (JKRHeapToken::Dummy) KoopaDemoFallToPlanetVs3Lv3(mKoopa);
     mDemoFallToPlanetLv3->init();
 
-    mBattleLv1 = new KoopaBattleVs3Lv1(mKoopa);
+    mBattleLv1 = new (JKRHeapToken::Dummy) KoopaBattleVs3Lv1(mKoopa);
     mBattleLv1->init();
 
-    mBattleLv2 = new KoopaBattleVs3Lv2(mKoopa);
+    mBattleLv2 = new (JKRHeapToken::Dummy) KoopaBattleVs3Lv2(mKoopa);
     mBattleLv2->init();
 
-    mBattleMain = new KoopaBattleMain("クッパ戦闘（Ｖｓ３Ｌｖ３）", mKoopa);
+    mBattleMain = new (JKRHeapToken::Dummy) KoopaBattleMain("クッパ戦闘（Ｖｓ３Ｌｖ３）", mKoopa);
     mBattleMain->init();
 
     MR::initDemoSheetTalkAnim(KoopaFunction::getKoopaDemoKoopaJr(mKoopa), rIter, "クッパＶｓ３ピーチ登場", "DemoKoopaMeetPeach", nullptr);

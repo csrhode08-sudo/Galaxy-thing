@@ -106,28 +106,28 @@ MtxPtr LayoutActor::getPaneMtxRef(const char* pParam1) {
 }
 
 void LayoutActor::initLayoutManager(const char* pName, u32 rootPaneAnimLayerNum) {
-    mLayoutManager = new LayoutManager(pName, true, rootPaneAnimLayerNum, 0x100);
+    mLayoutManager = new (JKRHeapToken::Dummy) LayoutManager(pName, true, rootPaneAnimLayerNum, 0x100);
 }
 
 void LayoutActor::initLayoutManagerNoConvertFilename(const char* pName, u32 rootPaneAnimLayerNum) {
-    mLayoutManager = new LayoutManager(pName, false, rootPaneAnimLayerNum, 0x100);
+    mLayoutManager = new (JKRHeapToken::Dummy) LayoutManager(pName, false, rootPaneAnimLayerNum, 0x100);
 }
 
 void LayoutActor::initLayoutManagerWithTextBoxBufferLength(const char* pName, u32 textBoxBufferLength, u32 rootPaneAnimLayerNum) {
-    mLayoutManager = new LayoutManager(pName, false, rootPaneAnimLayerNum, textBoxBufferLength);
+    mLayoutManager = new (JKRHeapToken::Dummy) LayoutManager(pName, false, rootPaneAnimLayerNum, textBoxBufferLength);
 }
 
 void LayoutActor::initNerve(const Nerve* pNerve) {
-    mSpine = new Spine(this, pNerve);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, pNerve);
 }
 
 void LayoutActor::initEffectKeeper(int param1, const char* pParam2, const EffectSystem* pEffectSystem) {
-    mEffectKeeper = new PaneEffectKeeper(this, mLayoutManager, param1, pParam2);
+    mEffectKeeper = new (JKRHeapToken::Dummy) PaneEffectKeeper(this, mLayoutManager, param1, pParam2);
     mEffectKeeper->init(this, pEffectSystem);
 }
 
 void LayoutActor::initPointingTarget(int maxNumTargets) {
-    mPointingTarget = new StarPointerLayoutTargetKeeper(maxNumTargets);
+    mPointingTarget = new (JKRHeapToken::Dummy) StarPointerLayoutTargetKeeper(maxNumTargets);
 }
 
 void LayoutActor::updateSpine() {

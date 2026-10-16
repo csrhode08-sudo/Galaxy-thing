@@ -100,11 +100,11 @@ void EyeBeamer::initStartNerve(const JMapInfoIter& rIter) {
 
 void EyeBeamer::initModel() {
     initModelManagerWithAnm("EyeBeamer", 0, false);
-    mBeamVolumeDrawer = new VolumeModelDrawer("ビームボリューム", "EyeBeamerBeamVolume", _9C);
-    mBeamBloom = new ModelObj("ビームブルーム", "EyeBeamerBeamBloom", _9C, MR::DrawBufferType_BloomModel, -2, -2, false);
+    mBeamVolumeDrawer = new (JKRHeapToken::Dummy) VolumeModelDrawer("ビームボリューム", "EyeBeamerBeamVolume", _9C);
+    mBeamBloom = new (JKRHeapToken::Dummy) ModelObj("ビームブルーム", "EyeBeamerBeamBloom", _9C, MR::DrawBufferType_BloomModel, -2, -2, false);
     mBeamBloom->initWithoutIter();
     MR::invalidateClipping(mBeamBloom);
-    mBeamMdl = new ModelObj("ビーム", "EyeBeamerBeam", _9C, MR::DrawBufferType_IndirectMapObj, -2, -2, false);
+    mBeamMdl = new (JKRHeapToken::Dummy) ModelObj("ビーム", "EyeBeamerBeam", _9C, MR::DrawBufferType_IndirectMapObj, -2, -2, false);
     mBeamMdl->initWithoutIter();
     MR::invalidateClipping(mBeamMdl);
     MR::startBtk(mBeamMdl, "EyeBeamerBeam");
@@ -137,7 +137,7 @@ void EyeBeamer::initAfterPlacement() {
 void EyeBeamer::initRailMoveFunction(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mRailMover->start();
         MR::moveCoordToStartPos(this);

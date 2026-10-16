@@ -12,8 +12,8 @@ ActorJointCtrl::ActorJointCtrl(LiveActor* pActor) {
     _10 = 1;
     _11 = 0;
 
-    mJointCtrlKeeper = new DynamicJointCtrlKeeper(mActor);
-    mFaceJointCtrl = new FaceJointCtrl(mActor);
+    mJointCtrlKeeper = new (JKRHeapToken::Dummy) DynamicJointCtrlKeeper(mActor);
+    mFaceJointCtrl = new (JKRHeapToken::Dummy) FaceJointCtrl(mActor);
     mFaceJointCtrl->init();
     mJointCtrlHolder = ActorJoint::createIKJointCtrlHolder(mActor);
 

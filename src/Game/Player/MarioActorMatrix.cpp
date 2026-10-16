@@ -151,11 +151,11 @@ static MatrixValueTable talking_head_height[] = {
     {"ロゼッタ", 240.0f},  {"ウサギ", 100.0f},   {"いたずらウサギ", 100.0f}, {"シャッチー（会話用）", 220.0f}, {""}};
 
 void MarioActor::initActionMatrix() {
-    _FBC = new MatrixControl("変身中のマリオ行動表", morph_bitmap, select_list, -1);
-    _FC0 = new MatrixControl("マリオ状態とオートバインド対応表", auto_bind_bitmap, auto_bind_selecterlist, 1);
-    _FC4 = new MatrixControl("メッセージ送信応答時のエフェクト", auto_efx_bitmap, auto_efx_selecterlist, 1);
+    _FBC = new (JKRHeapToken::Dummy) MatrixControl("変身中のマリオ行動表", morph_bitmap, select_list, -1);
+    _FC0 = new (JKRHeapToken::Dummy) MatrixControl("マリオ状態とオートバインド対応表", auto_bind_bitmap, auto_bind_selecterlist, 1);
+    _FC4 = new (JKRHeapToken::Dummy) MatrixControl("メッセージ送信応答時のエフェクト", auto_efx_bitmap, auto_efx_selecterlist, 1);
 
-    _FC8 = new MatrixValueGetter("キャラの身長", talking_head_height);
+    _FC8 = new (JKRHeapToken::Dummy) MatrixValueGetter("キャラの身長", talking_head_height);
 }
 
 bool MarioActor::isActionOk(const char* pName) const {

@@ -13,7 +13,7 @@ struct AudMePlayingParams {
     /* 0x1 */ u8 mChordVolume;
     /* 0x2 */ u8 _2;
     /* 0x3 */ u8 _3;
-    /* 0x4 */ u16 _4;
+    /* 0x4 */ BE(u16) _4;
     /* 0x6 */ u8 _6;
     /* 0x7 */ u8 _7;
 };

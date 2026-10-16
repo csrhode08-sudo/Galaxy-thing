@@ -20,27 +20,27 @@
 namespace {
     template < typename T >
     NameObj* createCenterOriginCube(const char* pName) {
-        return new T(AreaForm::Type_Cube1, pName);
+        return new (JKRHeapToken::Dummy) T(AreaForm::Type_Cube1, pName);
     }
 
     template < typename T >
     NameObj* createBaseOriginCube(const char* pName) {
-        return new T(AreaForm::Type_Cube2, pName);
+        return new (JKRHeapToken::Dummy) T(AreaForm::Type_Cube2, pName);
     }
 
     template < typename T >
     NameObj* createSphere(const char* pName) {
-        return new T(AreaForm::Type_Sphere, pName);
+        return new (JKRHeapToken::Dummy) T(AreaForm::Type_Sphere, pName);
     }
 
     template < typename T >
     NameObj* createBaseOriginCylinder(const char* pName) {
-        return new T(AreaForm::Type_Cylinder, pName);
+        return new (JKRHeapToken::Dummy) T(AreaForm::Type_Cylinder, pName);
     }
 
     template < typename T >
     NameObj* createBowl(const char* pName) {
-        return new T(AreaForm::Type_Bowl, pName);
+        return new (JKRHeapToken::Dummy) T(AreaForm::Type_Bowl, pName);
     }
 
     const NameObjFactory::Name2CreateFunc cCreateTable[] = {

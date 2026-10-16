@@ -100,7 +100,7 @@ CameraTargetObj* CameraTower::calc() {
 }
 
 CamTranslatorBase* CameraTower::createTranslator() {
-    return new CamTranslatorTower(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTower(this);
 }
 
 bool CameraTower::isEnableToRoundLeft() const {

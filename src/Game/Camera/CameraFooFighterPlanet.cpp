@@ -127,7 +127,7 @@ CameraTargetObj* CameraFooFighterPlanet::calc() {
 }
 
 CamTranslatorBase* CameraFooFighterPlanet::createTranslator() {
-    return new CamTranslatorFooFighterPlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFooFighterPlanet(this);
 }
 
 void CameraFooFighterPlanet::goRoundBehind(TVec3f& rPos, TVec3f& rWatchPos, TVec3f& rUp) {

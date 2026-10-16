@@ -6,7 +6,7 @@
 #include "Game/Util/SceneUtil.hpp"
 
 Camera::Camera(const char* pName) : NameObj(pName) {
-    mPoseParam = new CameraPoseParam();
+    mPoseParam = new (JKRHeapToken::Dummy) CameraPoseParam();
     mVPan = nullptr;
     mIsLOfsErpOff = false;
     mZoneMatrix.identity();
@@ -26,9 +26,9 @@ void Camera::setZoneMtx(s32 zoneID) {
 }
 
 CamTranslatorBase* Camera::createTranslator() {
-    return new CamTranslatorDummy(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorDummy(this);
 }
 
 void Camera::createVPanObj() {
-    mVPan = new CameraHeightArrange(this);
+    mVPan = new (JKRHeapToken::Dummy) CameraHeightArrange(this);
 }

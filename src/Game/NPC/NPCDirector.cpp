@@ -6,7 +6,7 @@ NPCDirector::NPCDirector() : NameObj("NPC指揮") {
 }
 
 void NPCDirector::init(const JMapInfoIter& rIter) {
-    mCapsParameterReader = new NPCCapsParameterReader("");
-    mItemParameterReader = new NPCItemParameterReader("");
+    mCapsParameterReader = new (JKRHeapToken::Dummy) NPCCapsParameterReader("");
+    mItemParameterReader = new (JKRHeapToken::Dummy) NPCItemParameterReader("");
     mDataResourceHolder = MR::createAndAddResourceHolder("NPCData.arc");
 }

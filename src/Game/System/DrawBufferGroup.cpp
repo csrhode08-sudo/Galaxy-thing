@@ -20,7 +20,7 @@ s32 DrawBufferGroup::registerDrawBuffer(LiveActor* pActor) {
     s32 idx = findExecuterIndex(pModelName);
 
     if (idx < 0) {
-        DrawBufferExecuter* exec = new DrawBufferExecuter(pModelName, MR::getJ3DModel(pActor), 0x10);
+        DrawBufferExecuter* exec = new (JKRHeapToken::Dummy) DrawBufferExecuter(pModelName, MR::getJ3DModel(pActor), 0x10);
 
         idx = mExecutors.size();
         mExecutors.push_back(exec);
@@ -36,7 +36,7 @@ s32 DrawBufferGroup::registerDrawBuffer(LiveActor* pActor) {
 }
 
 void DrawBufferGroup::allocateActorListBuffer() {
-    std::for_each(mExecutors.begin(), mExecutors.end(), std::mem_func(&DrawBufferExecuter::allocateActorListBuffer));
+    msl::for_each(mExecutors.begin(), mExecutors.end(), msl::mem_func(&DrawBufferExecuter::allocateActorListBuffer));
 }
 
 void DrawBufferGroup::active(LiveActor* pActor, s32 index) {
@@ -51,7 +51,7 @@ void DrawBufferGroup::active(LiveActor* pActor, s32 index) {
 void DrawBufferGroup::deactive(LiveActor* pActor, s32 index) {
     mExecutors[index]->remove(pActor);
     if (isExecutorEmpty(index)) {
-        mActiveExecutors[std::find(mActiveExecutors.begin(), mActiveExecutors.begin() + mActiveExecutors.size(), mExecutors[index]) -
+        mActiveExecutors[msl::find(mActiveExecutors.begin(), mActiveExecutors.begin() + mActiveExecutors.size(), mExecutors[index]) -
                          mActiveExecutors.begin()] = mActiveExecutors[mActiveExecutors.size() - 1];
         mActiveExecutors.mCount--;
     }
@@ -74,7 +74,7 @@ void DrawBufferGroup::findLightInfo(LiveActor* pActor, s32 index) {
 
 void DrawBufferGroup::entry() {
     if (mActiveExecutors.size() != 0) {
-        std::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), std::mem_func(&DrawBufferExecuter::calcViewAndEntry));
+        msl::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), msl::mem_func(&DrawBufferExecuter::calcViewAndEntry));
     }
 }
 
@@ -84,7 +84,7 @@ void DrawBufferGroup::drawOpa() const {
         if (mLightLoadType != -1) {
             MR::loadLight(mLightLoadType);
         }
-        std::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), std::mem_func(&DrawBufferExecuter::drawOpa));
+        msl::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), msl::mem_func(&DrawBufferExecuter::drawOpa));
     }
 }
 
@@ -94,7 +94,7 @@ void DrawBufferGroup::drawXlu() const {
         if (mLightLoadType != -1) {
             MR::loadLight(mLightLoadType);
         }
-        std::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), std::mem_func(&DrawBufferExecuter::drawXlu));
+        msl::for_each(mActiveExecutors.begin(), mActiveExecutors.end(), msl::mem_func(&DrawBufferExecuter::drawXlu));
     }
 }
 

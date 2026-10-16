@@ -17,7 +17,7 @@ BaseMatrixFollower::BaseMatrixFollower(NameObj* pObj, const JMapInfoIter& rIter)
     mFollowTarget = nullptr;
     mFollowID = -1;
     MR::getJMapInfoFollowID(rIter, &mFollowID);
-    mLinkInfo = new JMapLinkInfo(rIter, false);
+    mLinkInfo = new (JKRHeapToken::Dummy) JMapLinkInfo(rIter, false);
 }
 
 NameObj* BaseMatrixFollower::getFollowTargetActor() const {
@@ -110,7 +110,7 @@ void BaseMatrixFollowTargetHolder::addFollower(BaseMatrixFollower* pFollower) {
 
     BaseMatrixFollowTarget* pTarget = findFollowTarget(pFollower);
     if (!pTarget) {
-        pTarget = new BaseMatrixFollowTarget(pFollower->mLinkInfo);
+        pTarget = new (JKRHeapToken::Dummy) BaseMatrixFollowTarget(pFollower->mLinkInfo);
         mTargets.push_back(pTarget);
     }
 

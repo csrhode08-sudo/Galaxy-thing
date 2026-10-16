@@ -51,7 +51,7 @@ const char sJaiSeqResArc[] = "/AudioRes/JaiSeq.arc";
 AudSystem* AudSystem::msBasic;
 
 AudSystem* AudNewAudSystem_(JAUSectionHeap* pHeap, JKRArchive* pChordArchive, JKRArchive* pMeArchive, JKRArchive* pRemixArchive, int maxChannels) {
-    AudSystem* system = new AudSystem(pHeap, pChordArchive, pMeArchive, pRemixArchive);
+    AudSystem* system = new (JKRHeapToken::Dummy) AudSystem(pHeap, pChordArchive, pMeArchive, pRemixArchive);
     system->mAudience.mMaxChannels = maxChannels;
     return system;
 }
@@ -146,7 +146,7 @@ static JAUStdSoundInfo* newSoundInfo(JAUSection* pSection) {
     JAUSection* heap = pSection;
     JKRHeap* prevHeap = heap->getHeap_()->becomeCurrentHeap();
 
-    JAUDisposerObject_< JAUStdSoundInfo >* soundInfo = new JAUDisposerObject_< JAUStdSoundInfo >(true);
+    JAUDisposerObject_< JAUStdSoundInfo >* soundInfo = new (JKRHeapToken::Dummy) JAUDisposerObject_< JAUStdSoundInfo >(true);
 
     heap->get_C4().append(soundInfo);
     prevHeap->becomeCurrentHeap();
@@ -159,7 +159,7 @@ AudSystem::AudSystem(JAUSectionHeap* pSectionHeap, JKRArchive* pChordArchive, JK
       mSeStrategyMgr(), mVolumeController(), mHomeButtonMenuState(), mHomeButtonToggleTime(-1), mPauseMenuState(), mPauseMenuToggleTime(-1),
       mIsDvdError(), mLimitedSoundInfo(), mSpkSystem() {
     msBasic = this;
-    mLimitedSoundInfo = new (mSectionHeap->getHeap(), 0) AudLimitedSoundInfo[2];
+    mLimitedSoundInfo = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudLimitedSoundInfo[2];
     clearAllLimitedSound();
 
     JAISeqDataMgr* seSeqDataMgr = pSectionHeap->getSeSeqDataMgr();
@@ -174,7 +174,7 @@ AudSystem::AudSystem(JAUSectionHeap* pSectionHeap, JKRArchive* pChordArchive, JK
 
     setAudience(&mAudience);
 
-    JAUStreamStaticAramMgr* streamAramMgr = new JAUStreamStaticAramMgr();
+    JAUStreamStaticAramMgr* streamAramMgr = new (JKRHeapToken::Dummy) JAUStreamStaticAramMgr();
     streamAramMgr->alloc(AudParams::streamAramBlocks_perChunk, JASKernel::getAramHeap());
     mStreamAramMgr = streamAramMgr;
     mStreamMgr.setStreamAramMgr(mStreamAramMgr);
@@ -195,16 +195,16 @@ AudSystem::AudSystem(JAUSectionHeap* pSectionHeap, JKRArchive* pChordArchive, JK
     initCategoryArrangement();
     initVolumeSetting();
 
-    mSoundObjHolder = new (mSectionHeap->getHeap(), 0) AudSoundObjHolder(mSectionHeap->getHeap(), AudParams::numInspectableSoundObj);
-    mSystemSeObject = new (mSectionHeap->getHeap(), 0) AudSoundObject(nullptr, 10, mSectionHeap->getHeap());
-    mAtmosphereSeObject = new (mSectionHeap->getHeap(), 0) AudSoundObject(nullptr, 8, mSectionHeap->getHeap());
-    mSceneMgr = new (mSectionHeap->getHeap(), 0) AudSceneMgr(mSectionHeap);
-    mRhythmMeSystem = new (mSectionHeap->getHeap(), 0) AudRhythmMeSystem(mSectionHeap->getHeap(), 3, true);
-    mRemixMgr = new (mSectionHeap->getHeap(), 0) AudRemixMgr(mSectionHeap->getHeap());
+    mSoundObjHolder = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSoundObjHolder(mSectionHeap->getHeap(), AudParams::numInspectableSoundObj);
+    mSystemSeObject = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSoundObject(nullptr, 10, mSectionHeap->getHeap());
+    mAtmosphereSeObject = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSoundObject(nullptr, 8, mSectionHeap->getHeap());
+    mSceneMgr = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSceneMgr(mSectionHeap);
+    mRhythmMeSystem = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudRhythmMeSystem(mSectionHeap->getHeap(), 3, true);
+    mRemixMgr = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudRemixMgr(mSectionHeap->getHeap());
     mRemixMgr->init();
-    mSeStrategyMgr = new (mSectionHeap->getHeap(), 0) AudSeStrategyMgr();
+    mSeStrategyMgr = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSeStrategyMgr();
     mSeMgr.setStrategyMgr(mSeStrategyMgr);
-    mAudEffector = new (mSectionHeap->getHeap(), 0) AudEffector();
+    mAudEffector = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudEffector();
     mAudEffector->initFxLine(mSectionHeap->getHeap());
 
     if (pChordArchive != nullptr) {
@@ -219,9 +219,9 @@ AudSystem::AudSystem(JAUSectionHeap* pSectionHeap, JKRArchive* pChordArchive, JK
         mRemixMgr->setRemixSeqResource(pRemixArchive->getResource(static_cast< u16 >(0)));
     }
 
-    mSystemMeObject = new (mSectionHeap->getHeap(), 0) AudMeObject(nullptr, 8, mSectionHeap->getHeap());
-    mSpkSystem = new (mSectionHeap->getHeap(), 0) SpkSystem(mSectionHeap->getHeap());
-    mVolumeController = new (mSectionHeap->getHeap(), 0) AudSystemVolumeController(this);
+    mSystemMeObject = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudMeObject(nullptr, 8, mSectionHeap->getHeap());
+    mSpkSystem = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) SpkSystem(mSectionHeap->getHeap());
+    mVolumeController = new (JKRHeapToken::Dummy, mSectionHeap->getHeap(), 0) AudSystemVolumeController(this);
 }
 
 AudChordInfo* AudSystem::getChordInfo() {

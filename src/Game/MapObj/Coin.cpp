@@ -69,7 +69,7 @@ void Coin::init(const JMapInfoIter& rIter) {
         MR::startBck(mAirBubble, "Move");
     }
 
-    mFlashCtrl = new FlashingCtrl(this, true);
+    mFlashCtrl = new (JKRHeapToken::Dummy) FlashingCtrl(this, true);
     MR::tryCreateMirrorActor(this, mIsPurpleCoin ? "PurpleCoin" : "Coin");
     initNerve(GET_NERVE(Coin, CoinNrvFix));
 
@@ -643,7 +643,7 @@ void Coin::makeArchiveList(NameObjArchiveListCollector* pCollector, const JMapIn
 
 namespace MR {
     NameObj* createDirectSetCoin(const char* pName) {
-        Coin* coin = new Coin(pName);
+        Coin* coin = new (JKRHeapToken::Dummy) Coin(pName);
         MR::createCoinHolder();
         MR::createCoinRotater();
         MR::addToCoinHolder(coin, coin);
@@ -651,7 +651,7 @@ namespace MR {
     }
 
     NameObj* createCoin(const NameObj* pObj, const char* pName) {
-        Coin* coin = new Coin(pName);
+        Coin* coin = new (JKRHeapToken::Dummy) Coin(pName);
         MR::createCoinHolder();
         MR::createCoinRotater();
         MR::addToCoinHolder(pObj, coin);
@@ -659,7 +659,7 @@ namespace MR {
     }
 
     NameObj* createDirectSetPurpleCoin(const char* pName) {
-        Coin* coin = new Coin(pName);
+        Coin* coin = new (JKRHeapToken::Dummy) Coin(pName);
         coin->mIsPurpleCoin = true;
         MR::createPurpleCoinHolder();
         MR::createCoinRotater();
@@ -668,7 +668,7 @@ namespace MR {
     }
 
     NameObj* createPurpleCoin(const NameObj* pObj, const char* pName) {
-        Coin* coin = new Coin(pName);
+        Coin* coin = new (JKRHeapToken::Dummy) Coin(pName);
         coin->mIsPurpleCoin = true;
         MR::createPurpleCoinHolder();
         MR::createCoinRotater();

@@ -25,7 +25,7 @@ void CoinGroup::init(const JMapInfoIter& rIter) {
     mCoinCount = count;
     mTimeLimit = -1;
     MR::getJMapInfoArg1NoInit(rIter, &mTimeLimit);
-    mCoinArray = new Coin*[mCoinCount];
+    mCoinArray = new (JKRHeapToken::Dummy) Coin*[mCoinCount];
 
     for (u32 i = 0; i < mCoinCount; i++) {
         if (mIsPurpleCoinGroup) {

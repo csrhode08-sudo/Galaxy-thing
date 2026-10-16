@@ -54,8 +54,8 @@ BloomEffect::BloomEffect(const char* pName) : ImageEffectBase(pName), _14(255), 
     _3C = _2C;
     _40 = MR::getImageEffectResource()->_1C;
     _44 = MR::getImageEffectResource()->_20;
-    _48 = new Mtx[::sL1RoundPoints * ARRAY_SIZE(::sL1RadAndOfs)];
-    _4C = new Mtx[::sL2RoundPoints * ARRAY_SIZE(::sL2RadAndOfs)];
+    _48 = new (JKRHeapToken::Dummy) Mtx[::sL1RoundPoints * ARRAY_SIZE(::sL1RadAndOfs)];
+    _4C = new (JKRHeapToken::Dummy) Mtx[::sL2RoundPoints * ARRAY_SIZE(::sL2RadAndOfs)];
 
     for (u32 i = 0; i < ARRAY_SIZE(::sL1RadAndOfs); i++) {
         initBlurMtx(&_48[i * ::sL1RoundPoints], ::sL1RoundPoints, ::sL1RadAndOfs[i]._0, ::sL1RadAndOfs[i]._4);
@@ -275,7 +275,7 @@ void BloomEffect::initBlur(JUTTexture* pTexture, u32 param2, f32 intensity) cons
 }
 
 void BloomEffect::drawBlur(s32 divisions, s32 tile, Mtx* pMtx, u32 stageCount, u32 matrixCount) const {
-    GXSetArray(GX_TEX_MTX_ARRAY, pMtx, sizeof(Mtx));
+    GXSETARRAY(GX_TEX_MTX_ARRAY, pMtx, matrixCount * sizeof(Mtx), sizeof(Mtx), true);
 
     s32 row = tile / divisions;
     s32 column = tile % divisions;

@@ -22,7 +22,7 @@ void NameObjGroup::pauseOffAll() const {
 
 void NameObjGroup::initObjArray(int numMax) {
     mObjNumMax = numMax;
-    mObjArray = new NameObj*[numMax];
+    mObjArray = new (JKRHeapToken::Dummy) NameObj*[numMax];
 
     for (s32 i = 0; i < mObjNumMax; i++) {
         mObjArray[i] = nullptr;

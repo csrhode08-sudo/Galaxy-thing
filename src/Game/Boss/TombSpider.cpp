@@ -51,14 +51,14 @@ void TombSpider::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     initEffectKeeper(8, nullptr, false);
 
-    mParts = new TombSpiderParts(this);
+    mParts = new (JKRHeapToken::Dummy) TombSpiderParts(this);
     mParts->init();
 
     initHitSensor(32);
-    mSensorCtrl = new TombSpiderSensorCtrl(this);
+    mSensorCtrl = new (JKRHeapToken::Dummy) TombSpiderSensorCtrl(this);
     mSensorCtrl->initSensor();
 
-    mEnvironment = new TombSpiderEnvironment(this);
+    mEnvironment = new (JKRHeapToken::Dummy) TombSpiderEnvironment(this);
 
     initSound(8, false);
 
@@ -68,17 +68,17 @@ void TombSpider::init(const JMapInfoIter& rIter) {
 
     initNerve(GET_NERVE(TombSpider, TombSpiderNrvWaitPlayer));
 
-    mActionCocoon = new TombSpiderActionCocoon(this);
+    mActionCocoon = new (JKRHeapToken::Dummy) TombSpiderActionCocoon(this);
     mActionCocoon->init();
-    mAction1st = new TombSpiderAction1st(this);
+    mAction1st = new (JKRHeapToken::Dummy) TombSpiderAction1st(this);
     mAction1st->init();
-    mAction2nd = new TombSpiderAction2nd(this);
+    mAction2nd = new (JKRHeapToken::Dummy) TombSpiderAction2nd(this);
     mAction2nd->init();
 
     MR::invalidateClipping(this);
     MR::initActorCamera(this, rIter, &mCameraInfo);
 
-    mDemo = new TombSpiderDemo(this);
+    mDemo = new (JKRHeapToken::Dummy) TombSpiderDemo(this);
 
     MR::declarePowerStar(this);
     MR::declareStarPiece(this, 25);

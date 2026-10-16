@@ -18,8 +18,8 @@ WPadPointer::WPadPointer(const WPad* pPad)
     : mPad(pPad), mPosPlayRadius(0.03f), mPosSensitivity(0.5f), mHoriPlayRadius(), mHoriSensitivity(1.0f), mDistPlayRadius(), mDistSensitivity(1.0f),
       mLostSensorTime(), mDistDisplay(0.0f), mDpdValidFg(), mValidInScreenTime(), mInValidOutScreenTime(), mEnablePastCount(), mIsPointInScreen(),
       mIsPointerMoved() {
-    mPointingPosArray = new TVec2f[120];
-    mHorizonArray = new TVec2f[120];
+    mPointingPosArray = new (JKRHeapToken::Dummy) TVec2f[120];
+    mHorizonArray = new (JKRHeapToken::Dummy) TVec2f[120];
     mMaxPastCount = 120;
     reset();
 }

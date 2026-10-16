@@ -69,21 +69,21 @@ namespace MR {
 
     void addShadowSurfaceCircle(LiveActor* pActor, const char* pName, f32 radius) {
         ShadowController* pController = ActorShadow::createShadowControllerSuefaceParam(pActor, pName);
-        ShadowSurfaceCircle* pCircle = new ShadowSurfaceCircle();
+        ShadowSurfaceCircle* pCircle = new (JKRHeapToken::Dummy) ShadowSurfaceCircle();
         pController->setShadowDrawer(pCircle);
         pCircle->setRadius(radius);
     }
 
     void addShadowVolumeSphere(LiveActor* pActor, const char* pName, f32 radius) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
-        ShadowVolumeSphere* pSphere = new ShadowVolumeSphere();
+        ShadowVolumeSphere* pSphere = new (JKRHeapToken::Dummy) ShadowVolumeSphere();
         pController->setShadowDrawer(pSphere);
         pSphere->setRadius(radius);
     }
 
     void addShadowVolumeOval(LiveActor* pActor, const char* pName, const TVec3f& rSize, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
-        ShadowVolumeOval* pOval = new ShadowVolumeOval();
+        ShadowVolumeOval* pOval = new (JKRHeapToken::Dummy) ShadowVolumeOval();
         pController->setShadowDrawer(pOval);
         pController->setDropPosMtxPtr(pMtx, TVec3f(0.0f, 0.0f, 0.0f));
         pOval->setSize(rSize);
@@ -91,7 +91,7 @@ namespace MR {
 
     void addShadowVolumeCylinder(LiveActor* pActor, const char* pName, f32 radius) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
-        ShadowVolumeCylinder* pCylinder = new ShadowVolumeCylinder();
+        ShadowVolumeCylinder* pCylinder = new (JKRHeapToken::Dummy) ShadowVolumeCylinder();
         pController->setShadowDrawer(pCylinder);
         pController->offCalcCollision();
         pCylinder->setRadius(radius);
@@ -103,7 +103,7 @@ namespace MR {
 
     void addShadowVolumeBox(LiveActor* pActor, const char* pName, const TVec3f& rSize, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
-        ShadowVolumeBox* pBox = new ShadowVolumeBox();
+        ShadowVolumeBox* pBox = new (JKRHeapToken::Dummy) ShadowVolumeBox();
         pController->setShadowDrawer(pBox);
         pController->setDropPosMtxPtr(pMtx, TVec3f(0.0f, 0.0f, 0.0f));
         pBox->setSize(rSize);
@@ -112,7 +112,7 @@ namespace MR {
     void addShadowVolumeLine(LiveActor* pActor1, const char* pName1, LiveActor* pActor2, const char* pName2, f32 fromWidth, LiveActor* pActor3,
                              const char* pName3, f32 toWidth) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor1, pName1);
-        ShadowVolumeLine* pLine = new ShadowVolumeLine();
+        ShadowVolumeLine* pLine = new (JKRHeapToken::Dummy) ShadowVolumeLine();
         pController->setShadowDrawer(pLine);
         pController->offCalcCollision();
         pLine->setFromWidth(fromWidth);
@@ -127,7 +127,7 @@ namespace MR {
 
     void addShadowVolumeFlatModel(LiveActor* pActor, const char* pName1, const char* pName2, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName1);
-        ShadowVolumeFlatModel* pModel = new ShadowVolumeFlatModel(pName2);
+        ShadowVolumeFlatModel* pModel = new (JKRHeapToken::Dummy) ShadowVolumeFlatModel(pName2);
         pController->setShadowDrawer(pModel);
         pController->offCalcCollision();
         pModel->setBaseMatrixPtr(pMtx);
@@ -299,7 +299,7 @@ namespace MR {
             excludeCalcShadowToSensorAll(pActor, pSensor);
         } else {
             ShadowController* pShadowCtrl = ActorShadow::getShadowController(pActor, pName);
-            pShadowCtrl->setCollisionPartsFilter(new CollisionPartsFilterSensor(pSensor));
+            pShadowCtrl->setCollisionPartsFilter(new (JKRHeapToken::Dummy) CollisionPartsFilterSensor(pSensor));
         }
     }
 
@@ -319,7 +319,7 @@ namespace MR {
             return;
         }
 
-        CollisionPartsFilterSensor* pFilter = new CollisionPartsFilterSensor(pExcluded);
+        CollisionPartsFilterSensor* pFilter = new (JKRHeapToken::Dummy) CollisionPartsFilterSensor(pExcluded);
 
         for (u32 i = 0; i < count; i++) {
             ActorShadow::getShadowController(pActor, i)->setCollisionPartsFilter(pFilter);
@@ -333,7 +333,7 @@ namespace MR {
             return;
         }
 
-        CollisionPartsFilterActor* pFilter = new CollisionPartsFilterActor(pExcluded);
+        CollisionPartsFilterActor* pFilter = new (JKRHeapToken::Dummy) CollisionPartsFilterActor(pExcluded);
 
         for (u32 i = 0; i < count; i++) {
             ActorShadow::getShadowController(pActor, i)->setCollisionPartsFilter(pFilter);

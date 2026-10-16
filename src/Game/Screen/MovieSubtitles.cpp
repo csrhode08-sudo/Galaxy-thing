@@ -16,7 +16,7 @@ MovieSubtitles::MovieSubtitles(const char* pMessageId, s32 appearTime) : LayoutA
     MR::connectToScene(this, MR::MovementType_MovieSubtitles, MR::CalcAnimType_MovieSubtitles, MR::DrawBufferType_None, MR::DrawType_MovieSubtitles);
     initLayoutManager("CinemaSuper", 1);
 
-    mFormerText = new TalkTextFormer(this, "Text00");
+    mFormerText = new (JKRHeapToken::Dummy) TalkTextFormer(this, "Text00");
     mFormerText->formMessage(MR::getLayoutMessageDirect(pMessageId), 2);
 
     initNerve(GET_NERVE(MovieSubtitles, HostTypeWait));

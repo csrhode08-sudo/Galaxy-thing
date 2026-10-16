@@ -92,7 +92,7 @@ TripodBossLeg::~TripodBossLeg() {
 }
 
 TripodBossLeg::TripodBossLeg(const char* pName)
-    : LiveActor(pName), mBoss(), mMoveArea(), _94(), _98(), mJoint(new IKJoint()), _1F0(0, 0, 0, 1), _200(0, 0, 0, 1), _210(0, 0, 0), _21C(0, 0, 0),
+    : LiveActor(pName), mBoss(), mMoveArea(), _94(), _98(), mJoint(new (JKRHeapToken::Dummy) IKJoint()), _1F0(0, 0, 0, 1), _200(0, 0, 0, 1), _210(0, 0, 0), _21C(0, 0, 0),
       mForceEndPoint(0, 0, 0), _234(0, 0, 0), _240(0, 0, 0), _24C(1), _250(), _254(), mIsPressPlayer(), mDemoEffectTiming() {
     _A0.identity();
     mEndJointMtx.identity();
@@ -109,8 +109,8 @@ void TripodBossLeg::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorMtxMapObj(this, "body", 16, 1000.0f, mEndJointMtx, TVec3f(500.0f, 200.0f, 0.0f));
     initSound(6, false);
-    _25C = new AudAnmSoundObject(&_21C, 6, MR::getCurrentHeap());
-    _260 = new AudAnmSoundObject(&mForceEndPoint, 6, MR::getCurrentHeap());
+    _25C = new (JKRHeapToken::Dummy) AudAnmSoundObject(&_21C, 6, MR::getCurrentHeap());
+    _260 = new (JKRHeapToken::Dummy) AudAnmSoundObject(&mForceEndPoint, 6, MR::getCurrentHeap());
     initEffectKeeper(0, "TripodBoss", false);
     MR::setEffectHostMtx(this, "LegSmoke", mEndJointMtx);
     makeActorAppeared();

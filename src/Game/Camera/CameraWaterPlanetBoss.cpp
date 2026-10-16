@@ -197,5 +197,5 @@ CameraTargetObj* CameraWaterPlanetBoss::calc() {
 }
 
 CamTranslatorBase* CameraWaterPlanetBoss::createTranslator() {
-    return new CamTranslatorWaterPlanetBoss(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorWaterPlanetBoss(this);
 }

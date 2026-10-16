@@ -17,21 +17,12 @@ namespace nw4r {
             return rval;
         }
 
-        inline f32 FAbs(register f32 x) {
-            register f32 ax;
-
-            __asm {
-                fabs ax, x
-            }
-            ;
-
-            return ax;
+        inline f32 FAbs(f32 x) {
+            return __fabsf(x);
         }
 
-        inline f32 FSelect(register f32 cond, register f32 ifPos, register f32 ifNeg) {
-            register f32 ret;
-            asm { fsel   ret, cond, ifPos, ifNeg }
-            return ret;
+        inline f32 FSelect(f32 cond, f32 ifPos, f32 ifNeg) {
+            return cond >= 0.0f ? ifPos : ifNeg;
         }
     };  // namespace math
 };  // namespace nw4r

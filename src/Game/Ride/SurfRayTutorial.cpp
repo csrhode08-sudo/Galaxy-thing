@@ -41,7 +41,7 @@ SurfRayTutorial::SurfRayTutorial(LiveActor* pHost, TalkMessageCtrl* pTalkCtrl, c
     : NerveExecutor("チュートリアル演出"), mHost(pHost), mIsTutorialPass(), mPadAccel(0.0f, 0.0f, 0.0f), mTalkCtrl(pTalkCtrl), mChangeStep(), _28() {
     initNerve(GET_NERVE(SurfRayTutorial, SurfRayTutorialNrvTutorialAllStart));
 
-    mSurfingGuidance = new SurfingGuidance();
+    mSurfingGuidance = new (JKRHeapToken::Dummy) SurfingGuidance();
     mSurfingGuidance->init(rIter);
 }
 

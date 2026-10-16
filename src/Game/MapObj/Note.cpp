@@ -37,7 +37,7 @@ void Note::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
     initNerve(GET_NERVE(Note, NoteNrvWait));
-    mFlashCtrl = new FlashingCtrl(this, true);
+    mFlashCtrl = new (JKRHeapToken::Dummy) FlashingCtrl(this, true);
     MR::calcGravityAndDropShadowVector(this, &mGravity, nullptr, 0);
 
     if (MR::isNearZero(mGravity)) {

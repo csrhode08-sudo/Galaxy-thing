@@ -6,13 +6,13 @@
 
 DrawBufferExecuter::DrawBufferExecuter(const char* pName, J3DModel* pModel, s32 a1)
     : mActors(nullptr), mMaxNumActors(0), mNumActors(0), mName(pName), mDrawBuffer(nullptr), mLightType(-1), mDrawBufferCount(0) {
-    mDrawBuffer = new DrawBuffer(pModel);
+    mDrawBuffer = new (JKRHeapToken::Dummy) DrawBuffer(pModel);
 }
 
 void DrawBufferExecuter::allocateActorListBuffer() {
     s32 count = mDrawBufferCount;
     if (count != 0) {
-        mActors = new LiveActor*[count];
+        mActors = new (JKRHeapToken::Dummy) LiveActor*[count];
         mMaxNumActors = count;
         mDrawBuffer->init(mDrawBufferCount);
     }
@@ -26,7 +26,7 @@ void DrawBufferExecuter::add(LiveActor* pActor) {
 }
 
 void DrawBufferExecuter::remove(LiveActor* pActor) {
-    LiveActor** it = std::find(mActors, mActors + mNumActors, pActor);
+    LiveActor** it = msl::find(mActors, mActors + mNumActors, pActor);
     mActors[it - mActors] = getActor(mNumActors - 1);
     mNumActors--;
     mDrawBuffer->remove(pActor);
@@ -44,7 +44,7 @@ void DrawBufferExecuter::offExecuteLight() {
 }
 
 void DrawBufferExecuter::calcViewAndEntry() {
-    std::for_each(&mActors[0], &mActors[mNumActors], std::mem_func(&LiveActor::calcViewAndEntry));
+    msl::for_each(&mActors[0], &mActors[mNumActors], msl::mem_func(&LiveActor::calcViewAndEntry));
 }
 
 void DrawBufferExecuter::drawOpa() const {

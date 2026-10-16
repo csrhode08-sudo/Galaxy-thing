@@ -52,17 +52,17 @@ public:
 namespace {
     inline void initExtraMtxBuffer(J3DModelX* pModel) {
         for (u32 i = 0; i < pModel->_DD; i++) {
-            pModel->mExtraMtxBuffer[i] = new (0x20) Mtx[0xC00 / sizeof(Mtx)];
+            pModel->mExtraMtxBuffer[i] = new (JKRHeapToken::Dummy, 0x20) Mtx[0xC00 / sizeof(Mtx)];
         }
     }
 };  // namespace
 
 void MarioActor::initDrawAndModel() {
-    _218 = new DrawAdaptor(MR::Functor(this, &MarioActor::drawShadow), MR::DrawType_AlphaShadow);
-    _21C = new DrawAdaptor(MR::Functor(this, &MarioActor::drawSilhouette), MR::DrawType_0x28);
-    _220 = new DrawAdaptor(MR::Functor(this, &MarioActor::drawPreWipe), MR::DrawType_CometScreenFilter);
-    _228 = new DrawAdaptor(MR::Functor(this, &MarioActor::drawScreenBlend), MR::DrawType_CenterScreenBlur);
-    _22C = new DrawAdaptor(MR::Functor(this, &MarioActor::drawIndirect), MR::DrawType_0x24);
+    _218 = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawShadow), MR::DrawType_AlphaShadow);
+    _21C = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawSilhouette), MR::DrawType_0x28);
+    _220 = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawPreWipe), MR::DrawType_CometScreenFilter);
+    _228 = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawScreenBlend), MR::DrawType_CenterScreenBlur);
+    _22C = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawIndirect), MR::DrawType_0x24);
 
     if (gIsLuigi) {
         initModelManagerWithAnm("Luigi", "MarioAnime", true);
@@ -107,11 +107,11 @@ void MarioActor::initDrawAndModel() {
 
     initFace();
 
-    mDL[0] = new (0x20) u8[0x100];
-    mDL[1] = new (0x20) u8[0x100];
+    mDL[0] = new (JKRHeapToken::Dummy, 0x20) u8[0x100];
+    mDL[1] = new (JKRHeapToken::Dummy, 0x20) u8[0x100];
     mCurrDL = 0;
 
-    mDLchanger = new DLchanger(2, 0x100);
+    mDLchanger = new (JKRHeapToken::Dummy) DLchanger(2, 0x100);
     _1A4 = 0.0f;
 
     swapTextureInit();
@@ -119,10 +119,10 @@ void MarioActor::initDrawAndModel() {
 
     {
         MR::CurrentHeapRestorer restorer(static_cast< JKRHeap* >(MR::getSceneHeapGDDR3()));
-        _B7C = new JUTTexture(0x80, 0x40, GX_TF_RGB565);
+        _B7C = new (JKRHeapToken::Dummy) JUTTexture(0x80, 0x40, GX_TF_RGB565);
 
         for (u32 i = 0; i < 2; i++) {
-            mMaskTextures[i] = new JUTTexture(8, 8, GX_TF_IA4);
+            mMaskTextures[i] = new (JKRHeapToken::Dummy) JUTTexture(8, 8, GX_TF_IA4);
             mMaskTextures[i]->mWrapS = 1;
             mMaskTextures[i]->mWrapT = 1;
             mMaskTextures[i]->mMinType = 0;
@@ -161,7 +161,7 @@ void MarioActor::initBeeMario() {
 
     MR::createAndAddResourceHolder(archiveName);
 
-    _9E4 = new ModelHolder(modelName, true);
+    _9E4 = new (JKRHeapToken::Dummy) ModelHolder(modelName, true);
     _9E4->initWithoutIter();
 
     model = static_cast< J3DModelX* >(MR::getJ3DModel(_9E4));
@@ -176,7 +176,7 @@ void MarioActor::initBeeMario() {
     _9EC = MR::initFurPlayer(_9E4);
     MR::hideJoint(_9E4, "Face0");
 
-    _9E8 = new MarioParts(this, "B-WING", "BeeMarioWing", false, nullptr, nullptr);
+    _9E8 = new (JKRHeapToken::Dummy) MarioParts(this, "B-WING", "BeeMarioWing", false, nullptr, nullptr);
     _9E8->initWithoutIter();
 
     _9E8->initFixedPosition(_DDC.toMtxPtr(), TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
@@ -204,7 +204,7 @@ void MarioActor::initHopperMario() {
 
     MR::createAndAddResourceHolder(archiveName);
 
-    _A00 = new ModelHolder(modelName, true);
+    _A00 = new (JKRHeapToken::Dummy) ModelHolder(modelName, true);
     _A00->initWithoutIter();
 
     model = static_cast< J3DModelX* >(MR::getJ3DModel(_A00));
@@ -238,7 +238,7 @@ void MarioActor::initIceMario() {
 
     MR::createAndAddResourceHolder(archiveName);
 
-    _9C0 = new ModelHolder(modelName, true);
+    _9C0 = new (JKRHeapToken::Dummy) ModelHolder(modelName, true);
     _9C0->initWithoutIter();
 
     model = static_cast< J3DModelX* >(MR::getJ3DModel(_9C0));
@@ -252,9 +252,9 @@ void MarioActor::initIceMario() {
     _9C0->kill();
     MR::hideModel(_9C0);
 
-    _B4C = new IceStep*[20];
+    _B4C = new (JKRHeapToken::Dummy) IceStep*[20];
     for (u32 i = 0; i < 20; i++) {
-        _B4C[i] = new IceStep("アイス床");
+        _B4C[i] = new (JKRHeapToken::Dummy) IceStep("アイス床");
         _B4C[i]->initWithoutIter();
         _B4C[i]->kill();
     }
@@ -281,7 +281,7 @@ void MarioActor::initInvincibleMario() {
 
     MR::createAndAddResourceHolder(archiveName);
 
-    _9C8 = new ModelHolder(modelName, true);
+    _9C8 = new (JKRHeapToken::Dummy) ModelHolder(modelName, true);
     _9C8->initWithoutIter();
 
     model = static_cast< J3DModelX* >(MR::getJ3DModel(_9C8));
@@ -304,7 +304,7 @@ void MarioActor::initTeresaMario() {
         return;
     }
 
-    _9A4 = new MarioParts(this, "テレサの皮", modelName, nullptr);
+    _9A4 = new (JKRHeapToken::Dummy) MarioParts(this, "テレサの皮", modelName, nullptr);
     if (gIsLuigi) {
         _9A4->_9C = "TeresaMario";
     }
@@ -329,7 +329,7 @@ void MarioActor::initTornadoMario() {
         return;
     }
 
-    mTornadoMario = new TornadoMario(modelName);
+    mTornadoMario = new (JKRHeapToken::Dummy) TornadoMario(modelName);
     mTornadoMario->initWithoutIter();
     _990 = 0;
     _3D2 |= 0x200;
@@ -338,7 +338,7 @@ void MarioActor::initTornadoMario() {
 void MarioActor::initBoneMario() {
     const char* modelName = gIsLuigi ? "BoneLuigi" : "BoneMario";
 
-    _A04 = new ModelHolder(modelName, true);
+    _A04 = new (JKRHeapToken::Dummy) ModelHolder(modelName, true);
     _A04->initWithoutIter();
 
     J3DModelX* model = static_cast< J3DModelX* >(MR::getJ3DModel(_A04));
@@ -544,14 +544,14 @@ void MarioActor::swapTextureInit() {
     J3DModelData* actorData = MR::getJ3DModelData(this);
     const u32 textureCount = actorData->mMaterialTable.mTexture->getNum();
     _B60 = textureCount;
-    _B64 = new ResTIMG*[textureCount];
+    _B64 = new (JKRHeapToken::Dummy) ResTIMG*[textureCount];
     _B6A = 0;
 
     for (u32 i = 0; i < textureCount; i++) {
         _B64[i] = MR::getResTIMG(this, i);
     }
 
-    _B6C = new DLholder[12];
+    _B6C = new (JKRHeapToken::Dummy) DLholder[12];
 
     u16 texNo = 0;
     for (u16 i = 0; i < textureCount; i++) {
@@ -624,9 +624,9 @@ void MarioActor::initFace() {
     _A60 = 0;
 
     if (gIsLuigi) {
-        _A5C = new ModelHolder("LuigiFace", true);
+        _A5C = new (JKRHeapToken::Dummy) ModelHolder("LuigiFace", true);
     } else {
-        _A5C = new ModelHolder("MarioFace", true);
+        _A5C = new (JKRHeapToken::Dummy) ModelHolder("MarioFace", true);
     }
 
     MR::initDLMakerFog(_A5C, true);
@@ -701,7 +701,7 @@ void MarioActor::initBlur() {
 
     for (u32 i = 0; i < 2; i++) {
         for (u32 j = 0; j < 8; j++) {
-            mBlurMatrices[i][j] = new (0x20) Mtx[_B14];
+            mBlurMatrices[i][j] = new (JKRHeapToken::Dummy, 0x20) Mtx[_B14];
 
             for (u32 k = 0; k < _B14; k++) {
                 PSMTXIdentity(mBlurMatrices[i][j][k]);
@@ -965,7 +965,7 @@ void MarioActor::createTextureDL(DLholder* pHolder, u16 texMapID, u16 texIndex) 
     const u32 alignedSize = (dlSize + 0x1F) & ~0x1F;
 
     pHolder->mSize = dlSize;
-    pHolder->mDL = new (0x20) u8[alignedSize];
+    pHolder->mDL = new (JKRHeapToken::Dummy, 0x20) u8[alignedSize];
 
     MR::copyMemory(pHolder->mDL, tempDL, alignedSize);
     DCStoreRange(pHolder->mDL, alignedSize);

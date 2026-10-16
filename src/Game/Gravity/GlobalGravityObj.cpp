@@ -64,62 +64,62 @@ PlanetGravity* GlobalGravityObj::getGravity() {
 
 namespace MR {
     NameObj* createGlobalCubeGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new CubeGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) CubeGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalConeGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new ConeGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) ConeGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalDiskGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new DiskGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) DiskGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalDiskTorusGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new DiskTorusGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) DiskTorusGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalPlaneGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new PlaneGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) PlaneGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalPlaneInBoxGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new PlaneInBoxGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) PlaneInBoxGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalPlaneInCylinderGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new PlaneInCylinderGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) PlaneInCylinderGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalPointGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new PointGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) PointGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalSegmentGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new SegmentGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) SegmentGravityCreator();
         return ret;
     }
 
     NameObj* createGlobalWireGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
-        ret->mGravityCreator = new WireGravityCreator();
+        GlobalGravityObj* ret = new (JKRHeapToken::Dummy) GlobalGravityObj(pName);
+        ret->mGravityCreator = new (JKRHeapToken::Dummy) WireGravityCreator();
         return ret;
     }
 };  // namespace MR

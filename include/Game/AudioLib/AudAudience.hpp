@@ -240,7 +240,7 @@ public:
             return nullptr;
         }
 
-        Audible* audible = new Audible(rPos, pPos, mask);
+        Audible* audible = new (JKRHeapToken::Dummy) Audible(rPos, pPos, mask);
         if (audible == nullptr) {
             return nullptr;
         }

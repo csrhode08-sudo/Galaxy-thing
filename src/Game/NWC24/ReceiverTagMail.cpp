@@ -13,7 +13,7 @@ ReceiverTagMail::ReceiverTagMail(const char* pTaskName, const char* pMessageID, 
     mMessageID = pMessageID;
     mSenderID = pSenderID;
     mMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(mMessageID)) + FileSelectFunc::getMiiNameBufferSize();
-    mMessage = new wchar_t[mMessageLength];
+    mMessage = new (JKRHeapToken::Dummy) wchar_t[mMessageLength];
 
     MR::zeroMemory(mMessage, mMessageLength * sizeof(wchar_t));
 }

@@ -30,7 +30,7 @@
  */
 
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 
 #include <data_types.h>
 #include <gki_target.h>

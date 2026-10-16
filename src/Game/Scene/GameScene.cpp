@@ -313,16 +313,16 @@ void GameScene::exeGalaxyMap() {
 }
 
 void GameScene::initSequences() {
-    GameStageClearSequence* pStageClearSeq = new GameStageClearSequence();
+    GameStageClearSequence* pStageClearSeq = new (JKRHeapToken::Dummy) GameStageClearSequence();
     pStageClearSeq->initWithoutIter();
     mStageClearSeq = pStageClearSeq;
 
-    GamePauseSequence* pPauseSeq = new GamePauseSequence();
+    GamePauseSequence* pPauseSeq = new (JKRHeapToken::Dummy) GamePauseSequence();
     pPauseSeq->initWithoutIter();
     mPauseSeq = pPauseSeq;
 
-    mScenarioCamera = new GameSceneScenarioOpeningCameraState();
-    mPauseCtrl = new GameScenePauseControl(this);
+    mScenarioCamera = new (JKRHeapToken::Dummy) GameSceneScenarioOpeningCameraState();
+    mPauseCtrl = new (JKRHeapToken::Dummy) GameScenePauseControl(this);
     mPauseCtrl->registerNervePauseMenu(GET_NERVE(GameScene, GameScenePauseMenu));
 
     mPauseSeq->initWindowMenu(MR::Functor(mPauseCtrl, &GameScenePauseControl::requestPauseMenuOff));

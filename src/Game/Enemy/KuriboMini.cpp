@@ -95,8 +95,8 @@ void KuriboMini::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);
-    mItemGenerator = new ItemGenerator();
-    mScaleController = new AnimScaleController(nullptr);
+    mItemGenerator = new (JKRHeapToken::Dummy) ItemGenerator();
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     initSound(4, false);
     initEffectKeeper(1, nullptr, false);
     MR::initStarPointerTarget(this, 40.0f, TVec3f(0.0f, 60.0f, 0.0f));
@@ -135,11 +135,11 @@ void KuriboMini::initSensor() {
 }
 
 void KuriboMini::initState() {
-    mStateFindPlayer = new WalkerStateFindPlayer(this, &_B8, &::sParam.mStateParam, &::sParam.mFindPlayerParam);
-    mStateWander = new WalkerStateWander(this, &_B8, &::sParam.mStateParam, &::sParam.mWanderParam);
-    mStateChase = new WalkerStateChase(this, &_B8, &::sParam.mStateParam, &::sParam.mChaseParam);
-    mStateStagger = new WalkerStateStagger(this, &_B8, &::sParam.mStateParam, &::sParam.mStaggerParam);
-    mStateBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mStateFindPlayer = new (JKRHeapToken::Dummy) WalkerStateFindPlayer(this, &_B8, &::sParam.mStateParam, &::sParam.mFindPlayerParam);
+    mStateWander = new (JKRHeapToken::Dummy) WalkerStateWander(this, &_B8, &::sParam.mStateParam, &::sParam.mWanderParam);
+    mStateChase = new (JKRHeapToken::Dummy) WalkerStateChase(this, &_B8, &::sParam.mStateParam, &::sParam.mChaseParam);
+    mStateStagger = new (JKRHeapToken::Dummy) WalkerStateStagger(this, &_B8, &::sParam.mStateParam, &::sParam.mStaggerParam);
+    mStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 }
 
 void KuriboMini::makeActorAppeared() {

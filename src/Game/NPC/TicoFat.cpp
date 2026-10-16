@@ -170,7 +170,7 @@ void TicoFat::init(const JMapInfoIter& rIter) {
     _174 = 0;
     mStartEat = false;
     _1F4 = -1;
-    mScaleController = new AnimScaleController(&::sParam);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(&::sParam);
     NPCActor::initialize(rIter, caps);
     s32 itemType = _1DC;
     MR::getJMapInfoArg0NoInit(rIter, &itemType);
@@ -219,7 +219,7 @@ void TicoFat::init(const JMapInfoIter& rIter) {
     s32 arg3 = -1;
     MR::getJMapInfoArg3NoInit(rIter, &arg3);
     _1F4 = arg3;
-    mMeter = new FullnessMeter(this, _1E4, _1E4 - _1E0);
+    mMeter = new (JKRHeapToken::Dummy) FullnessMeter(this, _1E4, _1E4 - _1E0);
     mMeter->initWithoutIter();
     mMeter->setNumber(_1E4 - _1E0);
     MR::initMultiActorCamera(this, rIter, &mCameraInfo, "変身");
@@ -236,7 +236,7 @@ void TicoFat::init(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
         if (_1DC == -1) {
-            mShootPath = new SpinDriverShootPath();
+            mShootPath = new (JKRHeapToken::Dummy) SpinDriverShootPath();
             mShootPath->initUsingParabolic(rIter, mPosition);
             MR::getJMapInfoArg4NoInit(rIter, &_1FC);
         }

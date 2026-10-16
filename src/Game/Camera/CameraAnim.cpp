@@ -130,8 +130,8 @@ f32 KeyCamAnmDataAccessor::calcHermite(f32 key, f32 tA, f32 pA, f32 mA, f32 tB, 
 }
 
 CameraAnim::CameraAnim(const char* pName)
-    : Camera(pName), _4C(), _50(1), mNrFrames(), mIsKey(), mSpeed(1.0f), mFileDataAccessor(), mDataAccessor(new CamAnmDataAccessor()),
-      mKeyDataAccessor(new KeyCamAnmDataAccessor()), mNrValues(), _74(), mFileData(), mIsPaused() {
+    : Camera(pName), _4C(), _50(1), mNrFrames(), mIsKey(), mSpeed(1.0f), mFileDataAccessor(), mDataAccessor(new (JKRHeapToken::Dummy) CamAnmDataAccessor()),
+      mKeyDataAccessor(new (JKRHeapToken::Dummy) KeyCamAnmDataAccessor()), mNrValues(), _74(), mFileData(), mIsPaused() {
 }
 
 void CameraAnim::reset() {
@@ -216,7 +216,7 @@ u32 CameraAnim::getAnimFrame(u8* pFile) {
 }
 
 CamTranslatorBase* CameraAnim::createTranslator() {
-    return new CamTranslatorAnim(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorAnim(this);
 }
 
 bool CameraAnim::loadBin(u8* pFile) {

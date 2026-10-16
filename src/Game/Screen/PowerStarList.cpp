@@ -202,7 +202,7 @@ namespace NrvPowerStarList {
 PowerStarList::PowerStarList()
     : LayoutActor("全パワースターリスト", true), mArrowUpButtonCtrl(), mArrowDownButtonCtrl(), mCaptureButtonCtrl(), mSysInfoWindow(), mPageNo(),
       mMailMessageLength(), mMailMessage() {
-    mSeparatorArray = new Separator[4]();
+    mSeparatorArray = new (JKRHeapToken::Dummy) Separator[4]();
 }
 
 PowerStarList::Separator::Separator() {
@@ -243,7 +243,7 @@ void PowerStarList::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(PowerStarList, PowerStarListNrvWait));
 
     mMailMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(::cMailMessageID)) + FileSelectFunc::getMiiNameBufferSize();
-    mMailMessage = new wchar_t[mMailMessageLength];
+    mMailMessage = new (JKRHeapToken::Dummy) wchar_t[mMailMessageLength];
 }
 
 void PowerStarList::calcAnim() {
@@ -309,7 +309,7 @@ void PowerStarList::control() {
 }
 
 ButtonPaneController* PowerStarList::createButtonController(const char* pParam1, const char* pParam2) {
-    ButtonPaneController* pController = new ButtonPaneController(this, pParam1, pParam2, 0, true);
+    ButtonPaneController* pController = new (JKRHeapToken::Dummy) ButtonPaneController(this, pParam1, pParam2, 0, true);
 
     pController->mWaitAnimName = "Wait";
     pController->invalidateAppearance();

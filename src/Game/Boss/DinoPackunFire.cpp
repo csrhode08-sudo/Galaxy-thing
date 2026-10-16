@@ -19,7 +19,7 @@ DinoPackunFireHolder::DinoPackunFireHolder(s32 numMax) : DeriveActorGroup< DinoP
     DinoPackunFire* pFire;
 
     for (s32 i = 0; i < numMax; i++) {
-        pFire = new DinoPackunFire("ディノパックン炎");
+        pFire = new (JKRHeapToken::Dummy) DinoPackunFire("ディノパックン炎");
         pFire->initWithoutIter();
         registerActor(pFire);
     }

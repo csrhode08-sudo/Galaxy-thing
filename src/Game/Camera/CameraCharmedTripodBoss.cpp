@@ -82,5 +82,5 @@ void CameraCharmedTripodBoss::setParam(s32 jointID, TVec3f up, const TVec3f& wPo
 }
 
 CamTranslatorBase* CameraCharmedTripodBoss::createTranslator() {
-    return new CamTranslatorCharmedTripodBoss(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorCharmedTripodBoss(this);
 }

@@ -184,7 +184,7 @@ void ElectricRailHolder::registerRail(const LiveActor* pActor, ElectricRailType 
         mRailModels[railType] = createModel(railType);
     }
 
-    RailItem* pItem = new RailItem();
+    RailItem* pItem = new (JKRHeapToken::Dummy) RailItem();
     (*mRailItems.end()) = pItem;
     (*mRailItems.end())->mRailType = railType;
     (*mRailItems.end())->mHost = static_cast< const ElectricRailMoving* >(pActor);
@@ -205,7 +205,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_Red:
         pModelName = "ElectricRail";
         pName = "電撃レールモデル(黄)";
-        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
+        pModel = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRail");
@@ -216,7 +216,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_Yellow:
         pModelName = "ElectricRail";
         pName = "電撃レールモデル(赤)";
-        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
+        pModel = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRail");
@@ -227,7 +227,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_YellowMoving:
         pModelName = "ElectricRailMoving";
         pName = "移動電撃レールモデル(黄)";
-        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
+        pModel = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRailMoving");
@@ -238,7 +238,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_RedMoving:;
         pModelName = "ElectricRailMoving";
         pName = "移動電撃レールモデル(赤)";
-        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
+        pModel = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRailMoving");

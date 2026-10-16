@@ -199,10 +199,10 @@ void MarioActor::initMaterialEffect() {
         entry++;
     }
 
-    _BA4 = new HashSortTable(entryCount);
+    _BA4 = new (JKRHeapToken::Dummy) HashSortTable(entryCount);
     entry = cMaterialEffectTable;
     for (int i = 0; i < entryCount; i++) {
-        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< u32 >(&cMaterialEffectTable[i]), false);
+        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< uintptr_t >(&cMaterialEffectTable[i]), false);
     }
 
     _BA4->sort();
@@ -308,7 +308,7 @@ s32 MarioActor::getFloorMaterialIndex(u32 flags) const {
 
 MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
     MaterialEffectEntry* entry = nullptr;
-    _BA4->search(pName, reinterpret_cast< u32* >(&entry));
+    _BA4->search(pName, reinterpret_cast< uintptr_t* >(&entry));
 
     const s32 materialIndex = getFloorMaterialIndex(entry->mFlag.mByte0);
     if (materialIndex == -1) {
@@ -354,7 +354,7 @@ MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
 
 void MarioActor::stopMaterialEffect(const char* pName) {
     MaterialEffectEntry* entry = nullptr;
-    _BA4->search(pName, reinterpret_cast< u32* >(&entry));
+    _BA4->search(pName, reinterpret_cast< uintptr_t* >(&entry));
 
     if (entry->mCurrent != nullptr) {
         MR::deleteEffect(this, entry->mCurrent);
@@ -388,7 +388,7 @@ SmokeEffectEntry cSmokeTable[] = {{"共通着地普通", 0x08000000, 1.0f, 1.0f,
 void MarioActor::initCommonEffect() {
     _B9C = 0;
     _B9E = 0;
-    _BA0 = new SmokeEffectEntry*[8];
+    _BA0 = new (JKRHeapToken::Dummy) SmokeEffectEntry*[8];
 
     SmokeEffectEntry* entry = cSmokeTable;
     while (entry->mName != nullptr) {
@@ -876,7 +876,7 @@ void MarioActor::initEffect() {
 
     mEffectKeeper->finalizeSort();
 
-    ModelObj* obj = new ModelObj("WaterColumn", "WaterColumn", nullptr, -2, -2, -2, false);
+    ModelObj* obj = new (JKRHeapToken::Dummy) ModelObj("WaterColumn", "WaterColumn", nullptr, -2, -2, -2, false);
     _BA8 = obj;
     obj->kill();
 }

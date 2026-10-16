@@ -535,7 +535,7 @@ namespace nw4r {
                 TexMap* const pTexMap = GetTexMapAry();
 
                 for (u32 i = mGXMemNum.texMap; i < num; i++) {
-                    new (&pTexMap[i]) TexMap();
+                    new (JKRHeapToken::Dummy, &pTexMap[i]) TexMap();
                 }
             }
 
@@ -547,7 +547,7 @@ namespace nw4r {
                 TexCoordGen* const pTexCoordGen = GetTexCoordGenAry();
 
                 for (u32 i = mGXMemNum.texCoordGen; i < num; i++) {
-                    new (&pTexCoordGen[i]) TexCoordGen();
+                    new (JKRHeapToken::Dummy, &pTexCoordGen[i]) TexCoordGen();
                 }
             }
 
@@ -559,7 +559,7 @@ namespace nw4r {
                 TevStage* const pTevStage = GetTevStageAry();
 
                 for (u32 i = mGXMemNum.tevStage; i < num; i++) {
-                    new (&pTevStage[i]) TevStage();
+                    new (JKRHeapToken::Dummy, &pTevStage[i]) TevStage();
                 }
             }
 
@@ -571,7 +571,7 @@ namespace nw4r {
                 IndirectStage* const pIndStage = GetIndirectStageAry();
 
                 for (u32 i = mGXMemNum.indStage; i < num; i++) {
-                    new (&pIndStage[i]) IndirectStage();
+                    new (JKRHeapToken::Dummy, &pIndStage[i]) IndirectStage();
                 }
             }
 

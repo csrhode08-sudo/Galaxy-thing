@@ -26,14 +26,17 @@ CameraGeneralParam& CameraGeneralParam::operator=(const CameraGeneralParam& rOth
     mNum1 = rOther.mNum1;
     mNum2 = rOther.mNum2;
     mString = rOther.mString;
+#ifdef TARGET_PC
+    mAnimData = rOther.mAnimData;
+#endif
 
     return *this;
 }
 
 CameraParamChunk::CameraParamChunk(CameraHolder* pHolder, const CameraParamChunkID& rChunk) {
-    mParamChunkID = new CameraParamChunkID(rChunk);
+    mParamChunkID = new (JKRHeapToken::Dummy) CameraParamChunkID(rChunk);
     mCameraTypeIndex = pHolder->getIndexOfDefault();
-    mGeneralParam = new CameraGeneralParam();
+    mGeneralParam = new (JKRHeapToken::Dummy) CameraGeneralParam();
     _64 = false;
     mExParam.init();
 }

@@ -37,10 +37,10 @@ TimeLimitLayout::TimeLimitLayout(u32 timeLimit)
 void TimeLimitLayout::init(const JMapInfoIter& rIter) {
     initLayoutManager("TimeLimit", 1);
 
-    mScaleControl = new ValueControl(::sScaleUpDownFrame);
+    mScaleControl = new (JKRHeapToken::Dummy) ValueControl(::sScaleUpDownFrame);
     mScaleControl->setZero();
 
-    mFadeControl = new ValueControl(::sFadeinoutFrame);
+    mFadeControl = new (JKRHeapToken::Dummy) ValueControl(::sFadeinoutFrame);
     mFadeControl->setOne();
 
     MR::setInfluencedAlphaToChild(this);

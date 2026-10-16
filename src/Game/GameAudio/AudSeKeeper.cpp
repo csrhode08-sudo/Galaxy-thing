@@ -27,7 +27,7 @@ void AudSeKeeperBox::add(J3DJoint* pJoint, u16 hash) {
     mJoint = pJoint;
     mHash = hash;
     updateJointPos();
-    mSoundObj = new AudSoundObject(&mPos, 8, MR::getCurrentHeap());
+    mSoundObj = new (JKRHeapToken::Dummy) AudSoundObject(&mPos, 8, MR::getCurrentHeap());
 }
 
 void AudSeKeeperBox::updateJointPos() {
@@ -37,7 +37,7 @@ void AudSeKeeperBox::updateJointPos() {
 }
 
 AudSeKeeper::AudSeKeeper(LiveActor* pActor, int maxBoxes) : JKRDisposer(), mActor(pActor), mMaxBoxes(maxBoxes), mNumBoxes() {
-    mBoxes = new AudSeKeeperBox[mMaxBoxes];
+    mBoxes = new (JKRHeapToken::Dummy) AudSeKeeperBox[mMaxBoxes];
 }
 
 AudSeKeeper::~AudSeKeeper() {

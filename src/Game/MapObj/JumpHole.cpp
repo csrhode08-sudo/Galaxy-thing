@@ -33,7 +33,7 @@ namespace NrvJumpHole {
 
 JumpHole::JumpHole(const char* pName)
     : LiveActor(pName), mBoundSensor(), mLaunchStart(0, 0, 0), mBindVelocity(0, 0, 0), mHoleGravity(0, 0, 0), mSettledFrames() {
-    mCone = new BindCone(mPosition, TVec3f(0.0f, 1.0f, 0.0f), ::sHoleDepth, ::sHoleRadius);
+    mCone = new (JKRHeapToken::Dummy) BindCone(mPosition, TVec3f(0.0f, 1.0f, 0.0f), ::sHoleDepth, ::sHoleRadius);
 }
 
 void JumpHole::init(const JMapInfoIter& rIter) {

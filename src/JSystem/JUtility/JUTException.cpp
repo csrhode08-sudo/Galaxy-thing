@@ -10,6 +10,129 @@
 #pragma inline_max_size(250)
 #include <revolution/os.h>
 #include <revolution/os/OSModule.h>
+#ifdef TARGET_PC
+// PC: the console's crash screen dumps PowerPC registers and waits for a button combo.
+// Here we keep the bookkeeping the game relies on and report fatal errors to stderr.
+#include "pc/platform.h"
+#include <cstdio>
+#include <cstdlib>
+#include <thread>
+#include <chrono>
+
+OSMessageQueue JUTException::sMessageQueue = {0};
+JUTException* JUTException::sErrorManager;
+JUTExceptionUserCallback JUTException::sPreUserCallback;
+JUTExceptionUserCallback JUTException::sPostUserCallback;
+OSMessage JUTException::sMessageBuffer[1];
+void* JUTException::sConsoleBuffer;
+u32 JUTException::sConsoleBufferSize;
+JUTConsole* JUTException::sConsole;
+u32 JUTException::msr;
+u32 JUTException::fpscr;
+JSUList< JUTException::JUTExMapFile > JUTException::sMapFileList(false);
+
+JUTException::JUTException(JUTDirectPrint* pDirectPrint) : JKRThread(0x4000, 16, 0) {
+    mDirectPrint = pDirectPrint;
+    sPreUserCallback = nullptr;
+    sPostUserCallback = nullptr;
+    mGamePad = nullptr;
+    mGamePadPort = JUTGamePad::Port_Unknown;
+    mPrintWaitTime0 = 10;
+    mPrintWaitTime1 = 10;
+    mTraceSuppress = -1;
+    field_0x98 = 0;
+    mPrintFlags = 0x1F;
+}
+
+JUTException* JUTException::create(JUTDirectPrint* pDirectPrint) {
+    if (sErrorManager == nullptr) {
+        sErrorManager = new (JKRHeapToken::Dummy, JKRHeap::sSystemHeap, 0) JUTException(pDirectPrint);
+    }
+    return sErrorManager;
+}
+
+void* JUTException::run() {
+    return nullptr;
+}
+
+void JUTException::errorHandler(OSError error, OSContext* context, u32 dsisr, u32 dar) {
+    pc_log("[JUTException] CPU exception %d\n", (int)error);
+    if (sPreUserCallback) {
+        sPreUserCallback(error, context, dsisr, dar);
+    }
+    std::abort();
+}
+
+void JUTException::panic_f_va(const char* file, int line, const char* fmt, va_list args) {
+    char buf[1024];
+    std::vsnprintf(buf, sizeof(buf), fmt, args);
+    pc_log("[panic] %s:%d: %s\n", file, line, buf);
+    std::abort();
+}
+
+void JUTException::panic_f(const char* file, int line, const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    panic_f_va(file, line, fmt, args);
+    va_end(args);
+}
+
+void JUTException::setFPException(u32) {}
+
+JUTExceptionUserCallback JUTException::setPreUserCallback(JUTExceptionUserCallback cb) {
+    JUTExceptionUserCallback old = sPreUserCallback;
+    sPreUserCallback = cb;
+    return old;
+}
+
+JUTExceptionUserCallback JUTException::setPostUserCallback(JUTExceptionUserCallback cb) {
+    JUTExceptionUserCallback old = sPostUserCallback;
+    sPostUserCallback = cb;
+    return old;
+}
+
+void JUTException::appendMapFile(const char*) {}
+
+bool JUTException::queryMapAddress(char*, u32, s32, u32*, u32*, char*, u32, bool, bool) {
+    return false;
+}
+
+void JUTException::waitTime(s32 duration) {
+    if (duration > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    }
+}
+
+void JUTException::createConsole(void* console_buffer, u32 console_buffer_size) {
+    if (console_buffer == nullptr || console_buffer_size == 0) {
+        return;
+    }
+
+    u32 lines = JUTConsole::getLineFromObjectSize(console_buffer_size, 0x32);
+    if (lines != 0) {
+        sConsoleBuffer = console_buffer;
+        sConsoleBufferSize = console_buffer_size;
+        sConsole = JUTConsole::create(0x32, sConsoleBuffer, sConsoleBufferSize);
+
+        JUTConsoleManager::getManager()->setDirectConsole(sConsole);
+
+        JUTConsole* console = sConsole;
+        console->mFontSizeX = 10.0f;
+        console->mFontSizeY = 6.0f;
+        console = sConsole;
+        console->mPositionX = 15;
+        console->mPositionY = 26;
+        console = sConsole;
+        console->mHeight = 23;
+        if (console->mHeight > console->mMaxLines) {
+            console->mHeight = console->mMaxLines;
+        }
+        sConsole->mVisible = true;
+        sConsole->mOutput = JUTConsole::OUTPUT_OSREPORT | JUTConsole::OUTPUT_CONSOLE;
+    }
+}
+
+#else
 
 OSMessageQueue JUTException::sMessageQueue = {0};
 const char* JUTException::sCpuExpName[] = {
@@ -78,7 +201,7 @@ JUTException::JUTException(JUTDirectPrint* pDirectPrint) : JKRThread(0x4000, 16,
 
 JUTException* JUTException::create(JUTDirectPrint* pDirectPrint) {
     if (sErrorManager == nullptr) {
-        sErrorManager = new (JKRHeap::sSystemHeap, 0) JUTException(pDirectPrint);
+        sErrorManager = new (JKRHeapToken::Dummy, JKRHeap::sSystemHeap, 0) JUTException(pDirectPrint);
         OSResumeThread(sErrorManager->mThread);
     }
 
@@ -665,13 +788,13 @@ void JUTException::waitTime(s32 duration) {
 }
 
 void JUTException::createFB() {
-    _GXRenderModeObj* renderMode = &GXNtsc480Int;
+    GXRenderModeObj* renderMode = &GXNtsc480Int;
     void* end = OSGetArenaHi();
     u32 size = (static_cast< u16 >(ALIGN_NEXT(renderMode->fbWidth, 16)) * renderMode->xfbHeight) * 2;
 
     void* begin = reinterpret_cast< void* >(ALIGN_PREV(reinterpret_cast< u32 >(end) - size, 32));
     void* object = reinterpret_cast< void* >(ALIGN_PREV(reinterpret_cast< u32 >(begin) - sizeof(JUTExternalFB), 32));
-    new (object) JUTExternalFB(renderMode, GX_GM_1_7, begin, size);
+    new (JKRHeapToken::Dummy, object) JUTExternalFB(renderMode, GX_GM_1_7, begin, size);
 
     mDirectPrint->changeFrameBuffer(begin, renderMode->fbWidth, renderMode->efbHeight);
     VIConfigure(renderMode);
@@ -745,10 +868,12 @@ void JUTException::createConsole(void* console_buffer, u32 console_buffer_size) 
     }
 }
 
-JUTExternalFB::JUTExternalFB(_GXRenderModeObj* renderMode, GXGamma gamma, void* buffer, u32 size) {
+JUTExternalFB::JUTExternalFB(GXRenderModeObj* renderMode, GXGamma gamma, void* buffer, u32 size) {
     mRenderMode = renderMode;
     mSize = size;
     field_0x0C = 1;
     mGamma = gamma;
     field_0x10 = false;
 }
+
+#endif  // TARGET_PC

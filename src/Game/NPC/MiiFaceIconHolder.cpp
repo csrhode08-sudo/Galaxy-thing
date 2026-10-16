@@ -7,7 +7,7 @@
 #include "Game/Util/ObjUtil.hpp"
 
 MiiFaceIconHolder::MiiFaceIconHolder(u32 iconNum, const char* pName)
-    : NameObj(pName), mIconNumMax(iconNum), mIconNum(0), mIcon(new MiiFaceIcon*[iconNum]) {
+    : NameObj(pName), mIconNumMax(iconNum), mIconNum(0), mIcon(new (JKRHeapToken::Dummy) MiiFaceIcon*[iconNum]) {
     MR::connectToScene(MR::createDrawAdaptor("Miiアイコン生成", MR::Functor(this, &MiiFaceIconHolder::drawIcons)), MR::MovementType_None,
                        MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_MiiFaceIcon);
 }

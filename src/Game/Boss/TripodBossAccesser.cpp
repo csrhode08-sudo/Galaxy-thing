@@ -160,8 +160,8 @@ namespace MR {
         getTripodBossAccesser()->getTriPodBoss()->requestEndDamageDemo();
     }
 
-    u32 getTripodBossGravityHostID() {
-        return reinterpret_cast< u32 >(getTripodBossAccesser());
+    uintptr_t getTripodBossGravityHostID() {
+        return reinterpret_cast< uintptr_t >(getTripodBossAccesser());
     }
 
     void setTripodBossJointAttachBaseMatrix(const TPos3f& rPos, s32 id) {

@@ -44,7 +44,7 @@ void GravityLight::init(const JMapInfoIter& rIter) {
     const char* pName;
     MR::getObjectName(&pName, rIter);
 
-    mLightCylinder = new LightCylinder(pName, getBaseMtx(), color);
+    mLightCylinder = new (JKRHeapToken::Dummy) LightCylinder(pName, getBaseMtx(), color);
     mLightCylinder->initLightCylinderByOwner(rIter);
     mLightCylinder->makeActorAppeared();
 
@@ -60,13 +60,13 @@ void GravityLight::init(const JMapInfoIter& rIter) {
     if (isRailConnected) {
         initRailRider(rIter);
 
-        mMapPartsRailMover = new MapPartsRailMover(this);
+        mMapPartsRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mMapPartsRailMover->init(rIter);
         mMapPartsRailMover->start();
     }
 
     if (canRotate) {
-        mMapPartsRotator = new MapPartsRotator(this);
+        mMapPartsRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
         mMapPartsRotator->init(rIter);
         mMapPartsRotator->start();
     }

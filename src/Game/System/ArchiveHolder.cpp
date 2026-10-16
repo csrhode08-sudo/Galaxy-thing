@@ -4,12 +4,12 @@
 
 ArchiveHolderArchiveEntry::ArchiveHolderArchiveEntry(void* pData, JKRHeap* pHeap, const char* pArchiveName)
     : mHeap(pHeap), mArchive(nullptr), mArchiveName(nullptr) {
-    JKRMemArchive* archive = new (pHeap, 0) JKRMemArchive();
+    JKRMemArchive* archive = new (JKRHeapToken::Dummy, pHeap, 0) JKRMemArchive();
     archive->mountFixed(pData, JKR_MEM_BREAK_FLAG_0);
     mArchive = archive;
 
     s32 len = strlen(pArchiveName) + 1;
-    mArchiveName = new (pHeap, 0) char[len];
+    mArchiveName = new (JKRHeapToken::Dummy, pHeap, 0) char[len];
     MR::copyString(mArchiveName, pArchiveName, len);
 }
 
@@ -24,7 +24,7 @@ ArchiveHolder::ArchiveHolder() {
 }
 
 ArchiveHolderArchiveEntry* ArchiveHolder::createAndAdd(void* pData, JKRHeap* pHeap, const char* pArchiveName) {
-    ArchiveHolderArchiveEntry* entry = new (pHeap, 0) ArchiveHolderArchiveEntry(pData, pHeap, pArchiveName);
+    ArchiveHolderArchiveEntry* entry = new (JKRHeapToken::Dummy, pHeap, 0) ArchiveHolderArchiveEntry(pData, pHeap, pArchiveName);
     OSMutex* mutex = &mMutex;
     OSLockMutex(mutex);
 

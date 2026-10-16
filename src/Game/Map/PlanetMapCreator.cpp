@@ -23,7 +23,7 @@ namespace {
 
         if (data != 0) {
             s32 size = strlen(pPlanetName) + strlen(pSuffix) + 1;
-            char* buf = new char[size];
+            char* buf = new (JKRHeapToken::Dummy) char[size];
             snprintf(buf, size, "%s%s", pPlanetName, pSuffix);
 
             *ppDst = buf;
@@ -282,7 +282,7 @@ PlanetMapCreator::PlanetMapCreator(const char* pName) : NameObj(pName), mPlanetM
     JMapInfo* pIter = MR::createCsvParser(::sArcName, ::sFileName);
 
     mTableCount = MR::getCsvDataElementNum(pIter);
-    mPlanetMapData = new PlanetMapData*[mTableCount];
+    mPlanetMapData = new (JKRHeapToken::Dummy) PlanetMapData*[mTableCount];
     createPlanetMapDataTable(pIter);
 }
 
@@ -339,7 +339,7 @@ void PlanetMapCreator::makeArchiveListPlanet(NameObjArchiveListCollector* pColle
 
 void PlanetMapCreator::createPlanetMapDataTable(JMapInfo* pInfo) {
     for (int i = 0; i < mTableCount; i++) {
-        mPlanetMapData[i] = new PlanetMapData();
+        mPlanetMapData[i] = new (JKRHeapToken::Dummy) PlanetMapData();
 
         addTableData(pInfo, i);
     }

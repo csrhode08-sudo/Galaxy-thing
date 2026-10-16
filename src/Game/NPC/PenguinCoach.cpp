@@ -58,10 +58,10 @@ void PenguinCoach::init(const JMapInfoIter& rIter) {
     if (mBehavior == Behavior_Star) {
         MR::useStageSwitchWriteA(this, rIter);
         MR::declarePowerStar(this);
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStar", "TakeOutStarPenguinCoach", GET_NERVE(PenguinCoach, PenguinCoachNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStar", "TakeOutStarPenguinCoach", GET_NERVE(PenguinCoach, PenguinCoachNrvTakeOutStar));
     } else if (mBehavior == Behavior_Tutorial || mBehavior == Behavior_Race) {
         MR::declarePowerStar(this);
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStar", "TakeOutStarPenguinCoach", GET_NERVE(PenguinCoach, PenguinCoachNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStar", "TakeOutStarPenguinCoach", GET_NERVE(PenguinCoach, PenguinCoachNrvTakeOutStar));
         RaceManagerFunction::entryAudience(this);
     }
 
@@ -84,8 +84,8 @@ void PenguinCoach::init(const JMapInfoIter& rIter) {
         setNerve(GET_NERVE(PenguinCoach, PenguinCoachNrvPrep));
     }
 
-    mTutorial = new SurfRayTutorial(this, MR::createTalkCtrlDirect(this, rIter, "Common_SurfingTutorial000", caps.mMessageOffset, nullptr), rIter);
-    mTurnJointCtrl = new TurnJointCtrl(this);
+    mTutorial = new (JKRHeapToken::Dummy) SurfRayTutorial(this, MR::createTalkCtrlDirect(this, rIter, "Common_SurfingTutorial000", caps.mMessageOffset, nullptr), rIter);
+    mTurnJointCtrl = new (JKRHeapToken::Dummy) TurnJointCtrl(this);
     mTurnJointCtrl->init(90.0f, 10.0f, 40.0f);
     mTurnJointCtrl->addFace("Head", 1.0f, TurnJointCtrl::X, TurnJointCtrl::Y, TurnJointCtrl::Z);
     mTurnJointCtrl->_60 = 0.1f;

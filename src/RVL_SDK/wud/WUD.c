@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 #include "revolution/bte.h"
 #include "revolution/os.h"
 #include "revolution/sc.h"

@@ -28,8 +28,8 @@ namespace {
 };  // namespace
 
 MiiSelect::MiiSelect(const char* pName)
-    : LayoutActor(pName, true), _28(new MR::BitArray(5)), mFellowIconNum(), mFavoriteMiiNum(), mMiiNum(), _1EC(), _1F0(), _1F4(), _1F8(), _1FC(),
-      _200(), _204(new FileSelectIconID()) {
+    : LayoutActor(pName, true), _28(new (JKRHeapToken::Dummy) MR::BitArray(5)), mFellowIconNum(), mFavoriteMiiNum(), mMiiNum(), _1EC(), _1F0(), _1F4(), _1F8(), _1FC(),
+      _200(), _204(new (JKRHeapToken::Dummy) FileSelectIconID()) {
     for (int i = 0; i < ARRAY_SIZE(_20); i++) {
         _20[i] = nullptr;
     }
@@ -260,7 +260,7 @@ void MiiSelect::createButtons() {
     for (int i = 0; i < ARRAY_SIZE(_20); i++) {
         MR::createAndAddPaneCtrl(this, pane[i], 1);
 
-        _20[i] = new ButtonPaneController(this, pane[i], bound[i], 0, true);
+        _20[i] = new (JKRHeapToken::Dummy) ButtonPaneController(this, pane[i], bound[i], 0, true);
         _20[i]->_22 = false;
     }
 }
@@ -342,8 +342,8 @@ void MiiSelect::collectValidMiiIndex() {
 }
 
 void MiiSelect::createPage() {
-    _1F8 = new MiiSelectSub::Page(this);
-    _1FC = new MiiSelectSub::Page(this);
+    _1F8 = new (JKRHeapToken::Dummy) MiiSelectSub::Page(this);
+    _1FC = new (JKRHeapToken::Dummy) MiiSelectSub::Page(this);
 }
 
 void MiiSelect::flipPage() {
@@ -432,7 +432,7 @@ void MiiSelect::onSelectDummy() {
 namespace MiiSelectSub {
     Page::Page(MiiSelect* pHost) : mHost(pHost), _20(true) {
         for (u32 i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            mIconArray[i] = new MiiSelectIcon(-1, -1, -1, "Miiセレクト用アイコン");
+            mIconArray[i] = new (JKRHeapToken::Dummy) MiiSelectIcon(-1, -1, -1, "Miiセレクト用アイコン");
         }
     }
 

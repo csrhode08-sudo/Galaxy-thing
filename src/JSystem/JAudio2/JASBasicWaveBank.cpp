@@ -36,15 +36,15 @@ void JASBasicWaveBank::setGroupCount(u32 param_0, JKRHeap* heap) {
 
     delete[] mWaveGroupArray;
     mGroupCount = (u16)param_0;
-    mWaveGroupArray = new (heap, 0) TWaveGroup*[param_0];
+    mWaveGroupArray = new (JKRHeapToken::Dummy, heap, 0) TWaveGroup*[param_0];
     for (int i = 0; i < mGroupCount; i++) {
-        mWaveGroupArray[i] = new (heap, 0) TWaveGroup(this);
+        mWaveGroupArray[i] = new (JKRHeapToken::Dummy, heap, 0) TWaveGroup(this);
     }
 }
 
 void JASBasicWaveBank::setWaveTableSize(u32 count, JKRHeap* heap) {
     delete[] mWaveTable;
-    mWaveTable = new (heap, 0) TWaveInfo*[count];
+    mWaveTable = new (JKRHeapToken::Dummy, heap, 0) TWaveInfo*[count];
     JASCalc::bzero(mWaveTable, sizeof(TWaveHandle*) * count);
     mHandleCount = (u16)count;
 }
@@ -119,7 +119,7 @@ JASBasicWaveBank::TWaveGroup::~TWaveGroup() {
 void JASBasicWaveBank::TWaveGroup::setWaveCount(u32 count, JKRHeap* heap) {
     delete[] mCtrlWaveArray;
     mWaveCount = (u16)count;
-    mCtrlWaveArray = new (heap, 0) TWaveInfo[count];
+    mCtrlWaveArray = new (JKRHeapToken::Dummy, heap, 0) TWaveInfo[count];
 
     for (int i = 0; i < count; i++) {
         mCtrlWaveArray[i].mWaveHandle.mHeap = &mHeap;

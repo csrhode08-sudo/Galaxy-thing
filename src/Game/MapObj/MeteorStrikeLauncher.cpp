@@ -41,10 +41,10 @@ void MeteorStrikeLauncher::init(const JMapInfoIter& rIter) {
         mMeteorStrikeCount = 2;
     }
 
-    mMeteorStrikeArray = new MeteorStrike*[mMeteorStrikeCount];
+    mMeteorStrikeArray = new (JKRHeapToken::Dummy) MeteorStrike*[mMeteorStrikeCount];
 
     for (s32 idx = 0; idx < mMeteorStrikeCount; idx++) {
-        mMeteorStrikeArray[idx] = new MeteorStrike(pName);
+        mMeteorStrikeArray[idx] = new (JKRHeapToken::Dummy) MeteorStrike(pName);
         mMeteorStrikeArray[idx]->init(rIter);
     }
 

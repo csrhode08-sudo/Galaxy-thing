@@ -31,8 +31,8 @@ namespace NrvDesertLandMoveSwitch {
 
 DesertLandMoveSwitch::DesertLandMoveSwitch(const char* pName) : LiveActor(pName) {
     mCollisionParts = 0;
-    mSpringValue = new SpringValue();
-    mMapObjConnector = new MapObjConnector(this);
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue();
+    mMapObjConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     _98 = 0;
     _99 = 0;
     _9A = 0;

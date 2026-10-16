@@ -137,11 +137,11 @@ void Karon::init(const JMapInfoIter& rIter) {
     MR::declareStarPiece(this, 3);
     MR::validateClipping(this);
     MR::setGroupClipping(this, rIter, 32);
-    mTerritoryMover = new TerritoryMover(500.0f);
+    mTerritoryMover = new (JKRHeapToken::Dummy) TerritoryMover(500.0f);
     mTerritoryMover->mCenter.set(mPosition);
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f, 50.0f, 0.0f));
-    mScaleController = new AnimScaleController(0);
-    mStateStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(0);
+    mStateStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     makeActorAppeared();
 }
 

@@ -1,4 +1,4 @@
-#include "Game/Map/FileSelectItem.hpp"
+#include "Game/Map/FIleSelectItem.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/FileSelectIconID.hpp"
@@ -86,7 +86,7 @@ void FileSelectItem_DUMMY() {
 FileSelectItem::FileSelectItem(s32 a1, bool a2, const FileSelectIconID& rID, const char* pName) : LiveActor(pName) {
     _8C = a2;
     mPlanetMapObj = nullptr;
-    mIconID = new FileSelectIconID(rID);
+    mIconID = new (JKRHeapToken::Dummy) FileSelectIconID(rID);
     mFaceParts = nullptr;
     _A0 = nullptr;
     _134.set(0.0f);
@@ -95,8 +95,8 @@ FileSelectItem::FileSelectItem(s32 a1, bool a2, const FileSelectIconID& rID, con
     mIsInvalidateSelect = false;
     _146 = 0;
     _147 = 0;
-    mScaleCtrl = new FileSelectItemSub::ScaleController();
-    mBlinkCtrl = new FileSelectItemSub::BlinkController(this);
+    mScaleCtrl = new (JKRHeapToken::Dummy) FileSelectItemSub::ScaleController();
+    mBlinkCtrl = new (JKRHeapToken::Dummy) FileSelectItemSub::BlinkController(this);
     mDelegator = nullptr;
     _154 = 1;
     _155 = 0;
@@ -112,7 +112,7 @@ FileSelectItem::FileSelectItem(s32 a1, bool a2, const FileSelectIconID& rID, con
     _D4.identity();
     _104.identity();
 
-    mModels = new FileSelectModel*[5];
+    mModels = new (JKRHeapToken::Dummy) FileSelectModel*[5];
 
     for (u32 i = 0; i < 5; i++) {
         mModels[i] = nullptr;
@@ -422,7 +422,7 @@ void FileSelectItem::createNew() {
 
 void FileSelectItem::createFellows() {
     for (u32 i = 0; i < 5; i++) {
-        mModels[i] = new FileSelectModel(::sFellowModel[i], _D4, "キャラフェイス");
+        mModels[i] = new (JKRHeapToken::Dummy) FileSelectModel(::sFellowModel[i], _D4, "キャラフェイス");
     }
 }
 
@@ -442,7 +442,7 @@ void FileSelectItem::createMii() {
 }
 
 void FileSelectItem::createNumber() {
-    _A0 = new FileSelectNumber("ファイル番号");
+    _A0 = new (JKRHeapToken::Dummy) FileSelectNumber("ファイル番号");
     _A0->initWithoutIter();
     _A0->setNumber(_140);
 }
@@ -656,7 +656,7 @@ void FileSelectItem::updateRotate() {
 }
 
 void FileSelectItem::playPointedME() {
-    switch (MR::getRandom(0l, 5l)) {
+    switch (MR::getRandom(0, 5)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY1");
 
@@ -681,7 +681,7 @@ void FileSelectItem::playPointedME() {
 }
 
 void FileSelectItem::playPointedNotUsingME() {
-    switch (MR::getRandom(0l, 5l)) {
+    switch (MR::getRandom(0, 5)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N1");
 
@@ -826,7 +826,7 @@ namespace FileSelectItemSub {
 
     void BlinkController::exeOpen() {
         if (MR::isFirstStep(this)) {
-            _C = MR::getRandom(180l, 300l);
+            _C = MR::getRandom(180, 300);
             _10 = 0;
         }
 

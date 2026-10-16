@@ -158,12 +158,12 @@ void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 divisions, s32 
 void MR::connectToSceneNormalBloom(BloomEffect* pBloomEffect) {
     MR::connectToScene(pBloomEffect, MR::MovementType_None, MR::CalcAnimType_Environment, MR::DrawBufferType_None, MR::DrawType_None);
 
-    NameObjAdaptor* pPreDrawAdaptor = new NameObjAdaptor("BloomEffect::preDraw");
+    NameObjAdaptor* pPreDrawAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("BloomEffect::preDraw");
 
     pPreDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::preDraw));
     MR::connectToScene(pPreDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPreDraw);
 
-    NameObjAdaptor* pPostDrawAdaptor = new NameObjAdaptor("BloomEffect::postDraw");
+    NameObjAdaptor* pPostDrawAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("BloomEffect::postDraw");
 
     pPostDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::postDraw));
     MR::connectToScene(pPostDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPostDraw);

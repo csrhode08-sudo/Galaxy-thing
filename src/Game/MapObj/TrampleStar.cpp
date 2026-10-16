@@ -45,7 +45,7 @@ void TrampleStar::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::connectToScene(this, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_None, MR::DrawType_FlexibleSphere);
 
-    mTexture = new JUTTexture(MR::loadTexFromArc("TrampleStar.arc", "TrampleStar.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("TrampleStar.arc", "TrampleStar.bti"), 0);
 
     f32 scale = 500.0f;
     scale *= mScale.x;
@@ -54,8 +54,8 @@ void TrampleStar::init(const JMapInfoIter& rIter) {
 
     mNumSurfaces = 12;
     mNumVtxs = 24;
-    mDeformCoeff = new f32[mNumVtxs * 256];
-    mDeformSpeed = new f32[mNumVtxs * 256];
+    mDeformCoeff = new (JKRHeapToken::Dummy) f32[mNumVtxs * 256];
+    mDeformSpeed = new (JKRHeapToken::Dummy) f32[mNumVtxs * 256];
 
     bool isShareStar = false;
 
@@ -70,11 +70,11 @@ void TrampleStar::init(const JMapInfoIter& rIter) {
     }
 
     if (!isShareStar) {
-        mVtxs = new TVec3f[mNumVtxs * 256];
-        mSurfaces = new Surface[mNumSurfaces * 256];
-        mLodSurfaces = new Surface[static_cast< u32 >(mNumSurfaces * 256) / 4];
-        mVtxOverlap = new s16[mNumVtxs * 256];
-        mTexST = new TVec2f[mNumVtxs * 256];
+        mVtxs = new (JKRHeapToken::Dummy) TVec3f[mNumVtxs * 256];
+        mSurfaces = new (JKRHeapToken::Dummy) Surface[mNumSurfaces * 256];
+        mLodSurfaces = new (JKRHeapToken::Dummy) Surface[static_cast< u32 >(mNumSurfaces * 256) / 4];
+        mVtxOverlap = new (JKRHeapToken::Dummy) s16[mNumVtxs * 256];
+        mTexST = new (JKRHeapToken::Dummy) TVec2f[mNumVtxs * 256];
 
         mVtxs[0].set(-500.0f, -500.0f, -500.0f);
         mVtxs[1].set(-500.0f, -500.0f, 500.0f);
@@ -162,15 +162,15 @@ void TrampleStar::init(const JMapInfoIter& rIter) {
 
         toSphere(scale);
 
-        TrampleStarShare* shareStar = new TrampleStarShare(this);
+        TrampleStarShare* shareStar = new (JKRHeapToken::Dummy) TrampleStarShare(this);
     }
 
-    _A8 = new u8[mNumVtxs];
+    _A8 = new (JKRHeapToken::Dummy) u8[mNumVtxs];
     mNumDrawVtxs = 0;
-    mDrawPos = new TVec3f[mNumSurfaces * 3];
-    mDrawNorm = new TVec3f[mNumSurfaces * 3];
-    mDrawTex = new TVec2f[mNumSurfaces * 3];
-    mDrawDeformCoeffs = new f32[mNumSurfaces * 3];
+    mDrawPos = new (JKRHeapToken::Dummy) TVec3f[mNumSurfaces * 3];
+    mDrawNorm = new (JKRHeapToken::Dummy) TVec3f[mNumSurfaces * 3];
+    mDrawTex = new (JKRHeapToken::Dummy) TVec2f[mNumSurfaces * 3];
+    mDrawDeformCoeffs = new (JKRHeapToken::Dummy) f32[mNumSurfaces * 3];
 
     for (u32 vtx = 0; vtx < mNumVtxs; vtx++) {
         mDeformCoeff[vtx] = 0.0f;
@@ -194,7 +194,7 @@ void TrampleStar::toSphere(f32 radius) {
 }
 
 void TrampleStar::initCheckFlag(u32 numFlags) {
-    mCheckFlags = new (-0x4) u16[numFlags * numFlags];
+    mCheckFlags = new (JKRHeapToken::Dummy, -0x4) u16[numFlags * numFlags];
     mNumFlags = numFlags;
 
     for (u32 idx = 0; idx < mNumFlags * mNumFlags; idx++) {
@@ -673,5 +673,5 @@ void TrampleStar::drawSelf() const {
 }
 
 void TrampleStar_FORCE_MATCH_TEXTURE(const ResTIMG* pImage) {
-    new JUTTexture(pImage, 0);
+    new (JKRHeapToken::Dummy) JUTTexture(pImage, 0);
 }

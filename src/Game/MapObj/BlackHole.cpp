@@ -170,7 +170,7 @@ void BlackHole::initCubeBox() {
     MR::makeMtxRotate(_A8, mRotation.x, mRotation.y, mRotation.z);
     _A8.setTrans(mPosition);
 
-    _A4 = new TBox3f();
+    _A4 = new (JKRHeapToken::Dummy) TBox3f();
     TVec3f vecStart(0.5f * (1000.0f * -mScale.x), 0.5f * (1000.0f * -mScale.y), 0.5f * (1000.0f * -mScale.z));
     TVec3f vecEnd(0.5f * (1000.0f * mScale.x), 0.5f * (1000.0f * mScale.y), 0.5f * (1000.0f * mScale.z));
     _A4->set(vecStart, vecEnd);

@@ -151,241 +151,241 @@ bool SceneObjHolder::isExist(int id) const {
 NameObj* SceneObjHolder::newEachObj(int id) {
     switch (id) {
     case SceneObj_SensorHitChecker:
-        return new SensorHitChecker("センサー当たり");
+        return new (JKRHeapToken::Dummy) SensorHitChecker("センサー当たり");
     case SceneObj_CollisionDirector:
-        return new CollisionDirector();
+        return new (JKRHeapToken::Dummy) CollisionDirector();
     case SceneObj_ClippingDirector:
-        return new ClippingDirector();
+        return new (JKRHeapToken::Dummy) ClippingDirector();
     case SceneObj_DemoDirector:
-        return new DemoDirector("デモ指揮");
+        return new (JKRHeapToken::Dummy) DemoDirector("デモ指揮");
     case SceneObj_EventDirector:
-        return new EventDirector();
+        return new (JKRHeapToken::Dummy) EventDirector();
     case SceneObj_EffectSystem:
-        return new EffectSystem("エフェクトシステム", true);
+        return new (JKRHeapToken::Dummy) EffectSystem("エフェクトシステム", true);
     case SceneObj_LightDirector:
-        return new LightDirector();
+        return new (JKRHeapToken::Dummy) LightDirector();
     case SceneObj_SceneDataInitializer:
-        return new SceneDataInitializer();
+        return new (JKRHeapToken::Dummy) SceneDataInitializer();
     case SceneObj_StageDataHolder:
-        return new StageDataHolder(MR::getCurrentStageName(), 0, true);
+        return new (JKRHeapToken::Dummy) StageDataHolder(MR::getCurrentStageName(), 0, true);
     case SceneObj_MessageSensorHolder:
-        return new MessageSensorHolder("システム汎用センサー");
+        return new (JKRHeapToken::Dummy) MessageSensorHolder("システム汎用センサー");
     case SceneObj_StageSwitchContainer:
-        return new StageSwitchContainer();
+        return new (JKRHeapToken::Dummy) StageSwitchContainer();
     case SceneObj_SwitchWatcherHolder:
-        return new SwitchWatcherHolder();
+        return new (JKRHeapToken::Dummy) SwitchWatcherHolder();
     case SceneObj_SleepControllerHolder:
-        return new SleepControllerHolder();
+        return new (JKRHeapToken::Dummy) SleepControllerHolder();
     case SceneObj_AreaObjContainer:
-        return new AreaObjContainer("エリアオブジェクトコンテナ管理");
+        return new (JKRHeapToken::Dummy) AreaObjContainer("エリアオブジェクトコンテナ管理");
     case SceneObj_LiveActorGroupArray:
-        return new LiveActorGroupArray("オブジェクトグループ");
+        return new (JKRHeapToken::Dummy) LiveActorGroupArray("オブジェクトグループ");
     case SceneObj_MovementOnOffGroupHolder:
-        return new MovementOnOffGroupHolder("Movementグループ管理");
+        return new (JKRHeapToken::Dummy) MovementOnOffGroupHolder("Movementグループ管理");
     case SceneObj_CaptureScreenActor:
-        return new CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
+        return new (JKRHeapToken::Dummy) CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
     case SceneObj_AudCameraWatcher:
-        return new AudCameraWatcher();
+        return new (JKRHeapToken::Dummy) AudCameraWatcher();
     case SceneObj_AudEffectDirector:
-        return new AudEffectDirector();
+        return new (JKRHeapToken::Dummy) AudEffectDirector();
     case SceneObj_AudBgmConductor:
-        return new AudBgmConductor();
+        return new (JKRHeapToken::Dummy) AudBgmConductor();
     case SceneObj_MarioHolder:
-        return new MarioHolder();
+        return new (JKRHeapToken::Dummy) MarioHolder();
     case SceneObj_MirrorCamera:
-        return new MirrorCamera("鏡用カメラ");
+        return new (JKRHeapToken::Dummy) MirrorCamera("鏡用カメラ");
     case SceneObj_CameraContext:
-        return new CameraContext();
+        return new (JKRHeapToken::Dummy) CameraContext();
     case SceneObj_NameObjGroup:
-        return new NameObjGroup("IgnorePauseNameObj", 16);
+        return new (JKRHeapToken::Dummy) NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_TalkDirector:
-        return new TalkDirector("会話ディレクター");
+        return new (JKRHeapToken::Dummy) TalkDirector("会話ディレクター");
     case SceneObj_EventSequencer:
-        return new EventSequencer();
+        return new (JKRHeapToken::Dummy) EventSequencer();
     case SceneObj_StopSceneController:
-        return new StopSceneController();
+        return new (JKRHeapToken::Dummy) StopSceneController();
     case SceneObj_SceneNameObjMovementController:
-        return new SceneNameObjMovementController();
+        return new (JKRHeapToken::Dummy) SceneNameObjMovementController();
     case SceneObj_ImageEffectSystemHolder:
-        return new ImageEffectSystemHolder();
+        return new (JKRHeapToken::Dummy) ImageEffectSystemHolder();
     case SceneObj_BloomEffect:
-        return new BloomEffect("ブルーム");
+        return new (JKRHeapToken::Dummy) BloomEffect("ブルーム");
     case SceneObj_BloomEffectSimple:
-        return new BloomEffectSimple();
+        return new (JKRHeapToken::Dummy) BloomEffectSimple();
     case SceneObj_ScreenBlurEffect:
-        return new ScreenBlurEffect("画面ブラー");
+        return new (JKRHeapToken::Dummy) ScreenBlurEffect("画面ブラー");
     case SceneObj_DepthOfFieldBlur:
-        return new DepthOfFieldBlur("被写界深度ブラー");
+        return new (JKRHeapToken::Dummy) DepthOfFieldBlur("被写界深度ブラー");
     case SceneObj_SceneWipeHolder:
-        return new SceneWipeHolder();
+        return new (JKRHeapToken::Dummy) SceneWipeHolder();
     case SceneObj_PlayerActionGuidance:
-        return new PlayerActionGuidance();
+        return new (JKRHeapToken::Dummy) PlayerActionGuidance();
     case SceneObj_ScenePlayingResult:
-        return new ScenePlayingResult();
+        return new (JKRHeapToken::Dummy) ScenePlayingResult();
     case SceneObj_LensFlareDirector:
-        return new LensFlareDirector();
+        return new (JKRHeapToken::Dummy) LensFlareDirector();
     case SceneObj_FurDrawManager:
-        return new FurDrawManager(64);
+        return new (JKRHeapToken::Dummy) FurDrawManager(64);
     case SceneObj_PlacementStateChecker:
-        return new PlacementStateChecker("オブジェクト配置状態の監視");
+        return new (JKRHeapToken::Dummy) PlacementStateChecker("オブジェクト配置状態の監視");
     case SceneObj_NamePosHolder:
-        return new NamePosHolder();
+        return new (JKRHeapToken::Dummy) NamePosHolder();
     case SceneObj_NPCDirector:
-        return new NPCDirector();
+        return new (JKRHeapToken::Dummy) NPCDirector();
     case SceneObj_ResourceShare:
-        return new ResourceShare();
+        return new (JKRHeapToken::Dummy) ResourceShare();
     case SceneObj_MoviePlayerSimple:
-        return new MoviePlayerSimple();
+        return new (JKRHeapToken::Dummy) MoviePlayerSimple();
     case SceneObj_InformationObserver:
-        return new InformationObserver();
+        return new (JKRHeapToken::Dummy) InformationObserver();
     case SceneObj_CenterScreenBlur:
-        return new CenterScreenBlur();
+        return new (JKRHeapToken::Dummy) CenterScreenBlur();
     case SceneObj_OdhConverter:
-        return new OdhConverter();
+        return new (JKRHeapToken::Dummy) OdhConverter();
     case SceneObj_CometRetryButton:
-        return new CometRetryButton("コメットリトライボタン");
+        return new (JKRHeapToken::Dummy) CometRetryButton("コメットリトライボタン");
     case SceneObj_AllLiveActorGroup:
-        return new AllLiveActorGroup();
+        return new (JKRHeapToken::Dummy) AllLiveActorGroup();
     case SceneObj_CameraDirector:
-        return new CameraDirector("カメラ管理");
+        return new (JKRHeapToken::Dummy) CameraDirector("カメラ管理");
     case SceneObj_PlanetGravityManager:
-        return new PlanetGravityManager("重力");
+        return new (JKRHeapToken::Dummy) PlanetGravityManager("重力");
     case SceneObj_BaseMatrixFollowTargetHolder:
-        return new BaseMatrixFollowTargetHolder("行列追随先リスト", 256, 256);
+        return new (JKRHeapToken::Dummy) BaseMatrixFollowTargetHolder("行列追随先リスト", 256, 256);
     case SceneObj_GameSceneLayoutHolder:
-        return new GameSceneLayoutHolder();
+        return new (JKRHeapToken::Dummy) GameSceneLayoutHolder();
     case SceneObj_TripodBossAccesser:
-        return new TripodBossAccesser("三脚ボスアクセサ");
+        return new (JKRHeapToken::Dummy) TripodBossAccesser("三脚ボスアクセサ");
     case SceneObj_KameckBeamHolder:
-        return new KameckBeamHolder();
+        return new (JKRHeapToken::Dummy) KameckBeamHolder();
     case SceneObj_KameckFireBallHolder:
-        return new KameckFireBallHolder();
+        return new (JKRHeapToken::Dummy) KameckFireBallHolder();
     case SceneObj_KameckBeamTurtleHolder:
-        return new KameckBeamTurtleHolder();
+        return new (JKRHeapToken::Dummy) KameckBeamTurtleHolder();
     case SceneObj_KabokuriFireHolder:
-        return new KabokuriFireHolder();
+        return new (JKRHeapToken::Dummy) KabokuriFireHolder();
     case SceneObj_TakoHeiInkHolder:
-        return new TakoHeiInkHolder();
+        return new (JKRHeapToken::Dummy) TakoHeiInkHolder();
     case SceneObj_SwingRopeGroup:
-        return new SwingRopeGroup("スイングロープ描画");
+        return new (JKRHeapToken::Dummy) SwingRopeGroup("スイングロープ描画");
     case SceneObj_CoinHolder:
-        return new CoinHolder("コイン管理");
+        return new (JKRHeapToken::Dummy) CoinHolder("コイン管理");
     case SceneObj_PurpleCoinHolder:
-        return new PurpleCoinHolder();
+        return new (JKRHeapToken::Dummy) PurpleCoinHolder();
     case SceneObj_CoinRotater:
-        return new CoinRotater("コイン回転管理");
+        return new (JKRHeapToken::Dummy) CoinRotater("コイン回転管理");
     case SceneObj_AirBubbleHolder:
-        return new AirBubbleHolder("空気アワ管理");
+        return new (JKRHeapToken::Dummy) AirBubbleHolder("空気アワ管理");
     case SceneObj_StarPieceDirector:
-        return new StarPieceDirector("スターピース指揮");
+        return new (JKRHeapToken::Dummy) StarPieceDirector("スターピース指揮");
     case SceneObj_BegomanAttackPermitter:
-        return new BegomanAttackPermitter("ベーゴマン攻撃許可者");
+        return new (JKRHeapToken::Dummy) BegomanAttackPermitter("ベーゴマン攻撃許可者");
     case SceneObj_BigFanHolder:
-        return new BigFanHolder();
+        return new (JKRHeapToken::Dummy) BigFanHolder();
     case SceneObj_KarikariDirector:
-        return new KarikariDirector("カリカリディレクター");
+        return new (JKRHeapToken::Dummy) KarikariDirector("カリカリディレクター");
     case SceneObj_ShadowControllerHolder:
-        return new ShadowControllerHolder();
+        return new (JKRHeapToken::Dummy) ShadowControllerHolder();
     case SceneObj_ShadowVolumeDrawInit:
-        return new ShadowVolumeDrawInit();
+        return new (JKRHeapToken::Dummy) ShadowVolumeDrawInit();
     case SceneObj_ShadowSurfaceDrawInit:
-        return new ShadowSurfaceDrawInit("水面影描画初期化");
+        return new (JKRHeapToken::Dummy) ShadowSurfaceDrawInit("水面影描画初期化");
     case SceneObj_PlantStalkDrawInit:
-        return new PlantStalkDrawInit("植物の茎描画初期化");
+        return new (JKRHeapToken::Dummy) PlantStalkDrawInit("植物の茎描画初期化");
     case SceneObj_PlantLeafDrawInit:
-        return new PlantLeafDrawInit("描画初期化[植物の葉]");
+        return new (JKRHeapToken::Dummy) PlantLeafDrawInit("描画初期化[植物の葉]");
     case SceneObj_TrapezeRopeDrawInit:
-        return new TrapezeRopeDrawInit("空中ブランコロープ描画");
+        return new (JKRHeapToken::Dummy) TrapezeRopeDrawInit("空中ブランコロープ描画");
     case SceneObj_VolumeModelDrawInit:
-        return new VolumeModelDrawInit();
+        return new (JKRHeapToken::Dummy) VolumeModelDrawInit();
     case SceneObj_SpinDriverPathDrawInit:
-        return new SpinDriverPathDrawInit();
+        return new (JKRHeapToken::Dummy) SpinDriverPathDrawInit();
     case SceneObj_NoteGroup:
-        return new NoteGroup();
+        return new (JKRHeapToken::Dummy) NoteGroup();
     case SceneObj_ClipAreaHolder:
-        return new ClipAreaHolder("クリップエリアホルダー");
+        return new (JKRHeapToken::Dummy) ClipAreaHolder("クリップエリアホルダー");
     case SceneObj_ArrowSwitchMultiHolder:
-        return new ArrowSwitchMultiHolder();
+        return new (JKRHeapToken::Dummy) ArrowSwitchMultiHolder();
     case SceneObj_ClipAreaDropHolder:
-        return new ClipAreaDropHolder();
+        return new (JKRHeapToken::Dummy) ClipAreaDropHolder();
     case SceneObj_FallOutFieldDraw:
-        return new FallOutFieldDraw("クリップエリア描画[抜き]");
+        return new (JKRHeapToken::Dummy) FallOutFieldDraw("クリップエリア描画[抜き]");
     case SceneObj_ClipFieldFillDraw:
-        return new ClipFieldFillDraw("クリップエリア描画[塗りつぶし]");
+        return new (JKRHeapToken::Dummy) ClipFieldFillDraw("クリップエリア描画[塗りつぶし]");
     case SceneObj_ScreenAlphaCapture:
-        return new ScreenAlphaCapture("アルファテクスチャ取り込み");
+        return new (JKRHeapToken::Dummy) ScreenAlphaCapture("アルファテクスチャ取り込み");
     case SceneObj_MapPartsRailGuideHolder:
-        return new MapPartsRailGuideHolder();
+        return new (JKRHeapToken::Dummy) MapPartsRailGuideHolder();
     case SceneObj_GCapture:
-        return new GCapture("Gキャプチャー");
+        return new (JKRHeapToken::Dummy) GCapture("Gキャプチャー");
     case SceneObj_NameObjExecuteHolder:
-        return new NameObjExecuteHolder(4096);
+        return new (JKRHeapToken::Dummy) NameObjExecuteHolder(4096);
     case SceneObj_ElectricRailHolder:
-        return new ElectricRailHolder("電撃レール保持");
+        return new (JKRHeapToken::Dummy) ElectricRailHolder("電撃レール保持");
     case SceneObj_SpiderThread:
-        return new SpiderThread("クモの巣");
+        return new (JKRHeapToken::Dummy) SpiderThread("クモの巣");
     case SceneObj_QuakeEffectGenerator:
-        return new QuakeEffectGenerator();
+        return new (JKRHeapToken::Dummy) QuakeEffectGenerator();
     case SceneObj_HeatHazeDirector:
-        return new HeatHazeDirector("陽炎制御");
+        return new (JKRHeapToken::Dummy) HeatHazeDirector("陽炎制御");
     case SceneObj_BlueChipHolder:
-        return new ChipHolder("ブルーチップホルダー", 0);
+        return new (JKRHeapToken::Dummy) ChipHolder("ブルーチップホルダー", 0);
     case SceneObj_YellowChipHolder:
-        return new ChipHolder("イエローーチップホルダー", 1);
+        return new (JKRHeapToken::Dummy) ChipHolder("イエローーチップホルダー", 1);
     case SceneObj_BigBubbleHolder:
-        return new BigBubbleHolder("オオアワホルダー");
+        return new (JKRHeapToken::Dummy) BigBubbleHolder("オオアワホルダー");
     case SceneObj_EarthenPipeMediator:
-        return new EarthenPipeMediator();
+        return new (JKRHeapToken::Dummy) EarthenPipeMediator();
     case SceneObj_WaterAreaHolder:
-        return new WaterAreaHolder();
+        return new (JKRHeapToken::Dummy) WaterAreaHolder();
     case SceneObj_WaterPlantDrawInit:
-        return new WaterPlantDrawInit();
+        return new (JKRHeapToken::Dummy) WaterPlantDrawInit();
     case SceneObj_OceanHomeMapCtrl:
-        return new OceanHomeMapCtrl();
+        return new (JKRHeapToken::Dummy) OceanHomeMapCtrl();
     case SceneObj_RaceManager:
-        return new RaceManager();
+        return new (JKRHeapToken::Dummy) RaceManager();
     case SceneObj_GroupCheckManager:
-        return new GroupCheckManager("属性グループマネージャー");
+        return new (JKRHeapToken::Dummy) GroupCheckManager("属性グループマネージャー");
     case SceneObj_SkeletalFishBabyRailHolder:
-        return new SkeletalFishBabyRailHolder("スカルシャークベビーレール管理");
+        return new (JKRHeapToken::Dummy) SkeletalFishBabyRailHolder("スカルシャークベビーレール管理");
     case SceneObj_SkeletalFishBossRailHolder:
-        return new SkeletalFishBossRailHolder("スカルシャークボスレール管理");
+        return new (JKRHeapToken::Dummy) SkeletalFishBossRailHolder("スカルシャークボスレール管理");
     case SceneObj_WaterPressureBulletHolder:
-        return new WaterPressureBulletHolder("ウォータープレッシャー玉ホルダ−");
+        return new (JKRHeapToken::Dummy) WaterPressureBulletHolder("ウォータープレッシャー玉ホルダ−");
     case SceneObj_FirePressureBulletHolder:
-        return new FirePressureBulletHolder("ファイアプレッシャー玉ホルダ−");
+        return new (JKRHeapToken::Dummy) FirePressureBulletHolder("ファイアプレッシャー玉ホルダ−");
     case SceneObj_SunshadeMapHolder:
-        return new SunshadeMapHolder();
+        return new (JKRHeapToken::Dummy) SunshadeMapHolder();
     case SceneObj_MiiFacePartsHolder:
-        return new MiiFacePartsHolder(128);
+        return new (JKRHeapToken::Dummy) MiiFacePartsHolder(128);
     case SceneObj_MiiFaceIconHolder:
-        return new MiiFaceIconHolder(16, "Miiアイコン保持管理");
+        return new (JKRHeapToken::Dummy) MiiFaceIconHolder(16, "Miiアイコン保持管理");
     case SceneObj_FluffWindHolder:
-        return new FluffWindHolder();
+        return new (JKRHeapToken::Dummy) FluffWindHolder();
     case SceneObj_SphereSelector:
-        return new SphereSelector();
+        return new (JKRHeapToken::Dummy) SphereSelector();
     case SceneObj_GalaxyNamePlateDrawer:
-        return new GalaxyNamePlateDrawer();
+        return new (JKRHeapToken::Dummy) GalaxyNamePlateDrawer();
     case SceneObj_CinemaFrame:
-        return new CinemaFrame(true);
+        return new (JKRHeapToken::Dummy) CinemaFrame(true);
     case SceneObj_BossAccessor:
-        return new BossAccessor();
+        return new (JKRHeapToken::Dummy) BossAccessor();
     case SceneObj_MiniatureGalaxyHolder:
-        return new MiniatureGalaxyHolder();
+        return new (JKRHeapToken::Dummy) MiniatureGalaxyHolder();
     case SceneObj_PlanetMapCreator:
-        return new PlanetMapCreator("惑星クリエイタ");
+        return new (JKRHeapToken::Dummy) PlanetMapCreator("惑星クリエイタ");
     case SceneObj_WarpPodMgr:
-        return new WarpPodMgr("ワープポッド管理局");
+        return new (JKRHeapToken::Dummy) WarpPodMgr("ワープポッド管理局");
     case SceneObj_PriorDrawAirHolder:
-        return new PriorDrawAirHolder();
+        return new (JKRHeapToken::Dummy) PriorDrawAirHolder();
     case SceneObj_GalaxyMapController:
-        return new GalaxyMapController();
+        return new (JKRHeapToken::Dummy) GalaxyMapController();
     case SceneObj_MoviePlayingSequenceHolder:
-        return new MoviePlayingSequenceHolder("ムービー管理保持");
+        return new (JKRHeapToken::Dummy) MoviePlayingSequenceHolder("ムービー管理保持");
     case SceneObj_PrologueHolder:
-        return new PrologueHolder("プロローグ保持");
+        return new (JKRHeapToken::Dummy) PrologueHolder("プロローグ保持");
     case SceneObj_StaffRoll:
-        return new StaffRoll("スタッフロール");
+        return new (JKRHeapToken::Dummy) StaffRoll("スタッフロール");
     default:
         return nullptr;
     }

@@ -9,7 +9,7 @@
 TVec3f (TVec3f::* XanimeCore_FORCE_EMIT())(const TVec3f&) const {
     (void)1.0f;
     (void)0.0f;
-    TVec3f* pVectors = new TVec3f[1];
+    TVec3f* pVectors = new (JKRHeapToken::Dummy) TVec3f[1];
     delete[] pVectors;
     return &TVec3f::operator-;
 }
@@ -70,7 +70,7 @@ void XanimeCore::shareJointTransform(const XanimeCore* pOther) {
 }
 
 void XanimeCore::enableJointTransform(J3DModelData* pModelData) {
-    mTransformList = new XjointTransform[mJointCount];
+    mTransformList = new (JKRHeapToken::Dummy) XjointTransform[mJointCount];
 
     for (u32 i = 0; i < mJointCount; i++) {
         J3DJoint* pJoint = pModelData->getJointNodePointer(i);
@@ -111,7 +111,7 @@ void XanimeCore::initMember(u32 trackCount) {
     _29 = 0;
     _6 = 0;
     _C = 0;
-    mTrackList = new XanimeTrack[trackCount];
+    mTrackList = new (JKRHeapToken::Dummy) XanimeTrack[trackCount];
 
     s32 curTrack = 0;
 
@@ -127,7 +127,7 @@ XanimeCore::XanimeCore(u32 trackCount, u32 jointCount, u8 a3) {
     _4 = a3;
     mTrackCount = trackCount;
     mJointCount = jointCount;
-    mJointList = new XjointInfo[jointCount];
+    mJointList = new (JKRHeapToken::Dummy) XjointInfo[jointCount];
     mTransformList = nullptr;
     initMember(trackCount);
 }

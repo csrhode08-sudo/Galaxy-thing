@@ -1,3 +1,6 @@
+#ifdef TARGET_PC
+#include "pc/frame.h"
+#endif
 #include "Game/System/GameSystem.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjRegister.hpp"
@@ -45,7 +48,11 @@ namespace NrvGameSystem {
     NEW_NERVE(GameSystemNormal, GameSystem, Normal);
 };  // namespace NrvGameSystem
 
+#ifdef TARGET_PC
+void smg_main(void) {
+#else
 void main(void) {
+#endif
     OSInitFastCast();
     DVDInit();
     VIInit();
@@ -78,23 +85,23 @@ GameSystem::GameSystem()
 
 void GameSystem::init() {
     JKRAram::create(0xE00000, 0xFFFFFFFF, 8, 7, 3);
-    mObjHolder = new GameSystemObjHolder();
-    mFontHolder = new GameSystemFontHolder();
+    mObjHolder = new (JKRHeapToken::Dummy) GameSystemObjHolder();
+    mFontHolder = new (JKRHeapToken::Dummy) GameSystemFontHolder();
     mFontHolder->createFontFromEmbeddedData();
     initNerve(GET_NERVE(GameSystem, GameSystemInitializeAudio));
-    mSequenceDirector = new GameSequenceDirector();
+    mSequenceDirector = new (JKRHeapToken::Dummy) GameSequenceDirector();
     initGX();
     DrawSyncManager::start(0x300, 15);
-    mSceneController = new GameSystemSceneController();
+    mSceneController = new (JKRHeapToken::Dummy) GameSystemSceneController();
     mObjHolder->init();
-    mErrorWatcher = new GameSystemErrorWatcher();
-    mFrameControl = new GameSystemFrameControl();
+    mErrorWatcher = new (JKRHeapToken::Dummy) GameSystemErrorWatcher();
+    mFrameControl = new (JKRHeapToken::Dummy) GameSystemFrameControl();
     SingletonHolder< GameSystemResetAndPowerProcess >::init();
     SingletonHolder< GameSystemResetAndPowerProcess >::get()->initWithoutIter();
-    mStationedArchiveLoader = new GameSystemStationedArchiveLoader();
-    mHomeButtonLayout = new HomeButtonLayout();
-    mHomeButtonStateNotifier = new HomeButtonStateNotifier();
-    mDimmingWatcher = new GameSystemDimmingWatcher();
+    mStationedArchiveLoader = new (JKRHeapToken::Dummy) GameSystemStationedArchiveLoader();
+    mHomeButtonLayout = new (JKRHeapToken::Dummy) HomeButtonLayout();
+    mHomeButtonStateNotifier = new (JKRHeapToken::Dummy) HomeButtonStateNotifier();
+    mDimmingWatcher = new (JKRHeapToken::Dummy) GameSystemDimmingWatcher();
     setNerve(GET_NERVE(GameSystem, GameSystemInitializeAudio));
 }
 
@@ -158,7 +165,7 @@ void GameSystem::exeNormal() {
 
 void GameSystem::initGX() {
     if (mFifoBase == nullptr) {
-        mFifoBase = new (32) u8[GX_FIFO_SIZE];
+        mFifoBase = new (JKRHeapToken::Dummy, 32) u8[GX_FIFO_SIZE];
     }
 
     GXInit(mFifoBase, GX_FIFO_SIZE);
@@ -191,6 +198,9 @@ bool GameSystem::isPreparedReset() const {
 }
 
 void GameSystem::frameLoop() {
+#ifdef TARGET_PC
+    pc::frameBegin();
+#endif
     MainLoopFramework::sManager->beginRender();
     draw();
     MainLoopFramework::sManager->endRender();
@@ -198,6 +208,9 @@ void GameSystem::frameLoop() {
     calcAnim();
     mObjHolder->captureIfAllowForScreenPreserver();
     MainLoopFramework::sManager->endFrame();
+#ifdef TARGET_PC
+    pc::frameEnd();
+#endif
     MainLoopFramework::sManager->waitForRetrace();
 }
 

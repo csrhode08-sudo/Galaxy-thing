@@ -53,5 +53,5 @@ CameraTargetObj* CameraBlackHole::calc() {
 }
 
 CamTranslatorBase* CameraBlackHole::createTranslator() {
-    return new CamTranslatorBlackHole(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorBlackHole(this);
 }

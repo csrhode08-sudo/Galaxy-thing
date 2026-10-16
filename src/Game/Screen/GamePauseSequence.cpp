@@ -22,7 +22,7 @@ GamePauseSequence::GamePauseSequence() : LayoutActor("ポーズ画面管理", tr
 
 void GamePauseSequence::init(const JMapInfoIter& rIter) {
     if (!MR::isStageDisablePauseMenu()) {
-        mPauseMenu = new PauseMenu();
+        mPauseMenu = new (JKRHeapToken::Dummy) PauseMenu();
         mPauseMenu->initWithoutIter();
     }
 

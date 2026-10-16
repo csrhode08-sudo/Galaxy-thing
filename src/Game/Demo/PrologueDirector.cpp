@@ -250,18 +250,18 @@ void PrologueDirector::exeGameStart() {
 }
 
 void PrologueDirector::createPictureBook() {
-    mPictureBook = new ProloguePictureBook();
+    mPictureBook = new (JKRHeapToken::Dummy) ProloguePictureBook();
     mPictureBook->initWithoutIter();
     mPictureBook->kill();
 }
 
 void PrologueDirector::createLetter() {
-    mLetter = new PrologueLetter("ピーチからの手紙");
+    mLetter = new (JKRHeapToken::Dummy) PrologueLetter("ピーチからの手紙");
     mLetter->initWithoutIter();
 }
 
 void PrologueDirector::createScenery() {
-    mScenery = new ModelObj("背景書割", "DemoLetter", nullptr, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
+    mScenery = new (JKRHeapToken::Dummy) ModelObj("背景書割", "DemoLetter", nullptr, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
 
     MR::invalidateClipping(mScenery);
     mScenery->initWithoutIter();
@@ -274,7 +274,7 @@ void PrologueDirector::createScenery() {
 }
 
 void PrologueDirector::createMarioPosDummyModel() {
-    mMarioPosDummyModel = new ModelObj("マリオの経路", "DemoPeachCastleGate", nullptr, -2, -2, -2, false);
+    mMarioPosDummyModel = new (JKRHeapToken::Dummy) ModelObj("マリオの経路", "DemoPeachCastleGate", nullptr, -2, -2, -2, false);
     mMarioPosDummyModel->initWithoutIter();
 
     MR::invalidateClipping(mMarioPosDummyModel);
@@ -288,7 +288,7 @@ void PrologueDirector::createMarioPosDummyModel() {
 }
 
 void PrologueDirector::createCameraTarget() {
-    mCameraTarget = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTarget = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     mCameraTarget->mMatrix.identity();
 }
 

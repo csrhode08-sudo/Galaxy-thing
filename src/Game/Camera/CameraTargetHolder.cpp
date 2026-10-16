@@ -7,8 +7,8 @@ namespace {
 
 CameraTargetHolder::CameraTargetHolder() {
     mTarget = nullptr;
-    mTargetActor = new CameraTargetActor("アクター注目");
-    mTargetPlayer = new CameraTargetPlayer("マリオ注目");
+    mTargetActor = new (JKRHeapToken::Dummy) CameraTargetActor("アクター注目");
+    mTargetPlayer = new (JKRHeapToken::Dummy) CameraTargetPlayer("マリオ注目");
 }
 
 void CameraTargetHolder::movement() {

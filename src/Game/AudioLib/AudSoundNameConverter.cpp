@@ -73,7 +73,7 @@ void AudSoundNameConverter::init() {
 }
 
 void AudSoundNameConverter::initDataTable(const JAUSoundNameTable* pTable) {
-    mGroupItemOffsets = new u32[17];
+    mGroupItemOffsets = new (JKRHeapToken::Dummy) u32[17];
     mNumItems = 0;
     mNumItemsSection0 = getSoundNameTableNumItem_inSection(pTable, 0);
     mNumItemsSection1 = getSoundNameTableNumItem_inSection(pTable, 1);
@@ -83,7 +83,7 @@ void AudSoundNameConverter::initDataTable(const JAUSoundNameTable* pTable) {
     mNumItems += mNumItemsSection1;
     mNumItems += mNumItemsSection2;
 
-    mSoundNameData = new AudSoundNameData[mNumItems];
+    mSoundNameData = new (JKRHeapToken::Dummy) AudSoundNameData[mNumItems];
 
     for (s32 i = 0; i < mNumItems; i++) {
         mSoundNameData[i].mName = nullptr;

@@ -187,7 +187,7 @@ namespace MR {
     }
 
     void syncStageSwitchAppear(LiveActor* pActor) {
-        ActorAppearSwitchListener* pSwitchListener = new ActorAppearSwitchListener(pActor, true, true);
+        ActorAppearSwitchListener* pSwitchListener = new (JKRHeapToken::Dummy) ActorAppearSwitchListener(pActor, true, true);
         getSwitchWatcherHolder()->joinSwitchEventListenerAppear(pActor->mStageSwitchCtrl, pSwitchListener);
     }
 

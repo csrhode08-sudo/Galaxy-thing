@@ -47,7 +47,7 @@ void KoopaStateChaseRoll::init() {
 
     KoopaFunction::createKoopaRock(mHost);
 
-    mFigureBall = new KoopaFigureBall("追跡ボール", mHost, 260.0f, &::sChaseRollParam);
+    mFigureBall = new (JKRHeapToken::Dummy) KoopaFigureBall("追跡ボール", mHost, 260.0f, &::sChaseRollParam);
     mFigureBall->initWithoutIter();
 
     kill();

@@ -20,9 +20,9 @@ namespace {
 
 ImageEffectDirector::ImageEffectDirector(const char* pName)
     : NameObj(pName), mIsAuto(true), mIsPlayerSync(), _E(), _F(), mPlayerSyncIntensity(), mDepthOfFieldIntensity(::sDOFIntensity),
-      mStateNull(new ImageEffectStateImpl::StateNull(this)), mStateBloomNormal(new ImageEffectStateImpl::StateBloomNormal(this)),
-      mStateBloomSimple(new ImageEffectStateImpl::StateBloomSimple(this)), mStateScreenBlur(new ImageEffectStateImpl::StateScreenBlur(this)),
-      mStateDepthOfField(new ImageEffectStateImpl::StateDepthOfField(this)), mState(mStateNull), mCurrentEffect() {
+      mStateNull(new (JKRHeapToken::Dummy) ImageEffectStateImpl::StateNull(this)), mStateBloomNormal(new (JKRHeapToken::Dummy) ImageEffectStateImpl::StateBloomNormal(this)),
+      mStateBloomSimple(new (JKRHeapToken::Dummy) ImageEffectStateImpl::StateBloomSimple(this)), mStateScreenBlur(new (JKRHeapToken::Dummy) ImageEffectStateImpl::StateScreenBlur(this)),
+      mStateDepthOfField(new (JKRHeapToken::Dummy) ImageEffectStateImpl::StateDepthOfField(this)), mState(mStateNull), mCurrentEffect() {
     MR::connectToSceneImageEffectMovement(this);
 }
 

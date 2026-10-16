@@ -13,22 +13,22 @@ JPAEmitterManager::JPAEmitterManager(u32 i_ptclNum, u32 i_emtrNum, JKRHeap* pHea
     gidMax = i_gidMax;
     ridMax = i_ridMax;
 
-    JPABaseEmitter* p_emtr_link = new (pHeap, 0) JPABaseEmitter[emtrNum];
+    JPABaseEmitter* p_emtr_link = new (JKRHeapToken::Dummy, pHeap, 0) JPABaseEmitter[emtrNum];
 
     for (u32 i = 0; i < emtrNum; i++)
         mFreeEmtrList.prepend(&p_emtr_link[i].mLink);
 
-    JPANode< JPABaseParticle >* p_ptcl_node = new (pHeap, 0) JPANode< JPABaseParticle >[ptclNum];
+    JPANode< JPABaseParticle >* p_ptcl_node = new (JKRHeapToken::Dummy, pHeap, 0) JPANode< JPABaseParticle >[ptclNum];
     for (u32 i = 0; i < ptclNum; i++)
         mPtclPool.push_back(&p_ptcl_node[i]);
 
-    pEmtrUseList = new (pHeap, 0) JSUList< JPABaseEmitter >[gidMax];
-    pResMgrAry = new (pHeap, 0) JPAResourceManager*[ridMax];
+    pEmtrUseList = new (JKRHeapToken::Dummy, pHeap, 0) JSUList< JPABaseEmitter >[gidMax];
+    pResMgrAry = new (JKRHeapToken::Dummy, pHeap, 0) JPAResourceManager*[ridMax];
     for (int i = 0; i < ridMax; i++) {
         pResMgrAry[i] = NULL;
     }
 
-    pWd = new (pHeap, 0) JPAEmitterWorkData();
+    pWd = new (JKRHeapToken::Dummy, pHeap, 0) JPAEmitterWorkData();
 }
 
 JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(JGeometry::TVec3< f32 > const& pos, u16 resID, u8 group_id, u8 res_mgr_id,

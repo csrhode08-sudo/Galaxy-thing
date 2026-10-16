@@ -6,7 +6,7 @@ DrawSyncManager* DrawSyncManager::sInstance;
 
 DrawSyncManager* DrawSyncManager::start(u32 capacity, s32 priority) {
     if (sInstance == nullptr) {
-        sInstance = new DrawSyncManager(capacity, priority);
+        sInstance = new (JKRHeapToken::Dummy) DrawSyncManager(capacity, priority);
     }
 
     return sInstance;
@@ -78,14 +78,14 @@ void* DrawSyncManager::threadFunc(void* pArg) {
         OSMessage message;
         OSReceiveMessage(&pManager->mQueue, &message, OS_MESSAGE_BLOCK);
 
-        if (reinterpret_cast< u32 >(message) >= 0x80000000) {
+        if (reinterpret_cast< uintptr_t >(message) >= 0x80000000) {
             pManager->mFifo->push(message);
             const bool aborted = pManager->mAborted;
 
             if (pManager->mFifo->getCount() == 2) {
                 GXEnableBreakPt(message);
             }
-        } else if (reinterpret_cast< u32 >(message) < 0x10000) {
+        } else if (reinterpret_cast< uintptr_t >(message) < 0x10000) {
             pManager->mFifo->pop();
             const bool aborted = pManager->mAborted;
 
@@ -114,11 +114,11 @@ DrawSyncManager::DrawSyncManager(u32 capacity, s32 priority) {
     mHighTokenCount = 0;
     mAborted = false;
 
-    mStack = new u8[0x8000];
+    mStack = new (JKRHeapToken::Dummy) u8[0x8000];
     OSCreateThread(&mThread, threadFunc, this, mStack + 0x8000, 0x8000, priority, 0);
-    mMessageBuffer = new OSMessage[20];
+    mMessageBuffer = new (JKRHeapToken::Dummy) OSMessage[20];
     OSInitMessageQueue(&mQueue, mMessageBuffer, 20);
-    mFifo = new Fifo(capacity);
+    mFifo = new (JKRHeapToken::Dummy) Fifo(capacity);
     OSResumeThread(&mThread);
     GXSetDrawSyncCallback(drawSyncCallback);
 }

@@ -1,4 +1,4 @@
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
+#include "JSystem/JAudio2/JASDspInterface.hpp"
 #include "JSystem/JAudio2/JASCalc.hpp"
 #include "JSystem/JAudio2/JASCriticalSection.hpp"
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
@@ -108,8 +108,8 @@ u32 const ATTRIBUTE_ALIGN(32) JASDsp::DSPRES_FILTER[320] = {
 };
 
 void JASDsp::initBuffer() {
-    CH_BUF = new (JASDram, 0x20) TChannel[64];
-    FX_BUF = new (JASDram, 0x20) FxBuf[4];
+    CH_BUF = new (JKRHeapToken::Dummy, JASDram, 0x20) TChannel[64];
+    FX_BUF = new (JKRHeapToken::Dummy, JASDram, 0x20) FxBuf[4];
     JASCalc::bzero(CH_BUF, 0x6000);
     JASCalc::bzero(FX_BUF, sizeof(FxBuf) * 4);
     for (u8 i = 0; i < 4; i++) {

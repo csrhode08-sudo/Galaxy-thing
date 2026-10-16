@@ -108,7 +108,7 @@ JAIStream* JAIStreamMgr::newStream_() {
         return nullptr;
     }
 
-    JAIStream* stream = new JAIStream(this, soundStrategyMgr);
+    JAIStream* stream = new (JKRHeapToken::Dummy) JAIStream(this, soundStrategyMgr);
     if (stream == nullptr) {
         return nullptr;
     }

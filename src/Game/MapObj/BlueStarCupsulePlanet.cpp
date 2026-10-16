@@ -71,12 +71,12 @@ void BlueStarCupsulePlanet::init(const JMapInfoIter& rIter) {
 
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mRailMover->start();
     }
 
-    mRotator = new MapPartsRotator(this);
+    mRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
     mRotator->init(rIter);
     mRotator->start();
     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, nullptr);

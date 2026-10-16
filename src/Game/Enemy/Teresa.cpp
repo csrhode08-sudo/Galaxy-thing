@@ -159,7 +159,7 @@ void Teresa::initDummyModel(const JMapInfoIter& rIter) {
         mDisplayModel->kill();
 
         if (MR::getDummyDisplayModelId(rIter, -1) == 6) {
-            mKeySwitch = new KeySwitch("鍵スイッチ");
+            mKeySwitch = new (JKRHeapToken::Dummy) KeySwitch("鍵スイッチ");
             mKeySwitch->initKeySwitchByOwner(rIter);
             _FC = 0;
         }

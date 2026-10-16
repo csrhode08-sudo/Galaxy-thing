@@ -83,10 +83,10 @@ void IronCannonLauncherPoint::initModelAndConnectToScene() {
 }
 
 void IronCannonLauncherPoint::initBullet() {
-    mShellHolder = new CannonShellHolder(3);
+    mShellHolder = new (JKRHeapToken::Dummy) CannonShellHolder(3);
 
     for (s32 i = 0; i < 3; i++) {
-        IronCannonShell* pShell = new IronCannonShell("キャノン弾砲台の弾");
+        IronCannonShell* pShell = new (JKRHeapToken::Dummy) IronCannonShell("キャノン弾砲台の弾");
         pShell->initWithoutIter();
         pShell->makeActorDead();
         mShellHolder->registerCannonShell(pShell);

@@ -97,7 +97,7 @@ void OceanFloaterLandParts::initRailMoveFunction(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
 
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mRailMover->start();
     }

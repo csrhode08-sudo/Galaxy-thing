@@ -813,15 +813,15 @@ void Hanachan::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(Hanachan, HanachanNrvHanachanWalk));
     initSound(6, false);
     MR::validateClipping(this);
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     MR::declareStarPiece(this, 6);
     appear();
 
-    mBodyParts[0] = new HanachanParts(this, 0, "頭パーツ", "HanachanHead");
-    mBodyParts[1] = new HanachanParts(this, 1, "体パーツ", "HanachanBodyS");
-    mBodyParts[2] = new HanachanParts(this, 2, "体パーツ", "HanachanBody");
-    mBodyParts[3] = new HanachanParts(this, 3, "体パーツ", "HanachanBodyS");
-    mBodyParts[4] = new HanachanParts(this, 4, "体パーツ", "HanachanBody");
+    mBodyParts[0] = new (JKRHeapToken::Dummy) HanachanParts(this, 0, "頭パーツ", "HanachanHead");
+    mBodyParts[1] = new (JKRHeapToken::Dummy) HanachanParts(this, 1, "体パーツ", "HanachanBodyS");
+    mBodyParts[2] = new (JKRHeapToken::Dummy) HanachanParts(this, 2, "体パーツ", "HanachanBody");
+    mBodyParts[3] = new (JKRHeapToken::Dummy) HanachanParts(this, 3, "体パーツ", "HanachanBodyS");
+    mBodyParts[4] = new (JKRHeapToken::Dummy) HanachanParts(this, 4, "体パーツ", "HanachanBody");
 
     mBodyParts[0]->initWithoutIter();
     mBodyParts[1]->initWithoutIter();

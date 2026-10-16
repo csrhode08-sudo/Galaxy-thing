@@ -84,7 +84,7 @@ void CameraTowerPos::calcIdealPose(bool arrange) {
 }
 
 CamTranslatorBase* CameraTowerPos::createTranslator() {
-    return new CamTranslatorTowerPos(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTowerPos(this);
 }
 
 void CameraTowerPos::arrangeHorizontalPose(const TVec3f& rWatchPos, TVec3f& rPos) {

@@ -34,7 +34,7 @@ DinoPackunBattleVs1Lv2::DinoPackunBattleVs1Lv2(DinoPackun* pPackun) : DinoPackun
     mStateDamage = nullptr;
     _18 = 1;
     initNerve(GET_NERVE(DinoPackunBattleVs1Lv2, DinoPackunBattleVs1Lv2NrvStart));
-    mStateDamage = new DinoPackunStateDamage(pPackun);
+    mStateDamage = new (JKRHeapToken::Dummy) DinoPackunStateDamage(pPackun);
     mStateDamage->setDamageNormal();
 }
 

@@ -5,7 +5,7 @@
 #include "JSystem/JAudio2/JASCmdStack.hpp"
 #include "JSystem/JAudio2/JASCriticalSection.hpp"
 #include "JSystem/JAudio2/JASDSPChannel.hpp"
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
+#include "JSystem/JAudio2/JASDspInterface.hpp"
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JASLfo.hpp"
 #include "JSystem/JAudio2/JASProbe.hpp"
@@ -50,13 +50,13 @@ void JASDriver::initAI(void (*param_0)(void)) {
     u32 dacSize = getDacSize();
     const u32 size = dacSize * 2;
     for (int i = 0; i < 3; i++) {
-        sDmaDacBuffer[i] = new (JASDram, 0x20) s16[dacSize];
+        sDmaDacBuffer[i] = new (JKRHeapToken::Dummy, JASDram, 0x20) s16[dacSize];
         JASCalc::bzero(sDmaDacBuffer[i], size);
         DCStoreRange(sDmaDacBuffer[i], size);
     }
-    sDspDacBuffer = new (JASDram, 0) s16*[sDspDacBufferSize];
+    sDspDacBuffer = new (JKRHeapToken::Dummy, JASDram, 0) s16*[sDspDacBufferSize];
     for (int i = 0; i < sDspDacBufferSize; i++) {
-        sDspDacBuffer[i] = new (JASDram, 0x20) s16[getDacSize()];
+        sDspDacBuffer[i] = new (JKRHeapToken::Dummy, JASDram, 0x20) s16[getDacSize()];
         JASCalc::bzero(sDspDacBuffer[i], size);
         DCStoreRange(sDspDacBuffer[i], size);
     }

@@ -53,7 +53,7 @@ void TripodBossKillerGenerater::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg1NoInit(rIter, &mCanShootSettingPlayerDistance);
     initClippingSphere();
 
-    mKiller = new HomingKiller("ホーミングキラー");
+    mKiller = new (JKRHeapToken::Dummy) HomingKiller("ホーミングキラー");
     mKiller->initWithoutIter();
 
     s32 arg2;

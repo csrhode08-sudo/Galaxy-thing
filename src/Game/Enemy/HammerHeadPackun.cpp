@@ -79,7 +79,7 @@ void HammerHeadPackun::init(const JMapInfoIter& rIter) {
     initLeaf(rIter);
     MR::initStarPointerTargetAtJoint(this, "Head", 169.0f, TVec3f(120.0f, 0.0f, 0.0f));
     MR::declareStarPiece(this, 9);
-    mJointRumbler = new JointRumbler(this, "AllRoot", 8.0f, 0.06f, 60, true, 0);
+    mJointRumbler = new (JKRHeapToken::Dummy) JointRumbler(this, "AllRoot", 8.0f, 0.06f, 60, true, 0);
     makeActorAppeared();
 }
 
@@ -456,7 +456,7 @@ inline bool JMapInfo_inRange(const JMapInfoIter& rIter) {
 }
 
 void HammerHeadPackun::initLeaf(const JMapInfoIter& rIter) {
-    mLeafModel = new PartsModel(this, "パックンの葉", "PackunLeaf", nullptr, 18, false);
+    mLeafModel = new (JKRHeapToken::Dummy) PartsModel(this, "パックンの葉", "PackunLeaf", nullptr, 18, false);
     MR::initLightCtrl(mLeafModel);
     s32 arg = -1;
     if (JMapInfo_inRange(rIter)) {

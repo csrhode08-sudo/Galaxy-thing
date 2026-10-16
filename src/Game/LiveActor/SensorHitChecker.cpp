@@ -10,7 +10,7 @@ SensorGroup::SensorGroup(int maxSensors, const char* pName) {
     mMaxSensors = maxSensors;
     mSensorCount = 0;
     mSensors = nullptr;
-    mSensors = new HitSensor*[maxSensors];
+    mSensors = new (JKRHeapToken::Dummy) HitSensor*[maxSensors];
 
     for (s32 i = 0; i < mMaxSensors; i++) {
         mSensors[i] = nullptr;
@@ -166,10 +166,10 @@ SensorHitChecker::SensorHitChecker(const char* pName) : NameObj(pName) {
     mMapObjGroup = nullptr;
     mCharacterGroup = nullptr;
 
-    mPlayerGroup = new SensorGroup(0x10, "Player");
-    mRideGroup = new SensorGroup(0x80, "Ride");
-    mEyeGroup = new SensorGroup(0x200, "Eye");
-    mSimpleGroup = new SensorGroup(0x800, "Simple");
-    mMapObjGroup = new SensorGroup(0x400, "MapObj");
-    mCharacterGroup = new SensorGroup(0x400, "Character");
+    mPlayerGroup = new (JKRHeapToken::Dummy) SensorGroup(0x10, "Player");
+    mRideGroup = new (JKRHeapToken::Dummy) SensorGroup(0x80, "Ride");
+    mEyeGroup = new (JKRHeapToken::Dummy) SensorGroup(0x200, "Eye");
+    mSimpleGroup = new (JKRHeapToken::Dummy) SensorGroup(0x800, "Simple");
+    mMapObjGroup = new (JKRHeapToken::Dummy) SensorGroup(0x400, "MapObj");
+    mCharacterGroup = new (JKRHeapToken::Dummy) SensorGroup(0x400, "Character");
 }

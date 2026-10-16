@@ -26,10 +26,10 @@ namespace {
 };  // namespace
 
 NWC24Messenger::NWC24Messenger(const char* pName) : NameObj(pName) {
-    mForegroundTask = new NWC24MessengerSub::SendTask();
-    mBackgroundTaskArray = new NWC24MessengerSub::SendTask[BACKGROUND_TASK_NUM];
-    mSendState = new NWC24MessengerSub::SendState(this);
-    mSystem = new NWC24System(MR::getStationedHeapGDDR3(), 18);
+    mForegroundTask = new (JKRHeapToken::Dummy) NWC24MessengerSub::SendTask();
+    mBackgroundTaskArray = new (JKRHeapToken::Dummy) NWC24MessengerSub::SendTask[BACKGROUND_TASK_NUM];
+    mSendState = new (JKRHeapToken::Dummy) NWC24MessengerSub::SendState(this);
+    mSystem = new (JKRHeapToken::Dummy) NWC24System(MR::getStationedHeapGDDR3(), 18);
     _1C = false;
 }
 

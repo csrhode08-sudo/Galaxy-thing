@@ -69,7 +69,7 @@ void ChooChooTrain::init(const JMapInfoIter& rIter) {
     int i;
 
     for (i = 0; i < defTrainParts; i++) {
-        ModelObj* pObj = new ModelObj("汽車ポッポ客車", "ChooChooTrainBody", nullptr, -2, MR::MovementType_CollisionMapObj,
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj("汽車ポッポ客車", "ChooChooTrainBody", nullptr, -2, MR::MovementType_CollisionMapObj,
                                       MR::CalcAnimType_CollisionMapObj, false);
         pObj->initWithoutIter();
         MR::initCollisionParts(pObj, "ChooChooTrainBody", getSensor("body"), nullptr);

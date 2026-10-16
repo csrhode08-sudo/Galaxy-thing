@@ -62,7 +62,7 @@ JASInstEffect* JASBNKParser::Ver1::createEffector(void const* stream, JKRHeap* h
     switch (*data++) {
     case 'Rand': {
         TRandData* randData = (TRandData*)data;
-        JASInstRand* rand = new (heap, 0) JASInstRand();
+        JASInstRand* rand = new (JKRHeapToken::Dummy, heap, 0) JASInstRand();
         rand->mType = randData->mType;
         rand->setBase(randData->mBase);
         rand->setRange(randData->mRange);
@@ -70,7 +70,7 @@ JASInstEffect* JASBNKParser::Ver1::createEffector(void const* stream, JKRHeap* h
     }
     case 'Sens': {
         TSenseData* senseData = (TSenseData*)data;
-        JASInstSense* sense = new (heap, 0) JASInstSense();
+        JASInstSense* sense = new (JKRHeapToken::Dummy, heap, 0) JASInstSense();
         sense->mType = senseData->mType;
         sense->setParams(senseData->mSenseType, senseData->mMaxPoint, senseData->mStartLvl, senseData->mEndLvl);
         return sense;
@@ -85,7 +85,7 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
         heap = JASDram;
     }
 
-    JASBasicBank* bank = new (heap, 0) JASBasicBank();
+    JASBasicBank* bank = new (JKRHeapToken::Dummy, heap, 0) JASBasicBank();
     if (bank == nullptr) {
         return nullptr;
     }
@@ -94,12 +94,12 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
     TOscChunk* osc_chunk = (TOscChunk*)findChunk(stream, 'OSCT');
     TListChunk* list_chunk = (TListChunk*)findChunk(stream, 'LIST');
 
-    u8* envt = new (heap, 2) u8[envt_chunk->mSize];
+    u8* envt = new (JKRHeapToken::Dummy, heap, 2) u8[envt_chunk->mSize];
     JASCalc::bcopy(envt_chunk->mData, envt, envt_chunk->mSize);
 
     u32* ptr = &osc_chunk->mCount;
     u32 count = *ptr++;
-    JASOscillator::Data* osc_data = new (heap, 0) JASOscillator::Data[count];
+    JASOscillator::Data* osc_data = new (JKRHeapToken::Dummy, heap, 0) JASOscillator::Data[count];
     for (int i = 0; i < count; i++, ptr += sizeof(TOsc) >> 2) {
         TOsc* op = (TOsc*)ptr;
         JASOscillator::Data* data = &osc_data[i];
@@ -117,7 +117,7 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
             u32* data = (u32*)((intptr_t)stream + list->mOffsets[i]);
             switch (*data++) {
             case 'Inst': {
-                JASBasicInst* instp = new (heap, 0) JASBasicInst();
+                JASBasicInst* instp = new (JKRHeapToken::Dummy, heap, 0) JASBasicInst();
                 u32 oscCount = *data++;
                 for (int j = 0; j < oscCount; j++) {
                     u32 index = *data++;
@@ -127,7 +127,7 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
                 u32 effectCount = *data++;
                 for (int j = 0; j < effectCount; j++) {
                     JASInstEffect* effect = createEffector((void*)((intptr_t)stream + *data++), heap);
-                    instp->appendEffect(new (heap, 0) JASPtrListAdaptor< JASInstEffect >(effect));
+                    instp->appendEffect(new (JKRHeapToken::Dummy, heap, 0) JASPtrListAdaptor< JASInstEffect >(effect));
                 }
 
                 u32 keyRegionCount = *data++;
@@ -156,13 +156,13 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
             }
 
             case 'Perc': {
-                JASDrumSet* drump = new (heap, 0) JASDrumSet();
+                JASDrumSet* drump = new (JKRHeapToken::Dummy, heap, 0) JASDrumSet();
                 u32 pmap_count = data[1];
                 u32 count = *data++;
                 for (int j = 0; j < count; j++) {
                     u32 offset = *data++;
                     if (offset != 0) {
-                        JASDrumSet::TPerc* percp = new (heap, 0) JASDrumSet::TPerc();
+                        JASDrumSet::TPerc* percp = new (JKRHeapToken::Dummy, heap, 0) JASDrumSet::TPerc();
                         u32* ptr = (u32*)((intptr_t)stream + offset);
                         TPercData* perc_data = (TPercData*)(ptr + 1);
                         percp->setVolume(perc_data->mVolume);
@@ -174,7 +174,7 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
                         u32 effectCount = *ptr++;
                         for (u32 j = 0; j < effectCount; j++) {
                             JASInstEffect* effect = createEffector((void*)((intptr_t)stream + *ptr++), heap);
-                            percp->appendEffect(new (heap, 0) JASPtrListAdaptor< JASInstEffect >(effect));
+                            percp->appendEffect(new (JKRHeapToken::Dummy, heap, 0) JASPtrListAdaptor< JASInstEffect >(effect));
                         }
 
                         u32 veloCount = *ptr++;
@@ -211,7 +211,7 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
     }
 
     THeader const* header = (THeader*)stream;
-    JASBasicBank* bank = new (heap, 0) JASBasicBank();
+    JASBasicBank* bank = new (JKRHeapToken::Dummy, heap, 0) JASBasicBank();
     if (bank == nullptr) {
         return nullptr;
     }
@@ -219,7 +219,7 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
     for (int i = 0; i < 0x80; i++) {
         TInst* tinst = header->mOffsets.mInstOffset[i].ptr(header);
         if (tinst != nullptr) {
-            JASBasicInst* instp = new (heap, 0) JASBasicInst();
+            JASBasicInst* instp = new (JKRHeapToken::Dummy, heap, 0) JASBasicInst();
             instp->setVolume(tinst->mVolume);
             instp->setPitch(tinst->mPitch);
 
@@ -232,7 +232,7 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
                     if (osc != nullptr) {
                         instp->setOsc(osc_idx, osc);
                     } else {
-                        osc = new (heap, 0) JASOscillator::Data();
+                        osc = new (JKRHeapToken::Dummy, heap, 0) JASOscillator::Data();
                         osc->mTarget = tosc->mTarget;
                         osc->_04 = tosc->field_0x4;
 
@@ -240,7 +240,7 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
                         if (points != nullptr) {
                             const JASOscillator::Point* endPtr = getOscTableEndPtr(points);
                             int size = endPtr - points;
-                            JASOscillator::Point* table = new (heap, 0) JASOscillator::Point[size];
+                            JASOscillator::Point* table = new (JKRHeapToken::Dummy, heap, 0) JASOscillator::Point[size];
                             JASCalc::bcopy(points, table, size * sizeof(JASOscillator::Point));
                             osc->mTable = table;
                         } else {
@@ -251,7 +251,7 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
                         if (points != nullptr) {
                             const JASOscillator::Point* endPtr = getOscTableEndPtr(points);
                             int size = endPtr - points;
-                            JASOscillator::Point* table = new (heap, 0) JASOscillator::Point[size];
+                            JASOscillator::Point* table = new (JKRHeapToken::Dummy, heap, 0) JASOscillator::Point[size];
                             JASCalc::bcopy(points, table, size * sizeof(JASOscillator::Point));
                             osc->rel_table = table;
                         } else {
@@ -270,21 +270,21 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
             for (int j = 0; j < 2; j++) {
                 TRandEffect* randEffect = tinst->mRandOffset[j].ptr(header);
                 if (randEffect != nullptr) {
-                    JASInstRand* rand = new (heap, 0) JASInstRand();
+                    JASInstRand* rand = new (JKRHeapToken::Dummy, heap, 0) JASInstRand();
                     rand->mType = randEffect->mType;
                     rand->mBaseValue = randEffect->mBaseValue;
                     rand->mRange = randEffect->mRange;
-                    instp->appendEffect(new (heap, 0) JASPtrListAdaptor< JASInstEffect >(rand));
+                    instp->appendEffect(new (JKRHeapToken::Dummy, heap, 0) JASPtrListAdaptor< JASInstEffect >(rand));
                 }
             }
 
             for (int j = 0; j < 2; j++) {
                 TSenseEffect* senseEffect = tinst->mSenseOffset[j].ptr(header);
                 if (senseEffect != nullptr) {
-                    JASInstSense* sense = new (heap, 0) JASInstSense();
+                    JASInstSense* sense = new (JKRHeapToken::Dummy, heap, 0) JASInstSense();
                     sense->mType = senseEffect->mType;
                     sense->setParams(senseEffect->mSenseType, senseEffect->mMaxPoint, senseEffect->mStartLvl, senseEffect->mEndLvl);
-                    instp->appendEffect(new (heap, 0) JASPtrListAdaptor< JASInstEffect >(sense));
+                    instp->appendEffect(new (JKRHeapToken::Dummy, heap, 0) JASPtrListAdaptor< JASInstEffect >(sense));
                 }
             }
 
@@ -313,12 +313,12 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
     for (int i = 0; i < 12; i++) {
         TPerc* tperc = header->mOffsets.mPercOffset[i].ptr(header);
         if (tperc != nullptr) {
-            JASDrumSet* setp = new (heap, 0) JASDrumSet();
+            JASDrumSet* setp = new (JKRHeapToken::Dummy, heap, 0) JASDrumSet();
 
             for (int j = 0; j < 0x80; j++) {
                 TPmap* tpmap = tperc->mPmapOffset[j].ptr(header);
                 if (tpmap != nullptr) {
-                    JASDrumSet::TPerc* percp = new (heap, 0) JASDrumSet::TPerc();
+                    JASDrumSet::TPerc* percp = new (JKRHeapToken::Dummy, heap, 0) JASDrumSet::TPerc();
                     percp->setVolume(tpmap->mVolume);
                     percp->setPitch(tpmap->mPitch);
                     if (tperc->mMagic == 'PER2') {
@@ -329,11 +329,11 @@ JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* h
                     for (int k = 0; k < 2; k++) {
                         TRandEffect* randEffect = tpmap->mRandOffset[k].ptr(header);
                         if (randEffect != nullptr) {
-                            JASInstRand* rand = new (heap, 0) JASInstRand();
+                            JASInstRand* rand = new (JKRHeapToken::Dummy, heap, 0) JASInstRand();
                             rand->mType = randEffect->mType;
                             rand->mBaseValue = randEffect->mBaseValue;
                             rand->mRange = randEffect->mRange;
-                            percp->appendEffect(new (heap, 0) JASPtrListAdaptor< JASInstEffect >(rand));
+                            percp->appendEffect(new (JKRHeapToken::Dummy, heap, 0) JASPtrListAdaptor< JASInstEffect >(rand));
                         }
                     }
 

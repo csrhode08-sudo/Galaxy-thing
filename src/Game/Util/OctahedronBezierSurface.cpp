@@ -36,7 +36,7 @@ OctahedronBezierSurface::OctahedronBezierSurface(u32 a1) : mDiagonalRate(0.6f) {
     mVertices[5].set(0.0f, 200.0f, 0.0f);
 
     for (s32 idx = 0; idx < 8; idx++) {
-        mSurfaces[idx] = new BezierSurface(::sCoefTableDivideNum, a1);
+        mSurfaces[idx] = new (JKRHeapToken::Dummy) BezierSurface(::sCoefTableDivideNum, a1);
     }
 
     mSurfaces[0]->setST(TVec2f(0.25f, 0.5f), TVec2f(0.0f, 0.0f), TVec2f(0.0f, 1.0f));

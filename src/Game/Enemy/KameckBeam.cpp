@@ -471,6 +471,6 @@ void KameckBeam::emitBeamEffect() {
 
 namespace MR {
     void setKameckBeamCollisionFilter(LiveActor* pActor) {
-        MR::setBinderCollisionPartsFilter(pActor, new KameckBeamCollisionFilter(&pActor->mPosition, 10.0f));
+        MR::setBinderCollisionPartsFilter(pActor, new (JKRHeapToken::Dummy) KameckBeamCollisionFilter(&pActor->mPosition, 10.0f));
     }
 };  // namespace MR

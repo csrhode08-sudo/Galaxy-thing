@@ -38,7 +38,7 @@ namespace {
 };  // namespace
 
 GameEventValueChecker::GameEventValueChecker() : mValues(), mNumValues() {
-    mValues = new u16[ARRAY_SIZE(::cGameEventValueTable)];
+    mValues = new (JKRHeapToken::Dummy) u16[ARRAY_SIZE(::cGameEventValueTable)];
     mNumValues = ARRAY_SIZE(::cGameEventValueTable);
     initializeData();
 }

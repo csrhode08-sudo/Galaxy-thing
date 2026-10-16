@@ -53,7 +53,7 @@ void SuddenDeathMeter::init(const JMapInfoIter& rIter) {
     MR::startAnim(this, "ShowHide", 2);
     MR::setAnimFrameAndStop(this, 20.0f, 2);
     setCountAnimFrame();
-    mCountUpPaneRumbler = new CountUpPaneRumbler(this, "HitPointNumber");
+    mCountUpPaneRumbler = new (JKRHeapToken::Dummy) CountUpPaneRumbler(this, "HitPointNumber");
     initNerve(GET_NERVE(SuddenDeathMeter, SuddenDeathMeterNrvWait));
     initEffectKeeper(0, nullptr, nullptr);
     appear();

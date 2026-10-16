@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include <mem.h>
+#include <cstring>
 #include "revolution/mem/list.h"
 #include "revolution/os.h"
 
@@ -31,7 +31,7 @@ struct MEMiHeapHead {
 
 typedef MEMiHeapHead* MEMHeapHandle;
 
-typedef u32 UIntPtr;
+typedef uintptr_t UIntPtr;
 
 static inline UIntPtr GetUIntPtr(const void* ptr) {
     return (UIntPtr)(ptr);

@@ -72,7 +72,7 @@ void OceanRingPartDrawer::initDisplayList(f32* pTexCoordU0, f32* pTexCoordU1, f3
 
     u32 x = _14 * 0x50;
     u32 size = (((x * mOceanRing->mStride + 3) >> 5) + 2) << 5;
-    mDispList = new (0x20) u8[size];
+    mDispList = new (JKRHeapToken::Dummy, 0x20) u8[size];
     DCInvalidateRange(mDispList, size);
     GDLObj obj;
     GDInitGDLObj(&obj, mDispList, size);
@@ -317,8 +317,8 @@ OceanRingDrawer::OceanRingDrawer(const OceanRing* pOceanRing) {
     mDispListLength = 0;
     mDispList = nullptr;
 
-    mWaterTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
-    mWaterIndTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
+    mWaterTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
+    mWaterIndTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
     initParts();
     initDisplayList();
 }
@@ -366,9 +366,9 @@ void OceanRingDrawer::initParts() {
     mDrawerCount = (mRing->mSegCount / 10) + 1;
     s32 count2 = mRing->mSegCount / mDrawerCount;
     f32 a = 0.0f, b = 0.0f, c = 0.0f;
-    mPartDrawers = new OceanRingPartDrawer*[mDrawerCount];
+    mPartDrawers = new (JKRHeapToken::Dummy) OceanRingPartDrawer*[mDrawerCount];
     for (s32 i = 0; i < mDrawerCount - 1; i++) {
-        mPartDrawers[i] = new OceanRingPartDrawer(mRing, count2 * i, count2 + 1, false, &a, &b, &c);
+        mPartDrawers[i] = new (JKRHeapToken::Dummy) OceanRingPartDrawer(mRing, count2 * i, count2 + 1, false, &a, &b, &c);
     }
 
     s32 v;
@@ -385,7 +385,7 @@ void OceanRingDrawer::initParts() {
         v += 1;
     }
 
-    mPartDrawers[last] = new OceanRingPartDrawer(mRing, w, v, flag, &a, &b, &c);
+    mPartDrawers[last] = new (JKRHeapToken::Dummy) OceanRingPartDrawer(mRing, w, v, flag, &a, &b, &c);
 }
 
 void OceanRingDrawer::initDisplayList() {
@@ -399,7 +399,7 @@ void OceanRingDrawer::initDisplayList() {
 
     u32 x = 0x50 * (flag + mRing->mSegCount);
     u32 length = (((x + 3) >> 5) + 2) << 5;
-    mDispList = new (0x20) u8[length];
+    mDispList = new (JKRHeapToken::Dummy, 0x20) u8[length];
     DCInvalidateRange(mDispList, length);
     GDLObj obj;
     GDInitGDLObj(&obj, mDispList, length);

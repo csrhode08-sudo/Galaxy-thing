@@ -410,11 +410,11 @@ void SmallStone::init(const JMapInfoIter& rIter) {
 
 void SmallStone::initMember(const char* pModelName, bool useGravity) {
     s32 i;
-    mMembers = new SmallStoneMember*[mMemberCount];
+    mMembers = new (JKRHeapToken::Dummy) SmallStoneMember*[mMemberCount];
     MR::declareStarPiece(this, mMemberCount);
 
     for (i = 0; i < mMemberCount; i++) {
-        SmallStoneMember* pMember = new SmallStoneMember(pModelName);
+        SmallStoneMember* pMember = new (JKRHeapToken::Dummy) SmallStoneMember(pModelName);
         pMember->mAnimRate = 1.0f;
         pMember->mShakeRequested = 0;
         pMember->mUseGravity = useGravity;

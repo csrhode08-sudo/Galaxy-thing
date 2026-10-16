@@ -45,8 +45,8 @@ namespace {
 BossKameck::BossKameck(const char* pName, const char* pModelName)
     : LiveActor(pName), mModelName(pModelName), _90(0.0f, 1.0f), _A0(0, 0, 1), mSequencer(), mKameckHolder(), mJointCtrl(), mActorList(),
       mBeamEventListener(), mMoveRail(), mMoveRailNum(), _C8(0, 0, 0), mObjArg7(-1) {
-    mBeamEventListener = new BossKameckBeamEventListener(this);
-    mActorList = new ActiveActorList(8);
+    mBeamEventListener = new (JKRHeapToken::Dummy) BossKameckBeamEventListener(this);
+    mActorList = new (JKRHeapToken::Dummy) ActiveActorList(8);
 }
 
 void BossKameck::init(const JMapInfoIter& rIter) {
@@ -73,7 +73,7 @@ void BossKameck::init(const JMapInfoIter& rIter) {
         MR::declareCameraRegisterVec(this, mObjArg7, &mPosition);
     }
 
-    mJointCtrl = new ActorJointCtrl(this);
+    mJointCtrl = new (JKRHeapToken::Dummy) ActorJointCtrl(this);
     MR::addToAttributeGroupSearchTurtle(this);
     initSound(4, false);
     mSequencer->init(this, rIter);
@@ -237,13 +237,13 @@ void BossKameck::initKameckHolder(const JMapInfoIter& rIter) {
         return;
     }
 
-    mKameckHolder = new KameckHolder(childKameckNum);
+    mKameckHolder = new (JKRHeapToken::Dummy) KameckHolder(childKameckNum);
 
     for (s32 j = 0; j < childNum; j++) {
         MR::getChildObjName(&objName, rIter, j);
 
         if (MR::isEqualString(objName, "ChildKameck")) {
-            Kameck* kameck = new Kameck("カメック[保持用]");
+            Kameck* kameck = new (JKRHeapToken::Dummy) Kameck("カメック[保持用]");
             kameck->setBeamType(2);
             MR::initChildObj(kameck, rIter, j);
             kameck->makeActorDead();
@@ -269,7 +269,7 @@ void BossKameck::initMoveRail(const JMapInfoIter& rIter) {
         return;
     }
 
-    mMoveRail = new BossKameckMoveRail*[mMoveRailNum];
+    mMoveRail = new (JKRHeapToken::Dummy) BossKameckMoveRail*[mMoveRailNum];
 
     s32 moveRailNo = 0;
 
@@ -277,7 +277,7 @@ void BossKameck::initMoveRail(const JMapInfoIter& rIter) {
         MR::getChildObjName(&objName, rIter, j);
 
         if (MR::isEqualString(objName, "BossKameckMoveRail")) {
-            mMoveRail[moveRailNo] = new BossKameckMoveRail("ボスカメック移動経路");
+            mMoveRail[moveRailNo] = new (JKRHeapToken::Dummy) BossKameckMoveRail("ボスカメック移動経路");
             MR::initChildObj(mMoveRail[moveRailNo], rIter, j);
             moveRailNo++;
         }
@@ -318,8 +318,8 @@ namespace MR {
     NameObj* createBossKameck1(const char* pName) {
         BossKameck* bossKameck1;
 
-        bossKameck1 = new BossKameck(pName, "BossKameck");
-        bossKameck1->mSequencer = new BossKameckVs1();
+        bossKameck1 = new (JKRHeapToken::Dummy) BossKameck(pName, "BossKameck");
+        bossKameck1->mSequencer = new (JKRHeapToken::Dummy) BossKameckVs1();
 
         return bossKameck1;
     }
@@ -327,8 +327,8 @@ namespace MR {
     NameObj* createBossKameck2(const char* pName) {
         BossKameck* bossKameck2;
 
-        bossKameck2 = new BossKameck(pName, "BossKameck");
-        bossKameck2->mSequencer = new BossKameckVs2();
+        bossKameck2 = new (JKRHeapToken::Dummy) BossKameck(pName, "BossKameck");
+        bossKameck2->mSequencer = new (JKRHeapToken::Dummy) BossKameckVs2();
 
         return bossKameck2;
     }

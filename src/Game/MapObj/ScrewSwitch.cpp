@@ -32,7 +32,7 @@ ScrewSwitch::ScrewSwitch(const char* pName) : LiveActor(pName) {
     mCollisionParts = nullptr;
     _90 = nullptr;
     mMapObjConnector = nullptr;
-    mMapObjConnector = new MapObjConnector(this);
+    mMapObjConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
 }
 
 void ScrewSwitch::init(const JMapInfoIter& rIter) {

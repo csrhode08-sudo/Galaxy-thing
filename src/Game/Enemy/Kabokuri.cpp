@@ -94,13 +94,13 @@ void Kabokuri::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(Kabokuri, KabokuriNrvWait));
     MR::initStarPointerTarget(this, 90.0f * mScale.y, TVec3f(0.0f, 90.0f * mScale.y, 0.0f));
 
-    mAnimeScale = new AnimScaleController(nullptr);
+    mAnimeScale = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimeScale->setParamTight();
 
-    mStateBindStartPointer = new WalkerStateBindStarPointer(this, mAnimeScale);
+    mStateBindStartPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimeScale);
 
     // "Kabokuri kuribo"
-    mKuribo = new Kuribo("カボクリクリボー");
+    mKuribo = new (JKRHeapToken::Dummy) Kuribo("カボクリクリボー");
 
     if (mIsFloating) {
         mKuribo->onNoGravitySupport();

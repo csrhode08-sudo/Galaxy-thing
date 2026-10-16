@@ -39,7 +39,7 @@ void PhantomShipHandle::init(const JMapInfoIter& rIter) {
 
     initSound(4, false);
 
-    mRotator = new MapPartsSeesaw1AxisRotator(this, "SE_OJ_LV_P_SHIP_HANDLE_MOVE", 0.1f);
+    mRotator = new (JKRHeapToken::Dummy) MapPartsSeesaw1AxisRotator(this, "SE_OJ_LV_P_SHIP_HANDLE_MOVE", 0.1f);
     mRotator->init(rIter);
     mRotator->start();
 

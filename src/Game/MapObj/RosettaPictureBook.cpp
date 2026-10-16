@@ -36,10 +36,10 @@ void RosettaPictureBook::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorMapObjSimple(this, "body", 8, 150.0f, TVec3f(0.0f, 0.0f, 0.0f));
 
-    mLayout = new PictureBookLayout(1, MR::getPictureBookChapterCanRead(), false);
+    mLayout = new (JKRHeapToken::Dummy) PictureBookLayout(1, MR::getPictureBookChapterCanRead(), false);
     mLayout->initWithoutIter();
 
-    mIconAButton = new IconAButton(true, false);
+    mIconAButton = new (JKRHeapToken::Dummy) IconAButton(true, false);
     mIconAButton->initWithoutIter();
 
     initNerve(GET_NERVE(RosettaPictureBook, HostTypeNrvWait));

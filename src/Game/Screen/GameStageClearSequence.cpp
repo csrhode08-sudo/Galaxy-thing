@@ -34,7 +34,7 @@ GameStageClearSequence::GameStageClearSequence()
 }
 
 void GameStageClearSequence::init(const JMapInfoIter& rIter) {
-    mEffectLayout = new SimpleEffectLayout("スター取得", "GetStar", 1, -1);
+    mEffectLayout = new (JKRHeapToken::Dummy) SimpleEffectLayout("スター取得", "GetStar", 1, -1);
     mEffectLayout->initWithoutIter();
 
     MR::setFollowPos(&mEffectFollowPos, mEffectLayout, nullptr);

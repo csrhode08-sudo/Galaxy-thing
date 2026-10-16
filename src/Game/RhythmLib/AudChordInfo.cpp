@@ -23,6 +23,35 @@ bool AudChordTable::setChordTable(s32 id, JKRArchive* pArchive) {
 }
 
 bool AudChordTable::setChordTableResource(void* pRes) {
+#ifdef TARGET_PC
+    // CITS resource: big-endian, with 32-bit offsets the console relocated in place.
+    // On PC build separate pointer tables (and host-side scale records) instead.
+    u8* res = static_cast< u8* >(pRes);
+    if (res[4] != 'C' || res[5] != 'I' || res[6] != 'T' || res[7] != 'S') {
+        return false;
+    }
+
+    u8* base = res + 0x10;
+    mChordCount = (u16)*(BE(u16)*)(base + 0);
+    mScaleCount = (u16)*(BE(u16)*)(base + 2);
+    const BE(u32)* chordOffs = (const BE(u32)*)(base + 4);
+    const BE(u32)* scaleOffs = chordOffs + mChordCount;
+
+    mChordPtr = new (JKRHeapToken::Dummy) AudChordData*[mChordCount];
+    for (s32 i = 0; i < mChordCount; i++) {
+        mChordPtr[i] = (AudChordData*)(res + (u32)chordOffs[i]);
+    }
+
+    mScalePtr = new (JKRHeapToken::Dummy) AudScaleData*[mScaleCount];
+    AudScaleData* scales = new (JKRHeapToken::Dummy) AudScaleData[mScaleCount];
+    for (s32 i = 0; i < mScaleCount; i++) {
+        const BE(u32)* rec = (const BE(u32)*)(res + (u32)scaleOffs[i]);
+        scales[i].up = res + (u32)rec[0];
+        scales[i].down = res + (u32)rec[1];
+        mScalePtr[i] = &scales[i];
+    }
+    return true;
+#else
     s32* cursor = (s32*)pRes;
 
     bool alreadyRelocated = false;
@@ -62,6 +91,7 @@ bool AudChordTable::setChordTableResource(void* pRes) {
     }
 
     return true;
+#endif
 }
 
 AudChordInfo::AudChordInfo()

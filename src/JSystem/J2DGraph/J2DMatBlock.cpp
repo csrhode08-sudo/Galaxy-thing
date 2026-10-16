@@ -1,5 +1,5 @@
 #include "JSystem/JUtility/JUTTexture.hpp"
 
 JUTTexture* J2DMatBlockDummy() {
-    return new JUTTexture;
+    return new (JKRHeapToken::Dummy) JUTTexture;
 }

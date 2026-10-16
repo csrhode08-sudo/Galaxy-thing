@@ -20,7 +20,7 @@ JointRumbler::JointRumbler(LiveActor* pActor, const char* pJointName, f32 a3, f3
     }
 
     mJointTransform = MR::getJointTransform(pActor, pJointName);
-    mRumbleCalculator = new RumbleCalculatorCosMultLinear(a3, HALF_PI, a4, a5);
+    mRumbleCalculator = new (JKRHeapToken::Dummy) RumbleCalculatorCosMultLinear(a3, HALF_PI, a4, a5);
 
     if (a6) {
         mFlags |= FLAG_1;

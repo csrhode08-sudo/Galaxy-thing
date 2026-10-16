@@ -66,7 +66,7 @@ namespace nw4r {
             } else if (void* fontRes = resBlockSet.pResAccessor->GetResource('font', fontName, 0)) {
                 void* pMem = Layout::AllocMemory(sizeof(ut::ResFont));
                 if (pMem != nullptr) {
-                    ut::ResFont* pResFont = new (pMem) ut::ResFont;
+                    ut::ResFont* pResFont = new (JKRHeapToken::Dummy, pMem) ut::ResFont;
                     pResFont->SetResource(fontRes);
                     mpFont = pResFont;
                     mBits.bAllocFont = true;
@@ -78,7 +78,7 @@ namespace nw4r {
                 const u32* const matOffsTbl = detail::ConvertOffsToPtr< u32 >(resBlockSet.pMaterialList, sizeof(*resBlockSet.pMaterialList));
                 const res::Material* const pResMaterial =
                     detail::ConvertOffsToPtr< res::Material >(resBlockSet.pMaterialList, matOffsTbl[pBlock->materialIdx]);
-                mpMaterial = new (pMem) Material(pResMaterial, resBlockSet);
+                mpMaterial = new (JKRHeapToken::Dummy, pMem) Material(pResMaterial, resBlockSet);
             }
         }
 

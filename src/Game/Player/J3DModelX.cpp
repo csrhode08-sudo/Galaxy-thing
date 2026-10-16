@@ -276,7 +276,7 @@ void J3DModelX::simpleDrawShape(J3DMaterial* material) {
 void J3DModelX::storeDisplayList(GDLObj* obj, u32 index) {
     GDPadCurr32();
     u32 size = (GDGetGDLObjOffset(obj) + 31) & ~31;
-    mDisplayLists[index] = new (32) u8[size];
+    mDisplayLists[index] = new (JKRHeapToken::Dummy, 32) u8[size];
     MR::copyMemory(mDisplayLists[index], obj->start, size);
     DCStoreRange(mDisplayLists[index], size);
     mDisplayListSizes[index] = GDGetGDLObjOffset(obj);
@@ -455,9 +455,9 @@ J3DModelX::J3DModelX(J3DModelData* data, u32 flags, u32 bufferFlags) : J3DModel(
     _1BC = 0;
 
     u32 count = mModelData->getMaterialNum();
-    _1C4 = new u8*[count];
-    _1C8 = new u8*[count];
-    _1CC = new u16[count];
+    _1C4 = new (JKRHeapToken::Dummy) u8*[count];
+    _1C8 = new (JKRHeapToken::Dummy) u8*[count];
+    _1CC = new (JKRHeapToken::Dummy) u16[count];
     for (u32 i = 0; i < count; i++) {
         _1C4[i] = nullptr;
         _1C8[i] = nullptr;

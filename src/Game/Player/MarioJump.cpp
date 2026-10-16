@@ -1,4 +1,4 @@
-#include "Game/Enemy/KariKariDirector.hpp"
+#include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -616,7 +616,7 @@ void Mario::tryTornadoJump() {
 
 void Mario::startTornadoCentering(HitSensor* pSensor) {
     pushTask(reinterpret_cast< Task >(&Mario::taskOnTornadoCentering), 0x400);
-    _A38 = reinterpret_cast< u32 >(pSensor);
+    _A38 = reinterpret_cast< uintptr_t >(pSensor);
     _A34 = 0x1E;
 }
 

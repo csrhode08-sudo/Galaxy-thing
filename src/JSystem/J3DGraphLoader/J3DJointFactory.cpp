@@ -10,7 +10,7 @@ J3DJointFactory::J3DJointFactory(J3DJointBlock const& block) {
 }
 
 J3DJoint* J3DJointFactory::create(int no) {
-    J3DJoint* joint = new J3DJoint();
+    J3DJoint* joint = new (JKRHeapToken::Dummy) J3DJoint();
     joint->mJntNo = no;
     joint->mKind = getKind(no);
     joint->mScaleCompensate = getScaleCompensate(no);

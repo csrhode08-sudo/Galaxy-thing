@@ -7,7 +7,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 
-MarineSnow::MarineSnow() : mParticleCount(16), mParticlePositions(new (32) TVec3f[mParticleCount]), mCellSize(1000.0f) {
+MarineSnow::MarineSnow() : mParticleCount(16), mParticlePositions(new (JKRHeapToken::Dummy, 32) TVec3f[mParticleCount]), mCellSize(1000.0f) {
     for (s32 idx = 0; idx < mParticleCount; idx++) {
         TVec3f randVec;
         randVec.set(MR::getRandom() * mCellSize, MR::getRandom() * mCellSize, MR::getRandom() * mCellSize);
@@ -16,7 +16,7 @@ MarineSnow::MarineSnow() : mParticleCount(16), mParticlePositions(new (32) TVec3
 
     mFadeStep = 0;
 
-    mTexture = new JUTTexture(MR::loadTexFromArc("MarineSnow"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("MarineSnow"), 0);
 }
 
 void MarineSnow::view() {
@@ -164,5 +164,5 @@ void MarineSnow::draw(const TVec3f& rPosition, const TVec3f& rUp, f32 surfaceDis
 }
 
 MarineSnow* MarineSnow_FORCE_MATCH() {
-    return new MarineSnow();
+    return new (JKRHeapToken::Dummy) MarineSnow();
 }

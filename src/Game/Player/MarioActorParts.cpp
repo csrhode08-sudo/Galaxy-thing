@@ -28,13 +28,13 @@
 void MarioActor::init2D() {
     MR::getGameSceneLayoutHolder()->initLifeCount(mMaxHealth);
 
-    _1B8 = new CollectCounter("マリオ連続踏み");
+    _1B8 = new (JKRHeapToken::Dummy) CollectCounter("マリオ連続踏み");
 
     _1B8->initWithoutIter();
 }
 
 void MarioActor::initParts() {
-    mNullAnimation = new MarioNullBck("NULLアニメ");
+    mNullAnimation = new (JKRHeapToken::Dummy) MarioNullBck("NULLアニメ");
     mNullAnimation->initWithoutIter();
 
     mSearchLight = 0;
@@ -43,15 +43,15 @@ void MarioActor::initParts() {
     initSearchLight();
     initThrowing();
 
-    _9C4 = new MarioParts(this, "氷結モデル", "MarioFreezeIce", true, nullptr, nullptr);
+    _9C4 = new (JKRHeapToken::Dummy) MarioParts(this, "氷結モデル", "MarioFreezeIce", true, nullptr, nullptr);
     _9C4->initWithoutIter();
     _9C4->makeActorDead();
     _9C4->initFixedPosition(TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f), nullptr);
 
-    _9A0 = new JetTurtleShadow("カメシャドウモデル");
+    _9A0 = new (JKRHeapToken::Dummy) JetTurtleShadow("カメシャドウモデル");
     _9A0->initWithoutIter();
 
-    _994 = new MarioParts(this, "スピンチコ", "SpinTico", false, getBaseMtx(), nullptr);
+    _994 = new (JKRHeapToken::Dummy) MarioParts(this, "スピンチコ", "SpinTico", false, getBaseMtx(), nullptr);
     _994->initWithoutIter();
     _994->kill();
 }
@@ -299,7 +299,7 @@ void MarioActor::updateSpecialModeAnimation() {
 
 void MarioActor::initFireBall() {
     for (u32 idx = 0; idx < ARRAY_SIZE(_B54); idx++) {
-        _B54[idx] = new FireMarioBall("マリオ炎球");
+        _B54[idx] = new (JKRHeapToken::Dummy) FireMarioBall("マリオ炎球");
         _B54[idx]->initWithoutIter();
     }
 }

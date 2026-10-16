@@ -19,10 +19,10 @@ namespace {
 };  // namespace
 
 NWC24System::NWC24System(JKRHeap* pHeap, s32 threadPriority) : _0(), mWorkBuffer(), mVFWorkBuffer() {
-    mVFWorkBuffer = new (pHeap, 32) u8[::sWorkSize];
+    mVFWorkBuffer = new (JKRHeapToken::Dummy, pHeap, 32) u8[::sWorkSize];
     VFInitEx(mVFWorkBuffer, ::sWorkSize);
-    mWorkBuffer = new (pHeap, 32) u8[NWC24_WORK_MEM_SIZE];
-    mSendThread = new NWC24SendThread(threadPriority, pHeap);
+    mWorkBuffer = new (JKRHeapToken::Dummy, pHeap, 32) u8[NWC24_WORK_MEM_SIZE];
+    mSendThread = new (JKRHeapToken::Dummy) NWC24SendThread(threadPriority, pHeap);
 }
 
 bool NWC24System::open(NWC24Err* pErr, s32* pErrCode) {

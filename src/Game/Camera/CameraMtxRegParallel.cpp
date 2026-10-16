@@ -26,7 +26,7 @@ CameraTargetObj* CameraMtxRegParallel::calc() {
 }
 
 CamTranslatorBase* CameraMtxRegParallel::createTranslator() {
-    return new CamTranslatorMtxRegParallel(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorMtxRegParallel(this);
 }
 
 void CameraMtxRegParallel::calcIdealPose() {

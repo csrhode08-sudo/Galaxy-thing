@@ -40,11 +40,11 @@ void BeeFlowerHover::init(const JMapInfoIter& rIter) {
 
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mRailMover->start();
 
-        mRailPosture = new MapPartsRailPosture(this);
+        mRailPosture = new (JKRHeapToken::Dummy) MapPartsRailPosture(this);
         mRailPosture->mMovePosture = 2;
         mRailPosture->initWithoutIter();
         mRailPosture->start();

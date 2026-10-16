@@ -22,7 +22,7 @@ JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* heap, bool useErrorHandler
     if (!mem)
         return NULL;
 
-    return new (mem) JKRSolidHeap(dataPtr, alignedSize - solidHeapSize, heap, useErrorHandler);
+    return new (JKRHeapToken::Dummy, mem) JKRSolidHeap(dataPtr, alignedSize - solidHeapSize, heap, useErrorHandler);
 }
 
 void JKRSolidHeap::do_destroy(void) {

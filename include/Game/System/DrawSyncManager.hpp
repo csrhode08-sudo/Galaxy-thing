@@ -13,7 +13,7 @@ public:
 class Fifo {
 public:
     Fifo(u32 capacity) : mCount(capacity), mLoopIdx(), mWriteIndex() {
-        mArray = new void*[capacity + 1];
+        mArray = new (JKRHeapToken::Dummy) void*[capacity + 1];
     }
 
     void push(void* pValue) {

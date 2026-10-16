@@ -24,16 +24,16 @@ namespace NrvPlayTimerScene {
 PlayTimerScene::PlayTimerScene() : Scene("PlayTimerScene"), mTimeLimitLayout(), mTimeUpLayout(), mTimeUpWaitFrame(::sTimeUpWaitFrame), _20() {
     initNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneNormal));
 
-    _20 = new ValueControl(30);
+    _20 = new (JKRHeapToken::Dummy) ValueControl(30);
     _20->setZero();
 }
 
 void PlayTimerScene::init() {
-    mTimeLimitLayout = new TimeLimitLayout(::sTimeUpWaitFrame);
+    mTimeLimitLayout = new (JKRHeapToken::Dummy) TimeLimitLayout(::sTimeUpWaitFrame);
     mTimeLimitLayout->initWithoutIter();
     mTimeLimitLayout->kill();
 
-    mTimeUpLayout = new TimeUpLayout();
+    mTimeUpLayout = new (JKRHeapToken::Dummy) TimeUpLayout();
     mTimeUpLayout->initWithoutIter();
     mTimeUpLayout->kill();
 }

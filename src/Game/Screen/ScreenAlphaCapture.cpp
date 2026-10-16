@@ -24,7 +24,7 @@ void ScreenAlphaCapture::init(const JMapInfoIter& rIter) {
 void ScreenAlphaCapture::createScreenAlpha(s32 textureIndex, f32 screenScale) {
     MR::CurrentHeapRestorer heapRestorer(MR::getSceneHeapGDDR3());
 
-    mTexture[textureIndex] = new JUTTexture(static_cast< s32 >(JUTVideo::getManager()->getFbWidth()) * screenScale,
+    mTexture[textureIndex] = new (JKRHeapToken::Dummy) JUTTexture(static_cast< s32 >(JUTVideo::getManager()->getFbWidth()) * screenScale,
                                             static_cast< s32 >(JUTVideo::getManager()->getEfbHeight()) * screenScale, GX_TF_I8);
     mTexture[textureIndex]->mWrapS = GX_CLAMP;
     mTexture[textureIndex]->mWrapT = GX_CLAMP;

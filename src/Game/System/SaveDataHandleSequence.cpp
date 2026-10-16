@@ -35,16 +35,16 @@ SaveDataHandleSequence::SaveDataHandleSequence()
     : NerveExecutor("セーブ/ロード"), mSysConfigFile(), mCurrentUserFile(), mBackupUserFile(), mSaveDataHandler(), mNANDErrorSequence(),
       mSysInfoWindowConfirm(), mSysInfoWindowSave(), _24(), mIsConfirmRemind(), mIsSaveAndQuitMsg(), _2A(), _2B(), _2C(), mWorkUserFile(),
       mNerveForError(), mTempBuffer(), mOnSaveSuccessFunc(), mJustBeforeSaveFunc(), mSaveIcon() {
-    mTempBuffer = new (32) u8[SaveDataHandler::getEnoughtTempBufferSize()];
+    mTempBuffer = new (JKRHeapToken::Dummy, 32) u8[SaveDataHandler::getEnoughtTempBufferSize()];
 
     initNerve(GET_NERVE_ANON(SaveDataHandleSequenceNoOperation));
 }
 
 void SaveDataHandleSequence::initAfterResourceLoaded() {
-    mSysConfigFile = new SysConfigFile();
-    mCurrentUserFile = new UserFile();
-    mBackupUserFile = new UserFile();
-    mSaveDataHandler = new SaveDataHandler(mSysConfigFile, mCurrentUserFile);
+    mSysConfigFile = new (JKRHeapToken::Dummy) SysConfigFile();
+    mCurrentUserFile = new (JKRHeapToken::Dummy) UserFile();
+    mBackupUserFile = new (JKRHeapToken::Dummy) UserFile();
+    mSaveDataHandler = new (JKRHeapToken::Dummy) SaveDataHandler(mSysConfigFile, mCurrentUserFile);
 
     mSysInfoWindowConfirm = MR::createSysInfoWindowExecuteWithChildren();
     mSysInfoWindowConfirm->kill();
@@ -52,9 +52,9 @@ void SaveDataHandleSequence::initAfterResourceLoaded() {
     mSysInfoWindowSave = MR::createSysInfoWindowMiniExecuteWithChildren();
     mSysInfoWindowSave->kill();
 
-    mNANDErrorSequence = new NANDErrorSequence(this, mSysInfoWindowConfirm, mSysInfoWindowSave);
+    mNANDErrorSequence = new (JKRHeapToken::Dummy) NANDErrorSequence(this, mSysInfoWindowConfirm, mSysInfoWindowSave);
 
-    mSaveIcon = new SaveIcon(mSysInfoWindowSave);
+    mSaveIcon = new (JKRHeapToken::Dummy) SaveIcon(mSysInfoWindowSave);
     mSaveIcon->kill();
 }
 

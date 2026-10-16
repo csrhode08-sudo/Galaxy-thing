@@ -110,10 +110,10 @@ void KoteBug::init(const JMapInfoIter& rIter) {
     MR::initStarPointerTarget(this, 110.0f, TVec3f(0.0f, 80.0f, 0.0f));
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);
-    mSpinHitController = new SpinHitController(this, 3, false);
-    mScaleController = new AnimScaleController(nullptr);
-    mStampController = new AnimStampController();
-    mStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 3, false);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStampController = new (JKRHeapToken::Dummy) AnimStampController();
+    mStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     MR::onCalcGravity(this);
     MR::initShadowVolumeSphere(this, 70.0f * mScale.y);
     MR::validateClipping(this);

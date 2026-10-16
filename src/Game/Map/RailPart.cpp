@@ -12,7 +12,7 @@ RailPart::RailPart() : mRailPartLinear(nullptr), mRailPartBezier(nullptr) {
 
 void RailPart::init(const TVec3f& rPoint1, const TVec3f& rPoint1Ctrl, const TVec3f& rPoint2Ctrl, const TVec3f& rPoint2) {
     if ((rPoint1.epsilonEquals(rPoint1Ctrl, 0.1f)) && (rPoint2.epsilonEquals(rPoint2Ctrl, 0.1f))) {
-        mRailPartLinear = new LinearRailPart();
+        mRailPartLinear = new (JKRHeapToken::Dummy) LinearRailPart();
         mRailPartLinear->set(rPoint1, rPoint2);
     } else {
         initForBezier(rPoint1, rPoint1Ctrl, rPoint2Ctrl, rPoint2);
@@ -20,7 +20,7 @@ void RailPart::init(const TVec3f& rPoint1, const TVec3f& rPoint1Ctrl, const TVec
 }
 
 void RailPart::initForBezier(const TVec3f& rPoint1, const TVec3f& rPoint1Ctrl, const TVec3f& rPoint2Ctrl, const TVec3f& rPoint2) {
-    mRailPartBezier = new BezierRailPart();
+    mRailPartBezier = new (JKRHeapToken::Dummy) BezierRailPart();
     mRailPartBezier->set(rPoint1, rPoint1Ctrl, rPoint2Ctrl, rPoint2);
 }
 

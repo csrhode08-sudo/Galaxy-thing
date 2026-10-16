@@ -9,27 +9,27 @@
 SceneWipeHolder::SceneWipeHolder() : WipeHolderBase(8, "シーンワイプ保持") {
     WipeLayoutBase* pWipeLayout;
 
-    pWipeLayout = new WipeRing(1, "円ワイプ");
+    pWipeLayout = new (JKRHeapToken::Dummy) WipeRing(1, "円ワイプ");
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeFade("フェードワイプ", Color8(0, 0, 0, 255));
+    pWipeLayout = new (JKRHeapToken::Dummy) WipeFade("フェードワイプ", Color8(0, 0, 0, 255));
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeFade("白フェードワイプ", Color8(255, 255, 255, 255));
+    pWipeLayout = new (JKRHeapToken::Dummy) WipeFade("白フェードワイプ", Color8(255, 255, 255, 255));
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeGameOver();
+    pWipeLayout = new (JKRHeapToken::Dummy) WipeGameOver();
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeKoopa();
+    pWipeLayout = new (JKRHeapToken::Dummy) WipeKoopa();
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");

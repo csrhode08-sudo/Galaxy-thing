@@ -6,7 +6,7 @@
 #include "revolution/wud.h"
 #include "revolution/wud/wud.h"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 #if (VERSION == RMGJ01 || VERSION == RMGE01 || VERSION == RMGP01 || VERSION == RMGP01)
 static const char* __WPADVersion = "<< RVL_SDK - WPAD \trelease build: Aug  8 2007 02:07:23 (0x4199_60831) >>";

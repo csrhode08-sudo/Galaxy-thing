@@ -172,7 +172,7 @@ public:
     void getGlobalPrmColor(GXColor& color) {
         color = mGlobalPrmClr;
     }
-    void getGlobalPrmColor(_GXColor* color) const {
+    void getGlobalPrmColor(GXColor* color) const {
         *color = mGlobalPrmClr;
     }
     void setGlobalPrmColor(u8 r, u8 g, u8 b) {

@@ -27,7 +27,7 @@ ActorPadAndCameraCtrl::ActorPadAndCameraCtrl(const ModelManager* pModelManager, 
     }
 
     mInfoNum = count;
-    ActorPadAndCameraCtrlInfo* infoArray = new ActorPadAndCameraCtrlInfo[mInfoNum];
+    ActorPadAndCameraCtrlInfo* infoArray = new (JKRHeapToken::Dummy) ActorPadAndCameraCtrlInfo[mInfoNum];
     mInfo = infoArray;
     for (s32 i = 0; i < mInfoNum; i++) {
         ActorPadAndCameraCtrlInfo* info = &infoArray[i];
@@ -59,7 +59,7 @@ ActorPadAndCameraCtrl* ActorPadAndCameraCtrl::tryCreate(const ModelManager* pMod
         return nullptr;
     }
 
-    return new ActorPadAndCameraCtrl(pModelManager, pPosition);
+    return new (JKRHeapToken::Dummy) ActorPadAndCameraCtrl(pModelManager, pPosition);
 }
 
 void ActorPadAndCameraCtrl::update() {

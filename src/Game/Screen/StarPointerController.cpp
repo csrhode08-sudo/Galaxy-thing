@@ -27,8 +27,8 @@ StarPointerController::StarPointerController()
     : mPadChannel(-1), mScreenPos(0.0f, 0.0f), mOutScreenTime(), mPastPosition(), mPastPointNum(), mNextPastPosition(), mNextPastPointNum(),
       mScreenDist(), mScreenSpeed(), mScreenVel(0.0f, 0.0f), mWorldVel(0.0f, 0.0f, 0.0f), mWorldPos(0.0f, 0.0f, 0.0f) {
     // FIXME: TVec2 emitting default ctor in new[], needs to be a null ctor.
-    mPastPosition = new TVec2f[16];
-    mNextPastPosition = new TVec2f[16];
+    mPastPosition = new (JKRHeapToken::Dummy) TVec2f[16];
+    mNextPastPosition = new (JKRHeapToken::Dummy) TVec2f[16];
 }
 
 bool StarPointerController::isOutScreenLong() const {

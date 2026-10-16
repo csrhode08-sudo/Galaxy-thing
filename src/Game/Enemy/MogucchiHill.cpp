@@ -375,7 +375,7 @@ void MogucchiHill::exeWait() {
 }
 
 void MogucchiHill::createPieces() {
-    _90 = new MogucchiHillPiece[_94]();
+    _90 = new (JKRHeapToken::Dummy) MogucchiHillPiece[_94]();
 
     s32 modelCount = _D8;
     s32 previousModel = MR::getRandom(0, modelCount);

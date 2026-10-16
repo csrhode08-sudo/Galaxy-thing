@@ -6,7 +6,7 @@
 #include "Game/Util/MathUtil.hpp"
 
 CameraFix::CameraFix(const char* pName) : Camera(pName), mWPoint(0.0f, 0.0f, 0.0f), mAxis(0.0f, 0.0f, -2500.0f), mUp(0.0f, 1.0f, 0.0f) {
-    mTarget = new CameraTargetMtx("カメラターゲットダミー");
+    mTarget = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
 }
 
 void CameraFix::reset() {
@@ -53,5 +53,5 @@ void CameraFix::setParam(const TVec3f& rWPoint, const TVec3f& rAxis, const TVec3
 }
 
 CamTranslatorBase* CameraFix::createTranslator() {
-    return new CamTranslatorFix(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFix(this);
 }

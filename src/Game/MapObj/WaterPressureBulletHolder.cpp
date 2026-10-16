@@ -22,7 +22,7 @@ WaterPressureBulletHolder::~WaterPressureBulletHolder() {
 
 void WaterPressureBulletHolder::init(const JMapInfoIter& rIter) {
     for (u32 i = 0; i < ARRAY_SIZE(mBullet); i++) {
-        mBullet[i] = new WaterPressureBullet("ウォータープレッシャーの弾");
+        mBullet[i] = new (JKRHeapToken::Dummy) WaterPressureBullet("ウォータープレッシャーの弾");
         mBullet[i]->initWithoutIter();
     }
 }

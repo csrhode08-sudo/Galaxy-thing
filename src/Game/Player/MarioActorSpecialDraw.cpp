@@ -34,7 +34,7 @@ void MarioActorSpecialDraw_FORCE_MATCH_SDATA2() {
 }
 
 void MarioActor::initScreenBox() {
-    _B44 = new (32) u8[0x20000];
+    _B44 = new (JKRHeapToken::Dummy, 32) u8[0x20000];
     _B28 = 0.0f;
     _B24 = 0.0f;
     _B30 = 0.0f;
@@ -366,7 +366,7 @@ void MarioActor::createRainbowDL() {
 
     for (u32 alpha = 0; alpha < 8; alpha++) {
         for (u32 index = 0; index < 8; index++) {
-            _94[alpha * 8 + index] = new DLchanger(1, 32);
+            _94[alpha * 8 + index] = new (JKRHeapToken::Dummy) DLchanger(1, 32);
             GDInitGDLObj(&displayList, buffer, sizeof(buffer));
             __GDCurrentDL = &displayList;
             GXColor color = {0, 0, 0, 0};
@@ -816,8 +816,8 @@ void MarioActor::updateDarkMask(u16 unused) {
     u8* previous = mMaskTextures[_B88]->mImage;
     _B88 = 1 - _B88;
     u8* image = mMaskTextures[_B88]->mImage;
-    u8 x = MR::getRandom(0L, 8L);
-    u8 y = MR::getRandom(0L, 8L);
+    u8 x = MR::getRandom(0, 8);
+    u8 y = MR::getRandom(0, 8);
     s32 index = x + y * 8;
     image[index] = 0xF0;
     previous[index] = 0xF0;

@@ -236,7 +236,7 @@ void PoltaSensorCtrl::setScreamSensorSize(f32 screamSensorSize) {
 }
 
 void PoltaSensorCtrl::initSensor() {
-    mCoreSensors = new HitSensor*[getCoreSensorCount()];
+    mCoreSensors = new (JKRHeapToken::Dummy) HitSensor*[getCoreSensorCount()];
 
     for (int i = 0; i < getCoreSensorCount(); i++) {
         mCoreSensors[i] =
@@ -244,7 +244,7 @@ void PoltaSensorCtrl::initSensor() {
                                          TVec3f(::sCoreSensorList[i].mOffsetX, ::sCoreSensorList[i].mOffsetY, ::sCoreSensorList[i].mOffsetZ));
     }
 
-    mBodySensors = new HitSensor*[getBodySensorCount()];
+    mBodySensors = new (JKRHeapToken::Dummy) HitSensor*[getBodySensorCount()];
 
     for (int i = 0; i < getBodySensorCount(); i++) {
         mBodySensors[i] =
@@ -252,7 +252,7 @@ void PoltaSensorCtrl::initSensor() {
                                          TVec3f(::sBodySensorList[i].mOffsetX, ::sBodySensorList[i].mOffsetY, ::sBodySensorList[i].mOffsetZ));
     }
 
-    mLeftArmSensors = new HitSensor*[getArmSensorCount()];
+    mLeftArmSensors = new (JKRHeapToken::Dummy) HitSensor*[getArmSensorCount()];
     PoltaArm* poltaLeftArmTemp;
 
     for (int i = 0; i < getArmSensorCount(); i++) {
@@ -263,7 +263,7 @@ void PoltaSensorCtrl::initSensor() {
                                                       TVec3f(leftArmListEntry->mOffsetX, leftArmListEntry->mOffsetY, leftArmListEntry->mOffsetZ));
     }
 
-    mRightArmSensors = new HitSensor*[getArmSensorCount()];
+    mRightArmSensors = new (JKRHeapToken::Dummy) HitSensor*[getArmSensorCount()];
 
     for (int i = 0; i < getArmSensorCount(); i++) {
         const PoltaSensorListEntry* rightArmListEntry = &::sRightArmSensorList[i];

@@ -39,7 +39,7 @@ inline SpiderThreadPart* connectPoints(SpiderThreadPoint* pPointA, SpiderThreadP
     SpiderThreadMainPoint* pointB = static_cast< SpiderThreadMainPoint* >(pPointB);
     SpiderThreadMainPoint* pointA = static_cast< SpiderThreadMainPoint* >(pPointA);
 
-    SpiderThreadPart* part = new SpiderThreadPart(pointA, pointB, ::sMainPointRadius);
+    SpiderThreadPart* part = new (JKRHeapToken::Dummy) SpiderThreadPart(pointA, pointB, ::sMainPointRadius);
 
     pointA->addNearMainPoint(pointB, part);
     pointB->addNearMainPoint(pointA, part);
@@ -54,8 +54,8 @@ SpiderThread::SpiderThread(const char* pName)
       mIsBloomOn(false), mThreadTexture(nullptr), mIndirectTexture(nullptr) {
     mRadialPartsBufferSize = mNumRadialLines * (::sMainRadialLinePointNum + 1);
     mCirclePartsBufferSize = mNumRadialLines * ::sMainRadialLinePointNum;
-    mRadialParts = new SpiderThreadPart*[mRadialPartsBufferSize];
-    mCircleParts = new SpiderThreadPart*[mCirclePartsBufferSize];
+    mRadialParts = new (JKRHeapToken::Dummy) SpiderThreadPart*[mRadialPartsBufferSize];
+    mCircleParts = new (JKRHeapToken::Dummy) SpiderThreadPart*[mCirclePartsBufferSize];
 
     for (s32 idx = 0; idx < mRadialPartsBufferSize; idx++) {
         mRadialParts[idx] = nullptr;
@@ -74,16 +74,16 @@ void SpiderThread::initThread(const TVec3f& rPos) {
 
     MR::connectToScene(this, MR::MovementType_Ride, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_SpiderThread);
 
-    mWindCtrl = new SpiderThreadWindCtrl();
+    mWindCtrl = new (JKRHeapToken::Dummy) SpiderThreadWindCtrl();
     initMainThreads();
     MR::invalidateClipping(this);
 
-    mThreadTexture = new JUTTexture(MR::loadTexFromArc("SpiderThread.arc", "SpiderThread.bti"), 0);
-    mIndirectTexture = new JUTTexture(MR::loadTexFromArc("SpiderThread.arc", "Indirect.bti"), 0);
+    mThreadTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpiderThread.arc", "SpiderThread.bti"), 0);
+    mIndirectTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpiderThread.arc", "Indirect.bti"), 0);
 
-    mHangInfos = new SpiderThreadHangInfo*[::sHangActorNumMax];
+    mHangInfos = new (JKRHeapToken::Dummy) SpiderThreadHangInfo*[::sHangActorNumMax];
     for (s32 idx = 0; idx < ::sHangActorNumMax; idx++) {
-        mHangInfos[idx] = new SpiderThreadHangInfo();
+        mHangInfos[idx] = new (JKRHeapToken::Dummy) SpiderThreadHangInfo();
     }
 
     MR::registerDemoSimpleCastAll(this);
@@ -190,22 +190,22 @@ void SpiderThread::initMainThreads() {
     MR::makeMtxRotate(rotMtx.toMtxPtr(), 0.0f, 0.0f, 360.0f / mNumRadialLines);
     TVec3f down(0.0f, -1.0f, 0.0f);
 
-    mMainPoint = new SpiderThreadMainPoint(mPosition, mNumRadialLines + 1);
+    mMainPoint = new (JKRHeapToken::Dummy) SpiderThreadMainPoint(mPosition, mNumRadialLines + 1);
 
-    mAnchorPoints = new SpiderThreadMainPoint*[mNumRadialLines];
+    mAnchorPoints = new (JKRHeapToken::Dummy) SpiderThreadMainPoint*[mNumRadialLines];
     for (s32 idx = 0; idx < mNumRadialLines; idx++) {
         mAnchorPoints[idx] = nullptr;
     }
 
     mCutPointsBufferSize = mNumRadialLines + ARRAY_SIZE(::sCutPointNoTable) * 4;
-    mCutPoints = new SpiderThreadMainPoint*[mCutPointsBufferSize];
+    mCutPoints = new (JKRHeapToken::Dummy) SpiderThreadMainPoint*[mCutPointsBufferSize];
     for (s32 idx = 0; idx < mCutPointsBufferSize; idx++) {
-        mCutPoints[idx] = new SpiderThreadMainPoint(mPosition, 5);
+        mCutPoints[idx] = new (JKRHeapToken::Dummy) SpiderThreadMainPoint(mPosition, 5);
     }
 
-    mRadialLines = new SpiderThreadRadialLine*[mNumRadialLines];
+    mRadialLines = new (JKRHeapToken::Dummy) SpiderThreadRadialLine*[mNumRadialLines];
     for (s32 radialIdx = 0; radialIdx < mNumRadialLines; radialIdx++) {
-        mRadialLines[radialIdx] = new SpiderThreadRadialLine(::sMainRadialLinePointNum);
+        mRadialLines[radialIdx] = new (JKRHeapToken::Dummy) SpiderThreadRadialLine(::sMainRadialLinePointNum);
 
         // main axial points
         for (s32 idx = 0; idx < ::sMainRadialLinePointNum; idx++) {
@@ -213,7 +213,7 @@ void SpiderThread::initMainThreads() {
             pos.scale(::sMainRadialLineInterval * (idx + 1));
             pos.add(mMainPoint->mPosition);
 
-            SpiderThreadMainPoint* point = new SpiderThreadMainPoint(pos, 5);
+            SpiderThreadMainPoint* point = new (JKRHeapToken::Dummy) SpiderThreadMainPoint(pos, 5);
             getMainRadialLine(radialIdx)->addPoint(point);
             point->mRadialLine = getMainRadialLine(radialIdx);
         }
@@ -222,7 +222,7 @@ void SpiderThread::initMainThreads() {
         TVec3f pos(down);
         pos.scale(::sMainRadialLineLength);
         pos.add(mMainPoint->mPosition);
-        mAnchorPoints[radialIdx] = new SpiderThreadMainPoint(pos, 5);
+        mAnchorPoints[radialIdx] = new (JKRHeapToken::Dummy) SpiderThreadMainPoint(pos, 5);
         mAnchorPoints[radialIdx]->mRadialLine = getMainRadialLine(radialIdx);
 
         // connect points

@@ -135,7 +135,7 @@ J3DMaterial* J3DMaterialFactory::createNormalMaterial(J3DMaterial* i_material, i
     u32 pe_flag = getMdlDataFlag_PEFlag(i_flags);
     BOOL ind_flag = (i_flags & 0x1000000) ? TRUE : FALSE;
     if (i_material == nullptr) {
-        i_material = new J3DMaterial();
+        i_material = new (JKRHeapToken::Dummy) J3DMaterial();
     }
 
     i_material->mColorBlock = J3DMaterial::createColorBlock(color_flag);
@@ -249,13 +249,13 @@ J3DMaterial* J3DMaterialFactory::createNormalMaterial(J3DMaterial* i_material, i
 
 J3DMaterial* J3DMaterialFactory::createPatchedMaterial(J3DMaterial* i_material, int i_idx, u32 i_flags) const {
     if (i_material == nullptr) {
-        i_material = new J3DPatchedMaterial();
+        i_material = new (JKRHeapToken::Dummy) J3DPatchedMaterial();
     }
 
     u8 indFlag = (i_flags & 0x3000000) != 0 ? static_cast< u8 >(1) : static_cast< u8 >(0);
     i_material->mColorBlock = J3DMaterial::createColorBlock(0x40000000);
-    i_material->mTexGenBlock = new J3DTexGenBlockPatched();
-    i_material->mTevBlock = new J3DTevBlockPatched();
+    i_material->mTexGenBlock = new (JKRHeapToken::Dummy) J3DTexGenBlockPatched();
+    i_material->mTevBlock = new (JKRHeapToken::Dummy) J3DTevBlockPatched();
     i_material->mIndBlock = J3DMaterial::createIndBlock(indFlag);
     i_material->mPEBlock = J3DMaterial::createPEBlock(0x10000000, getMaterialMode(i_idx));
     i_material->mIndex = i_idx;
@@ -362,12 +362,12 @@ void J3DMaterialFactory::modifyPatchedCurrentMtx(J3DMaterial* i_material, int i_
 
 J3DMaterial* J3DMaterialFactory::createLockedMaterial(J3DMaterial* i_material, int i_idx, u32 i_flags) const {
     if (i_material == nullptr) {
-        i_material = new J3DLockedMaterial();
-        i_material->mColorBlock = new J3DColorBlockNull();
-        i_material->mTexGenBlock = new J3DTexGenBlockNull();
-        i_material->mTevBlock = new J3DTevBlockNull();
-        i_material->mIndBlock = new J3DIndBlockNull();
-        i_material->mPEBlock = new J3DPEBlockNull();
+        i_material = new (JKRHeapToken::Dummy) J3DLockedMaterial();
+        i_material->mColorBlock = new (JKRHeapToken::Dummy) J3DColorBlockNull();
+        i_material->mTexGenBlock = new (JKRHeapToken::Dummy) J3DTexGenBlockNull();
+        i_material->mTevBlock = new (JKRHeapToken::Dummy) J3DTevBlockNull();
+        i_material->mIndBlock = new (JKRHeapToken::Dummy) J3DIndBlockNull();
+        i_material->mPEBlock = new (JKRHeapToken::Dummy) J3DPEBlockNull();
         i_material->mIndex = i_idx;
         i_material->mMaterialMode = mpMaterialMode[i_idx];
     }
@@ -380,7 +380,7 @@ J3DMaterial* J3DMaterialFactory::createLockedMaterial(J3DMaterial* i_material, i
     i_material->getTevBlock()->setTevRegOffset(mpPatchingInfo[i_idx].mTevRegOffset);
     i_material->getPEBlock()->setFogOffset(mpPatchingInfo[i_idx].mFogOffset);
     if (i_material->mSharedDLObj == nullptr) {
-        i_material->mSharedDLObj = new J3DDisplayListObj();
+        i_material->mSharedDLObj = new (JKRHeapToken::Dummy) J3DDisplayListObj();
         i_material->mSharedDLObj->setSingleDisplayList((void*)(mpDisplayListInit[i_idx].mOffset + (uintptr_t)&mpDisplayListInit[i_idx]),
                                                        mpDisplayListInit[i_idx].field_0x4);
     }
@@ -538,7 +538,7 @@ J3DTexMtx* J3DMaterialFactory::newTexMtx(int i_idx, int i_no) const {
     J3DTexMtx* tex_mtx = nullptr;
     J3DMaterialInitData* mtl_init_data = &mpMaterialInitData[mpMaterialID[i_idx]];
     if (mtl_init_data->mTexMtxIdx[i_no] != 0xffff) {
-        tex_mtx = new J3DTexMtx(mpTexMtxInfo[mtl_init_data->mTexMtxIdx[i_no]]);
+        tex_mtx = new (JKRHeapToken::Dummy) J3DTexMtx(mpTexMtxInfo[mtl_init_data->mTexMtxIdx[i_no]]);
     }
 
     return tex_mtx;

@@ -17,7 +17,7 @@ void GalaxySelectBackButton::init(const JMapInfoIter&) {
     initLayoutManager("BackButton", 1);
     MR::connectToSceneLayout(this);
 
-    mPaneCtrl = new ButtonPaneController(this, "Back", "BoxButton", 0, true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "Back", "BoxButton", 0, true);
     mPaneCtrl->_23 = true;
 
     initNerve(GET_NERVE(GalaxySelectBackButton, GalaxySelectBackButtonNrvAppear));

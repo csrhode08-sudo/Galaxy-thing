@@ -40,7 +40,7 @@ void PTimerSwitch::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(PTimerSwitch, PTimerSwitchNrvOff));
     initEffectKeeper(0, nullptr, false);
     MR::startBck(this, "Wait");
-    mConnector = new MapObjConnector(this);
+    mConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     appear();
 }
 

@@ -21,18 +21,18 @@ namespace {
 GameDataHolder::GameDataHolder(const UserFile* pUserFile)
     : mUserFile(pUserFile), mEventFlagChecker(), mEventValueChecker(), mPlayerStatus(), mAllGalaxyStorage(), mSpinDriverPathStorage(),
       mStarPieceAlmsStorage(), mMapInfo(), mScenarioProgressTestRun(), mChunkHolder() {
-    mScenarioProgressTestRun = new ScenarioProgressTestRun(this);
-    mAllGalaxyStorage = new GameDataAllGalaxyStorage();
-    mEventFlagChecker = new GameEventFlagChecker(this);
-    mEventValueChecker = new GameEventValueChecker();
-    mPlayerStatus = new GameDataPlayerStatus();
-    mSpinDriverPathStorage = new SpinDriverPathStorage();
-    mStarPieceAlmsStorage = new StarPieceAlmsStorage();
+    mScenarioProgressTestRun = new (JKRHeapToken::Dummy) ScenarioProgressTestRun(this);
+    mAllGalaxyStorage = new (JKRHeapToken::Dummy) GameDataAllGalaxyStorage();
+    mEventFlagChecker = new (JKRHeapToken::Dummy) GameEventFlagChecker(this);
+    mEventValueChecker = new (JKRHeapToken::Dummy) GameEventValueChecker();
+    mPlayerStatus = new (JKRHeapToken::Dummy) GameDataPlayerStatus();
+    mSpinDriverPathStorage = new (JKRHeapToken::Dummy) SpinDriverPathStorage();
+    mStarPieceAlmsStorage = new (JKRHeapToken::Dummy) StarPieceAlmsStorage();
 
-    mMapInfo = new JMapInfo();
+    mMapInfo = new (JKRHeapToken::Dummy) JMapInfo();
     mMapInfo->attach(cStoryProgressTable);
 
-    mChunkHolder = new BinaryDataChunkHolder(4096, 6);
+    mChunkHolder = new (JKRHeapToken::Dummy) BinaryDataChunkHolder(4096, 6);
     mChunkHolder->addChunk(mPlayerStatus);
     mChunkHolder->addChunk(mEventFlagChecker->getChunk());
     mChunkHolder->addChunk(mStarPieceAlmsStorage);
@@ -153,7 +153,7 @@ u32 GameDataHolder::getRaceBestTime(const char* pName) const {
 
 void GameDataHolder::addMissPoint(int points) {
     u32 value = mEventValueChecker->getValue("MissPointForLetter");
-    u32 newValue = MR::clamp(value + points, 0l, 20l);
+    u32 newValue = MR::clamp(value + points, 0, 20);
 
     setGameEventValue("MissPointForLetter", newValue);
 }

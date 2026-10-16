@@ -18,7 +18,7 @@ JKRAram* JKRAram::sAramObject;
 
 JKRAram* JKRAram::create(u32 aram_audio_buffer_size, u32 aram_audio_graph_size, s32 stream_priority, s32 decomp_priority, s32 piece_priority) {
     if (!sAramObject) {
-        sAramObject = new (JKRGetSystemHeap(), 0) JKRAram(aram_audio_buffer_size, aram_audio_graph_size, piece_priority);
+        sAramObject = new (JKRHeapToken::Dummy, JKRGetSystemHeap(), 0) JKRAram(aram_audio_buffer_size, aram_audio_graph_size, piece_priority);
     }
 
     JKRCreateAramStreamManager(stream_priority);

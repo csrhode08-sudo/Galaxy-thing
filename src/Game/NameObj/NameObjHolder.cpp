@@ -44,7 +44,7 @@ void NameObjHolder::syncWithFlags() {
 }
 
 void NameObjHolder::callMethodAllObj(NameObjMethod pMethod) {
-    std::for_each(mObjArray1.begin(), mObjArray1.end(), std::mem_fun(pMethod));
+    msl::for_each(mObjArray1.begin(), mObjArray1.end(), msl::mem_fun(pMethod));
 }
 
 void NameObjHolder::clearArray() {
@@ -53,7 +53,7 @@ void NameObjHolder::clearArray() {
 }
 
 NameObj* NameObjHolder::find(const char* pName) {
-    NameObj** pCached = std::find_if(mObjArray2.begin(), mObjArray2.end(), equal_fullname(pName));
+    NameObj** pCached = msl::find_if(mObjArray2.begin(), mObjArray2.end(), equal_fullname(pName));
     if (pCached != mObjArray2.end()) {
         NameObj* pObj = *pCached;
         mObjArray2.erase(pCached);
@@ -61,7 +61,7 @@ NameObj* NameObjHolder::find(const char* pName) {
         return pObj;
     }
 
-    NameObj** pFound = std::find_if(mObjArray1.begin(), mObjArray1.end(), equal_fullname(pName));
+    NameObj** pFound = msl::find_if(mObjArray1.begin(), mObjArray1.end(), equal_fullname(pName));
     if (pFound == mObjArray1.end()) {
         return nullptr;
     }

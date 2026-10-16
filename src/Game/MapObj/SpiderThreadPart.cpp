@@ -54,7 +54,7 @@ SpiderThreadPart::SpiderThreadPart(SpiderThreadMainPoint* pPointA, SpiderThreadM
     mDistBetweenPoints = mDistBetweenMainPoints / (mNumPoints + 1);
     MR::normalize(&forward);
 
-    mPoints = new SpiderThreadPoint*[mNumPoints];
+    mPoints = new (JKRHeapToken::Dummy) SpiderThreadPoint*[mNumPoints];
 
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         TVec3f pos(forward);
@@ -79,7 +79,7 @@ SpiderThreadPart::SpiderThreadPart(SpiderThreadMainPoint* pPointA, SpiderThreadM
         f32 lengthSpring = (0.9f * (1.0f - lengthNormalized) + (0.9f * lengthNormalized));
         f32 friction = indexSpring * lengthSpring;
 
-        mPoints[idx] = new SpiderThreadPoint(pos, friction);
+        mPoints[idx] = new (JKRHeapToken::Dummy) SpiderThreadPoint(pos, friction);
     }
 
     mSide.set(0.0f, 0.0f, -1.0f);

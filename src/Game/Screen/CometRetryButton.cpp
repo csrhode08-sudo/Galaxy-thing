@@ -29,8 +29,8 @@ void CometRetryButton::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "NBackUp", 1);
     MR::createAndAddPaneCtrl(this, "NBackDown", 1);
 
-    mButtonYesPaneCtrl = new ButtonPaneController(this, "NBackUp", "BoxButton1", 0, true);
-    mButtonNoPaneCtrl = new ButtonPaneController(this, "NBackDown", "BoxButton2", 0, true);
+    mButtonYesPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "NBackUp", "BoxButton1", 0, true);
+    mButtonNoPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "NBackDown", "BoxButton2", 0, true);
     mButtonYesPaneCtrl->_22 = false;
     mButtonNoPaneCtrl->_22 = false;
 
@@ -54,7 +54,7 @@ void CometRetryButton::init(const JMapInfoIter& rIter) {
     mButtonNoPaneCtrl->mNotPointingAnimName = pSelectOut;
     mButtonNoPaneCtrl->mDisappearAnimName = pEnd;
 
-    mPlayerMissLeft = new PlayerMissLeft("ミス時のプレイヤー残機表示");
+    mPlayerMissLeft = new (JKRHeapToken::Dummy) PlayerMissLeft("ミス時のプレイヤー残機表示");
     mPlayerMissLeft->initWithoutIter();
     mPlayerMissLeft->kill();
 

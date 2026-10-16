@@ -57,7 +57,7 @@ struct CameraTableEntry {
 namespace {
     template < typename T >
     Camera* createCamera() {
-        return new T();
+        return new (JKRHeapToken::Dummy) T();
     }
 
     static const CameraTableEntry sCameraTable[] = {
@@ -170,8 +170,8 @@ s32 CameraHolder::getIndexOf(Camera* pCamera) const {
 }
 
 void CameraHolder::createCameras() {
-    mCameras = new Camera*[getNum()];
-    mTranslators = new CamTranslatorBase*[getNum()];
+    mCameras = new (JKRHeapToken::Dummy) Camera*[getNum()];
+    mTranslators = new (JKRHeapToken::Dummy) CamTranslatorBase*[getNum()];
 
     for (s32 i = 0; i < getNum(); i++) {
         mCameras[i] = ::sCameraTable[i].mCreateFunc();

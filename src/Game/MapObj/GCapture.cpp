@@ -108,9 +108,9 @@ namespace NrvGCapture {
 GCapture::GCapture(const char* pName)
     : LiveActor(pName), _BC(0.0f, 0.0f, 0.0f, 1.0f), mEffectPos(0, 0, 0), _D8(0, 0, 0), _E4(0, 0, 0), _F0(0, 0, 0), _FC(0, 0, 1), _108(), mTarget(),
       _110(), mCaptureRibbon(), mTractPower(), _124(), _128(0.1f), _12C(), _130(FLOAT_MAX), mGuidanceTime(), mIsStarPointerPointing(), _139() {
-    mCaptureRibbon = new GCaptureRibbon("Gキャプチャーリボン");
-    mTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
-    mSpringValue = new SpringValue(1.0f, 1.0f, 0.05f, 0.91f, 0.0f);
+    mCaptureRibbon = new (JKRHeapToken::Dummy) GCaptureRibbon("Gキャプチャーリボン");
+    mTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue(1.0f, 1.0f, 0.05f, 0.91f, 0.0f);
     _8C.identity();
 }
 

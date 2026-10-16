@@ -44,7 +44,7 @@ void LiveActorUtil_FORCE_MATCH_SDATA2() {
 namespace {
     CollisionParts* createCollisionParts(ResourceHolder* pResHolder, const char* pName, HitSensor* pSensor, const TPos3f& rMtx,
                                          MR::CollisionScaleType scaleType, s32 unk) {
-        CollisionParts* parts = new CollisionParts();
+        CollisionParts* parts = new (JKRHeapToken::Dummy) CollisionParts();
         char kcl[0x80];
         snprintf(kcl, sizeof(kcl), "%s.kcl", pName);
         char pa[0x80];
@@ -76,13 +76,13 @@ namespace {
         u32 subLength = strlen(pSubName);
         u32 actorLength = strlen(pActor->mName);
         u32 length = actorLength + subLength + strlen("（）") + 1;
-        char* pBuffer = new char[length];
+        char* pBuffer = new (JKRHeapToken::Dummy) char[length];
         snprintf(pBuffer, length, "%s（%s）", pActor->mName, pSubName);
         return pBuffer;
     }
 
     PartsModel* createSubModel(LiveActor* pActor, const char* pSubModelName, MtxPtr pMtx, int drawBufferType) NO_INLINE {
-        const char* modelResName = MR::getModelResourceHolder(pActor)->mModelResTable->getResName(0UL);
+        const char* modelResName = MR::getModelResourceHolder(pActor)->mModelResTable->getResName(0u);
 
         if (!MR::isExistSubModel(modelResName, pSubModelName)) {
             return nullptr;
@@ -92,7 +92,7 @@ namespace {
         snprintf(subModelName, sizeof(subModelName), "%s%s", modelResName, pSubModelName);
 
         const char* objName = createSubModelObjName(pActor, pSubModelName);
-        PartsModel* parts = new PartsModel(pActor, objName, subModelName, pMtx, drawBufferType, false);
+        PartsModel* parts = new (JKRHeapToken::Dummy) PartsModel(pActor, objName, subModelName, pMtx, drawBufferType, false);
         parts->initWithoutIter();
         MR::tryStartAllAnim(parts, subModelName);
         return parts;
@@ -350,7 +350,7 @@ namespace MR {
         }
 
         const char* objName = ::createSubModelObjName(pActor, "鏡内モデル");
-        MirrorActor* mirror = new MirrorActor(pActor, objName, pModelName);
+        MirrorActor* mirror = new (JKRHeapToken::Dummy) MirrorActor(pActor, objName, pModelName);
         mirror->initWithoutIter();
         return mirror;
     }
@@ -795,7 +795,7 @@ namespace MR {
     }
 
     const char* getModelResName(const LiveActor* pActor) {
-        return getModelResourceHolder(pActor)->mModelResTable->getResName(0UL);
+        return getModelResourceHolder(pActor)->mModelResTable->getResName(0u);
     }
 
     bool isExistAnim(const LiveActor* pActor, const char* pName) {
@@ -1680,7 +1680,7 @@ namespace MR {
 
     void setJointTransformLocalMtx(const LiveActor* pActor, const char* pName, MtxPtr pMtx) {
         XjointTransform* pTransform = pActor->mModelManager->getJointTransform(pName);
-        pTransform->_68 = (u32)pMtx;
+        pTransform->_68 = (uintptr_t)pMtx;
     }
 
     f32 getBckFrame(const LiveActor* pActor) {
@@ -2015,7 +2015,7 @@ namespace MR {
     }
 
     void setBinderExceptActor(LiveActor* pActor, const LiveActor* pExcept) {
-        CollisionPartsFilterActor* pFilter = new CollisionPartsFilterActor(pExcept);
+        CollisionPartsFilterActor* pFilter = new (JKRHeapToken::Dummy) CollisionPartsFilterActor(pExcept);
         pActor->mBinder->setCollisionPartsFilter(pFilter);
     }
 
@@ -2461,99 +2461,99 @@ namespace MR {
     }
 
     ModelObj* createModelObjMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObj, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObj, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjMapObjStrongLight(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjNoSilhouettedMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjNoSilhouettedMapObjStrongLight(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjIndirectMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_IndirectMapObj, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_IndirectMapObj, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjPlayerDecoration(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_PlayerDecoration, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_PlayerDecoration, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjEnemy(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_Enemy, MR::MovementType_EnemyDecoration, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_Enemy, MR::MovementType_EnemyDecoration, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjNpc(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NPC, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NPC, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjPlanetLow(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_PlanetLow, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_PlanetLow, -2, -2, false);
         pObj->initWithoutIter();
         return pObj;
     }
 
     ModelObj* createModelObjBloomModel(const char* pName, const char* pModelName, MtxPtr pMtx) {
-        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_BloomModel, -2, -2, false);
+        ModelObj* pObj = new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_BloomModel, -2, -2, false);
         pObj->initWithoutIter();
         registerDemoSimpleCastAll(pObj);
         return pObj;
     }
 
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObj, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObj, false);
         pModel->initWithoutIter();
         return pModel;
     }
 
     PartsModel* createPartsModelMapObjStrongLight(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObjStrongLight, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObjStrongLight, false);
         pModel->initWithoutIter();
         return pModel;
     }
 
     PartsModel* createPartsModelNoSilhouettedMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
         pModel->initWithoutIter();
         return pModel;
     }
 
     PartsModel* createPartsModelEnemy(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_Enemy, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_Enemy, false);
         pModel->initWithoutIter();
         return pModel;
     }
 
     PartsModel* createPartsModelNpc(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NPC, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NPC, false);
         pModel->initWithoutIter();
         pModel->_99 = true;
         return pModel;
     }
 
     PartsModel* createPartsModelIndirectNpc(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_IndirectNpc, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_IndirectNpc, false);
         pModel->initWithoutIter();
         pModel->_99 = true;
         return pModel;
@@ -2561,14 +2561,14 @@ namespace MR {
 
     PartsModel* createPartsModelEnemyAndFix(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx, const TVec3f& rPos,
                                             const TVec3f& rRot, const char* pJointName) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_Enemy, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_Enemy, false);
         pModel->initFixedPosition(rPos, rRot, pJointName);
         pModel->initWithoutIter();
         return pModel;
     }
 
     PartsModel* createPartsModelNpcAndFix(LiveActor* pHost, const char* pName, const char* pModelName, const char* pJointName) {
-        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, nullptr, MR::DrawBufferType_NPC, false);
+        PartsModel* pModel = new (JKRHeapToken::Dummy) PartsModel(pHost, pName, pModelName, nullptr, MR::DrawBufferType_NPC, false);
         pModel->initFixedPosition(pJointName);
         pModel->initWithoutIter();
         pModel->_99 = true;
@@ -2576,7 +2576,7 @@ namespace MR {
     }
 
     LodCtrl* createLodCtrlNPC(LiveActor* pActor, const JMapInfoIter& rIter) {
-        LodCtrl* pLod = new LodCtrl(pActor, rIter);
+        LodCtrl* pLod = new (JKRHeapToken::Dummy) LodCtrl(pActor, rIter);
         pLod->createLodModel(MR::DrawBufferType_NPC, MR::MovementType_NPC, -1);
         pLod->syncMaterialAnimation();
         pLod->syncJointAnimation();
@@ -2587,18 +2587,18 @@ namespace MR {
     }
 
     LodCtrl* createLodCtrlPlanet(LiveActor* pActor, const JMapInfoIter& rIter, f32 farClip, s32 lowModelType) {
-        LodCtrl* pLod = new LodCtrl(pActor, rIter);
+        LodCtrl* pLod = new (JKRHeapToken::Dummy) LodCtrl(pActor, rIter);
         pLod->createLodModel(MR::DrawBufferType_PlanetLow, lowModelType, MR::DrawBufferType_Sky);
         pLod->setDistanceToMiddleAndLow(5000.0f, 10000.0f);
         pLod->setFarClipping(farClip);
 
         if (pLod->_10 != nullptr) {
-            const char* pResName = getModelResourceHolder(pLod->_10)->mModelResTable->getResName(0UL);
+            const char* pResName = getModelResourceHolder(pLod->_10)->mModelResTable->getResName(0u);
             tryStartAllAnim(pLod->_10, pResName);
         }
 
         if (pLod->_14 != nullptr) {
-            const char* pResName = getModelResourceHolder(pLod->_14)->mModelResTable->getResName(0UL);
+            const char* pResName = getModelResourceHolder(pLod->_14)->mModelResTable->getResName(0u);
             tryStartAllAnim(pLod->_14, pResName);
         }
 
@@ -2606,18 +2606,18 @@ namespace MR {
     }
 
     LodCtrl* createLodCtrlMapObj(LiveActor* pActor, const JMapInfoIter& rIter, f32 farClip) {
-        LodCtrl* pLod = new LodCtrl(pActor, rIter);
+        LodCtrl* pLod = new (JKRHeapToken::Dummy) LodCtrl(pActor, rIter);
         pLod->createLodModel(MR::DrawBufferType_MapObj, -1, MR::DrawBufferType_PlanetLow);
         pLod->setDistanceToMiddleAndLow(5000.0f, 10000.0f);
         pLod->setFarClipping(farClip);
 
         if (pLod->_10 != nullptr) {
-            const char* pResName = getModelResourceHolder(pLod->_10)->mModelResTable->getResName(0UL);
+            const char* pResName = getModelResourceHolder(pLod->_10)->mModelResTable->getResName(0u);
             tryStartAllAnim(pLod->_10, pResName);
         }
 
         if (pLod->_14 != nullptr) {
-            const char* pResName = getModelResourceHolder(pLod->_14)->mModelResTable->getResName(0UL);
+            const char* pResName = getModelResourceHolder(pLod->_14)->mModelResTable->getResName(0u);
             tryStartAllAnim(pLod->_14, pResName);
         }
 
@@ -2626,7 +2626,7 @@ namespace MR {
 
     Flag* createMapFlag(const char* pName, const char* pInfoName, const TVec3f* pPos, const TVec3f& rRot, f32 a5, f32 a6, f32 a7, s32 a8, s32 a9,
                         f32 a10) {
-        Flag* pFlag = new Flag(pName);
+        Flag* pFlag = new (JKRHeapToken::Dummy) Flag(pName);
         pFlag->setInfoPos(pInfoName, pPos, rRot, a5, a6, a7, a8, a9, a10);
         pFlag->initWithoutIter();
 

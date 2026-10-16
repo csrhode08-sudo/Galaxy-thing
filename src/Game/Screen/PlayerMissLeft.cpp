@@ -25,8 +25,8 @@ void PlayerMissLeft::init(const JMapInfoIter& rIter) {
     initLayoutManager("PlayerLeft", 3);
     MR::createAndAddPaneCtrl(this, "CenterPlayerLeft", 1);
 
-    mLayoutAppearer = new CounterLayoutAppearer(this, TVec2f(-50.0f, 0.0f));
-    mPaneRumbler = new CountUpPaneRumbler(this, "CenterPlayerLeft");
+    mLayoutAppearer = new (JKRHeapToken::Dummy) CounterLayoutAppearer(this, TVec2f(-50.0f, 0.0f));
+    mPaneRumbler = new (JKRHeapToken::Dummy) CountUpPaneRumbler(this, "CenterPlayerLeft");
 
     initNerve(GET_NERVE(PlayerMissLeft, HostTypeNrvAppearWait));
     kill();

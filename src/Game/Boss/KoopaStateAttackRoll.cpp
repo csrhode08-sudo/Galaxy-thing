@@ -54,7 +54,7 @@ void KoopaStateAttackRoll::init() {
 
     KoopaFunction::createKoopaRollBall(mHost);
 
-    mFigureBall = new KoopaFigureBall("追跡ボール", mHost, 230.0f, &::sAttackRollParamLv3Slow);
+    mFigureBall = new (JKRHeapToken::Dummy) KoopaFigureBall("追跡ボール", mHost, 230.0f, &::sAttackRollParamLv3Slow);
     mFigureBall->initWithoutIter();
 
     kill();

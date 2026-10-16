@@ -7,7 +7,7 @@ EffectObjGravityDust::EffectObjGravityDust(const char* pName) : SimpleEffectObj(
 
 void EffectObjGravityDust::init(const JMapInfoIter& rIter) {
     SimpleEffectObj::init(rIter);
-    _9C = new GravityDustParticleCallBack(this);
+    _9C = new (JKRHeapToken::Dummy) GravityDustParticleCallBack(this);
     MR::emitEffectWithParticleCallBack(this, _8C, _9C);
     MR::setEffectLocalScale(this, _8C, mScale);
     _A0 = (mScale.x + mScale.y + mScale.z) / 3.0f;
@@ -23,7 +23,9 @@ f32 EffectObjGravityDust::getClippingRadius() const {
 }
 
 TVec3f* EffectObjGravityDust::getClippingCenterOffset() const {
-    return &(TVec3f(0.0f, 500.0f * mScale.y, 0.0f));
+    static thread_local TVec3f sOffset;
+    sOffset.set(0.0f, 500.0f * mScale.y, 0.0f);
+    return &sOffset;
 }
 
 EffectObjGravityDust::~EffectObjGravityDust() {

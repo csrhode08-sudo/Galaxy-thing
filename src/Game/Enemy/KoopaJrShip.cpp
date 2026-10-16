@@ -175,14 +175,14 @@ bool KoopaJrShip::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor*
 }
 
 void KoopaJrShip::initShells() {
-    mShellHolder = new CannonShellHolder(0x12);
+    mShellHolder = new (JKRHeapToken::Dummy) CannonShellHolder(0x12);
     CannonShellUtil::registerKoopaJrShipCannonShell(mShellHolder, 0x12);
-    mMainShellHolder = new CannonShellHolder(9);
+    mMainShellHolder = new (JKRHeapToken::Dummy) CannonShellHolder(9);
     CannonShellUtil::registerKoopaJrShipCannonMainShell(mMainShellHolder, 9);
 }
 
 void KoopaJrShip::initKoopaJr(const JMapInfoIter& rIter) {
-    mJr = new KoopaJr("クッパJr");
+    mJr = new (JKRHeapToken::Dummy) KoopaJr("クッパJr");
     TPos3f mtx;
     mtx.set(getBaseMtx());
     mtx.setTrans(mPosition);
@@ -202,7 +202,7 @@ void KoopaJrShip::initKameck(const JMapInfoIter& rIter) {
 
 void KoopaJrShip::initKiller() {
     for (HomingKiller** pActor = mKillers.begin(); pActor != mKillers.end(); pActor++) {
-        *pActor = new HomingKiller("ホーミングキラー");
+        *pActor = new (JKRHeapToken::Dummy) HomingKiller("ホーミングキラー");
         (*pActor)->initWithoutIter();
         (*pActor)->setChaseStartEndDistance(5500.0f, 6500.0f);
     }
@@ -388,11 +388,11 @@ void KoopaJrShip::shootKillersAfterDamage() {
 }
 
 bool KoopaJrShip::isExistActiveKiller() const {
-    return std::find_if(mKillers.begin(), mKillers.end(), std::not1(std::ptr_fun(&MR::isDead))) != mKillers.end();
+    return msl::find_if(mKillers.begin(), mKillers.end(), msl::not1(msl::ptr_fun(&MR::isDead))) != mKillers.end();
 }
 
 bool KoopaJrShip::isExistActiveKameck() const {
-    return std::find_if(mKamecks.begin(), mKamecks.end(), std::not1(std::ptr_fun(&MR::isDead))) != mKamecks.end();
+    return msl::find_if(mKamecks.begin(), mKamecks.end(), msl::not1(msl::ptr_fun(&MR::isDead))) != mKamecks.end();
 }
 
 void KoopaJrShip::shootMainShells() {
@@ -769,7 +769,7 @@ void KoopaJrShip::exeTurnFront() {
         }
 
         mKamecks[0]->makeActorDeadForce();
-        std::for_each(mKillers.begin(), mKillers.end(), std::mem_func(&HomingKiller::makeActorDead));
+        msl::for_each(mKillers.begin(), mKillers.end(), msl::mem_func(&HomingKiller::makeActorDead));
     }
 
     MR::startLevelSound(this, "SE_BM_LV_KOOPAJR_SHIP_3RD_DEMO");

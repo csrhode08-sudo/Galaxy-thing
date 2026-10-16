@@ -11,7 +11,7 @@ BossStinkBugBombHolder::BossStinkBugBombHolder(LiveActor* pHost)
     BossStinkBugBomb* pBomb;
 
     for (s32 i = 0; i < ::sMaxBossStinkBugBomb; i++) {
-        pBomb = new BossStinkBugBomb("ボスカメムシ爆弾");
+        pBomb = new (JKRHeapToken::Dummy) BossStinkBugBomb("ボスカメムシ爆弾");
         pBomb->initWithoutIter();
 
         MR::setBinderExceptActor(pBomb, pHost);

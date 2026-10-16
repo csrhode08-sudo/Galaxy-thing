@@ -184,7 +184,7 @@ void Tico::init(const JMapInfoIter& rIter) {
 
     switch (_15C) {
     case 5:
-        mDemoGetPower = new TicoDemoGetPower(this, rIter);
+        mDemoGetPower = new (JKRHeapToken::Dummy) TicoDemoGetPower(this, rIter);
         setNerve(GET_NERVE(Tico, TicoNrvSpin0));
         break;
     case 1:
@@ -305,7 +305,7 @@ void Tico::exeReaction() {
 void Tico::exeDelight() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, _13C);
-        MR::resetAndForwardNode(_174, MR::getRandom(0l, 5l));
+        MR::resetAndForwardNode(_174, MR::getRandom(0, 5));
     }
 
     MR::tryTalkForce(_174);

@@ -46,10 +46,10 @@ public:
     class CameraManStack {
     public:
         inline CameraManStack() {
-            mElements = new CameraMan*[CAMERA_MAN_CAPACITY];
+            mElements = new (JKRHeapToken::Dummy) CameraMan*[CAMERA_MAN_CAPACITY];
             mCapacity = CAMERA_MAN_CAPACITY;
             mCount = 0;
-            mElements = new CameraMan*[CAMERA_MAN_CAPACITY];
+            mElements = new (JKRHeapToken::Dummy) CameraMan*[CAMERA_MAN_CAPACITY];
         }
 
         CameraMan** mElements;

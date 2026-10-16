@@ -49,10 +49,10 @@ BossStinkBug::BossStinkBug(const char* pName)
     : LiveActor(pName), _8C(), _94(), _98(), _CC(), mActionSequencer(), _D4(), mBombLauncher(), _DC(0.0f, 0.0f, 0.0f, 1.0f), _EC(0.0f, 0.0f, 1.0f),
       _F8(0.0f, 0.0f, 0.0f), _104(-1), _108(0.15f), _10C(1.0f), _110(), _111() {
     _9C.identity();
-    _90 = new GroundChecker*[6];
+    _90 = new (JKRHeapToken::Dummy) GroundChecker*[6];
 
     for (int i = 0; i < 6; i++) {
-        _90[i] = new GroundChecker("地面チェック", 30.0f, 0.0f);
+        _90[i] = new (JKRHeapToken::Dummy) GroundChecker("地面チェック", 30.0f, 0.0f);
         _90[i]->makeActorDead();
         MR::setBinderExceptActor(_90[i], this);
     }
@@ -93,11 +93,11 @@ void BossStinkBug::init(const JMapInfoIter& rIter) {
     initCamera(rIter);
     MR::initShadowFromCSV(this, "Shadow");
     MR::excludeCalcShadowToActorAll(this, this);
-    _98 = new ActorJointCtrl(this);
-    MR::addBaseMatrixFollowTarget(this, rIter, &_9C, new BossStinkBugFollowValidater(this));
+    _98 = new (JKRHeapToken::Dummy) ActorJointCtrl(this);
+    MR::addBaseMatrixFollowTarget(this, rIter, &_9C, new (JKRHeapToken::Dummy) BossStinkBugFollowValidater(this));
     MR::invalidateClipping(this);
-    mActionSequencer = new BossStinkBugActionSequencer(this, rIter);
-    _94 = new BossStinkBugBombHolder(this);
+    mActionSequencer = new (JKRHeapToken::Dummy) BossStinkBugActionSequencer(this, rIter);
+    _94 = new (JKRHeapToken::Dummy) BossStinkBugBombHolder(this);
     _D4 = MR::createPartsModelMapObj(this, "羽モデル", "BossStinkBugWing", nullptr);
     _D4->initFixedPosition("Switch");
     mBombLauncher = MR::createPartsModelMapObj(this, "ボム発射口", "BossStinkBugBombLauncher", nullptr);
@@ -148,7 +148,7 @@ void BossStinkBug::initSensor() {
 }
 
 void BossStinkBug::initCollision() {
-    _8C = new CollisionParts*[3];
+    _8C = new (JKRHeapToken::Dummy) CollisionParts*[3];
 
     for (int i = 0; i < 3; i++) {
         _8C[i] = MR::createCollisionPartsFromLiveActor(this, ::sCollisionInfo[i]._0, getSensor(::sCollisionInfo[i]._8),

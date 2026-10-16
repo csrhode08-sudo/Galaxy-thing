@@ -110,8 +110,8 @@ void TakoHei::init(const JMapInfoIter& rIter) {
     initSensor();
     MR::initShadowVolumeSphere(this, ::sShadowRadius);
     initNerve(GET_NERVE(TakoHei, TakoHeiNrvWait));
-    _8C = new AnimScaleController(nullptr);
-    _90 = new WalkerStateBindStarPointer(this, _8C);
+    _8C = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    _90 = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, _8C);
 
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);

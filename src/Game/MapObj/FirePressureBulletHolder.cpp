@@ -22,7 +22,7 @@ FirePressureBulletHolder::~FirePressureBulletHolder() {
 
 void FirePressureBulletHolder::init(const JMapInfoIter& rIter) {
     for (u32 i = 0; i < ARRAY_SIZE(mBullet); i++) {
-        mBullet[i] = new FirePressureBullet("ファイアプレッシャーの弾");
+        mBullet[i] = new (JKRHeapToken::Dummy) FirePressureBullet("ファイアプレッシャーの弾");
         mBullet[i]->initWithoutIter();
     }
 }

@@ -53,5 +53,5 @@ CameraTargetObj* CameraCubePlanet::calc() {
 }
 
 CamTranslatorBase* CameraCubePlanet::createTranslator() {
-    return new CamTranslatorCubePlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorCubePlanet(this);
 }

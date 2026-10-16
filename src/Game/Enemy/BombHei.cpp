@@ -171,10 +171,10 @@ void BombHei::init(const JMapInfoIter& rIter) {
 
     mBodyJoint = MR::createJointDelegatorWithNullChildFunc(this, &BombHei::calcJoint, "Body");
 
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
 
-    mBindStarPointerState = new WalkerStateBindStarPointer(this, mScaleController);
+    mBindStarPointerState = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 
     appear();
 }

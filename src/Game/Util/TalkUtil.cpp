@@ -36,13 +36,13 @@ namespace MR {
     }
 
     TalkMessageCtrl* createTalkCtrl(LiveActor* pActor, const JMapInfoIter& rIter, const char* pMessageID, const TVec3f& rOffset, MtxPtr pMtx) {
-        TalkMessageCtrl* pCtrl = new TalkMessageCtrl(pActor, rOffset, pMtx);
+        TalkMessageCtrl* pCtrl = new (JKRHeapToken::Dummy) TalkMessageCtrl(pActor, rOffset, pMtx);
         pCtrl->createMessage(rIter, pMessageID);
         return pCtrl;
     }
 
     TalkMessageCtrl* createTalkCtrlDirect(LiveActor* pActor, const JMapInfoIter& rIter, const char* pMessageID, const TVec3f& rOffset, MtxPtr pMtx) {
-        TalkMessageCtrl* pCtrl = new TalkMessageCtrl(pActor, rOffset, pMtx);
+        TalkMessageCtrl* pCtrl = new (JKRHeapToken::Dummy) TalkMessageCtrl(pActor, rOffset, pMtx);
         pCtrl->createMessageDirect(rIter, pMessageID);
         return pCtrl;
     }

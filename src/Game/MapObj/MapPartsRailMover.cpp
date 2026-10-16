@@ -48,7 +48,7 @@ void MapPartsRailMover::init(const JMapInfoIter& rIter) {
 
     _28.set(mHost->mPosition);
     _34 = MR::getRailCoord(mHost);
-    mRailPointPassChecker = new MapPartsRailPointPassChecker(mHost);
+    mRailPointPassChecker = new (JKRHeapToken::Dummy) MapPartsRailPointPassChecker(mHost);
     mRailPointPassChecker->init(rIter);
     initNerve(GET_NERVE(MapPartsRailMover, HostTypeWait));
 }

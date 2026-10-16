@@ -177,10 +177,10 @@ namespace MR {
 FurDrawManager::FurDrawManager(u8 capacity) : NameObj("ファー描画マネージャ") {
     mCounts[0] = 0;
     mCounts[1] = 0;
-    mFurCtrls[0] = new FurCtrl*[capacity];
-    mFurCtrls[1] = new FurCtrl*[capacity];
+    mFurCtrls[0] = new (JKRHeapToken::Dummy) FurCtrl*[capacity];
+    mFurCtrls[1] = new (JKRHeapToken::Dummy) FurCtrl*[capacity];
     mCapacity = capacity;
-    mBank = new FurBank;
+    mBank = new (JKRHeapToken::Dummy) FurBank;
     MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_Fur);
 }
 
@@ -191,10 +191,10 @@ void FurCtrl::setupFur(J3DModel* pModel, ResTIMG* pLength, ResTIMG* pIndirect, R
     mBodyMap = pBody;
     mIndirectMap = pIndirect;
     mShapeIndex = shape;
-    mShader = new CShader(pData, pLength);
+    mShader = new (JKRHeapToken::Dummy) CShader(pData, pLength);
     mShader->makeIndexData(pData->getShapeNodePointer(shape));
     mShader->checkBorderVtx(pData, shape);
-    mDrawer = new FurDrawer(numLayers, pBody, pIndirect);
+    mDrawer = new (JKRHeapToken::Dummy) FurDrawer(numLayers, pBody, pIndirect);
     s32 componentSize;
 
     switch (mShader->_24) {
@@ -207,12 +207,12 @@ void FurCtrl::setupFur(J3DModel* pModel, ResTIMG* pLength, ResTIMG* pIndirect, R
     }
 
     mNumLayers = numLayers;
-    mLayerModels = new J3DModel*[numLayers];
+    mLayerModels = new (JKRHeapToken::Dummy) J3DModel*[numLayers];
 
     for (s32 i = 0; i < mNumLayers; i++) {
         char name[16];
         sprintf(name, "レイヤ %d", i);
-        J3DModel2* pLayer = new J3DModel2(mModel);
+        J3DModel2* pLayer = new (JKRHeapToken::Dummy) J3DModel2(mModel);
         pLayer->setVtxShader(mShader, componentSize);
         mLayerModels[i] = pLayer;
     }
@@ -230,12 +230,12 @@ void FurCtrl::setupFurClone(J3DModel* pModel, FurCtrl* pOther) {
     mShader = nullptr;
     mDrawer = pOther->mDrawer;
     mNumLayers = pOther->mNumLayers;
-    mLayerModels = new J3DModel*[mNumLayers];
+    mLayerModels = new (JKRHeapToken::Dummy) J3DModel*[mNumLayers];
 
     for (u32 i = 0; i < mNumLayers; i++) {
         char name[32];
         sprintf(name, "レイヤ(コピー) %d", i);
-        J3DModel2* pLayer = new J3DModel2(mModel);
+        J3DModel2* pLayer = new (JKRHeapToken::Dummy) J3DModel2(mModel);
         *pLayer->getVertexBuffer() = *pOther->mLayerModels[i]->getVertexBuffer();
         mLayerModels[i] = pLayer;
     }

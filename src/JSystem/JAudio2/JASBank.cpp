@@ -38,7 +38,7 @@ JASChannel* JASBank::noteOn(JASBank const* pBank, int progNo, u8 pitch, u8 veloc
         return nullptr;
     }
 
-    JASChannel* channel = new JASChannel(pCallback, pChannelMgr);
+    JASChannel* channel = new (JKRHeapToken::Dummy) JASChannel(pCallback, pChannelMgr);
     if (!channel) {
         return nullptr;
     }
@@ -76,7 +76,7 @@ JASChannel* JASBank::noteOnOsc(int progNo, u8 pitch, u8 velocity, u16 priority, 
                                void* param_5) {
     static const JASOscillator::Data OSC_ENV = {0, 1.0f, nullptr, OSC_RELEASE_TABLE, 1.0f, 0.0f};
 
-    JASChannel* channel = new JASChannel(param_4, param_5);
+    JASChannel* channel = new (JKRHeapToken::Dummy) JASChannel(param_4, param_5);
     if (channel == nullptr) {
         return nullptr;
     }

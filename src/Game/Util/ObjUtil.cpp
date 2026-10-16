@@ -420,7 +420,7 @@ void MR::registerPreDrawFunction(const MR::FunctorBase& rFunc, int drawType) {
 NameObjAdaptor* MR::createDrawAdaptor(const char* pName, const MR::FunctorBase& rFunctor) {
     NameObjAdaptor* pAdaptor;
 
-    pAdaptor = new NameObjAdaptor(pName);
+    pAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor(pName);
     pAdaptor->connectToDraw(rFunctor);
 
     return pAdaptor;
@@ -429,7 +429,7 @@ NameObjAdaptor* MR::createDrawAdaptor(const char* pName, const MR::FunctorBase& 
 NameObjAdaptor* MR::createAdaptorAndConnectToDrawBloomModel(const char* pName, const MR::FunctorBase& rFunctor) {
     NameObjAdaptor* pAdaptor;
 
-    pAdaptor = new NameObjAdaptor(pName);
+    pAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor(pName);
     pAdaptor->connectToDraw(rFunctor);
 
     MR::connectToScene(pAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomModel);
@@ -440,7 +440,7 @@ NameObjAdaptor* MR::createAdaptorAndConnectToDrawBloomModel(const char* pName, c
 void MR::listenNameObjStageSwitchOnAppear(const NameObj* pObj, const StageSwitchCtrl* pSwitchCtrl, const MR::FunctorBase& rOnFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
 
     MR::getSwitchWatcherHolder()->joinSwitchEventListenerAppear(pSwitchCtrl, pListener);
@@ -450,7 +450,7 @@ void MR::listenNameObjStageSwitchOnOffAppear(const NameObj* pObj, const StageSwi
                                              const MR::FunctorBase& rOffFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
     pListener->setOffFunctor(rOffFunctor);
 
@@ -460,7 +460,7 @@ void MR::listenNameObjStageSwitchOnOffAppear(const NameObj* pObj, const StageSwi
 void MR::listenNameObjStageSwitchOnA(const NameObj* pObj, const StageSwitchCtrl* pSwitchCtrl, const MR::FunctorBase& rOnFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
 
     MR::getSwitchWatcherHolder()->joinSwitchEventListenerA(pSwitchCtrl, pListener);
@@ -470,7 +470,7 @@ void MR::listenNameObjStageSwitchOnOffA(const NameObj* pObj, const StageSwitchCt
                                         const MR::FunctorBase& rOffFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
     pListener->setOffFunctor(rOffFunctor);
 
@@ -480,7 +480,7 @@ void MR::listenNameObjStageSwitchOnOffA(const NameObj* pObj, const StageSwitchCt
 void MR::listenNameObjStageSwitchOnB(const NameObj* pObj, const StageSwitchCtrl* pSwitchCtrl, const MR::FunctorBase& rOnFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
 
     MR::getSwitchWatcherHolder()->joinSwitchEventListenerB(pSwitchCtrl, pListener);
@@ -489,7 +489,7 @@ void MR::listenNameObjStageSwitchOnB(const NameObj* pObj, const StageSwitchCtrl*
 void MR::listenNameObjStageSwitchOffB(const NameObj* pObj, const StageSwitchCtrl* pSwitchCtrl, const MR::FunctorBase& rOffFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOffFunctor(rOffFunctor);
 
     MR::getSwitchWatcherHolder()->joinSwitchEventListenerB(pSwitchCtrl, pListener);
@@ -499,7 +499,7 @@ void MR::listenNameObjStageSwitchOnOffB(const NameObj* pObj, const StageSwitchCt
                                         const MR::FunctorBase& rOffFunctor) {
     SwitchEventFunctorListener* pListener;
 
-    pListener = new SwitchEventFunctorListener();
+    pListener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
     pListener->setOnFunctor(rOnFunctor);
     pListener->setOffFunctor(rOffFunctor);
 
@@ -561,7 +561,7 @@ namespace {
             return nullptr;
         }
 
-        JMapInfo* pInfo = new JMapInfo();
+        JMapInfo* pInfo = new (JKRHeapToken::Dummy) JMapInfo();
         pInfo->attach(pHolder->mFileInfoTable->getRes(buf));
 
         return pInfo;
@@ -799,7 +799,7 @@ void MR::initStarPieceGetCSSound() {
 BenefitItemOneUp* MR::createKinokoOneUp() {
     BenefitItemOneUp* pKinokoOneUp;
 
-    pKinokoOneUp = new BenefitItemOneUp("１ＵＰキノコ(create)");
+    pKinokoOneUp = new (JKRHeapToken::Dummy) BenefitItemOneUp("１ＵＰキノコ(create)");
     pKinokoOneUp->initWithoutIter();
     pKinokoOneUp->makeActorDead();
 
@@ -829,7 +829,7 @@ void MR::appearKinokoOneUpPop(BenefitItemObj* pBenefitObj, MtxPtr pMtx, f32 spee
 BenefitItemLifeUp* MR::createKinokoSuper() {
     BenefitItemLifeUp* pKinokoSuper;
 
-    pKinokoSuper = new BenefitItemLifeUp("スーパーキノコ");
+    pKinokoSuper = new (JKRHeapToken::Dummy) BenefitItemLifeUp("スーパーキノコ");
     pKinokoSuper->initWithoutIter();
     pKinokoSuper->makeActorDead();
 

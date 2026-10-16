@@ -10,11 +10,11 @@
 
 AudRhythmMeSystem::AudRhythmMeSystem(JKRHeap* pHeap, u32 numSeqParsers, bool hasMgr)
     : JASGlobalInstance< AudRhythmMeSystem >(true), mBgmIdx(), _C(), mMeMgr() {
-    mSeqParsers = new (pHeap, 0) AudRhythmSeqParser*[numSeqParsers];
-    mRhythmHolders = new (pHeap, 0) AudRhythmHolder[numSeqParsers];
+    mSeqParsers = new (JKRHeapToken::Dummy, pHeap, 0) AudRhythmSeqParser*[numSeqParsers];
+    mRhythmHolders = new (JKRHeapToken::Dummy, pHeap, 0) AudRhythmHolder[numSeqParsers];
 
     for (s32 i = 0; i < numSeqParsers; i++) {
-        mSeqParsers[i] = new (pHeap, 0) AudRhythmSeqParser();
+        mSeqParsers[i] = new (JKRHeapToken::Dummy, pHeap, 0) AudRhythmSeqParser();
         mRhythmHolders[i].mSeqParser = mSeqParsers[i];
     }
 
@@ -25,7 +25,7 @@ AudRhythmMeSystem::AudRhythmMeSystem(JKRHeap* pHeap, u32 numSeqParsers, bool has
     }
 
     if (hasMgr) {
-        mMeMgr = new (pHeap, 0) AudMeMgr();
+        mMeMgr = new (JKRHeapToken::Dummy, pHeap, 0) AudMeMgr();
     }
 }
 

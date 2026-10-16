@@ -65,14 +65,14 @@ void Koopa::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     initHitSensor(32);
 
-    mSensorCtrl = new KoopaSensorCtrl(this);
+    mSensorCtrl = new (JKRHeapToken::Dummy) KoopaSensorCtrl(this);
     mSensorCtrl->initSensor();
 
     initBinder(200.0f, 200.0f, 0);
     initEffectKeeper(0, nullptr, false);
     initSound(16, false);
 
-    mJointCtrl = new ActorJointCtrl(this);
+    mJointCtrl = new (JKRHeapToken::Dummy) ActorJointCtrl(this);
     KoopaFunction::endFaceCtrlDirect(this);
 
     MR::initShadowFromCSV(this, "Shadow");
@@ -80,7 +80,7 @@ void Koopa::init(const JMapInfoIter& rIter) {
 
     MR::onCalcGravity(this);
 
-    mParts = new KoopaParts(this, rIter);
+    mParts = new (JKRHeapToken::Dummy) KoopaParts(this, rIter);
 
     mSequencer->init(this, rIter);
 

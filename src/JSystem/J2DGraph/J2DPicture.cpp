@@ -32,7 +32,7 @@ void J2DPicture::private_initiate(const ResTIMG* timg, const ResTLUT* tlut) {
 
     if (timg != NULL) {
         if (mTexture[0] == NULL) {
-            mTexture[0] = new JUTTexture(timg, 0);
+            mTexture[0] = new (JKRHeapToken::Dummy) JUTTexture(timg, 0);
             if (mTexture[0] != NULL) {
                 mTextureNum++;
                 // SMG1 change -- mask of 2 to 0xE
@@ -48,7 +48,7 @@ void J2DPicture::private_initiate(const ResTIMG* timg, const ResTLUT* tlut) {
 
     mPalette = NULL;
     if (tlut && mPalette == NULL) {
-        mPalette = new JUTPalette(GX_TLUT0, const_cast< ResTLUT* >(tlut));
+        mPalette = new (JKRHeapToken::Dummy) JUTPalette(GX_TLUT0, const_cast< ResTLUT* >(tlut));
         if (mTexture[0] != NULL) {
             mTexture[0]->attachPalette(mPalette);
         }
@@ -82,7 +82,7 @@ bool J2DPicture::prepareTexture(u8 param_0) {
         }
 
         if (mTexture[i] == NULL) {
-            JUTTexture* tmp = new JUTTexture();
+            JUTTexture* tmp = new (JKRHeapToken::Dummy) JUTTexture();
             mTexture[i] = tmp;
 
             if (mTexture[i] == NULL) {
@@ -106,7 +106,7 @@ bool J2DPicture::insert(ResTIMG const* img, JUTPalette* palette, u8 param_2, f32
 
     JUTTexture* var_r31;
     if (mTexture[mTextureNum] == NULL) {
-        var_r31 = new JUTTexture(img, var_r26);
+        var_r31 = new (JKRHeapToken::Dummy) JUTTexture(img, var_r26);
 
         if (palette != NULL) {
             var_r31->storeTIMG(img, palette);

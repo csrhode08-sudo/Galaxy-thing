@@ -32,11 +32,11 @@ WaterAreaHolder::WaterAreaHolder()
         mUseBloom = true;
     }
 
-    mOceanBowls = new OceanBowl*[::sAreaNumMax];
-    mOceanRings = new OceanRing*[::sAreaNumMax];
-    mOceanSpheres = new OceanSphere*[::sAreaNumMax];
-    mWhirlPools = new WhirlPool*[::sAreaNumMax];
-    mWhirlPoolAccelerators = new WhirlPoolAccelerator*[::sAreaNumMax];
+    mOceanBowls = new (JKRHeapToken::Dummy) OceanBowl*[::sAreaNumMax];
+    mOceanRings = new (JKRHeapToken::Dummy) OceanRing*[::sAreaNumMax];
+    mOceanSpheres = new (JKRHeapToken::Dummy) OceanSphere*[::sAreaNumMax];
+    mWhirlPools = new (JKRHeapToken::Dummy) WhirlPool*[::sAreaNumMax];
+    mWhirlPoolAccelerators = new (JKRHeapToken::Dummy) WhirlPoolAccelerator*[::sAreaNumMax];
 
     for (s32 idx = 0; idx < ::sAreaNumMax; idx++) {
         mOceanBowls[idx] = nullptr;
@@ -47,7 +47,7 @@ WaterAreaHolder::WaterAreaHolder()
     }
 
     MR::connectToSceneScreenEffectMovement(this);
-    mCameraFilter = new WaterCameraFilter();
+    mCameraFilter = new (JKRHeapToken::Dummy) WaterCameraFilter();
     mCameraFilter->initWithoutIter();
 }
 

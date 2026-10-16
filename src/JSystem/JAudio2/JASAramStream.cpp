@@ -2,7 +2,7 @@
 #include "JSystem/JAudio2/JASAiCtrl.hpp"
 #include "JSystem/JAudio2/JASChannel.hpp"
 #include "JSystem/JAudio2/JASCriticalSection.hpp"
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
+#include "JSystem/JAudio2/JASDspInterface.hpp"
 #include "JSystem/JAudio2/JASDriverIF.hpp"
 #include "JSystem/JAudio2/JASDvdThread.hpp"
 #include "JSystem/JKernel/JKRAram.hpp"
@@ -28,7 +28,7 @@ void JASAramStream::initSystem(u32 block_size, u32 channel_max) {
             sLoadThread = JASDvd::getThreadPointer();
         }
 
-        sReadBuffer = new (JASDram, 0x20) u8[(block_size + 0x20) * channel_max];
+        sReadBuffer = new (JKRHeapToken::Dummy, JASDram, 0x20) u8[(block_size + 0x20) * channel_max];
         sBlockSize = block_size;
         sChannelMax = channel_max;
         UNK_BOOL_A = false;
@@ -672,7 +672,7 @@ void JASAramStream::channelStart() {
         // probably a fake match, this should be set in the JASWaveInfo constructor
         static u32 const one = 1;
         wave_info._24 = &one;
-        JASChannel* jc = new JASChannel(channelCallback, this);
+        JASChannel* jc = new (JKRHeapToken::Dummy) JASChannel(channelCallback, this);
         jc->setPriority(0x7f7f);
         for (u32 j = 0; j < 6; j++) {
             jc->setMixConfig(j, _1DC[j]);

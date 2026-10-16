@@ -14,7 +14,7 @@ SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder"), mSw
 void SwitchWatcherHolder::movement() {
     // not quite sure what is going on here
     // but it seems to just call movement on all watchers
-    std::for_each(mSwitchWatcher.begin(), mSwitchWatcher.end(), std::mem_func(&SwitchWatcher::movement));
+    msl::for_each(mSwitchWatcher.begin(), mSwitchWatcher.end(), msl::mem_func(&SwitchWatcher::movement));
 }
 
 void SwitchWatcherHolder::joinSwitchEventListenerA(const StageSwitchCtrl* pCtrl, SwitchEventListener* pListener) {
@@ -43,7 +43,7 @@ void SwitchWatcherHolder::joinSwitchEventListener(const StageSwitchCtrl* pCtrl, 
     SwitchWatcher* pSwitchWatcher = findSwitchWatcher(pCtrl);
 
     if (pSwitchWatcher == nullptr) {
-        pSwitchWatcher = new SwitchWatcher(pCtrl);
+        pSwitchWatcher = new (JKRHeapToken::Dummy) SwitchWatcher(pCtrl);
         addSwitchWatcher(pSwitchWatcher);
     }
 

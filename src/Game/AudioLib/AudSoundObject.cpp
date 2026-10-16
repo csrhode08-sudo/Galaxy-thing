@@ -16,7 +16,7 @@ AudSoundObject::AudSoundObject(TVec3f* pPos, u8 numHandles, JKRHeap* pHeap)
     : JAUSoundObject(pPos, numHandles, pHeap), JKRDisposer(), mSeVersion(0), mMapCode(0), mMapCodeExtra(0), mHashDatas(nullptr), mNumSounds(0) {
     mNumHandles = numHandles;
     if (mNumHandles > 0) {
-        mHashDatas = new AudSoundObjHashData[numHandles];
+        mHashDatas = new (JKRHeapToken::Dummy) AudSoundObjHashData[numHandles];
 
         for (s32 idx = 0; idx < mNumHandles; idx++) {
             mHashDatas[idx].init();

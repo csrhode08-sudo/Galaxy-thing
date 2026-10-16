@@ -59,14 +59,14 @@ void JellyfishElectric::init(const JMapInfoIter& rIter) {
     MR::addHitSensorEnemy(this, "body", 8, 350.0f, sensorOffs);
     initBinder(400.0f, 0.0f, 0);
     MR::offBind(this);
-    mController = new AnimScaleController(nullptr);
+    mController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mController->setParamTight();
     initEffectKeeper(2, nullptr, false);
     MR::addEffectHitNormal(this, nullptr);
     initSound(4, false);
     MR::initStarPointerTarget(this, 400.0f, TVec3f(0.0f, 0.0f, 0.0f));
-    mController = new AnimScaleController(nullptr);
-    mBindStarPtr = new WalkerStateBindStarPointer(this, mController);
+    mController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPtr = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mController);
     MR::initShadowVolumeSphere(this, 230.0f);
     MR::declareCoin(this, 1);
 
@@ -330,7 +330,7 @@ bool JellyfishElectric::selectNerveAfterWait() {
         s32 rand;
 
         if (isNerve(GET_NERVE(JellyfishElectric, JellyfishElectricNrvWait))) {
-            rand = MR::getRandom(0l, 3l);
+            rand = MR::getRandom(0, 3);
         } else {
             rand = 0;
         }

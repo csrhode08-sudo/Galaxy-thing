@@ -334,7 +334,7 @@ namespace MR {
         if (chunk != nullptr) {
             chunk->setCameraType("CAM_TYPE_ANIM", getCameraDirector()->mHolder);
             CameraGeneralParam* param = chunk->mGeneralParam;
-            chunk->mGeneralParam->mNum1 = reinterpret_cast< s32 >(pAnimData);
+            chunk->mGeneralParam->mAnimData = reinterpret_cast< const u8* >(pAnimData);
             chunk->mGeneralParam->mDist = 1.0f;
             chunk->getGeneralParam()->mNum2 = CameraAnim::getAnimFrame(reinterpret_cast< u8* >(pAnimData));
             chunk->_64 = true;
@@ -514,7 +514,7 @@ namespace {
         char buff[256];
         snprintf(buff, 256, "%s-%d", pNameObj->getName(), id);
 
-        char* out = new char[strlen(buff) + 1];
+        char* out = new (JKRHeapToken::Dummy) char[strlen(buff) + 1];
         strcpy(out, buff);
         return out;
     }

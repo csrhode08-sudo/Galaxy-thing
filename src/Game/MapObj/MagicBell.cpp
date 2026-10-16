@@ -38,8 +38,8 @@ void MagicBell::init(const JMapInfoIter& rIter) {
     mtx.identity();
     MR::makeMtxTR(mtx.toMtxPtr(), this);
     MR::calcGravity(this);
-    mBellSwinger = new Swinger(&mPosition, mtx.toMtxPtr(), 100.0f, 0.60f, 0.99f, &mGravity);
-    mBellRodSwinger = new Swinger(&mPosition, mtx.toMtxPtr(), 50.0f, 0.3f, 0.95f, &mGravity);
+    mBellSwinger = new (JKRHeapToken::Dummy) Swinger(&mPosition, mtx.toMtxPtr(), 100.0f, 0.60f, 0.99f, &mGravity);
+    mBellRodSwinger = new (JKRHeapToken::Dummy) Swinger(&mPosition, mtx.toMtxPtr(), 50.0f, 0.3f, 0.95f, &mGravity);
     makeActorAppeared();
 }
 

@@ -190,14 +190,14 @@ void RingBeam::init(const JMapInfoIter& rIter) {
     mtx.getTrans(_c0);
     mtx.getTrans(_cc);
     if (_9d) {
-        _a4 = new ModelObj("影モデル", "JumpBeamerBeamShadow", nullptr, MR::DrawBufferType_IndirectEnemy, MR::MovementType_Enemy,
+        _a4 = new (JKRHeapToken::Dummy) ModelObj("影モデル", "JumpBeamerBeamShadow", nullptr, MR::DrawBufferType_IndirectEnemy, MR::MovementType_Enemy,
                            MR::CalcAnimType_Enemy, false);
         _a4->initWithoutIter();
         _a4->mPosition.set(this->mPosition);
         _a4->mRotation.set(this->mRotation);
         _a4->mScale.set(this->mScale);
     } else {
-        _a0 = new RingBeamShadowDrawer(this);
+        _a0 = new (JKRHeapToken::Dummy) RingBeamShadowDrawer(this);
     }
     mBloomModel = MR::createModelObjBloomModel("リングビームブルーム", "JumpBeamerBeamBloom", getBaseMtx());
     MR::invalidateClipping(mBloomModel);

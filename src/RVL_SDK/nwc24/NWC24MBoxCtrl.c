@@ -1,7 +1,7 @@
 #include "revolution/nwc24.h"
 #include "revolution/nwc24/NWC24Internal.h"
 
-#include <mem.h>
+#include <cstring>
 
 #define MBOX_CTRL_MAGIC FOURCC('W', 'c', 'T', 'f')
 #define MBOX_CTRL_VERSION 4

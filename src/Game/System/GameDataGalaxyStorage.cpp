@@ -25,7 +25,7 @@ bool GameDataSomeScenarioAccessor::isAlreadyVisited() const {
 }
 
 s32 GameDataSomeScenarioAccessor::getMaxCoinNum() const {
-    return MR::clamp(mSomeGalaxyStorage->getMaxCoinNum(mScenarioNum - 1), 0, 999L);
+    return MR::clamp(mSomeGalaxyStorage->getMaxCoinNum(mScenarioNum - 1), 0, 999);
 }
 
 void GameDataSomeScenarioAccessor::setPowerStarFlag(bool val) {
@@ -39,7 +39,7 @@ void GameDataSomeScenarioAccessor::setFlagAlreadyVisited(bool val) {
 void GameDataSomeScenarioAccessor::updateMaxCoinNum(int coinNum) {
     if (getMaxCoinNum() < coinNum) {
         s32 scenarioNo = mScenarioNum - 1;
-        u16 maxCoins = MR::clamp(coinNum, 0, 999L);
+        u16 maxCoins = MR::clamp(coinNum, 0, 999);
         mSomeGalaxyStorage->setMaxCoinNum(scenarioNo, maxCoins);
     }
 }
@@ -111,14 +111,14 @@ s32 GameDataSomeGalaxyStorage::deserialize(const BinaryDataContentAccessor& rAcc
 }
 
 GameDataAllGalaxyStorage::GameDataAllGalaxyStorage() : mHeaderSerializer(nullptr) {
-    mHeaderSerializer = new BinaryDataContentHeaderSerializer(new u8[32], 32);
+    mHeaderSerializer = new (JKRHeapToken::Dummy) BinaryDataContentHeaderSerializer(new (JKRHeapToken::Dummy) u8[32], 32);
     mSomeGalaxyStorages.init(64);
 
     ScenarioDataIter iter = MR::makeBeginScenarioDataIter();
     while (!iter.isEnd()) {
         GalaxyStatusAccessor accessor = iter.makeAccessor();
         if (accessor.getPowerStarNum() != 0) {
-            mSomeGalaxyStorages.push_back(new GameDataSomeGalaxyStorage(accessor));
+            mSomeGalaxyStorages.push_back(new (JKRHeapToken::Dummy) GameDataSomeGalaxyStorage(accessor));
         }
         iter.goNext();
     }

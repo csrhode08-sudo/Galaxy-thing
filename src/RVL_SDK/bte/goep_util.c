@@ -4,7 +4,7 @@
  * headers
  */
 
-#include <mem.h>
+#include <cstring>
 
 #include "macros.h"  // ARRAY_LENGTH
 

@@ -34,12 +34,12 @@ void PunchingKinoko::init(const JMapInfoIter& rIter) {
     MR::calcGravity(this);
     _9C.set(mPosition);
 
-    mGroundChecker = new GroundChecker("頭コリジョン", 70.0f, 0.0f);
+    mGroundChecker = new (JKRHeapToken::Dummy) GroundChecker("頭コリジョン", 70.0f, 0.0f);
     MR::calcPositionUpOffset(&mGroundChecker->mPosition, this, 130.0f);
     MR::resetPosition(mGroundChecker);
     MR::onCalcGravity(mGroundChecker);
 
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
 
     TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
     MR::initStarPointerTargetAtPos(this, 70.0f, groundCheckerPos, TVec3f(0, 0, 0));

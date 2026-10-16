@@ -563,7 +563,7 @@ void MarioTeresa::procControl() {
 void MarioActor::runTeresaBaseAnimation() {
     if (!mMario->isStatusActive(MarioStatus_Wait) && !_9B8->isRun("基本")) {
         _9B8->changeAnimation("基本");
-        _9B4 = MR::getRandom(60L, 180L);
+        _9B4 = MR::getRandom(60, 180);
         MR::startBtp(_9A4, "blink");
     }
 }
@@ -580,7 +580,7 @@ void MarioActor::changeTeresaAnimation(const char* pAnimation, s32 interpolation
     }
 
     if (MR::isEqualString(pAnimation, "wait") || MR::isEqualString(pAnimation, "run")) {
-        _9B4 = MR::getRandom(60L, 180L);
+        _9B4 = MR::getRandom(60, 180);
         MR::stopBtp(_9A4);
         return;
     }
@@ -684,7 +684,7 @@ void MarioActor::updateTeresaAnimation() {
     if (_9B4) {
         _9B4--;
         if (!_9B4) {
-            _9B4 = MR::getRandom(90L, 240L);
+            _9B4 = MR::getRandom(90, 240);
             MR::startBtp(_9A4, "blink");
         }
     }
@@ -741,8 +741,8 @@ XanimeBckTable2 teresaAnime2[] = {
 
 void MarioActor::initTeresaMarioAnimation() {
     _9B0 = 0.0f;
-    _9BC = new XanimeResourceTable(MR::getResourceHolder(_9A4), teresaAnimeTable, nullptr, nullptr, nullptr, teresaAnime2, nullptr, nullptr, nullptr);
-    _9B8 = new XanimePlayer(MR::getJ3DModel(_9A4), _9BC);
+    _9BC = new (JKRHeapToken::Dummy) XanimeResourceTable(MR::getResourceHolder(_9A4), teresaAnimeTable, nullptr, nullptr, nullptr, teresaAnime2, nullptr, nullptr, nullptr);
+    _9B8 = new (JKRHeapToken::Dummy) XanimePlayer(MR::getJ3DModel(_9A4), _9BC);
     _9B8->setDefaultAnimation("基本");
     _9B8->changeAnimation("基本");
     _9A4->mModelManager->mXanimePlayer = _9B8;

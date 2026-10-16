@@ -43,15 +43,15 @@ void Manual2P::init(const JMapInfoIter& rIter) {
     MR::invalidateParentAnim(this);
     MR::createAndAddPaneCtrl(this, "LeftButton", 2);
 
-    mLeftPaneCtrl = new ButtonPaneController(this, "LeftButton", "PicLButton", 0, true);
+    mLeftPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "LeftButton", "PicLButton", 0, true);
     mLeftPaneCtrl->_22 = 0;
 
     MR::createAndAddPaneCtrl(this, "RightButton", 2);
 
-    mRightPaneCtrl = new ButtonPaneController(this, "RightButton", "PicRButton", 0, true);
+    mRightPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "RightButton", "PicRButton", 0, true);
     mRightPaneCtrl->_22 = 0;
 
-    mBackButton = new BackButton("マニュアルの戻るボタン", true);
+    mBackButton = new (JKRHeapToken::Dummy) BackButton("マニュアルの戻るボタン", true);
     mBackButton->initWithoutIter();
 
     initNerve(GET_NERVE_ANON(Manual2PNrvAppear));

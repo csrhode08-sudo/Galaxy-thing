@@ -165,12 +165,12 @@ void GreenCaterpillarBig::exeEnd() {
 void GreenCaterpillarBig::initBodyParts(const JMapInfoIter& rIter) {
     s32 count = MR::getRailTotalLength(this) / 300.0f;
     mBodyArrayLength = count;
-    mBodyArray = new GreenCaterpillarBigBody*[count];
+    mBodyArray = new (JKRHeapToken::Dummy) GreenCaterpillarBigBody*[count];
     GreenCaterpillarBig* caterpillar = this;
 
     for (s32 i = 0; i < mBodyArrayLength; i++) {
         MtxPtr jointMtx = MR::getJointMtx(caterpillar, "FollowPoint");
-        mBodyArray[i] = new GreenCaterpillarBigBody(caterpillar, jointMtx);
+        mBodyArray[i] = new (JKRHeapToken::Dummy) GreenCaterpillarBigBody(caterpillar, jointMtx);
         mBodyArray[i]->init(rIter);
         caterpillar = reinterpret_cast< GreenCaterpillarBig* >(mBodyArray[i]);
     }

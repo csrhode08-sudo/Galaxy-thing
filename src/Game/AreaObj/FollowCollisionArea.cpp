@@ -23,7 +23,7 @@ FollowCollisionArea::FollowCollisionArea(const TVec3f& rSize, MtxPtr pMatrix, f3
     _24 = 0;
     _2C = 0;
     _28 = false;
-    _30 = new AreaPolygon();
+    _30 = new (JKRHeapToken::Dummy) AreaPolygon();
     _30->setMtx(_34, _38, _44);
     _30->initWithoutIter();
     _30->validate();

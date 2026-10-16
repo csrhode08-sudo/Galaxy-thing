@@ -127,7 +127,7 @@ IsbnManager* IsbnManager::create(void* pArchiveBuf, MEMAllocator* pAllocator) {
         nw4r::db::Panic(__FILE__, 192, "NW4R:Failed assertion pIsbnBuffer");
     }
 
-    IsbnManager* pIsbn = new (pIsbnBuffer) IsbnManager(pAllocator);
+    IsbnManager* pIsbn = new (JKRHeapToken::Dummy, pIsbnBuffer) IsbnManager(pAllocator);
 
     if (pIsbn == nullptr) {
         nw4r::db::Panic(__FILE__, 194, "NW4R:Failed assertion pIsbn");
@@ -141,7 +141,7 @@ IsbnManager* IsbnManager::create(void* pArchiveBuf, MEMAllocator* pAllocator) {
         nw4r::db::Panic(__FILE__, 199, "NW4R:Failed assertion pIsbn->mpResAccBuffer");
     }
 
-    pIsbn->mpResAccessor = new (pIsbn->mpResAccBuffer) nw4r::lyt::ArcResourceAccessor();
+    pIsbn->mpResAccessor = new (JKRHeapToken::Dummy, pIsbn->mpResAccBuffer) nw4r::lyt::ArcResourceAccessor();
 
     if (pIsbn->mpResAccessor == nullptr) {
         nw4r::db::Panic(__FILE__, 201, "NW4R:Failed assertion pIsbn->mpResAccessor");
@@ -153,7 +153,7 @@ IsbnManager* IsbnManager::create(void* pArchiveBuf, MEMAllocator* pAllocator) {
         nw4r::db::Panic(__FILE__, 205, "NW4R:Failed assertion pIsbn->mpLayoutBuffer");
     }
 
-    pIsbn->mpLayout = new (pIsbn->mpLayoutBuffer) nw4r::lyt::Layout();
+    pIsbn->mpLayout = new (JKRHeapToken::Dummy, pIsbn->mpLayoutBuffer) nw4r::lyt::Layout();
 
     if (pIsbn->mpLayout == nullptr) {
         nw4r::db::Panic(__FILE__, 207, "NW4R:Failed assertion pIsbn->mpLayout");

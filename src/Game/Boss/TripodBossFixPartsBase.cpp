@@ -105,6 +105,6 @@ void TripodBossFixPartsBase::updateTripodMatrix() {
 }
 
 void TripodBossFixPartsBase::initBreakMovement(s32 level) {
-    mBreakMovement = new TripodBossBreakMovement("三脚ボスパーツ破壊挙動");
+    mBreakMovement = new (JKRHeapToken::Dummy) TripodBossBreakMovement("三脚ボスパーツ破壊挙動");
     mBreakMovement->setBreakDownLevel(level);
 }

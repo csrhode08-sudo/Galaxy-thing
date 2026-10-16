@@ -9,7 +9,7 @@ GalaxyMapTicoIcon::GalaxyMapTicoIcon(int exclamationGalaxyIndex, const char* pGa
       mMode(0) {
     u32 paneNameLen = strlen(pPaneName) + 1;
 
-    mPaneName = new char[paneNameLen];
+    mPaneName = new (JKRHeapToken::Dummy) char[paneNameLen];
 
     snprintf(mPaneName, paneNameLen, "%s", pPaneName);
 }

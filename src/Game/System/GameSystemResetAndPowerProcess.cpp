@@ -261,9 +261,9 @@ void GameSystemResetAndPowerProcess::handleCheckDiskAsync(s32 result, DVDCommand
 GameSystemResetAndPowerProcess::GameSystemResetAndPowerProcess()
     : LayoutActor("リセット・電源", false), mResetTriggerChecker(), mFadeinoutControl(), mResetOperation(ResetOperation_Restart), _5C(true),
       mIsValidPowerOff(), _5E() {
-    mResetTriggerChecker = new TriggerChecker();
+    mResetTriggerChecker = new (JKRHeapToken::Dummy) TriggerChecker();
 
-    mFadeinoutControl = new ValueControl(::sFadeinoutFrame);
+    mFadeinoutControl = new (JKRHeapToken::Dummy) ValueControl(::sFadeinoutFrame);
     mFadeinoutControl->setOne();
 }
 

@@ -92,12 +92,12 @@ void WatchTowerRotateStep::calcAndSetBaseMtx() {
 }
 
 void WatchTowerRotateStep::initLift(const JMapInfoIter& rIter) {
-    mLift = new PartsModel*[LIFT_NUM];
+    mLift = new (JKRHeapToken::Dummy) PartsModel*[LIFT_NUM];
 
     for (s32 i = 0; i < LIFT_NUM; i++) {
         MtxPtr mtx = MR::getJointMtx(this, i + 1);
 
-        mLift[i] = new PartsModel(this, "物見の塔リフト", "WatchTowerRotateStepLift", mtx, -1, false);
+        mLift[i] = new (JKRHeapToken::Dummy) PartsModel(this, "物見の塔リフト", "WatchTowerRotateStepLift", mtx, -1, false);
         mLift[i]->mIsCalcOwnMtx = false;
 
         MR::initCollisionParts(mLift[i], "WatchTowerRotateStepLift", getSensor(nullptr), nullptr);

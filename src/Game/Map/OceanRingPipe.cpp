@@ -24,9 +24,9 @@ void OceanRingPipe::init(const JMapInfoIter& rIter) {
     initRailRider(rIter);
     initPoints();
     MR::invalidateClipping(this);
-    mPipeInside = new OceanRingPipeInside(this);
+    mPipeInside = new (JKRHeapToken::Dummy) OceanRingPipeInside(this);
     mPipeInside->initWithoutIter();
-    mPipeOutside = new OceanRingPipeOutside(this);
+    mPipeOutside = new (JKRHeapToken::Dummy) OceanRingPipeOutside(this);
     mPipeOutside->initWithoutIter();
 
     if (MR::isName(mOceanRing, "オーシャンリング（旗）")) {
@@ -73,8 +73,8 @@ void OceanRingPipe::initPoints() {
     f32 length = MR::getRailTotalLength(this) / (_98 - 1);
     f32 angle = getAngle();
 
-    _A0 = new (32) TVec3f[_94];
-    _A4 = new (32) TVec3s[_94];
+    _A0 = new (JKRHeapToken::Dummy, 32) TVec3f[_94];
+    _A4 = new (JKRHeapToken::Dummy, 32) TVec3s[_94];
 
     s32 idx = 0;
 

@@ -31,7 +31,7 @@ namespace MR {
             return false;
         }
 
-        MR::addBaseMatrixFollower(new GraviryFollower(pGravityObj, rIter));
+        MR::addBaseMatrixFollower(new (JKRHeapToken::Dummy) GraviryFollower(pGravityObj, rIter));
         return true;
     }
 };  // namespace MR

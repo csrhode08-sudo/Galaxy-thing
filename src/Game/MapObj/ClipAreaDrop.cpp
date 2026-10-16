@@ -17,7 +17,7 @@ namespace NrvClipAreaDrop {
 };  // namespace NrvClipAreaDrop
 
 ClipAreaDrop::ClipAreaDrop(const char* pName) : ClipArea(pName), mShapeSphere(), mBaseSize(500.0f) {
-    mShapeSphere = new ClipAreaShapeSphere();
+    mShapeSphere = new (JKRHeapToken::Dummy) ClipAreaShapeSphere();
 
     setShape(mShapeSphere);
 }

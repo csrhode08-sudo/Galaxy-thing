@@ -56,7 +56,7 @@ const TVec3f* SpiderThreadPointNearInfo::getPos() const {
 
 SpiderThreadMainPoint::SpiderThreadMainPoint(const TVec3f& rPos, int nearInfoBufferSize)
     : SpiderThreadPoint(rPos, ::sFrictionRate), mRadialLine(nullptr), mNearInfoBufferSize(nearInfoBufferSize), mNumNearInfos(0), mNearInfos(nullptr) {
-    mNearInfos = new SpiderThreadPointNearInfo[nearInfoBufferSize];
+    mNearInfos = new (JKRHeapToken::Dummy) SpiderThreadPointNearInfo[nearInfoBufferSize];
 }
 
 void SpiderThreadMainPoint::addNearMainPoint(SpiderThreadMainPoint* pMainPoint, SpiderThreadPart* pThreadPart) {

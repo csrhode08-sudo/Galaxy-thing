@@ -79,7 +79,7 @@ void GeneralMapParts::appear() {
 }
 
 void GeneralMapParts::kill() {
-    std::for_each(mFunctionArray.begin(), mFunctionArray.end(), std::mem_fun(&MapPartsFunction::end));
+    msl::for_each(mFunctionArray.begin(), mFunctionArray.end(), msl::mem_fun(&MapPartsFunction::end));
     LiveActor::kill();
 }
 
@@ -178,7 +178,7 @@ void GeneralMapParts::calcAndSetBaseMtx() {
 }
 
 void GeneralMapParts::initMapPartsFunction(const JMapInfoIter& rIter) {
-    mAppearController = new MapPartsAppearController(this);
+    mAppearController = new (JKRHeapToken::Dummy) MapPartsAppearController(this);
     mAppearController->init(rIter);
     mFunctionArray.push_back(mAppearController);
 
@@ -187,21 +187,21 @@ void GeneralMapParts::initMapPartsFunction(const JMapInfoIter& rIter) {
     bool hasRotateSpeed = 0.0f != rotateSpeed;
 
     if (hasRotateSpeed) {
-        mRotator = new MapPartsRotator(this);
+        mRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
         mRotator->init(rIter);
         mFunctionArray.push_back(mRotator);
     }
 
     if (MR::isConnectedWithRail(rIter)) {
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mFunctionArray.push_back(mRailMover);
-        mRailRotator = new MapPartsRailRotator(this);
+        mRailRotator = new (JKRHeapToken::Dummy) MapPartsRailRotator(this);
         mRailRotator->init(rIter);
         mFunctionArray.push_back(mRailRotator);
         mGuideDrawer = MR::createMapPartsRailGuideDrawer(this, "RailPoint", rIter);
         mFunctionArray.push_back(mGuideDrawer);
-        mRailPosture = new MapPartsRailPosture(this);
+        mRailPosture = new (JKRHeapToken::Dummy) MapPartsRailPosture(this);
         mRailPosture->init(rIter);
         mFunctionArray.push_back(mRailPosture);
     }
@@ -316,8 +316,8 @@ void GeneralMapParts::receiveMsgSwitchBOff() {
 }
 
 void GeneralMapParts::broadcastMsgToAllFunctions(u32 msg) {
-    std::for_each(mFunctionArray.begin(), mFunctionArray.end(),
-                  std::binder2nd< std::mem_fun1_t< bool, MapPartsFunction, u32 >, u32 >(std::mem_func(&MapPartsFunction::receiveMsg), msg));
+    msl::for_each(mFunctionArray.begin(), mFunctionArray.end(),
+                  msl::binder2nd< msl::mem_fun1_t< bool, MapPartsFunction, u32 >, u32 >(msl::mem_func(&MapPartsFunction::receiveMsg), msg));
 }
 
 bool GeneralMapParts::isFixed() const {

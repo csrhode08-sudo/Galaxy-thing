@@ -93,8 +93,8 @@ void Trapeze::init(const JMapInfoIter& rIter) {
     mScale.set(1.0f, 1.0f, 1.0f);
 
     TVec3f spawnPos(mPosition.x, mPosition.y - mRopeLength, mPosition.z);
-    mStickPoint = new SwingRopePoint(spawnPos);
-    mHangPoint = new SwingRopePoint(mPosition);
+    mStickPoint = new (JKRHeapToken::Dummy) SwingRopePoint(spawnPos);
+    mHangPoint = new (JKRHeapToken::Dummy) SwingRopePoint(mPosition);
 
     mStickPoint->updatePosAndAxis(mFront, ::sStickPointFrictionRate);
     mHangPoint->updatePosAndAxis(mFront, ::sHangPointFrictionRate);
@@ -111,7 +111,7 @@ void Trapeze::init(const JMapInfoIter& rIter) {
 
     MR::setClippingTypeSphere(this, mRopeLength);
 
-    mTrapezeModel = new PartsModel(this, "棒", "Trapeze", mPosMtx, MR::DrawBufferType_Enemy, false);
+    mTrapezeModel = new (JKRHeapToken::Dummy) PartsModel(this, "棒", "Trapeze", mPosMtx, MR::DrawBufferType_Enemy, false);
     mTrapezeModel->initWithoutIter();
 
     MR::initShadowFromCSV(mTrapezeModel, "Shadow");
@@ -805,7 +805,7 @@ void Trapeze::drawRope(const TVec3f& rPosA, const TVec3f& rPosB, const TVec3f& r
 
 TrapezeRopeDrawInit::TrapezeRopeDrawInit(const char* pName) : NameObj(pName) {
     mTexture = nullptr;
-    mTexture = new JUTTexture(MR::loadTexFromArc("Trapeze.arc", "TrapezeRope.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("Trapeze.arc", "TrapezeRope.bti"), 0);
 
     MR::registerPreDrawFunction(MR::Functor(this, &TrapezeRopeDrawInit::initDraw), MR::DrawType_Trapeze);
 }

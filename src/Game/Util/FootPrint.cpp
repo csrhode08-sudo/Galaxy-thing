@@ -36,7 +36,7 @@ void FootPrint::initMember(s32 amount, s32 drawType) {
 
     mLastPrintPos.zero();
 
-    mPrints = new FootPrintInfo[amount];
+    mPrints = new (JKRHeapToken::Dummy) FootPrintInfo[amount];
     mPrintMaxNum = amount;
 
     for (int i = 0; i < mPrintMaxNum; i++) {
@@ -51,7 +51,7 @@ FootPrintInfo::FootPrintInfo() {
 
 void FootPrint::setTexture(ResTIMG* img) {
     MR::CurrentHeapRestorer heapRestorer = MR::CurrentHeapRestorer(reinterpret_cast< JKRHeap* >(MR::getSceneHeapGDDR3()));
-    _C = new JUTTexture(img, 0);
+    _C = new (JKRHeapToken::Dummy) JUTTexture(img, 0);
 }
 
 void FootPrint::movement() {

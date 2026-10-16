@@ -71,8 +71,8 @@ void PackunPetit::init(const JMapInfoIter& rIter) {
     MR::declareCoin(this, 1);
     MR::declareStarPiece(this, 6);
     initStarPointer("Head");
-    mScaleController = new AnimScaleController(nullptr);
-    mStarPointerState = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStarPointerState = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     MR::getJMapInfoArg0NoInit(rIter, &mDontTurn);
     MR::calcFrontVec(&_94, this);
     initBlowModel();

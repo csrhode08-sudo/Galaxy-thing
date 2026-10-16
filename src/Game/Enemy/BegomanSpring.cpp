@@ -124,7 +124,7 @@ void BegomanSpring::init(const JMapInfoIter& rIter) {
     if (MR::isEqualString(pObjectName, "BegomanSpringHide")) {
         setName("隠れバネベーゴマン");
         mType = 1;
-        mBaby = new BegomanBaby("隠れバネベーゴマンベビー");
+        mBaby = new (JKRHeapToken::Dummy) BegomanBaby("隠れバネベーゴマンベビー");
         mBaby->mPosition.set(mPosition);
         mBaby->initWithoutIter();
         mBaby->makeActorDead();
@@ -145,7 +145,7 @@ void BegomanSpring::init(const JMapInfoIter& rIter) {
 
     initEffectAndStarPointerBind();
     MR::setEffectHostMtx(this, "WaterColumn", mWaterColumnMatrix);
-    mHead = new BegomanSpringHead(this, mHeadMatrix);
+    mHead = new (JKRHeapToken::Dummy) BegomanSpringHead(this, mHeadMatrix);
     mHead->_9C = &_B4;
     mHead->initWithoutIter();
     initSensor(1, 70.0f, 140.0f, "Center");
@@ -165,9 +165,9 @@ void BegomanSpring::init(const JMapInfoIter& rIter) {
 }
 
 void BegomanSpring::initEventCameras(const JMapInfoIter& rIter) {
-    mCameraInfo = new ActorCameraInfo(rIter);
+    mCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     if (mCameraInfo->mCameraSetID != -1) {
-        mEventCamera = new MultiEventCamera();
+        mEventCamera = new (JKRHeapToken::Dummy) MultiEventCamera();
         mEventCamera->setUp(mName, mCameraInfo, 2);
         mEventCamera->setEndCameraTypeSoon();
     }

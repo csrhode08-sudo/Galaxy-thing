@@ -88,7 +88,7 @@ void Butler::init(const JMapInfoIter& rIter) {
         dome = "AstroDome_Butler017";
     }
 
-    mButlerState = new ButlerStateStarPieceReaction(this, rIter, dome);
+    mButlerState = new (JKRHeapToken::Dummy) ButlerStateStarPieceReaction(this, rIter, dome);
     mButlerState->init();
     initTalkCtrlArray(rIter);
 
@@ -308,7 +308,7 @@ bool Butler::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) 
 }
 
 void Butler::initTalkCtrlArray(const JMapInfoIter& rIter) {
-    mTalkMessage = new TalkMessageCtrl*[0x7];
+    mTalkMessage = new (JKRHeapToken::Dummy) TalkMessageCtrl*[0x7];
 
     for (s32 i = 0; i < 7; i++) {
         mTalkMessage[i] = createTalkCtrl(rIter, ::cMessageId[i]);

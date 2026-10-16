@@ -24,7 +24,7 @@ u32 J3DShapeDraw::countVertex(u32 stride) {
 
 void J3DShapeDraw::addTexMtxIndexInDL(u32 stride, u32 attrOffs, u32 valueBase) {
     u32 newSize = ALIGN_NEXT(countVertex(stride) + mDisplayListSize, 0x20);
-    u8* newDLStart = new (0x20) u8[newSize];
+    u8* newDLStart = new (JKRHeapToken::Dummy, 0x20) u8[newSize];
     u8* oldDLStart = static_cast< u8* >(mDisplayList);
     u8* oldDL = oldDLStart;
     u8* newDL = newDLStart;

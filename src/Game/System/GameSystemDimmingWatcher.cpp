@@ -3,7 +3,7 @@
 #include <revolution.h>
 
 GameSystemDimmingWatcher::GameSystemDimmingWatcher() : mChecker(nullptr), _4(true), _5(false) {
-    mChecker = new TriggerChecker();
+    mChecker = new (JKRHeapToken::Dummy) TriggerChecker();
 }
 
 void GameSystemDimmingWatcher::update() {

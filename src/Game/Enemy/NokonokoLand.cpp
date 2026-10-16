@@ -84,7 +84,7 @@ namespace NrvNokonokoLand {
 };  // namespace NrvNokonokoLand
 
 NokonokoLand::NokonokoLand(const char* pName)
-    : LiveActor(pName), mJetTurtle(new JetTurtle("陸ノコ用ジェット亀")), mRailPointPassChecker(new MapPartsRailPointPassChecker(this)),
+    : LiveActor(pName), mJetTurtle(new (JKRHeapToken::Dummy) JetTurtle("陸ノコ用ジェット亀")), mRailPointPassChecker(new (JKRHeapToken::Dummy) MapPartsRailPointPassChecker(this)),
       mAnimScaleController(nullptr), mBindStarPointerState(nullptr), mTurtleType(0), mAppearPos(gZeroVec), mTurnAxis(TVec3f(0.0f, 1.0f, 0.0f)) {
     mTargetQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 }
@@ -120,9 +120,9 @@ void NokonokoLand::init(const JMapInfoIter& rIter) {
     MR::onCalcShadow(this, nullptr);
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f));
     initNerve(GET_NERVE(NokonokoLand, HostTypeWalk));
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimScaleController->setParamTight();
-    mBindStarPointerState = new WalkerStateBindStarPointer(this, mAnimScaleController);
+    mBindStarPointerState = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleController);
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
         MR::registerDemoActionFunctor(this, MR::Functor(this, &NokonokoLand::appear), nullptr);

@@ -52,7 +52,7 @@ void SpiderCoin::init(const JMapInfoIter& rIter) {
     MR::initStarPointerTarget(this, 150.0f, TVec3f(0.0f, 80.0f, 0.0f));
 
     MR::declareCoin(this, 1);
-    mCocoonModel = new PartsModel(this, "まゆ", "SpaceCocoon", mBaseMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
+    mCocoonModel = new (JKRHeapToken::Dummy) PartsModel(this, "まゆ", "SpaceCocoon", mBaseMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
     mCocoonModel->mScale.set(0.3f);
     mCocoonModel->initWithoutIter();
 

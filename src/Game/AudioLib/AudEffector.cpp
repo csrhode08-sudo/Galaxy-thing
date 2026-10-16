@@ -16,7 +16,7 @@ AudEffector::AudEffector() : mFxSend(), mCutoff(0x7F), mSpecialFx() {
 
 void AudEffector::initFxLine(JKRHeap* pHeap) {
     for (u8 i = 0; i < 4; i++) {
-        mFxLines[i] = new (pHeap, 0x20) s16[0x2800];
+        mFxLines[i] = new (JKRHeapToken::Dummy, pHeap, 0x20) s16[0x2800];
         JASDsp::setFXLine(i, mFxLines[i], &mFxLine[i]);
     }
 }

@@ -43,7 +43,7 @@ namespace {
 
 namespace MR {
     RailGraph* createRailGraphFromJMap(const JMapInfoIter& rIter) {
-        RailGraph* pGraph = new RailGraph;
+        RailGraph* pGraph = new (JKRHeapToken::Dummy) RailGraph;
         const JMapInfo* pRailPoints = nullptr;
         JMapInfoIter railIter;
         bool hasRail = true;
@@ -63,7 +63,7 @@ namespace MR {
     }
 
     RailGraphIter* createRailGraphIter(const RailGraph* pGraph) {
-        return new RailGraphIter(pGraph->getIterator());
+        return new (JKRHeapToken::Dummy) RailGraphIter(pGraph->getIterator());
     }
 
     void moveNextNode(RailGraphIter* pIter) {

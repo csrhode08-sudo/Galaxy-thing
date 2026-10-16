@@ -65,7 +65,7 @@ void LavaHomeSeesaw::init(const JMapInfoIter& rIter) {
     MR::initCollisionParts(this, name, MR::addBodyMessageSensorMapObj(this), nullptr);
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
     MR::connectToSceneCollisionMapObj(this);
-    mSeesawRotator = new LavaHomeSeesawRotator(this, "SE_OJ_LV_LAVA_SEESAW_MOVE", 0.1f);
+    mSeesawRotator = new (JKRHeapToken::Dummy) LavaHomeSeesawRotator(this, "SE_OJ_LV_LAVA_SEESAW_MOVE", 0.1f);
     mSeesawRotator->init(rIter);
     mSeesawRotator->start();
     makeActorAppeared();

@@ -31,7 +31,7 @@ void ArrowSwitchTarget::init(const JMapInfoIter& rIter) {
     s32 arg0;
     MR::getJMapInfoArg0WithInit(rIter, &arg0);
 
-    mIdInfo = new JMapIdInfo(arg0, rIter);
+    mIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(arg0, rIter);
 
     MR::getJMapInfoArg1WithInit(rIter, &mTargetIndex);
     mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
@@ -82,7 +82,7 @@ void ArrowSwitchMulti::init(const JMapInfoIter& rIter) {
     s32 arg0;
     MR::getJMapInfoArg0WithInit(rIter, &arg0);
 
-    mIdInfo = new JMapIdInfo(arg0, rIter);
+    mIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(arg0, rIter);
 
     if (MR::isInAreaObj("PlaneModeCube", mPosition)) {
         initHitSensor(1);

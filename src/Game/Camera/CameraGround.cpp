@@ -46,5 +46,5 @@ CameraTargetObj* CameraGround::calc() {
 }
 
 CamTranslatorBase* CameraGround::createTranslator() {
-    return new CamTranslatorGround(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorGround(this);
 }

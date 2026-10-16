@@ -4,6 +4,14 @@
 #include "Game/Util/StringUtil.hpp"
 #include <revolution/types.h>
 
+// Explicit specializations are defined at the bottom of this file; declare them before first use.
+template <>
+MR::FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::iterator(const DemoStartInfo** pHead, const DemoStartInfo** pTail);
+template <>
+void MR::FixedRingBuffer< const DemoStartInfo*, 16 >::push_back(const DemoStartInfo* const& rValue);
+template <>
+void MR::FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::operator++();
+
 DemoStartInfo::DemoStartInfo() {
     _0 = nullptr;
     _4 = nullptr;
@@ -173,9 +181,9 @@ DemoStartInfo* DemoStartRequestHolder::findEmpty() const {
 }
 
 DemoStartRequestHolder::DemoStartRequestHolder() : mNumInfos(), mRequestBuffer(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer) {
-    mProxyObj = new NameObj("代理人");
+    mProxyObj = new (JKRHeapToken::Dummy) NameObj("代理人");
     for (u32 i = 0; i < ARRAY_SIZE(mStartInfos); i++) {
-        DemoStartInfo* pInfo = new DemoStartInfo();
+        DemoStartInfo* pInfo = new (JKRHeapToken::Dummy) DemoStartInfo();
         s32 idx = mNumInfos;
         mNumInfos = idx + 1;
         mStartInfos[idx] = pInfo;

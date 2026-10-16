@@ -19,7 +19,7 @@ void PictureBookCloseButton::init(const JMapInfoIter& rIter) {
     initLayoutManager("BackButton", 1);
     MR::connectToSceneLayoutDecoration(this);
 
-    mPaneCtrl = new ButtonPaneController(this, "Back", "BoxButton", 0, true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "Back", "BoxButton", 0, true);
 
     initNerve(GET_NERVE(PictureBookCloseButton, PictureBookCloseButtonNrvSelect));
 }

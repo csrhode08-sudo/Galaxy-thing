@@ -13,7 +13,7 @@ SkeletalFishBabyRailGroupNode::SkeletalFishBabyRailGroupNode(s32 a1) {
     _20 = nullptr;
     _24 = nullptr;
 
-    SkeletalFishBabyRailSetLinkNode* node = new SkeletalFishBabyRailSetLinkNode();
+    SkeletalFishBabyRailSetLinkNode* node = new (JKRHeapToken::Dummy) SkeletalFishBabyRailSetLinkNode();
     _18 = node;
     _1C = node;
     _20 = node;
@@ -68,7 +68,7 @@ void SkeletalFishBabyRailGroupNode::tidy() {
 }
 
 void SkeletalFishBabyRailGroupNode::createChild() {
-    SkeletalFishBabyRailSetLinkNode* node = new SkeletalFishBabyRailSetLinkNode();
+    SkeletalFishBabyRailSetLinkNode* node = new (JKRHeapToken::Dummy) SkeletalFishBabyRailSetLinkNode();
     node->_C = _1C;
     _1C->_10 = node;
     _1C = node;
@@ -105,7 +105,7 @@ void SkeletalFishBabyRailHolder::add(SkeletalFishBabyRail* pRail) {
 }
 
 SkeletalFishBabyRailGroupNode* SkeletalFishBabyRailHolder::createGroup(s32 a1) {
-    SkeletalFishBabyRailGroupNode* groupNode = new SkeletalFishBabyRailGroupNode(a1);
+    SkeletalFishBabyRailGroupNode* groupNode = new (JKRHeapToken::Dummy) SkeletalFishBabyRailGroupNode(a1);
     SkeletalFishBabyRailGroupNode* cur = mNodes;
     mNodes = groupNode;
     groupNode->_14 = cur;

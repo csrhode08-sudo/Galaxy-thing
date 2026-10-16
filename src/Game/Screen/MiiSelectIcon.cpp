@@ -27,7 +27,7 @@ namespace {
 };  // namespace
 
 MiiSelectIcon::MiiSelectIcon(int movementType, int calcAnimType, int drawType, const char* pName)
-    : LayoutActor(pName, true), _20(), _24(), _28(), mIcon(), mMiiTexMap(), mFellowTexMap(), mIconID(new FileSelectIconID()), mIsMiiDummy(),
+    : LayoutActor(pName, true), _20(), _24(), _28(), mIcon(), mMiiTexMap(), mFellowTexMap(), mIconID(new (JKRHeapToken::Dummy) FileSelectIconID()), mIsMiiDummy(),
       _3D(true) {
     initLayoutManager("MiiIcon", 1);
     MR::createAndAddPaneCtrl(this, "MarioIcon", 3);
@@ -229,10 +229,10 @@ void MiiSelectIcon::control() {
 }
 
 void MiiSelectIcon::createButton() {
-    _24 = new ButtonPaneController(this, "MarioIcon", "PicMario", 0, true);
+    _24 = new (JKRHeapToken::Dummy) ButtonPaneController(this, "MarioIcon", "PicMario", 0, true);
     _24->_22 = false;
 
-    _28 = new ButtonPaneController(this, "MiiIcon", "PicMii", 0, true);
+    _28 = new (JKRHeapToken::Dummy) ButtonPaneController(this, "MiiIcon", "PicMii", 0, true);
     _28->_22 = false;
 }
 
@@ -240,13 +240,13 @@ void MiiSelectIcon::createFaceImageObj() {
     nw4r::lyt::TexMap* pTexMap;
 
     mIcon =
-        new MiiFaceIcon(128, 128, MiiFaceRecipe(RFLDataSource_Official, 0, RFLResolution_256, RFLExpFlag_Normal | RFLExpFlag_Blink), "Miiアイコン");
+        new (JKRHeapToken::Dummy) MiiFaceIcon(128, 128, MiiFaceRecipe(RFLDataSource_Official, 0, RFLResolution_256, RFLExpFlag_Normal | RFLExpFlag_Blink), "Miiアイコン");
     mIcon->initWithoutIter();
 
     GXTexObj texObj;
     MR::getLytTexMap(this, "PicMario", 0)->Get(&texObj);
 
-    mFellowTexMap = new nw4r::lyt::TexMap(texObj);
+    mFellowTexMap = new (JKRHeapToken::Dummy) nw4r::lyt::TexMap(texObj);
     mMiiTexMap = MR::createLytTexMap(reinterpret_cast< ResTIMG* >(mIcon->mImageBuffer));
     pTexMap = mMiiTexMap;
 

@@ -17,7 +17,7 @@ RestartCube::RestartCube(int formType, const char* pName) : AreaObj(formType, pN
 void RestartCube::init(const JMapInfoIter& rIter) {
     AreaObj::init(rIter);
 
-    mIdInfo = new JMapIdInfo(mObjArg0, rIter);
+    mIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(mObjArg0, rIter);
     _40 = mObjArg1;
     _44 = mObjArg2;
     _48 = false;

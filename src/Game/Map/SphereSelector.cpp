@@ -33,7 +33,7 @@ SphereSelector::SphereSelector()
 void SphereSelector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjDecorationMovement(this);
     MR::invalidateClipping(this);
-    mSphereGroup = new LiveActorGroup("スフィアセレクターアクターグループ", 32);
+    mSphereGroup = new (JKRHeapToken::Dummy) LiveActorGroup("スフィアセレクターアクターグループ", 32);
     initNerve(GET_NERVE(SphereSelector, SphereSelectorNrvSelectStart));
     makeActorDead();
 }
@@ -114,7 +114,7 @@ bool SphereSelector::isMoveClickedPos() const {
 }
 
 void SphereSelector::playSelectedME() {
-    switch (MR::getRandom(0L, 4L)) {
+    switch (MR::getRandom(0, 4)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_SELECT1");
         break;
@@ -131,7 +131,7 @@ void SphereSelector::playSelectedME() {
 }
 
 void SphereSelector::playCanceledME() {
-    switch (MR::getRandom(0L, 4L)) {
+    switch (MR::getRandom(0, 4)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_CALCEL1");
         break;

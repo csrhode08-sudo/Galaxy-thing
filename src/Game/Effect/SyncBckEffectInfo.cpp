@@ -13,13 +13,13 @@ bool SyncBckEffectInfo::BckResourceInfo::isLoop() const {
 
 SyncBckEffectInfo::SyncBckEffectInfo(const XanimePlayer* pPlayer, const char* pName, s32 capacity, f32 startFrame, f32 endFrame, bool continueAnimEnd)
     : mBckResources(), mCapacity(), mCount(), mStartFrame(startFrame), mEndFrame(endFrame), mContinueAnimEnd(continueAnimEnd) {
-    mBckResources = new BckResourceInfo*[capacity];
+    mBckResources = new (JKRHeapToken::Dummy) BckResourceInfo*[capacity];
     mCapacity = capacity;
     addBck(pPlayer, pName);
 }
 
 void SyncBckEffectInfo::addBck(const XanimePlayer* pPlayer, const char* pName) {
-    BckResourceInfo* pInfo = new BckResourceInfo(pPlayer, pName);
+    BckResourceInfo* pInfo = new (JKRHeapToken::Dummy) BckResourceInfo(pPlayer, pName);
     const s32 index = mCount++;
     mBckResources[index] = pInfo;
 }

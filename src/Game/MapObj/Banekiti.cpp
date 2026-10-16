@@ -32,12 +32,12 @@ void Banekiti::init(const JMapInfoIter& rIter) {
     initEffectKeeper(1, nullptr, false);
     initSound(4, false);
     initRailRider(rIter);
-    mRailMover = new MapPartsRailMover(this);
+    mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
     mRailMover->init(rIter);
     mRailMover->start();
     initStarPointer();
-    mAnimScaleCtrl = new AnimScaleController(nullptr);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mAnimScaleCtrl);
+    mAnimScaleCtrl = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleCtrl);
     initNerve(GET_NERVE(Banekiti, BanekitiNrvWait));
     makeActorAppeared();
 }

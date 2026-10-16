@@ -28,7 +28,7 @@ namespace {
             pController->setDropTypeNormal();
         }
 
-        T* pDrawer = new T;
+        T* pDrawer = new (JKRHeapToken::Dummy) T;
         pController->setShadowDrawer(pDrawer);
         return pDrawer;
     }
@@ -56,7 +56,7 @@ namespace ActorShadow {
     }
 
     ShadowController* createShadowControllerVolumeParam(LiveActor* pActor, const char* pName) {
-        ShadowController* pController = new ShadowController(pActor, pName);
+        ShadowController* pController = new (JKRHeapToken::Dummy) ShadowController(pActor, pName);
         pController->setDropPosPtr(&pActor->mPosition);
         pController->setDropDirPtr(&pActor->mGravity);
         pController->setDropLength(1000.0f);
@@ -67,7 +67,7 @@ namespace ActorShadow {
     }
 
     ShadowController* createShadowControllerSuefaceParam(LiveActor* pActor, const char* pName) {
-        ShadowController* pController = new ShadowController(pActor, pName);
+        ShadowController* pController = new (JKRHeapToken::Dummy) ShadowController(pActor, pName);
         pController->setDropPosPtr(&pActor->mPosition);
         pController->setDropDirPtr(&pActor->mGravity);
         pController->setDropLength(1000.0f);
@@ -100,7 +100,7 @@ namespace ActorShadow {
     ShadowController* createShadowControlFromCSV(LiveActor* pActor, const JMapInfoIter& rIter) {
         const char* pName = nullptr;
         rIter.getValue("Name", &pName);
-        ShadowController* pController = new ShadowController(pActor, pName);
+        ShadowController* pController = new (JKRHeapToken::Dummy) ShadowController(pActor, pName);
 
         const char* pGroupName = "";
         rIter.getValue("GroupName", &pGroupName);

@@ -28,13 +28,13 @@ MaterialAnmBuffer::MaterialAnmBuffer(const ResourceHolder* pResourceHolder, J3DM
     u16 materialNum = pModelData->getMaterialNum();
 
     if (useDiffFlag) {
-        _4 = new u32[materialNum];
+        _4 = new (JKRHeapToken::Dummy) u32[materialNum];
         MR::zeroMemory(_4, sizeof(u32) * materialNum);
         setDiffFlag(pResourceHolder);
     }
 
     u16 anmNum = getAllocMaterialAnmNum(pModelData, useDiffFlag);
-    _0 = new J3DMaterialAnm[anmNum];
+    _0 = new (JKRHeapToken::Dummy) J3DMaterialAnm[anmNum];
     attachMaterialAnmBuffer(pModelData, useDiffFlag);
 }
 

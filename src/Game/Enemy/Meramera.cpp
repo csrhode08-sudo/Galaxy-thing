@@ -228,7 +228,7 @@ namespace NrvMeramera {
     NEW_NERVE(MerameraNrvReadyRestart, Meramera, ReadyRestart);
 };  // namespace NrvMeramera
 
-f32 lerp(f32 start, f32 end, f32 t) {
+static f32 merameraLerp(f32 start, f32 end, f32 t) {
     return start + (end - start) * t;
 }
 
@@ -255,7 +255,7 @@ Meramera::Meramera(const char* pName)
     mExtinguishMtx.identity();
     _F8.identity();
 
-    mParabolicPath = new ParabolicPath();
+    mParabolicPath = new (JKRHeapToken::Dummy) ParabolicPath();
 }
 
 void Meramera::init(const JMapInfoIter& rIter) {
@@ -282,10 +282,10 @@ void Meramera::init(const JMapInfoIter& rIter) {
 
     MR::useStageSwitchWriteDead(this, rIter);
 
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimScaleController->setParamTight();
 
-    mWalkerStateBindStarPointer = new WalkerStateBindStarPointer(this, mAnimScaleController);
+    mWalkerStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleController);
 
     MR::declareCoin(this, 1);
 
@@ -727,7 +727,7 @@ bool Meramera::tryEndChase() {
 }
 
 bool Meramera::tryRunaway() {
-    if (MR::isGreaterStep(this, MR::getRandom(0L, 0L) + ::sRunawayTime)) {
+    if (MR::isGreaterStep(this, MR::getRandom(0, 0) + ::sRunawayTime)) {
         setNerve(GET_NERVE(Meramera, MerameraNrvRunaway));
         return true;
     }
@@ -1094,7 +1094,7 @@ void Meramera::exeRunaway() {
 
                 MR::startSound(this, "SE_EM_MERAMERA_JUMP");
 
-                mRunawayTimer = MR::getRandom(0L, 10L) + 30;
+                mRunawayTimer = MR::getRandom(0, 10) + 30;
             }
         }
 

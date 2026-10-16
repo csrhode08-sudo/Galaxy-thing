@@ -24,8 +24,8 @@ void WhirlPool::init(const JMapInfoIter& rIter) {
     mHeight = 100.0f * mScale.y;
     MR::calcActorAxisY(&mAxis, this);
     initPoints();
-    mTexture = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
-    mIndirectTexture = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
+    mIndirectTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
     initSound(4, false);
     mClippingCenter.set(mPosition);
     mClippingCenter.y -= mRadius / 2.0f;
@@ -47,7 +47,7 @@ void WhirlPool::movement() {
 
 void WhirlPool::initPoints() {
     mPointCount = static_cast< s32 >(mHeight / 50.0f) + 1;
-    mPoints = new WhirlPoolPoint*[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) WhirlPoolPoint*[mPointCount];
     TPos3f rotation;
     rotation.identity();
     MR::makeMtxRotate(rotation, 0.0f, 10.0f, 0.0f);
@@ -64,7 +64,7 @@ void WhirlPool::initPoints() {
         f32 rate = MR::getEaseInValue(static_cast< f32 >(mPointCount - i) / mPointCount, 0.0f, 1.0f, 1.0f);
         rate = MR::getEaseInValue(rate, 0.0f, 1.0f, 1.0f);
         f32 radius = 100.0f + rate * (mRadius - 100.0f);
-        mPoints[i] = new WhirlPoolPoint(position, mAxis, normal, radius, angle / 360.0f, 0xFF);
+        mPoints[i] = new (JKRHeapToken::Dummy) WhirlPoolPoint(position, mAxis, normal, radius, angle / 360.0f, 0xFF);
         rotation.mult(normal, normal);
         angle = MR::repeat(10.0f + angle, 0.0f, 360.0f);
     }

@@ -19,7 +19,7 @@ CameraCover::CameraCover(const char* pName) : NameObj(pName) {
     _40 = 0;
     _41 = false;
     _44 = 1;
-    mActor = new CaptureScreenActor(MR::DrawType_CaptureScreenCamera, "Camera");
+    mActor = new (JKRHeapToken::Dummy) CaptureScreenActor(MR::DrawType_CaptureScreenCamera, "Camera");
     MR::connectToScene(this, MR::MovementType_CameraCover, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_CameraCover);
     MR::joinToNameObjGroup(this, "IgnorePauseNameObj");
     _C.identity();

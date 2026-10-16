@@ -12,7 +12,7 @@ namespace {
 };  // namespace
 
 OnlyCamera::OnlyCamera(const char* pName)
-    : NameObj(pName), mPoseParam(new CameraPoseParam()), mStartPose(true), mCalcIdeal(), mPos(0.0f, 0.0f, 0.0f), mSpeed(), _28(), _2C(true),
+    : NameObj(pName), mPoseParam(new (JKRHeapToken::Dummy) CameraPoseParam()), mStartPose(true), mCalcIdeal(), mPos(0.0f, 0.0f, 0.0f), mSpeed(), _28(), _2C(true),
       _2D(true), _30(0.0f, 0.0f, 0.0f), mIsZeroFrameMoveOff(), mIsResetting() {
 }
 

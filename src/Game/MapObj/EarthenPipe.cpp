@@ -307,7 +307,7 @@ void EarthenPipe::exePlayerOut() {
 
         MR::startSound(mHostActor, "SE_PM_JUMP_M");
         MR::startSound(mHostActor, "SE_PV_JUMP_JOY");
-        MR::startBckPlayer("EarthenPipeJump", 0L);
+        MR::startBckPlayer("EarthenPipeJump", 0);
         MR::endBindAndPlayerForceWeakGravityJumpInputOff(this, v4);
         mHostActor = nullptr;
         _B0->tryHideDown();
@@ -514,7 +514,7 @@ void EarthenPipe::processBgmPlayerOut() {
 EarthenPipeMediator::EarthenPipeMediator() : NameObj("土管仲介者") {
     mNumEntries = 0;
     mPipeEntries = nullptr;
-    mPipeEntries = new Entry[0x20];
+    mPipeEntries = new (JKRHeapToken::Dummy) Entry[0x20];
 
     for (s32 i = 0; i < 32; i++) {
         mPipeEntries[i]._0 = nullptr;

@@ -16,7 +16,7 @@ namespace {
 };  // namespace
 
 SaveDataBannerCreator::SaveDataBannerCreator() : NerveExecutor("BannerCreator"), mNANDRequestInfo(), mBanner() {
-    mNANDRequestInfo = new NANDRequestInfo();
+    mNANDRequestInfo = new (JKRHeapToken::Dummy) NANDRequestInfo();
 
     initNerve(GET_NERVE_ANON(SaveDataBannerCreatorNoOperation));
     setupBannerInfo();
@@ -78,7 +78,7 @@ void SaveDataBannerCreator::exeMoveToHomeDir() {
 }
 
 void SaveDataBannerCreator::setupBannerInfo() {
-    mBanner = new (MR::getStationedHeapGDDR3(), 32) NANDBanner;
+    mBanner = new (JKRHeapToken::Dummy, MR::getStationedHeapGDDR3(), 32) NANDBanner;
 
     const u16* title = reinterpret_cast< const u16* >(MR::getSystemMessageDirect("TITLE_MAIN"));
     const u16* comment = reinterpret_cast< const u16* >(MR::getSystemMessageDirect("TITLE_SUB"));

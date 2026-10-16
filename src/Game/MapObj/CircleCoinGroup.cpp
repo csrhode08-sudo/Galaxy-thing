@@ -38,12 +38,12 @@ void CircleCoinGroup::placementCoin() {
 
 namespace MR {
     NameObj* createCircleCoinGroup(const char* pName) {
-        CircleCoinGroup* group = new CircleCoinGroup(pName);
+        CircleCoinGroup* group = new (JKRHeapToken::Dummy) CircleCoinGroup(pName);
         return group;
     }
 
     NameObj* createCirclePurpleCoinGroup(const char* pName) {
-        CircleCoinGroup* group = new CircleCoinGroup(pName);
+        CircleCoinGroup* group = new (JKRHeapToken::Dummy) CircleCoinGroup(pName);
         group->mIsPurpleCoinGroup = true;
         return group;
     }

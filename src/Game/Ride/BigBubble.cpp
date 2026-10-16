@@ -111,7 +111,7 @@ BigBubble::BigBubble(const char* pName)
       mPushInvalidTime(), mReduceVolumeTimer(), _208(), mMergeIndex(-1), mShapeType(-1), _214(), mAppearRadius(1.0f), mVolume(1.0f), mDrawZ(),
       mBinderRadius(), mWarningColor(255, 0, 0, 0), mIsObstruct(), _22D(), mIsHidden(), mIsExitLimitter(), mIsBroken(), mIsShrinkable(true),
       mIsAttached(true) {
-    mSurface = new OctahedronBezierSurface(3);
+    mSurface = new (JKRHeapToken::Dummy) OctahedronBezierSurface(3);
     mEffectMtx.identity();
     mBaseMtx.identity();
 

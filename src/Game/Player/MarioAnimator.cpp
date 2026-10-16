@@ -56,7 +56,7 @@ void MarioAnimator::init() {
         luigiAnimations = luigiAnimeSwapTable;
     }
 
-    mResourceTable = new XanimeResourceTable(MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
+    mResourceTable = new (JKRHeapToken::Dummy) XanimeResourceTable(MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
                                              reinterpret_cast< XanimeBckTable* >(singleAnimeTable), doubleAnimeTable, tripleAnimeTable,
                                              quadAnimeTable, luigiAnimations);
 
@@ -90,7 +90,7 @@ void MarioAnimator::init() {
 
     initCallbackTable();
 
-    mXanimePlayer = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable);
+    mXanimePlayer = new (JKRHeapToken::Dummy) XanimePlayer(MR::getJ3DModel(mActor), mResourceTable);
 
     changeDefault("基本");
     change("基本");
@@ -98,7 +98,7 @@ void MarioAnimator::init() {
     mXanimePlayer->getCore()->enableJointTransform(MR::getJ3DModelData(mActor));
 
     mActor->mModelManager->mXanimePlayer = mXanimePlayer;
-    mXanimePlayerUpper = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable, mXanimePlayer);
+    mXanimePlayerUpper = new (JKRHeapToken::Dummy) XanimePlayer(MR::getJ3DModel(mActor), mResourceTable, mXanimePlayer);
     changeDefaultUpper("基本");
     mXanimePlayerUpper->changeAnimation("基本");
     mXanimePlayerUpper->mCore->shareJointTransform(mXanimePlayer->mCore);

@@ -15,7 +15,7 @@ void MarioLauncherAttractor::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("MarioLauncherAttractor", nullptr, nullptr);
 
     // Create and initialize gravity
-    mGravityCreator = new PointGravityCreator();
+    mGravityCreator = new (JKRHeapToken::Dummy) PointGravityCreator();
     mGravityCreator->createFromJMap(rIter);
     PlanetGravity* pGravity = mGravityCreator->getGravity();
     pGravity->mGravityType = GRAVITY_TYPE_MARIO_LAUNCHER;

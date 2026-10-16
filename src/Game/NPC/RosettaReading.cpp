@@ -53,7 +53,7 @@ void RosettaReading::init(const JMapInfoIter& rIter) {
                   gZeroVec, MR::getJointMtx(this, "Chin")));
 
     if (::getChapterNumberMin() <= ::getChapterNumberMax()) {
-        mPictureBookLayout = new PictureBookLayout(::getChapterNumberMin(), ::getChapterNumberMax(), true);
+        mPictureBookLayout = new (JKRHeapToken::Dummy) PictureBookLayout(::getChapterNumberMin(), ::getChapterNumberMax(), true);
         mPictureBookLayout->initWithoutIter();
     }
 

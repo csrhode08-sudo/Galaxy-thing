@@ -103,8 +103,8 @@ void DisplayInformationForResult::exeIdle() {
 
 StageResultInformer::StageResultInformer()
     : LayoutActor("リザルト通知", true), mInformationDisplayer(), mSequenceChecker(), mIconAButton(), _30(), _31() {
-    mInformationDisplayer = new DisplayInformationForResult(this);
-    mSequenceChecker = new StageResultSequenceChecker();
+    mInformationDisplayer = new (JKRHeapToken::Dummy) DisplayInformationForResult(this);
+    mSequenceChecker = new (JKRHeapToken::Dummy) StageResultSequenceChecker();
 }
 
 void StageResultInformer::init(const JMapInfoIter& rIter) {

@@ -11,13 +11,13 @@
 #include <cstring>
 
 namespace {
-    struct HasActor : std::binary_function< const MsgSharedGroup*, const LiveActor*, bool > {
+    struct HasActor : msl::binary_function< const MsgSharedGroup*, const LiveActor*, bool > {
         bool operator()(const MsgSharedGroup* pGroup, const LiveActor* pActor) const {
             return pGroup->hasActor(pActor);
         }
     };
 
-    struct HasGroupId : std::binary_function< const MsgSharedGroup*, const JMapIdInfo&, bool > {
+    struct HasGroupId : msl::binary_function< const MsgSharedGroup*, const JMapIdInfo&, bool > {
         bool operator()(const MsgSharedGroup* pGroup, const JMapIdInfo& rIdInfo) const {
             return *pGroup->mIdInfo == rIdInfo;
         }
@@ -27,7 +27,7 @@ namespace {
 MsgSharedGroup::MsgSharedGroup(const char* pName, s32 numMax, const JMapInfoIter& rIter)
     : LiveActorGroup(mGroupName, numMax), mIdInfo(), mMsg(-1), mSensor(), mSensorName() {
     MR::copyString(mGroupName, pName, sizeof(mGroupName));
-    JMapIdInfo* pIdInfo = new JMapIdInfo();
+    JMapIdInfo* pIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo();
 
     if (pIdInfo != nullptr) {
         JMapIdInfo newInfo = MR::createJMapIdInfoFromGroupId(rIter);
@@ -75,7 +75,7 @@ LiveActorGroup* LiveActorGroupArray::getLiveActorGroup(const LiveActor* pActor) 
 LiveActorGroup* LiveActorGroupArray::createGroup(const JMapInfoIter& rIter, const char* pName, s32 numMax) {
     MsgSharedGroup* pGroup;
 
-    pGroup = new MsgSharedGroup(pName, numMax, rIter);
+    pGroup = new (JKRHeapToken::Dummy) MsgSharedGroup(pName, numMax, rIter);
     pGroup->initWithoutIter();
 
     mGroups.push_back(pGroup);
@@ -84,13 +84,13 @@ LiveActorGroup* LiveActorGroupArray::createGroup(const JMapInfoIter& rIter, cons
 }
 
 namespace {
-    std::binder2nd< HasGroupId, const JMapIdInfo& > makeGroupIdPredicate(const JMapIdInfo& rIdInfo) {
-        return std::binder2nd< HasGroupId, const JMapIdInfo& >(HasGroupId(), rIdInfo);
+    msl::binder2nd< HasGroupId, const JMapIdInfo& > makeGroupIdPredicate(const JMapIdInfo& rIdInfo) {
+        return msl::binder2nd< HasGroupId, const JMapIdInfo& >(HasGroupId(), rIdInfo);
     }
 };  // namespace
 
 LiveActorGroup* LiveActorGroupArray::findGroup(const JMapInfoIter& rIter) const {
-    MsgSharedGroup* const* it = std::find_if(mGroups.begin(), mGroups.end(), ::makeGroupIdPredicate(MR::createJMapIdInfoFromGroupId(rIter)));
+    MsgSharedGroup* const* it = msl::find_if(mGroups.begin(), mGroups.end(), ::makeGroupIdPredicate(MR::createJMapIdInfoFromGroupId(rIter)));
 
     if (it != mGroups.end()) {
         return *it;
@@ -100,7 +100,7 @@ LiveActorGroup* LiveActorGroupArray::findGroup(const JMapInfoIter& rIter) const 
 }
 
 LiveActorGroup* LiveActorGroupArray::findGroup(const LiveActor* pActor) const {
-    MsgSharedGroup* const* it = std::find_if(mGroups.begin(), mGroups.end(), std::binder2nd< HasActor, const LiveActor* >(HasActor(), pActor));
+    MsgSharedGroup* const* it = msl::find_if(mGroups.begin(), mGroups.end(), msl::binder2nd< HasActor, const LiveActor* >(HasActor(), pActor));
 
     if (it != mGroups.end()) {
         return *it;

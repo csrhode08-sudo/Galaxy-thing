@@ -16,12 +16,14 @@ extern const J3DIndTexMtxInfo j3dDefaultIndTexMtxInfo;
 extern const J3DTevStageInfo j3dDefaultTevStageInfo;
 extern const J3DIndTevStageInfo j3dDefaultIndTevStageInfo;
 
+#ifndef TARGET_PC
 // doing this matches. figure out why
 namespace J3DTevsDefault {
     extern "C" J3DIndTevStageInfo j3dDefaultIndTevStageInfo;
     extern "C" J3DTevStageInfo j3dDefaultTevStageInfo;
     extern "C" J3DTevSwapModeInfo j3dDefaultTevSwapMode;
 }  // namespace J3DTevsDefault
+#endif
 extern const J3DFogInfo j3dDefaultFogInfo;
 extern const J3DNBTScaleInfo j3dDefaultNBTScaleInfo;
 
@@ -69,8 +71,8 @@ public:
 struct J3DTevStage {
     J3DTevStage() {
 #ifdef J3D_TEV_STAGE_MUTABLE_DEFAULTS
-        setTevStageInfo(J3DTevsDefault::j3dDefaultTevStageInfo);
-        setTevSwapModeInfo(J3DTevsDefault::j3dDefaultTevSwapMode);
+        setTevStageInfo(j3dDefaultTevStageInfo);
+        setTevSwapModeInfo(j3dDefaultTevSwapMode);
 #else
         setTevStageInfo(j3dDefaultTevStageInfo);
         setTevSwapModeInfo(j3dDefaultTevSwapMode);
@@ -302,7 +304,7 @@ struct J3DTevSwapModeTable {
 
 struct J3DIndTevStage {
     J3DIndTevStage() : mInfo() {
-        setIndTevStageInfo(J3DTevsDefault::j3dDefaultIndTevStageInfo);
+        setIndTevStageInfo(j3dDefaultIndTevStageInfo);
     }
 
     J3DIndTevStage(J3DIndTevStageInfo const& info) : mInfo() {

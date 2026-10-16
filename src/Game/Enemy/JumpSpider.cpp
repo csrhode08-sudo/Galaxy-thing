@@ -91,8 +91,8 @@ void JumpSpider::init(const JMapInfoIter& rIter) {
     MR::initStarPointerTarget(this, 110.0f, offset2);
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);
-    mSpinHitController = new SpinHitController(this, 3, false);
-    mScaleController = new AnimScaleController(nullptr);
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 3, false);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     MR::offCalcGravity(this);
     MR::initShadowFromCSV(this, "Shadow");
     MR::onCalcShadowAll(this);

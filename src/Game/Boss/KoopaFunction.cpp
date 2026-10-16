@@ -29,18 +29,18 @@ namespace {
 };  // namespace
 
 NameObj* KoopaFunction::createKoopaVs1(const char* pName) {
-    KoopaSequencerVs1* pSequencer = new KoopaSequencerVs1();
-    return new Koopa(pName, pSequencer);
+    KoopaSequencerVs1* pSequencer = new (JKRHeapToken::Dummy) KoopaSequencerVs1();
+    return new (JKRHeapToken::Dummy) Koopa(pName, pSequencer);
 }
 
 NameObj* KoopaFunction::createKoopaVs2(const char* pName) {
-    KoopaSequencerVs2* pSequencer = new KoopaSequencerVs2();
-    return new Koopa(pName, pSequencer);
+    KoopaSequencerVs2* pSequencer = new (JKRHeapToken::Dummy) KoopaSequencerVs2();
+    return new (JKRHeapToken::Dummy) Koopa(pName, pSequencer);
 }
 
 NameObj* KoopaFunction::createKoopaVs3(const char* pName) {
-    KoopaSequencerVs3* pSequencer = new KoopaSequencerVs3();
-    return new Koopa(pName, pSequencer);
+    KoopaSequencerVs3* pSequencer = new (JKRHeapToken::Dummy) KoopaSequencerVs3();
+    return new (JKRHeapToken::Dummy) Koopa(pName, pSequencer);
 }
 
 void KoopaFunction::initKoopaPartsVs1(Koopa* pKoopa) {

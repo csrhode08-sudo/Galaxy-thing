@@ -35,7 +35,7 @@ PlanetGravity* GravityCreator::createFromJMap(const JMapInfoIter& rIter) {
 }
 
 PlanetGravity* CubeGravityCreator::createInstance() {
-    mGravityInstance = new CubeGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) CubeGravity();
     return mGravityInstance;
 }
 
@@ -88,7 +88,7 @@ PlanetGravity* CubeGravityCreator::getGravity() {
 }
 
 PlanetGravity* DiskGravityCreator::createInstance() {
-    mGravityInstance = new DiskGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) DiskGravity();
     return mGravityInstance;
 }
 
@@ -129,7 +129,7 @@ PlanetGravity* DiskGravityCreator::getGravity() {
 }
 
 PlanetGravity* DiskTorusGravityCreator::createInstance() {
-    mGravityInstance = new DiskTorusGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) DiskTorusGravity();
     return mGravityInstance;
 }
 
@@ -177,7 +177,7 @@ PlanetGravity* DiskTorusGravityCreator::getGravity() {
 }
 
 PlanetGravity* ConeGravityCreator::createInstance() {
-    mGravityInstance = new ConeGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) ConeGravity();
     return mGravityInstance;
 }
 
@@ -201,7 +201,7 @@ PlanetGravity* ConeGravityCreator::getGravity() {
 }
 
 PlanetGravity* PlaneGravityCreator::createInstance() {
-    mGravityInstance = new ParallelGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) ParallelGravity();
     return mGravityInstance;
 }
 
@@ -221,7 +221,7 @@ PlanetGravity* PlaneGravityCreator::getGravity() {
 }
 
 PlanetGravity* PlaneInBoxGravityCreator::createInstance() {
-    mGravityInstance = new ParallelGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) ParallelGravity();
     mGravityInstance->setRangeType(ParallelGravity::RangeType_Box);
     return mGravityInstance;
 }
@@ -271,7 +271,7 @@ void PlaneInBoxGravityCreator::settingFromJMapArgs(s32 arg0, s32 arg1, s32 arg2)
 }
 
 PlanetGravity* PlaneInCylinderGravityCreator::createInstance() {
-    mGravityInstance = new ParallelGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) ParallelGravity();
     mGravityInstance->setRangeType(ParallelGravity::RangeType_Cylinder);
     return mGravityInstance;
 }
@@ -300,7 +300,7 @@ void PlaneInCylinderGravityCreator::settingFromJMapArgs(s32 arg0, s32 arg1, s32 
 }
 
 PlanetGravity* PointGravityCreator::createInstance() {
-    mGravityInstance = new PointGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) PointGravity();
     return mGravityInstance;
 }
 
@@ -314,7 +314,7 @@ PlanetGravity* PointGravityCreator::getGravity() {
 }
 
 PlanetGravity* SegmentGravityCreator::createInstance() {
-    mGravityInstance = new SegmentGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) SegmentGravity();
     return mGravityInstance;
 }
 
@@ -368,13 +368,13 @@ PlanetGravity* SegmentGravityCreator::getGravity() {
 }
 
 PlanetGravity* WireGravityCreator::createInstance() {
-    mGravityInstance = new WireGravity();
+    mGravityInstance = new (JKRHeapToken::Dummy) WireGravity();
     return mGravityInstance;
 }
 
 void WireGravityCreator::settingFromJMapOtherParam(const JMapInfoIter& rIter) {
     // Get data from JMap
-    mRailRider = new RailRider(rIter);
+    mRailRider = new (JKRHeapToken::Dummy) RailRider(rIter);
     s32 numPointsInBetween = 20;
     MR::getJMapInfoArg0NoInit(rIter, &numPointsInBetween);
 

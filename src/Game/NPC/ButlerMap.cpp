@@ -78,7 +78,7 @@ void ButlerMap::init(const JMapInfoIter& rIter) {
         SphereSelectorFunction::registerTarget(this);
     }
 
-    mStateStarPieceReaction = new ButlerStateStarPieceReaction(this, rIter, "AstroGalaxy_Butler000");
+    mStateStarPieceReaction = new (JKRHeapToken::Dummy) ButlerStateStarPieceReaction(this, rIter, "AstroGalaxy_Butler000");
     mStateStarPieceReaction->init();
 
     if (MR::isButlerMapAppear()) {

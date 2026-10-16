@@ -1,4 +1,4 @@
-#include <mem.h>
+#include <cstring>
 #include "private/flipper.h"
 #include "revolution/os.h"
 #include "revolution/os/OSInterrupt.h"

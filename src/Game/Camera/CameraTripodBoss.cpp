@@ -9,7 +9,7 @@ CameraTripodBoss::CameraTripodBoss(const char* pName) : CameraTower(pName), mAng
 }
 
 CamTranslatorBase* CameraTripodBoss::createTranslator() {
-    return new CamTranslatorTripodBoss(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTripodBoss(this);
 }
 
 void CameraTripodBoss::arrangeRound() {

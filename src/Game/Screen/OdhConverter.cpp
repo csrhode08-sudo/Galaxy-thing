@@ -33,8 +33,8 @@ void OdhConverter::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_LayoutOnPause);
     MR::CurrentHeapRestorer heapRestorer(MR::getSceneHeapGDDR3());
 
-    mImage = new (32) u8[mLimitSize];
-    mCaptureImage = new (32) u8[mCaptureWidth * mCaptureHeight * 3];
+    mImage = new (JKRHeapToken::Dummy, 32) u8[mLimitSize];
+    mCaptureImage = new (JKRHeapToken::Dummy, 32) u8[mCaptureWidth * mCaptureHeight * 3];
 }
 
 void OdhConverter::draw() const {
@@ -105,7 +105,7 @@ namespace MR {
 
     u32 getOdhImageSize() {
         if (!isExistSceneObj(SceneObj_OdhConverter)) {
-            return nullptr;
+            return 0;
         }
 
         return ::getConverter()->getImageSize();

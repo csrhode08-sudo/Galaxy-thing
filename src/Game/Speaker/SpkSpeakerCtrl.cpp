@@ -2,7 +2,7 @@
 #include "Game/Speaker/SpkMixingBuffer.hpp"
 #include "Game/Speaker/SpkSound.hpp"
 #include <JSystem/JAudio2/JASCriticalSection.hpp>
-#include <mem.h>
+#include <cstring>
 #include <revolution/os/OSAlarm.h>
 #include <revolution/wenc.h>
 #include <revolution/wpad.h>

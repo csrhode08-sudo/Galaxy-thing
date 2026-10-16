@@ -411,7 +411,7 @@ void makeTevSwapTable() {
 
 void J3DTexMtx::loadTexMtx(u32 param_0) const {
     GDOverflowCheck(0x35);
-    J3DGDLoadTexMtxImm((MtxPtr)mMtx, param_0 * 3 + 30, (_GXTexMtxType)mTexMtxInfo.mProjection);
+    J3DGDLoadTexMtxImm((MtxPtr)mMtx, param_0 * 3 + 30, (GXTexMtxType)mTexMtxInfo.mProjection);
 }
 
 void J3DTexMtx::loadPostTexMtx(u32 param_0) const {
@@ -419,7 +419,7 @@ void J3DTexMtx::loadPostTexMtx(u32 param_0) const {
     J3DGDLoadPostTexMtxImm((MtxPtr)mMtx, param_0 * 3 + 0x40);
 }
 
-inline void J3DGDLoadTexMtxImm(f32 (*param_1)[4], u32 param_2, _GXTexMtxType param_3) {
+inline void J3DGDLoadTexMtxImm(f32 (*param_1)[4], u32 param_2, GXTexMtxType param_3) {
     u16 addr = param_2 << 2;
     u8 len = param_3 == GX_MTX2x4 ? 8 : 12;
     J3DGDWriteXFCmdHdr(addr, len);

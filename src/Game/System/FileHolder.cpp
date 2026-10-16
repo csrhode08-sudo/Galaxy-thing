@@ -42,7 +42,7 @@ FileHolder::FileHolder() {
 }
 
 FileHolderFileEntry* FileHolder::add(const char* pFilePath, JKRHeap* pHeap, void* pContext) {
-    FileHolderFileEntry* pEntry = new (pHeap, 0) FileHolderFileEntry(pFilePath, pHeap, pContext);
+    FileHolderFileEntry* pEntry = new (JKRHeapToken::Dummy, pHeap, 0) FileHolderFileEntry(pFilePath, pHeap, pContext);
     mEntries.push_back(pEntry);
     return pEntry;
 }

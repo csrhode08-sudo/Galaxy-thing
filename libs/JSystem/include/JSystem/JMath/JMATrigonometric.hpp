@@ -3,17 +3,17 @@
 #include <math_types.hpp>
 #include <revolution/types.h>
 
-namespace std {
+namespace JMath {
     template < typename A1, typename B1 >
-    struct pair {
+    struct TPair {
         A1 a1;
         B1 b1;
-        pair() {
+        TPair() {
             a1 = A1();
             b1 = B1();
         }
     };
-}  // namespace std
+}  // namespace JMath
 
 namespace JMath {
 
@@ -45,7 +45,7 @@ namespace JMath {
         TSinCosTable();
 
         static const u32 LEN = 1 << Bits;
-        std::pair< T, T > table[LEN];
+        JMath::TPair< T, T > table[LEN];
 
         T sinShort(s16 v) const {
             return table[static_cast< u16 >(v) >> (16U - Bits)].a1;
@@ -123,6 +123,9 @@ namespace JMath {
         T mTable[Len];
         T _1000;
     };
+
+    template <>
+    f32 TAtanTable< 1024, f32 >::atan2_(f32, f32) const;
 
     template < s32 Len, typename T >
     class TAsinAcosTable {

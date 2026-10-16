@@ -98,17 +98,17 @@ void Mogu::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, 60.0f * mScale.y);
     MR::invalidateShadow(this, nullptr);
     MR::initLightCtrl(this);
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     makeActorAppeared();
 
-    _90 = new FixedPosition(this, "ArmR2", TVec3f(67.38f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    _90 = new (JKRHeapToken::Dummy) FixedPosition(this, "ArmR2", TVec3f(67.38f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
 
     // "Rock-throwing stone"
-    mStone = new MoguStone("投石用の石", "MoguStone");
+    mStone = new (JKRHeapToken::Dummy) MoguStone("投石用の石", "MoguStone");
     mStone->initWithoutIter();
 
     // "Burrow model"
-    mHole = new ModelObj("巣穴モデル", "MoguHole", nullptr, -2, -2, -2, false);
+    mHole = new (JKRHeapToken::Dummy) ModelObj("巣穴モデル", "MoguHole", nullptr, -2, -2, -2, false);
     mHole->mPosition.set(mPosition);
     mHole->mRotation.set(mRotation);
     mHole->initWithoutIter();

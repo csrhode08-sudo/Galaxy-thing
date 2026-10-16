@@ -8,13 +8,13 @@
 
 GameSequenceDirector::GameSequenceDirector()
     : mGameDataTemporaryInGalaxy(nullptr), mGameSequenceProgress(nullptr), mSaveDataHandleSequence(nullptr), mNWC24Messenger(nullptr) {
-    mSaveDataHandleSequence = new SaveDataHandleSequence();
+    mSaveDataHandleSequence = new (JKRHeapToken::Dummy) SaveDataHandleSequence();
     mSaveDataHandleSequence->registerFunctorOnSaveSuccess(MR::Functor(this, &GameSequenceDirector::executeOnSaveSuccess));
     mSaveDataHandleSequence->registerFunctorJustBeforeSave(MR::Functor(this, &GameSequenceDirector::executeJustBeforeSave));
 
-    mGameSequenceProgress = new GameSequenceProgress();
-    mGameDataTemporaryInGalaxy = new GameDataTemporaryInGalaxy();
-    mNWC24Messenger = new NWC24Messenger("NWC24Messenger");
+    mGameSequenceProgress = new (JKRHeapToken::Dummy) GameSequenceProgress();
+    mGameDataTemporaryInGalaxy = new (JKRHeapToken::Dummy) GameDataTemporaryInGalaxy();
+    mNWC24Messenger = new (JKRHeapToken::Dummy) NWC24Messenger("NWC24Messenger");
 }
 
 void GameSequenceDirector::initAfterResourceLoaded() {

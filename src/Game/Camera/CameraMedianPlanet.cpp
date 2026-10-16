@@ -56,7 +56,7 @@ CameraTargetObj* CameraMedianPlanet::calc() {
 }
 
 CamTranslatorBase* CameraMedianPlanet::createTranslator() {
-    return new CamTranslatorMedianPlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorMedianPlanet(this);
 }
 
 void CameraMedianPlanet::getPrevFront(TVec3f* pPrevFront) {

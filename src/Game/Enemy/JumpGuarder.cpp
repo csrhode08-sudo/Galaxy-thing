@@ -65,10 +65,10 @@ void JumpEmitter::kill() {
 }
 
 void JumpEmitter::initEventCamera(const JMapInfoIter& rIter) {
-    mCameraInfo = new ActorCameraInfo(rIter);
+    mCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
 
     if (mCameraInfo->mCameraSetID != -1) {
-        mMultEventCamera = new MultiEventCamera();
+        mMultEventCamera = new (JKRHeapToken::Dummy) MultiEventCamera();
         mMultEventCamera->setUp(mName, mCameraInfo, 2);
         mMultEventCamera->setEndCameraTypeSoon();
     }
@@ -506,7 +506,7 @@ void JumpGuarder::init(const JMapInfoIter& rIter) {
         break;
     }
 
-    mBabies = new JumpGuarderBaby[::sBabyNum];
+    mBabies = new (JKRHeapToken::Dummy) JumpGuarderBaby[::sBabyNum];
     MR::declareCoin(this, mNumCoins);
 
     for (int i = 0; i < ::sBabyNum; i++) {

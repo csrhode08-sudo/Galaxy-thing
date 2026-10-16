@@ -43,15 +43,15 @@ ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(), mGalaxyName
 
     int galaxyNameSize = strlen(fileName) + 1;
 
-    mGalaxyName = new char[galaxyNameSize];
+    mGalaxyName = new (JKRHeapToken::Dummy) char[galaxyNameSize];
     MR::copyString(mGalaxyName, fileName, galaxyNameSize);
 
     JKRMemArchive* pArchive = static_cast< JKRMemArchive* >(MR::receiveArchive(pFilePath));
 
-    mScenarioData = new JMapInfo();
+    mScenarioData = new (JKRHeapToken::Dummy) JMapInfo();
     mScenarioData->attach(pArchive->getResource("/ScenarioData.bcsv"));
 
-    mZoneList = new JMapInfo();
+    mZoneList = new (JKRHeapToken::Dummy) JMapInfo();
     mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
 }
 
@@ -173,7 +173,7 @@ ScenarioDataParser::ScenarioDataParser(const char* pName) : NameObj(pName), mSce
             continue;
         }
 
-        ScenarioData* pData = new ScenarioData(fileName);
+        ScenarioData* pData = new (JKRHeapToken::Dummy) ScenarioData(fileName);
 
         u32 index = mScenarioData.mCount;
         u32 nextCount = index;
@@ -185,7 +185,7 @@ ScenarioDataParser::ScenarioDataParser(const char* pName) : NameObj(pName), mSce
 
     DVDCloseDir(&dir);
 
-    std::sort(mScenarioData.begin(), mScenarioData.end(), GalaxyNameSortLt());
+    msl::sort(mScenarioData.begin(), mScenarioData.end(), GalaxyNameSortLt());
 }
 #pragma pop
 

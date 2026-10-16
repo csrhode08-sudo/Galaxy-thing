@@ -153,9 +153,9 @@ void BegomanBase::initEffectAndStarPointerBind() {
     modelBoundingRadius *= 0.75f;
     MR::initStarPointerTarget(this, modelBoundingRadius, TVec3f(0.0f, 0.5f * modelBoundingRadius, 0.0f));
 
-    mScaleControler = new AnimScaleController(nullptr);
+    mScaleControler = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleControler->setParamTight();
-    mStarPointBind = new WalkerStateBindStarPointer(this, mScaleControler);
+    mStarPointBind = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleControler);
 }
 
 void BegomanBase::initAfterPlacement() {

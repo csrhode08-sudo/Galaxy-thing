@@ -6,7 +6,7 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     mFlag = mFlag & 2 | 1;
     u32 bufSize = GXGetTexBufferSize(width, height, format, GX_FALSE, 1);
 
-    ResTIMG* texBuf = reinterpret_cast< ResTIMG* >(new (sizeof(ResTIMG)) u8[bufSize + sizeof(ResTIMG)]);
+    ResTIMG* texBuf = reinterpret_cast< ResTIMG* >(new (JKRHeapToken::Dummy, sizeof(ResTIMG)) u8[bufSize + sizeof(ResTIMG)]);
     _3C = texBuf;
     texBuf->mFormat = format;
     texBuf->mTransparency = 0;
@@ -74,7 +74,7 @@ void JUTTexture::storeTIMG(const ResTIMG* pTIMG, u8 a1) {
         }
 
         if (mEmbPalette == nullptr || (mFlag & 2) == 0) {
-            mEmbPalette = new JUTPalette(static_cast< GXTlut >(lut), static_cast< GXTlutFmt >(getTexInfo()->mPaletteFormat),
+            mEmbPalette = new (JKRHeapToken::Dummy) JUTPalette(static_cast< GXTlut >(lut), static_cast< GXTlutFmt >(getTexInfo()->mPaletteFormat),
                                          static_cast< JUTTransparency >(getTexInfo()->mTransparency), getTexInfo()->mPaletteNum,
                                          reinterpret_cast< u8* >(const_cast< ResTIMG* >(getTexInfo())) + getTexInfo()->mPaletteDataOffset);
             setEmbPaletteDelFlag(true);

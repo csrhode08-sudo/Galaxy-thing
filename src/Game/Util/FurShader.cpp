@@ -12,7 +12,7 @@
 CShader::CShader(const J3DModelData* pModelData, const ResTIMG* pTimg) : mIndexArray(), mLengthMap(pTimg) {
     _1C = 0.0f;
     _8 = 0.0f;
-    mIndexArray = new CIndex[pModelData->mVertexData.mVtxNum];
+    mIndexArray = new (JKRHeapToken::Dummy) CIndex[pModelData->mVertexData.mVtxNum];
     _22 = 8;
     _21 = 8;
     _20 = 8;
@@ -373,7 +373,7 @@ f32 CShader::CLengthMap::refer(f32 u, f32 v) const {
     return f32(_4[((x % 8) + (y % 4) * 8) + (x / 8 + (_0->mWidth / 8) * (y / 4)) * 32]) / 255.0f;
 }
 
-u16 CShader::CLengthMap::getTexelOrder(u16 a1, f32 a2, _GXTexWrapMode mode) const {
+u16 CShader::CLengthMap::getTexelOrder(u16 a1, f32 a2, GXTexWrapMode mode) const {
     if (a2 > 1.0f) {
         switch (mode) {
         case GX_CLAMP:

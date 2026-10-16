@@ -36,8 +36,8 @@ namespace NrvHipDropSwitch {
 HipDropTimerSwitch::HipDropTimerSwitch(const char* pName)
     : LiveActor(pName), _8C(0), mMapObjConnector(nullptr), mCollisionParts(nullptr), mTimerMax(300), mTimerSFXType(0), mWasLightPressed(false),
       mIsLightPressed(false) {
-    mSpring = new SpringValue;
-    mMapObjConnector = new MapObjConnector(this);
+    mSpring = new (JKRHeapToken::Dummy) SpringValue;
+    mMapObjConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     mSpring->setParam(0.0f, 0.0f, 0.2f, 0.9f, 0.0f);
     _9C.identity();
 }

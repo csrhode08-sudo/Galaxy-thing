@@ -6,7 +6,7 @@
 #include "revolution/gx.h"
 #include "revolution/os.h"
 #include "revolution/gx/GXRegs.h"
-#include <mem.h>
+#include <cstring>
 
 #define TOPHYSICAL(a) (((u32)a) & 0x3FFFFFFF)
 

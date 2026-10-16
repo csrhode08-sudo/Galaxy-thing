@@ -166,5 +166,5 @@ CameraTargetObj* CameraDPD::calc() {
 }
 
 CamTranslatorBase* CameraDPD::createTranslator() {
-    return new CamTranslatorDPD(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorDPD(this);
 }

@@ -47,7 +47,7 @@ void PhantomTorch::init(const JMapInfoIter& rIter) {
     }
 
     initEffectKeeper(0, mParticle, false);
-    mPullParticle = new SpinPullParticleCallBack();
+    mPullParticle = new (JKRHeapToken::Dummy) SpinPullParticleCallBack();
     initSound(4, false);
     initHitSensor(1);
     TVec3f vec;

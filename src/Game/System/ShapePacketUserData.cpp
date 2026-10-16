@@ -40,7 +40,7 @@ void ShapePacketUserData::init(J3DMaterial* pMaterial) {
         }
     }
 
-    mDisplayList = new (32) u8[size + 0x40];
+    mDisplayList = new (JKRHeapToken::Dummy, 32) u8[size + 0x40];
     DCInvalidateRange(mDisplayList, size + 0x40);
     GDLObj displayList;
     GDInitGDLObj(&displayList, mDisplayList, size + 0x40);
@@ -99,7 +99,7 @@ namespace MR {
             J3DMaterial* pMaterial = pModelData->getMaterialNodePointer(i);
             J3DShapePacket* pShapePacket = pModel->getShapePacket(pMaterial->getShape()->getIndex());
             if (isEnvelope(pMaterial) && (isUseTexMtxProjMap(pMaterial) || isUseTexMtxEnvMap(pMaterial))) {
-                ShapePacketUserData* pUserData = new ShapePacketUserData();
+                ShapePacketUserData* pUserData = new (JKRHeapToken::Dummy) ShapePacketUserData();
                 pUserData->init(pMaterial);
                 if (pUserData != nullptr) {
                     pShapePacket->setUserArea(reinterpret_cast< uintptr_t >(pUserData));

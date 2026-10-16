@@ -18,7 +18,7 @@ void YesNoLayout::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "Right", 1);
     initEffectKeeper(0, nullptr, nullptr);
 
-    mController = new YesNoController(this);
+    mController = new (JKRHeapToken::Dummy) YesNoController(this);
 
     MR::registerDemoSimpleCastAll(this);
     initNerve(GET_NERVE(YesNoLayout, YesNoLayoutNrvSelecting));

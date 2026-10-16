@@ -126,8 +126,8 @@ void Poihana::init(const JMapInfoIter& rIter) {
     initSound(4, false);
 
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f, 100.0f, 0.0f));
-    mAnimScaleCtrl = new AnimScaleController(nullptr);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mAnimScaleCtrl);
+    mAnimScaleCtrl = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleCtrl);
 
     MR::initShadowVolumeSphere(this, 80.0f);
     MR::addToAttributeGroupSearchTurtle(this);

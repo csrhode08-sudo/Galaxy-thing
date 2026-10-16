@@ -61,11 +61,11 @@ void OceanBowl::init(const JMapInfoIter& rIter) {
     initPoints();
     WaterAreaFunction::entryOceanBowl(this);
 
-    mWaterTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
-    mWaterIndirectTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
-    mMaskTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Mask.bti"), 0);
+    mWaterTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
+    mWaterIndirectTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
+    mMaskTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Mask.bti"), 0);
 
-    mBloomDrawer = new OceanBowlBloomDrawer(this);
+    mBloomDrawer = new (JKRHeapToken::Dummy) OceanBowlBloomDrawer(this);
     mBloomDrawer->initWithoutIter();
 
     MR::invalidateClipping(this);
@@ -188,14 +188,14 @@ void OceanBowl::initPoints() {
             finalpos.add(vecA);
             finalpos.add(vecB);
 
-            setPoint(x, y, new OceanBowlPoint(finalpos));
+            setPoint(x, y, new (JKRHeapToken::Dummy) OceanBowlPoint(finalpos));
         }
     }
 
-    mVtxTex0Array = new (0x20) f32[24 * 25 * 4];
-    mVtxTex1Array = new (0x20) f32[24 * 25 * 4];
-    mVtxTex2Array = new (0x20) f32[24 * 25 * 4];
-    mVtxTex3Array = new (0x20) f32[24 * 25 * 4];
+    mVtxTex0Array = new (JKRHeapToken::Dummy, 0x20) f32[24 * 25 * 4];
+    mVtxTex1Array = new (JKRHeapToken::Dummy, 0x20) f32[24 * 25 * 4];
+    mVtxTex2Array = new (JKRHeapToken::Dummy, 0x20) f32[24 * 25 * 4];
+    mVtxTex3Array = new (JKRHeapToken::Dummy, 0x20) f32[24 * 25 * 4];
 
     s32 index = 0;
 
@@ -403,10 +403,10 @@ void OceanBowl::loadMaterial() const {
     GXSetVtxDesc(GX_VA_TEX1, GX_INDEX16);
     GXSetVtxDesc(GX_VA_TEX2, GX_INDEX16);
     GXSetVtxDesc(GX_VA_TEX3, GX_INDEX16);
-    GXSetArray(GX_VA_TEX0, mVtxTex0Array, 8);
-    GXSetArray(GX_VA_TEX1, mVtxTex1Array, 8);
-    GXSetArray(GX_VA_TEX2, mVtxTex2Array, 8);
-    GXSetArray(GX_VA_TEX3, mVtxTex3Array, 8);
+    GXSETARRAY(GX_VA_TEX0, mVtxTex0Array, 24 * 25 * 4 * sizeof(f32), 8, true);
+    GXSETARRAY(GX_VA_TEX1, mVtxTex1Array, 24 * 25 * 4 * sizeof(f32), 8, true);
+    GXSETARRAY(GX_VA_TEX2, mVtxTex2Array, 24 * 25 * 4 * sizeof(f32), 8, true);
+    GXSETARRAY(GX_VA_TEX3, mVtxTex3Array, 24 * 25 * 4 * sizeof(f32), 8, true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);
     GXSetNumChans(1);
@@ -519,8 +519,8 @@ void OceanBowl::loadMaterialBloom() const {
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
     GXSetVtxDesc(GX_VA_TEX1, GX_INDEX16);
-    GXSetArray(GX_VA_TEX0, mVtxTex0Array, 8);
-    GXSetArray(GX_VA_TEX1, mVtxTex1Array, 8);
+    GXSETARRAY(GX_VA_TEX0, mVtxTex0Array, 24 * 25 * 4 * sizeof(f32), 8, true);
+    GXSETARRAY(GX_VA_TEX1, mVtxTex1Array, 24 * 25 * 4 * sizeof(f32), 8, true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);
     GXSetNumChans(1);

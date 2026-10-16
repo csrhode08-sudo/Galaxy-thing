@@ -131,7 +131,7 @@ void Caretaker::init(const JMapInfoIter& rIter) {
         MR::needStageSwitchWriteB(this, rIter);
         MR::declarePowerStar(this);
 
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStarCaretaker", "TakeOutStarCaretaker", GET_NERVE(Caretaker, CaretakerNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStarCaretaker", "TakeOutStarCaretaker", GET_NERVE(Caretaker, CaretakerNrvTakeOutStar));
 
         if (MR::isPlayerLuigi()) {
             MR::getJMapInfoArg2NoInit(rIter, &mTidyTimeLimit);
@@ -139,7 +139,7 @@ void Caretaker::init(const JMapInfoIter& rIter) {
             MR::getJMapInfoArg1NoInit(rIter, &mTidyTimeLimit);
         }
 
-        mBombTimerLayout = new BombTimerLayout(true);
+        mBombTimerLayout = new (JKRHeapToken::Dummy) BombTimerLayout(true);
         mBombTimerLayout->initWithoutIter();
         mBombTimerLayout->setTimeLimit(mTidyTimeLimit * 60);
         mBombTimerLayout->kill();

@@ -25,7 +25,7 @@ int (*AnmPlayer_FORCE_EMIT(TQuat4f& rQuat, const TQuat4f& rOther, TPos3f& rMtx, 
     rQuat.normalize(rOther);
     rQuat.getEuler(rVec);
 
-    delete[] new TPos3f[1];
+    delete[] new (JKRHeapToken::Dummy) TPos3f[1];
     rMtx.identity();
     rMtx.mult(rVec, rVec);
     rMtx.multTranspose(rVec, rVec);

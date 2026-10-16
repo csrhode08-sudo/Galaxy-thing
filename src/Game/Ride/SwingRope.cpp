@@ -198,7 +198,7 @@ inline void SwingRope::exeFreeInvalid() {
 
 void SwingRope::exeBindSlideDownStart() {
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("SwingRopeSlideDownStart", 0L);
+        MR::startBckPlayer("SwingRopeSlideDownStart", 0);
         mSlideSpeed = 0.0f;
     }
 
@@ -239,15 +239,15 @@ void SwingRope::exeBindLoose() {
 
 void SwingRope::initPoints() {
     mNumPoints = mRopeLength / ::sPointInterval;
-    mPoints = new SwingRopePoint*[mNumPoints];
+    mPoints = new (JKRHeapToken::Dummy) SwingRopePoint*[mNumPoints];
 
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         TVec3f pos = mGravity * (::sPointInterval * (idx + 1));
         pos.add(mBasePos);
-        mPoints[idx] = new SwingRopePoint(pos);
+        mPoints[idx] = new (JKRHeapToken::Dummy) SwingRopePoint(pos);
     }
 
-    mSledPoint = new SledRopePoint(mBasePos, ::sPointInterval);
+    mSledPoint = new (JKRHeapToken::Dummy) SledRopePoint(mBasePos, ::sPointInterval);
 }
 
 void SwingRope::updateHitSensor(HitSensor* pSensor) {
@@ -458,7 +458,7 @@ bool SwingRope::tryJump() {
         MR::endActorCameraAtLanding(this, mCameraInfo);
         MR::startSound(mRider, "SE_PV_JUMP_S");
         MR::startSound(mRider, "SE_PM_JUMP_M");
-        MR::startBckPlayer("SwingRopeSpin", 0L);
+        MR::startBckPlayer("SwingRopeSpin", 0);
 
         MR::setPlayerFrontTargetVec(front, 1);
         MR::endBindAndPlayerWeakGravityJump(this, jumpVec);
@@ -807,7 +807,7 @@ void SwingRope::drawBind() const {
 
 SwingRopeGroup::SwingRopeGroup(const char* pName) : NameObj(pName) {
     mTexture = nullptr;
-    mTexture = new JUTTexture(MR::loadTexFromArc("SwingRope.arc", "SwingRope.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SwingRope.arc", "SwingRope.bti"), 0);
 
     MR::registerPreDrawFunction(MR::Functor(this, &SwingRopeGroup::initDraw), MR::DrawType_SwingRope);
 }

@@ -29,7 +29,7 @@ void MovementOnOffGroupHolder::onMovementGroup(const char* pName) {
 NameObjGroup* MovementOnOffGroupHolder::createGroup(const char* pName, u32 numMax) {
     NameObjGroup* group;
 
-    group = new NameObjGroup(pName, numMax);
+    group = new (JKRHeapToken::Dummy) NameObjGroup(pName, numMax);
     group->initWithoutIter();
 
     mGroups.push_back(group);

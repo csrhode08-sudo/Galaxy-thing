@@ -45,7 +45,7 @@ namespace {
             }
 
             field_0x4 = stack_14.getNumFiles();
-            field_0x8 = new s32[field_0x4];
+            field_0x8 = new (JKRHeapToken::Dummy) s32[field_0x4];
 
             if (!field_0x8) {
                 field_0x4 = 0;
@@ -147,7 +147,7 @@ JAUSoundTable* JAUSection::newSoundTable(void const* bst, u32 param_1, bool para
             bstDst = newCopy(bst, param_1, 4);
         }
 
-        JAUSoundTable* soundTable = new JAUSoundTable(param_2);
+        JAUSoundTable* soundTable = new (JKRHeapToken::Dummy) JAUSoundTable(param_2);
         soundTable->init(bstDst);
         sectionHeap_->sectionHeapData_.soundTable = soundTable;
         data_.mBstDst = bstDst;
@@ -165,7 +165,7 @@ JAUSoundNameTable* JAUSection::newSoundNameTable(void const* bstn, u32 param_1, 
             bstnDst = newCopy(bstn, param_1, 4);
         }
 
-        JAUSoundNameTable* soundNameTable = new JAUSoundNameTable(param_2);
+        JAUSoundNameTable* soundNameTable = new (JKRHeapToken::Dummy) JAUSoundNameTable(param_2);
         soundNameTable->init(bstnDst);
         sectionHeap_->sectionHeapData_.soundNameTable = soundNameTable;
         data_.mBstnDst = bstnDst;
@@ -180,13 +180,13 @@ JAIStreamDataMgr* JAUSection::newStreamFileTable(void const* param_0, bool param
         JAIStreamDataMgr* r28 = nullptr;
 
         if (param_1) {
-            TStreamDataMgr* r26 = new TStreamDataMgr(param_0);
+            TStreamDataMgr* r26 = new (JKRHeapToken::Dummy) TStreamDataMgr(param_0);
 
             if (r26->isValid()) {
                 r28 = r26;
             }
         } else {
-            JAUStreamDataMgr_StreamFileTable* r25 = new JAUStreamDataMgr_StreamFileTable();
+            JAUStreamDataMgr_StreamFileTable* r25 = new (JKRHeapToken::Dummy) JAUStreamDataMgr_StreamFileTable();
             r25->init(param_0);
 
             if (r25->isValid()) {
@@ -207,7 +207,7 @@ JAISeqDataMgr* JAUSection::newSeSeqCollection(void const* bsc, u32 param_1) {
 
     {
         TPushCurrentHeap push(getHeap_());
-        JAUSeqDataMgr_SeqCollection* seSeqDataMgr = new JAUSeqDataMgr_SeqCollection();
+        JAUSeqDataMgr_SeqCollection* seSeqDataMgr = new (JKRHeapToken::Dummy) JAUSeqDataMgr_SeqCollection();
         seSeqDataMgr->init(bsc);
         sectionHeap_->sectionHeapData_.seSeqDataMgr_ = seSeqDataMgr;
         data_.field_0x80 = seSeqDataMgr;
@@ -219,19 +219,19 @@ JAISeqDataMgr* JAUSection::newSeSeqCollection(void const* bsc, u32 param_1) {
 u8* JAUSection::newStaticSeqDataBlock_(JAISoundID param_0, u32 size) {
     {
         TPushCurrentHeap push(getHeap_());
-        JAUSeqDataBlock* seqDataBlock = new JAUSeqDataBlock();
+        JAUSeqDataBlock* seqDataBlock = new (JKRHeapToken::Dummy) JAUSeqDataBlock();
 
         if (!seqDataBlock) {
             return nullptr;
         }
 
-        JSULink< JAUSeqDataBlock >* link = new JSULink< JAUSeqDataBlock >(seqDataBlock);
+        JSULink< JAUSeqDataBlock >* link = new (JKRHeapToken::Dummy) JSULink< JAUSeqDataBlock >(seqDataBlock);
 
         if (!link) {
             return nullptr;
         }
 
-        u8* r28 = new (0x20) u8[size];
+        u8* r28 = new (JKRHeapToken::Dummy, 0x20) u8[size];
 
         if (!r28) {
             return nullptr;
@@ -293,7 +293,7 @@ void* JAUSection::loadDVDFile(const char* pFileName, bool direction, JKRExpandSw
 }
 
 void* JAUSection::newCopy(void const* param_0, u32 param_1, s32 param_2) {
-    u8* r31 = new (getHeap_(), param_2) u8[param_1];
+    u8* r31 = new (JKRHeapToken::Dummy, getHeap_(), param_2) u8[param_1];
 
     if (r31) {
         memcpy(r31, param_0, param_1);
@@ -420,7 +420,7 @@ JASVoiceBank* JAUSection::newVoiceBank(u32 bank_no, u32 param_1) {
     {
         JASWaveBank* waveBank = sectionHeap_->getWaveBankTable().getWaveBank(param_1);
         TPushCurrentHeap push(getHeap_());
-        JASBank* voiceBank = new JASVoiceBank();
+        JASBank* voiceBank = new (JKRHeapToken::Dummy) JASVoiceBank();
 
         if (voiceBank) {
             if (buildingBankTable_) {
@@ -442,10 +442,10 @@ bool JAUSection::beginNewBankTable(u32 param_0, u32 param_1) {
     JAUBankTableLink* bankTableLink = nullptr;
     {
         TPushCurrentHeap push(getHeap_());
-        JASBank** r26 = new JASBank*[param_1];
+        JASBank** r26 = new (JKRHeapToken::Dummy) JASBank*[param_1];
 
         if (r26 != nullptr) {
-            bankTableLink = new JAUBankTableLink(param_0, r26, param_1);
+            bankTableLink = new (JKRHeapToken::Dummy) JAUBankTableLink(param_0, r26, param_1);
 
             if (bankTableLink != nullptr) {
                 buildingBankTable_ = bankTableLink;
@@ -496,7 +496,7 @@ u32 JAUSectionHeap::releaseIdleDynamicSeqDataBlock() {
 static JAUSectionHeap* JAUNewSectionHeap(JKRSolidHeap* heap, bool param_1) NO_INLINE {
     TPushCurrentHeap push(heap);
     s32 r29 = heap->getFreeSize();
-    JAUSectionHeap* sectionHeap = new JAUSectionHeap(heap, param_1, r29);
+    JAUSectionHeap* sectionHeap = new (JKRHeapToken::Dummy) JAUSectionHeap(heap, param_1, r29);
     return sectionHeap;
 }
 
@@ -545,19 +545,19 @@ bool JAUSectionHeap::setSeqDataUser(JAISeqDataUser* param_0) {
 bool JAUSectionHeap::newDynamicSeqBlock(u32 size) {
     {
         TPushCurrentHeap push(getHeap_());
-        JAUSeqDataBlock* seqDataBlock = new JAUSeqDataBlock();
+        JAUSeqDataBlock* seqDataBlock = new (JKRHeapToken::Dummy) JAUSeqDataBlock();
 
         if (!seqDataBlock) {
             return false;
         }
 
-        JSULink< JAUSeqDataBlock >* link = new JSULink< JAUSeqDataBlock >(seqDataBlock);
+        JSULink< JAUSeqDataBlock >* link = new (JKRHeapToken::Dummy) JSULink< JAUSeqDataBlock >(seqDataBlock);
 
         if (!link) {
             return false;
         }
 
-        u8* r25 = new (0x20) u8[size];
+        u8* r25 = new (JKRHeapToken::Dummy, 0x20) u8[size];
 
         if (!r25) {
             return false;

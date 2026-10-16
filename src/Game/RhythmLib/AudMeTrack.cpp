@@ -112,7 +112,7 @@ AudMeTrack* AudMeTrack::newChild(s32 childNo) {
         return nullptr;
     }
 
-    mChildren[childNo] = new AudMeTrack();
+    mChildren[childNo] = new (JKRHeapToken::Dummy) AudMeTrack();
     if (mChildren[childNo] == nullptr) {
         return nullptr;
     }

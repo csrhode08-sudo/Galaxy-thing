@@ -184,8 +184,8 @@ void SurfRay::init(const JMapInfoIter& pMapInfoIter) {
     MR::useStageSwitchWriteA(this, pMapInfoIter);
     MR::tryFindNamePos("ワープ位置（サーフィン）", &mWarpPos, nullptr);
 
-    mActorJointCtrl = new ActorJointCtrl(this);
-    mTwistBuffer = new f32[mTwistBufferSize];
+    mActorJointCtrl = new (JKRHeapToken::Dummy) ActorJointCtrl(this);
+    mTwistBuffer = new (JKRHeapToken::Dummy) f32[mTwistBufferSize];
 
     for (s32 count = 0; count < mTwistBufferSize; count++) {
         mTwistBuffer[count] = 0.0f;
@@ -410,7 +410,7 @@ void SurfRay::exeWipeOut() {
     if (!updateRide() && !MR::isWipeActive()) {
         MR::resetPosition(this, "スタート位置（サーフィン）");
         resetAllInfo();
-        MR::startBckPlayer("SurfRide", 0L);
+        MR::startBckPlayer("SurfRide", 0);
         MR::resetCameraMan();
         setNerve(GET_NERVE(SurfRay, SurfRayNrvWipeIn));
     }
@@ -430,7 +430,7 @@ void SurfRay::exeReady() {
     if (MR::isFirstStep(this)) {
         MR::endStartPosCamera();
         MR::startBck(this, "WaitRaceStart");
-        MR::startBckPlayer("SurfRide", 0L);
+        MR::startBckPlayer("SurfRide", 0);
         MR::tryEmitEffect(this, "Ripple");
         MR::tryDeleteEffect(this, "RunDashSplash");
         MR::tryDeleteEffect(this, "SwimSplash");
@@ -496,7 +496,7 @@ bool SurfRay::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
         }
 
         MR::startBckNoInterpole(this, "Wait");
-        MR::startBckPlayer("SurfRideLoop", 0L);
+        MR::startBckPlayer("SurfRideLoop", 0);
         MR::calcAnimDirect(this);
         mActorJointCtrl->resetDynamicCtrl();
 
@@ -549,7 +549,7 @@ bool SurfRay::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
         MR::resetPosition(this, "スタート位置（サーフィン）");
         resetAllInfo();
         MR::setPlayerPos(mPosition);
-        MR::startBckPlayer("SurfRide", 0L);
+        MR::startBckPlayer("SurfRide", 0);
         MR::resetCameraMan();
         return true;
     }

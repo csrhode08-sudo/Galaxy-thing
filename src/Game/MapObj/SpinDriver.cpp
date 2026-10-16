@@ -224,7 +224,7 @@ void SpinDriver::initParamFromJMapInfo(const JMapInfoIter& rIter) {
 
 void SpinDriver::initShootPath(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
-        mShootPath = new SpinDriverShootPath();
+        mShootPath = new (JKRHeapToken::Dummy) SpinDriverShootPath();
 
         _134 = 0.0f;
         MR::getJMapInfoArg5NoInit(rIter, &_134);
@@ -239,7 +239,7 @@ void SpinDriver::initShootPath(const JMapInfoIter& rIter) {
 }
 
 void SpinDriver::initEventCamera(const JMapInfoIter& rIter) {
-    mSpinDriverCamera = new SpinDriverCamera();
+    mSpinDriverCamera = new (JKRHeapToken::Dummy) SpinDriverCamera();
     mSpinDriverCamera->init(rIter, this);
 
     if (MR::isConnectedWithRail(rIter)) {

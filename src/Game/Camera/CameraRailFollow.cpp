@@ -112,5 +112,5 @@ void CameraRailFollow::setParam(s32 zoneID, s32 railID, f32 stopMargin, f32 rail
 }
 
 CamTranslatorBase* CameraRailFollow::createTranslator() {
-    return new CamTranslatorRailFollow(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorRailFollow(this);
 }

@@ -21,38 +21,38 @@ GameSceneLayoutHolder::GameSceneLayoutHolder()
     MR::joinToNameObjGroup(this, "IgnorePauseNameObj");
     MR::connectToSceneLayoutMovement(this);
 
-    mMarioMeter = new MarioMeter("マリオメーター");
+    mMarioMeter = new (JKRHeapToken::Dummy) MarioMeter("マリオメーター");
     mMarioMeter->initWithoutIter();
 
-    mCounterLayoutCtrl = new CounterLayoutController();
+    mCounterLayoutCtrl = new (JKRHeapToken::Dummy) CounterLayoutController();
     mCounterLayoutCtrl->initWithoutIter();
     mCounterLayoutCtrl->setHPMeter(mMarioMeter);
 
-    mCameraInfo = new CameraInfo("カメラ情報表示");
+    mCameraInfo = new (JKRHeapToken::Dummy) CameraInfo("カメラ情報表示");
     mCameraInfo->initWithoutIter();
 
-    mInformationMessage = new InformationMessage();
+    mInformationMessage = new (JKRHeapToken::Dummy) InformationMessage();
     mInformationMessage->initWithoutIter();
 
-    mOneUpBoard = new OneUpBoard();
+    mOneUpBoard = new (JKRHeapToken::Dummy) OneUpBoard();
     mOneUpBoard->initWithoutIter();
 
-    mMissLayout = new MissLayout();
+    mMissLayout = new (JKRHeapToken::Dummy) MissLayout();
     mMissLayout->initWithoutIter();
 
-    mMarioSubMeter = new MarioSubMeter("マリオサブメーター");
+    mMarioSubMeter = new (JKRHeapToken::Dummy) MarioSubMeter("マリオサブメーター");
     mMarioSubMeter->initWithoutIter();
 
-    mNoteCounter = new NoteCounter("音符カウンタ");
+    mNoteCounter = new (JKRHeapToken::Dummy) NoteCounter("音符カウンタ");
     mNoteCounter->initWithoutIter();
     MR::hideLayout(mNoteCounter);
 
-    mYesNoLayout = new YesNoLayout();
+    mYesNoLayout = new (JKRHeapToken::Dummy) YesNoLayout();
     mYesNoLayout->initWithoutIter();
 }
 
 void GameSceneLayoutHolder::createPurpleCoinCounter() {
-    mPurpleCoinCounter = new PurpleCoinCounter("パープルコインカウンタ");
+    mPurpleCoinCounter = new (JKRHeapToken::Dummy) PurpleCoinCounter("パープルコインカウンタ");
     mPurpleCoinCounter->initWithoutIter();
 }
 

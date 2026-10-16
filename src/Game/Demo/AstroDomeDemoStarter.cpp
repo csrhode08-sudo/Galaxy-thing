@@ -49,10 +49,10 @@ void AstroDomeDemoStarter::init(const JMapInfoIter& rIter) {
     MR::initActorCamera(this, rIter, &_F4);
     MR::initAnimCamera(this, _F4, "AstroDomeDemoCamera.arc", "AstroDomeDemoCamera");
 
-    _8C = new SpinDriverShootPath();
+    _8C = new (JKRHeapToken::Dummy) SpinDriverShootPath();
     _8C->init(rIter);
 
-    _90 = new SpinDriverPathDrawer(_8C);
+    _90 = new (JKRHeapToken::Dummy) SpinDriverPathDrawer(_8C);
     _90->initWithoutIter();
     _90->setColorNormal();
 
@@ -134,7 +134,7 @@ void AstroDomeDemoStarter::exeSpinDriverAppear() {
         MR::setBaseTRMtx(this, _94);
         MR::showModel(this);
         MR::startBck(this, "Appear");
-        MR::startBckPlayer("SpinDriverWait", 20L);
+        MR::startBckPlayer("SpinDriverWait", 20);
         MR::startSound(this, "SE_OJ_S_SPIN_DRV_APPEAR");
     }
 

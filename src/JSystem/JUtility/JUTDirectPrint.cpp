@@ -9,7 +9,7 @@ JUTDirectPrint::JUTDirectPrint() {
 
 JUTDirectPrint* JUTDirectPrint::start() {
     if (!sDirectPrint) {
-        sDirectPrint = new JUTDirectPrint();
+        sDirectPrint = new (JKRHeapToken::Dummy) JUTDirectPrint();
     }
 
     return sDirectPrint;

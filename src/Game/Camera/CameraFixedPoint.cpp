@@ -59,7 +59,7 @@ CameraTargetObj* CameraFixedPoint::calc() {
 }
 
 CamTranslatorBase* CameraFixedPoint::createTranslator() {
-    return new CamTranslatorFixedPoint(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFixedPoint(this);
 }
 
 void CameraFixedPoint::setParam(const TVec3f& rPos, u32 cameraType) {

@@ -30,7 +30,7 @@ JUTXfb::JUTXfb(void* a1, void* a2, void* a3) {
 
 JUTXfb* JUTXfb::createManager(void* a1, void* a2, void* a3) {
     if (sManager == nullptr) {
-        sManager = new JUTXfb(a1, a2, a3);
+        sManager = new (JKRHeapToken::Dummy) JUTXfb(a1, a2, a3);
     }
     return sManager;
 }

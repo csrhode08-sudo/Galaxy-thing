@@ -46,9 +46,9 @@ DemoActionInfo::DemoActionInfo() {
     mFunctors = nullptr;
     mNerves = nullptr;
     _2C = 0;
-    mCastList = new LiveActor*[128];
-    mFunctors = new MR::FunctorBase*[_18];
-    mNerves = new const Nerve*[_18];
+    mCastList = new (JKRHeapToken::Dummy) LiveActor*[128];
+    mFunctors = new (JKRHeapToken::Dummy) MR::FunctorBase*[_18];
+    mNerves = new (JKRHeapToken::Dummy) const Nerve*[_18];
     for (s32 i = 0; i < _18; i++) {
         mCastList[i] = nullptr;
         mFunctors[i] = nullptr;
@@ -228,10 +228,10 @@ DemoActionKeeper::DemoActionKeeper(const DemoExecutor* pExector) {
     mInfoArray = nullptr;
     JMapInfo* jmap = nullptr;
     mNumInfos = DemoFunction::createSheetParser(mDemoExecutor, "Action", &jmap);
-    mInfoArray = new DemoActionInfo*[mNumInfos];
+    mInfoArray = new (JKRHeapToken::Dummy) DemoActionInfo*[mNumInfos];
 
     for (s32 i = 0; i < mNumInfos; i++) {
-        mInfoArray[i] = new DemoActionInfo();
+        mInfoArray[i] = new (JKRHeapToken::Dummy) DemoActionInfo();
         DemoActionInfo* info = mInfoArray[i];
         jmap->getValue< const char* >(i, "PartName", &info->mPartName);
         jmap->getValue< const char* >(i, "CastName", &info->mCastName);

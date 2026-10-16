@@ -6,7 +6,7 @@
 AudSoundObjHolder::AudSoundObjHolder(JKRHeap* pHeap, s32 capacity) {
     mCapacity = capacity;
     mSize = 0;
-    mArray = new (pHeap, 0) AudSoundObject*[capacity];
+    mArray = new (JKRHeapToken::Dummy, pHeap, 0) AudSoundObject*[capacity];
 }
 
 void AudSoundObjHolder::update() {

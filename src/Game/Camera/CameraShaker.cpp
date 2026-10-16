@@ -53,8 +53,8 @@ void CameraShaker::createSinglyVerticalTask() {
     static const f32 cSinglyIntensity[] = {0.08f, 0.2f, 0.5f, 1.0f, 3.0f, 6.0f, 9.0f};
 
     for (u32 i = 0; i < NR_VERTICAL_TASKS; i++) {
-        CameraShakePatternSingly* singly = new CameraShakePatternSingly(cSinglyIntensity[i]);
-        CameraShakeTask* task = new CameraShakeTask(singly);
+        CameraShakePatternSingly* singly = new (JKRHeapToken::Dummy) CameraShakePatternSingly(cSinglyIntensity[i]);
+        CameraShakeTask* task = new (JKRHeapToken::Dummy) CameraShakeTask(singly);
 
         mVerticalTasks[i] = task;
     }
@@ -71,11 +71,11 @@ void CameraShaker::createSinglyHorizontalTask() {
 
     // Should be i < NR_HORIZONTAL_TASKS
     for (u32 i = 0; i < NR_VERTICAL_TASKS; i++) {
-        CameraShakePatternSingly* singly = new CameraShakePatternSingly(cSinglyIntensity[i]);
+        CameraShakePatternSingly* singly = new (JKRHeapToken::Dummy) CameraShakePatternSingly(cSinglyIntensity[i]);
 
         singly->setDirection(TVec2f(1.0f, 0.0f));
 
-        CameraShakeTask* task = new CameraShakeTask(singly);
+        CameraShakeTask* task = new (JKRHeapToken::Dummy) CameraShakeTask(singly);
 
         mHorizontalTasks[i] = task;
     }
@@ -83,8 +83,8 @@ void CameraShaker::createSinglyHorizontalTask() {
 
 void CameraShaker::createInfinityTask() {
     for (u32 i = 0; i < NR_INFINITY_TASKS; i++) {
-        CameraShakePatternVerticalSin* sin = new CameraShakePatternVerticalSin(::sInfinityIntensity, ::sInfinitySpeed);
-        CameraShakeTask* task = new CameraShakeTask(sin);
+        CameraShakePatternVerticalSin* sin = new (JKRHeapToken::Dummy) CameraShakePatternVerticalSin(::sInfinityIntensity, ::sInfinitySpeed);
+        CameraShakeTask* task = new (JKRHeapToken::Dummy) CameraShakeTask(sin);
 
         mInfinityTasks[i] = task;
         mInfinityNameObjs[i] = nullptr;

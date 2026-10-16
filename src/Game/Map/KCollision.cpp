@@ -32,7 +32,7 @@ void DUMMY_KCollision2() {
     }
 }
 
-KCollisionServer::KCollisionServer() : mFile(), mapInfo(new JMapInfo()), mMaxVertexDistance(1.0f) {
+KCollisionServer::KCollisionServer() : mFile(), mapInfo(new (JKRHeapToken::Dummy) JMapInfo()), mMaxVertexDistance(1.0f) {
 }
 
 void KCollisionServer::init(void* pData, const void* pMapData) {
@@ -254,7 +254,7 @@ u32 KCollisionServer::checkArea3D(Fxyz* pMin, Fxyz* pMax, KC_PrismData** pOut, u
 
                         KC_PrismData** end = pOut + foundCount;
 
-                        if (std::find(pOut, end, (KC_PrismData* const&)prism) != end) {
+                        if (msl::find(pOut, end, (KC_PrismData* const&)prism) != end) {
                             continue;
                         }
 
@@ -390,7 +390,7 @@ u32 KCollisionServer::checkSphere(Fxyz* pCenter, f32 radius, f32 param, u32 maxC
 
                         end = pOut + foundCount;
 
-                        if (std::find(pOut, end, (KC_PrismData* const&)prism) != end) {
+                        if (msl::find(pOut, end, (KC_PrismData* const&)prism) != end) {
                             continue;
                         }
 
@@ -402,7 +402,7 @@ u32 KCollisionServer::checkSphere(Fxyz* pCenter, f32 radius, f32 param, u32 maxC
                             continue;
                         }
 
-                        if (std::find(pOut, end, (KC_PrismData* const&)prism) != end) {
+                        if (msl::find(pOut, end, (KC_PrismData* const&)prism) != end) {
                             continue;
                         }
 
@@ -504,7 +504,7 @@ u32 KCollisionServer::checkSphereWithThickness(Fxyz* pCenter, f32 radius, f32 pa
 
                         end = pOut + foundCount;
 
-                        if (std::find(pOut, end, (KC_PrismData* const&)prism) != end) {
+                        if (msl::find(pOut, end, (KC_PrismData* const&)prism) != end) {
                             continue;
                         }
 
@@ -516,7 +516,7 @@ u32 KCollisionServer::checkSphereWithThickness(Fxyz* pCenter, f32 radius, f32 pa
                             continue;
                         }
 
-                        if (std::find(pOut, end, (KC_PrismData* const&)prism) != end) {
+                        if (msl::find(pOut, end, (KC_PrismData* const&)prism) != end) {
                             continue;
                         }
 

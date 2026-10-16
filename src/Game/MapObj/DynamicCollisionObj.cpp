@@ -150,17 +150,17 @@ void DynamicCollisionObj::updateCollisionHeader() {
 }
 
 void DynamicCollisionObj_FORCE_MATCH(TVec2f* pDst, const TVec2f& rA) {
-    new (pDst) TVec2f(rA);
-    new (pDst + 1) TVec2f(rA);
+    new (JKRHeapToken::Dummy, pDst) TVec2f(rA);
+    new (JKRHeapToken::Dummy, pDst + 1) TVec2f(rA);
 }
 
 void DynamicCollisionObj::createCollision() {
     s32 v = _94;
-    mKCLFile = new KCLFile();
-    mKCLFile->mPos = new TVec3f[v];
-    mKCLFile->mNorms = new TVec3f[v * 4];
-    mKCLFile->mPrisms = new KC_PrismData[(v + 1) * 1];
-    u16* u16array = new (4) u16[v + 3];
+    mKCLFile = new (JKRHeapToken::Dummy) KCLFile();
+    mKCLFile->mPos = new (JKRHeapToken::Dummy) TVec3f[v];
+    mKCLFile->mNorms = new (JKRHeapToken::Dummy) TVec3f[v * 4];
+    mKCLFile->mPrisms = new (JKRHeapToken::Dummy) KC_PrismData[(v + 1) * 1];
+    u16* u16array = new (JKRHeapToken::Dummy, 4) u16[v + 3];
     mKCLFile->mOctree = u16array;
 
     u16array[0] = 0x8000;
@@ -177,7 +177,7 @@ void DynamicCollisionObj::createCollision() {
     updateCollisionHeader();
     updateTriangle();
 
-    mParts = new CollisionParts();
+    mParts = new (JKRHeapToken::Dummy) CollisionParts();
     TPos3f posmtx;
     PSMTXTrans(posmtx, mPosition.x, mPosition.y, mPosition.z);
     mParts->init(posmtx, getSensor("body"), mKCLFile, nullptr, 0, true);

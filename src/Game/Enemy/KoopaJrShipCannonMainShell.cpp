@@ -148,7 +148,7 @@ void KoopaJrShipCannonMainShell::exeFly() {
 namespace CannonShellUtil {
     void registerKoopaJrShipCannonMainShell(CannonShellHolder* pHolder, int shellNum) {
         for (s32 i = 0; i < shellNum; i++) {
-            KoopaJrShipCannonMainShell* pShell = new KoopaJrShipCannonMainShell("メイン砲弾");
+            KoopaJrShipCannonMainShell* pShell = new (JKRHeapToken::Dummy) KoopaJrShipCannonMainShell("メイン砲弾");
             pShell->initWithoutIter();
             pShell->makeActorDead();
             pHolder->registerCannonShell(pShell);

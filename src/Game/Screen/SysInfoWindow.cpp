@@ -43,7 +43,7 @@ void SysInfoWindow::init(const JMapInfoIter& rIter) {
     if (mWindowType == WindowType_Normal) {
         MR::createAndAddPaneCtrl(this, "Left", 1);
         MR::createAndAddPaneCtrl(this, "Right", 1);
-        mYesNoSelector = new YesNoController(this);
+        mYesNoSelector = new (JKRHeapToken::Dummy) YesNoController(this);
         MR::setTextBoxGameMessageRecursive(this, "Left", "System_Save00_No");
         MR::setTextBoxGameMessageRecursive(this, "Right", "System_Save00_Yes");
     }
@@ -253,7 +253,7 @@ void SysInfoWindow::setTextBoxArgString(const wchar_t* pArg, s32 param2) {
 
 namespace MR {
     SysInfoWindow* createSysInfoWindow() {
-        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Normal);
+        SysInfoWindow* pWindow = new (JKRHeapToken::Dummy) SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Normal);
 
         pWindow->initWithoutIter();
 
@@ -261,7 +261,7 @@ namespace MR {
     }
 
     SysInfoWindow* createSysInfoWindowExecuteWithChildren() {
-        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Children);
+        SysInfoWindow* pWindow = new (JKRHeapToken::Dummy) SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Children);
 
         pWindow->initWithoutIter();
 
@@ -269,7 +269,7 @@ namespace MR {
     }
 
     SysInfoWindow* createSysInfoWindowMiniExecuteWithChildren() {
-        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Mini, SysInfoWindow::ExecuteType_Children);
+        SysInfoWindow* pWindow = new (JKRHeapToken::Dummy) SysInfoWindow(SysInfoWindow::WindowType_Mini, SysInfoWindow::ExecuteType_Children);
 
         pWindow->initWithoutIter();
 

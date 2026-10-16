@@ -197,7 +197,7 @@ f32 RailRider::getPointCoord(s32 idx) const {
 }
 
 void RailRider::initBezierRail(const JMapInfoIter& rIter, const JMapInfo* pInfo) {
-    mBezierRail = new BezierRail(rIter, pInfo);
+    mBezierRail = new (JKRHeapToken::Dummy) BezierRail(rIter, pInfo);
     syncPosDir();
     setCoord(mBezierRail->getTotalLength());
     mEndPos.set(mCurPos);

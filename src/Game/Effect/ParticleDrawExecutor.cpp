@@ -122,24 +122,24 @@ void ParticleDrawExecutor::drawWithViewMtxAfterImageEffect(const TPos3f& rViewMt
 }
 
 void ParticleDrawExecutor::initDrawAdaptor() {
-    _4 = new NameObjAdaptor("3Dパーティクル");
+    _4 = new (JKRHeapToken::Dummy) NameObjAdaptor("3Dパーティクル");
     ::connectToSceneDrawAdaptor(_4, MR::Functor(this, &ParticleDrawExecutor::draw3D), MR::DrawType_EffectDraw3D);
 
-    _8 = new NameObjAdaptor("2Dパーティクル");
+    _8 = new (JKRHeapToken::Dummy) NameObjAdaptor("2Dパーティクル");
     ::connectToSceneDrawAdaptor(_8, MR::Functor(this, &ParticleDrawExecutor::draw2D), MR::DrawType_EffectDraw2D);
 
-    _C = new NameObjAdaptor("インダイレクトパーティクル");
+    _C = new (JKRHeapToken::Dummy) NameObjAdaptor("インダイレクトパーティクル");
     ::connectToSceneDrawAdaptor(_C, MR::Functor(this, &ParticleDrawExecutor::drawIndirect), MR::DrawType_EffectDrawIndirect);
 
-    _10 = new NameObjAdaptor("インダイレクト後パーティクル");
+    _10 = new (JKRHeapToken::Dummy) NameObjAdaptor("インダイレクト後パーティクル");
     ::connectToSceneDrawAdaptor(_10, MR::Functor(this, &ParticleDrawExecutor::drawAfterIndirect), MR::DrawType_EffectDrawAfterIndirect);
 
-    _14 = new NameObjAdaptor("2Dモデル用パーティクル");
+    _14 = new (JKRHeapToken::Dummy) NameObjAdaptor("2Dモデル用パーティクル");
     ::connectToSceneDrawAdaptor(_14, MR::Functor(this, &ParticleDrawExecutor::drawFor2DModel), MR::DrawType_EffectDrawFor2DModel);
 
-    _18 = new NameObjAdaptor("ブルーム用パーティクル");
+    _18 = new (JKRHeapToken::Dummy) NameObjAdaptor("ブルーム用パーティクル");
     ::connectToSceneDrawAdaptor(_18, MR::Functor(this, &ParticleDrawExecutor::drawForBloomEffect), MR::DrawType_EffectDrawForBloomEffect);
 
-    _1C = new NameObjAdaptor("イメージエフェクト後パーティクル");
+    _1C = new (JKRHeapToken::Dummy) NameObjAdaptor("イメージエフェクト後パーティクル");
     ::connectToSceneDrawAdaptor(_1C, MR::Functor(this, &ParticleDrawExecutor::drawAfterImageEffect), MR::DrawType_EffectDrawAfterImageEffect);
 }

@@ -7,7 +7,7 @@
 
 namespace nw4r {
     namespace lyt {
-        void TexMap::Get(_GXTexObj* pTexObj) const {
+        void TexMap::Get(GXTexObj* pTexObj) const {
             if (detail::IsCITexelFormat(GetTexelFormat())) {
                 u32 tlutName = GXGetTexObjTlut(pTexObj);
                 GXInitTexObjCI(pTexObj, mImage, mWidth, mHeight, GXCITexFmt(GetTexelFormat()), GetWrapModeS(), GetWrapModeT(), IsMipMap(), tlutName);
@@ -19,7 +19,7 @@ namespace nw4r {
                             GetAnisotropy());
         }
 
-        void TexMap::Get(_GXTlutObj* pTlutObj) const {
+        void TexMap::Get(GXTlutObj* pTlutObj) const {
             GXInitTlutObj(pTlutObj, GetPalette(), GetPaletteFormat(), GetPaletteEntryNum());
         }
 
@@ -70,9 +70,13 @@ namespace nw4r {
         }
 
         void TexMap::ReplaceImage(TPLPalette* p, u32 id) {
+#ifdef TARGET_PC
+            TPLBind(p);  // builds (or reuses) the native descriptors
+#else
             if (reinterpret_cast< u32 >(p->descriptorArray) < 0x80000000) {
                 TPLBind(p);
             }
+#endif
 
             ReplaceImage(TPLGet(p, id));
         }

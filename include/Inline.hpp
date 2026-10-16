@@ -2,6 +2,7 @@
 
 // Macro which is put after the function definition (only in the header) to prevent the function from being inlined.
 // Example: void someFunction(int someArg) const NO_INLINE;
+#undef NO_INLINE
 #define NO_INLINE __attribute__((noinline))
 
 // Macros which should be used when a function is both inlined and not inlined (so it's auto-inlined by the compiler).

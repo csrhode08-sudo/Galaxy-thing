@@ -6,7 +6,7 @@
 
 NamePosHolder::NamePosHolder() : NameObj("位置テーブル保持"), mPosNum(), mInfos() {
     mPosNum = MR::getGeneralPosNum();
-    mInfos = new NamePosInfo[mPosNum];
+    mInfos = new (JKRHeapToken::Dummy) NamePosInfo[mPosNum];
 
     for (s32 i = 0; i < mPosNum; i++) {
         NamePosInfo* curInf = &mInfos[i];

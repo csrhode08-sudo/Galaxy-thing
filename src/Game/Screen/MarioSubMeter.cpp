@@ -59,9 +59,9 @@ MarioSubMeter::~MarioSubMeter() {
 }
 
 void MarioSubMeter::init(const JMapInfoIter& rIter) {
-    mFlyMeter = new SubMeterLayout("ハチメーター", "FlyMeter");
+    mFlyMeter = new (JKRHeapToken::Dummy) SubMeterLayout("ハチメーター", "FlyMeter");
     mFlyMeter->initWithoutIter();
 
-    mAirMeter = new SubMeterLayout("水中メーター", "AirMeter");
+    mAirMeter = new (JKRHeapToken::Dummy) SubMeterLayout("水中メーター", "AirMeter");
     mAirMeter->initWithoutIter();
 }

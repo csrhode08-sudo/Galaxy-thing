@@ -33,15 +33,15 @@ void GameSystemFontHolder::createFontFromEmbeddedData() {
 #endif
 
     _0 = static_cast< u8* >(MR::decompressFileFromArchive(pArchive, embeddedFontPath, pHeap, -32));
-    _4 = new (pHeap, 0) JKRMemArchive();
+    _4 = new (JKRHeapToken::Dummy, pHeap, 0) JKRMemArchive();
     _4->mountFixed(_0, JKR_MEM_BREAK_FLAG_0);
-    mEmbeddedMessageFont = new (pHeap, -4) nw4r::ut::ResFont();
+    mEmbeddedMessageFont = new (JKRHeapToken::Dummy, pHeap, -4) nw4r::ut::ResFont();
     mEmbeddedMessageFont->SetResource(_4->getResource("MessageFont26.brfnt"));
 }
 
 namespace {
     inline nw4r::ut::ResFont* createFont(JKRArchive* pArchive, const char* pName) {
-        nw4r::ut::ResFont* pFont = new nw4r::ut::ResFont();
+        nw4r::ut::ResFont* pFont = new (JKRHeapToken::Dummy) nw4r::ut::ResFont();
         pFont->SetResource(pArchive->getResource(pName));
         return pFont;
     }

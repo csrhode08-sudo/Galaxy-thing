@@ -26,7 +26,7 @@ ElectricBall::Ball::Ball() : mHost(), mPosition(gZeroVec), mIsActive() {
 }
 
 void ElectricBall::Ball::init(LiveActor* pActor) {
-    mHost = new PartsModel(pActor, "ビリビリボール", "ElectricBall", nullptr, -1, false);
+    mHost = new (JKRHeapToken::Dummy) PartsModel(pActor, "ビリビリボール", "ElectricBall", nullptr, -1, false);
     mHost->initWithoutIter();
     mHost->makeActorAppeared();
 
@@ -70,7 +70,7 @@ void ElectricBall::init(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
 
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
     }
 
@@ -89,9 +89,9 @@ void ElectricBall::init(const JMapInfoIter& rIter) {
 }
 
 void ElectricBall::initAfterPlacement() {
-    std::for_each(mBalls.begin(), mBalls.end(),
-                  std::binder2nd< std::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
-                      std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
+    msl::for_each(mBalls.begin(), mBalls.end(),
+                  msl::binder2nd< msl::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
+                      msl::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
 
     Ball* ball = getNearestBall();
     mClosestBallPos.set(ball->mHost->mPosition);
@@ -113,9 +113,9 @@ void ElectricBall::control() {
         mBaseMtx.concat(mBaseMtx, mtx);
         mBaseMtx.setTrans(mPosition);
 
-        std::for_each(mBalls.begin(), mBalls.end(),
-                      std::binder2nd< std::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
-                          std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
+        msl::for_each(mBalls.begin(), mBalls.end(),
+                      msl::binder2nd< msl::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
+                          msl::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
 
         MR::startLevelSound(this, "SE_OJ_LV_BIRIKYU_MOVE");
     }
@@ -147,8 +147,8 @@ void ElectricBall::initBalls(const JMapInfoIter& rIter) {
 
     mBalls.init(arg0);
 
-    std::for_each_array(mBalls.begin(), mBalls.end(),
-                        std::binder2nd< std::mem_fun1_t< void, Ball, LiveActor* >, LiveActor* >(std::mem_func(&Ball::init), this));
+    msl::for_each_array(mBalls.begin(), mBalls.end(),
+                        msl::binder2nd< msl::mem_fun1_t< void, Ball, LiveActor* >, LiveActor* >(msl::mem_func(&Ball::init), this));
 
     TVec3f vec(mRadius, 0.0f, 0.0f);
     f32 f1 = TWO_PI / mBalls.size();
@@ -180,7 +180,7 @@ void ElectricBall::startMove() {
         mRailMover->start();
     }
 
-    std::for_each_array(mBalls.begin(), mBalls.end(), std::mem_func(&Ball::activate));
+    msl::for_each_array(mBalls.begin(), mBalls.end(), msl::mem_func(&Ball::activate));
 
     setNerve(GET_NERVE(ElectricBall, HostTypeMove));
 }

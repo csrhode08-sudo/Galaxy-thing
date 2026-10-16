@@ -98,41 +98,41 @@ void NPCParameterJoint::read(JMapInfo* pInfo, s32 a2) {
 }
 
 void NPCCapsParameterReader::init() {
-    push_back(new NPCParameterBool("mModel", &mActorCaps.mModel));
-    push_back(new NPCParameterBool("mMakeActor", &mActorCaps.mMakeActor));
-    push_back(new NPCParameterBool("mHostIO", &mActorCaps.mHostIO));
-    push_back(new NPCParameterBool("mMessage", &mActorCaps.mMessage));
-    push_back(new NPCParameterV3f("mMessageOffset", &mActorCaps.mMessageOffset, 0.0f, 1000.0f));
-    push_back(new NPCParameterBool("mInterpole", &mActorCaps.mInterpole));
-    push_back(new NPCParameterBool("mConnectTo", &mActorCaps.mConnectTo));
-    push_back(new NPCParameterBool("mLightCtrl", &mActorCaps.mLightCtrl));
-    push_back(new NPCParameterBool("mEffect", &mActorCaps.mEffect));
-    push_back(new NPCParameterBool("mSound", &mActorCaps.mSound));
-    push_back(new NPCParameterRange< s32 >("mSoundSize", &mActorCaps.mSoundSize, 0, 16));
-    push_back(new NPCParameterBool("mAttribute", &mActorCaps.mAttribute));
-    push_back(new NPCParameterBool("mPosition", &mActorCaps.mPosition));
-    push_back(new NPCParameterBool("mLodCtrl", &mActorCaps.mLodCtrl));
-    push_back(new NPCParameterBool("mNerve", &mActorCaps.mNerve));
-    push_back(new NPCParameterBool("mBinder", &mActorCaps.mBinder));
-    push_back(new NPCParameterRange< f32 >("mBinderSize", &mActorCaps.mBinderSize, 0.0f, 1000.0f));
-    push_back(new NPCParameterBool("mSensor", &mActorCaps.mSensor));
-    push_back(new NPCParameterJoint("mSensorJoint", mActorCaps.mObjectName, &mActorCaps.mSensorJoint));
-    push_back(new NPCParameterRange< f32 >("mSensorSize", &mActorCaps.mSensorSize, 0.0f, 1000.0f));
-    push_back(new NPCParameterRange< s32 >("mSensorMax", &mActorCaps.mSensorMax, 0, 16));
-    push_back(new NPCParameterBool("mShadow", &mActorCaps.mShadow));
-    push_back(new NPCParameterRange< f32 >("mShadowSize", &mActorCaps.mShadowSize, 0.0f, 1000.0f));
-    push_back(new NPCParameterBool("mRailRider", &mActorCaps.mRailRider));
-    push_back(new NPCParameterBool("mSwitchDead", &mActorCaps.mSwitchDead));
-    push_back(new NPCParameterBool("mSwitchAppear", &mActorCaps.mSwitchAppear));
-    push_back(new NPCParameterBool("mPointer", &mActorCaps.mPointer));
-    push_back(new NPCParameterRange< f32 >("mPointerSize", &mActorCaps.mPointerSize, 0.0f, 1000.0f));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mModel", &mActorCaps.mModel));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mMakeActor", &mActorCaps.mMakeActor));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mHostIO", &mActorCaps.mHostIO));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mMessage", &mActorCaps.mMessage));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterV3f("mMessageOffset", &mActorCaps.mMessageOffset, 0.0f, 1000.0f));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mInterpole", &mActorCaps.mInterpole));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mConnectTo", &mActorCaps.mConnectTo));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mLightCtrl", &mActorCaps.mLightCtrl));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mEffect", &mActorCaps.mEffect));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mSound", &mActorCaps.mSound));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< s32 >("mSoundSize", &mActorCaps.mSoundSize, 0, 16));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mAttribute", &mActorCaps.mAttribute));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mPosition", &mActorCaps.mPosition));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mLodCtrl", &mActorCaps.mLodCtrl));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mNerve", &mActorCaps.mNerve));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mBinder", &mActorCaps.mBinder));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< f32 >("mBinderSize", &mActorCaps.mBinderSize, 0.0f, 1000.0f));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mSensor", &mActorCaps.mSensor));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterJoint("mSensorJoint", mActorCaps.mObjectName, &mActorCaps.mSensorJoint));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< f32 >("mSensorSize", &mActorCaps.mSensorSize, 0.0f, 1000.0f));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< s32 >("mSensorMax", &mActorCaps.mSensorMax, 0, 16));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mShadow", &mActorCaps.mShadow));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< f32 >("mShadowSize", &mActorCaps.mShadowSize, 0.0f, 1000.0f));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mRailRider", &mActorCaps.mRailRider));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mSwitchDead", &mActorCaps.mSwitchDead));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mSwitchAppear", &mActorCaps.mSwitchAppear));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterBool("mPointer", &mActorCaps.mPointer));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterRange< f32 >("mPointerSize", &mActorCaps.mPointerSize, 0.0f, 1000.0f));
 }
 
 NPCItemParameterReader::NPCItemParameterReader(const char* pName) : NPCParameterReader(pName), mItem("") {
-    push_back(new NPCParameterEdit("mGoods0", &mItem.mGoods0, true));
-    push_back(new NPCParameterEdit("mGoods1", &mItem.mGoods1, true));
-    push_back(new NPCParameterJoint("mGoodsJoint0", pName, &mItem.mGoodsJoint0));
-    push_back(new NPCParameterJoint("mGoodsJoint1", pName, &mItem.mGoodsJoint1));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterEdit("mGoods0", &mItem.mGoods0, true));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterEdit("mGoods1", &mItem.mGoods1, true));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterJoint("mGoodsJoint0", pName, &mItem.mGoodsJoint0));
+    push_back(new (JKRHeapToken::Dummy) NPCParameterJoint("mGoodsJoint1", pName, &mItem.mGoodsJoint1));
 }
 
 void NPCParameterBase::read(JMapInfo*, s32) {

@@ -54,7 +54,7 @@ FogCtrl::FogCtrl(J3DModelData* pModelData, bool useAllMaterials) : MaterialCtrl(
 
     mFogInfo = *firstMaterial->mPEBlock->getFog()->getFogInfo();
     if (mNumMaterials > 0) {
-        mMaterials = new J3DMaterial*[mNumMaterials];
+        mMaterials = new (JKRHeapToken::Dummy) J3DMaterial*[mNumMaterials];
         s32 materialCount = 0;
         for (u16 i = 0; i < pModelData->mMaterialTable.getMaterialNum(); i++) {
             J3DMaterial* material = pModelData->mMaterialTable.getMaterialNodePointer(i);
@@ -93,7 +93,7 @@ ViewProjmapEffectMtxSetter::ViewProjmapEffectMtxSetter(J3DModelData* pModelData)
         }
     }
 
-    mMatricies = new J3DTexMtxInfo*[mNumMatricies];
+    mMatricies = new (JKRHeapToken::Dummy) J3DTexMtxInfo*[mNumMatricies];
     MR::copyMemory(mMatricies, matrices, sizeof(J3DTexMtxInfo*) * mNumMatricies);
 }
 
@@ -126,7 +126,7 @@ ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(J3DModel* pModel, const ResourceH
         }
     }
 
-    mUpdatingMtxInfo = new UpdateEffectMtxInfo[mNumUpdatingMtx];
+    mUpdatingMtxInfo = new (JKRHeapToken::Dummy) UpdateEffectMtxInfo[mNumUpdatingMtx];
     s32 matrixCount = 0;
     for (u16 i = 0; i < modelData->mMaterialTable.getMaterialNum(); i++) {
         J3DMaterial* material = modelData->mMaterialTable.getMaterialNodePointer(i);
@@ -210,7 +210,7 @@ void MirrorReflectionMtxSetter::update() {
 
 MarioShadowProjmapMtxSetter::MarioShadowProjmapMtxSetter(J3DModel* pModel, const ResourceHolder* pResourceHolder)
     : MaterialCtrl(nullptr, nullptr), mProjmapMtxSetter() {
-    mProjmapMtxSetter = new ProjmapEffectMtxSetter(pModel, pResourceHolder);
+    mProjmapMtxSetter = new (JKRHeapToken::Dummy) ProjmapEffectMtxSetter(pModel, pResourceHolder);
 }
 
 void MarioShadowProjmapMtxSetter::update() {

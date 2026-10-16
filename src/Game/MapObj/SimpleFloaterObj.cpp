@@ -40,7 +40,7 @@ void SimpleFloaterObj::init(const JMapInfoIter& rrIter) {
     MR::setEffectHostSRT(this, ::cEffectName, &_94, &mRotation, nullptr);
     initSound(4, false);
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
-    _90 = new MapPartsFloatingForce(this);
+    _90 = new (JKRHeapToken::Dummy) MapPartsFloatingForce(this);
     _90->init(rrIter);
     _90->setObjectName(_8C);
     _90->start();

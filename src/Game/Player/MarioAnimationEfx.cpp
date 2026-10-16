@@ -41,7 +41,7 @@ void MarioAnimator::initCallbackTable() {
         }
     }
 
-    mCallbackTable = new HashSortTable(count);
+    mCallbackTable = new (JKRHeapToken::Dummy) HashSortTable(count);
     callback = marioCallbackTable;
     for (u32 i = 0; i < count; callback++, i++) {
         mCallbackTable->add(callback->mAnimation, i, false);
@@ -55,7 +55,7 @@ void MarioAnimator::initCallbackTable() {
 void MarioAnimator::entryCallback(const char* pName) {
     mCallbackEnded = false;
     closeCallback();
-    u32 index;
+    uintptr_t index;
     if (mCallbackTable->search(pName, &index)) {
         mCallbackId = index;
         if (marioCallbackTable[mCallbackId].mEntry != nullptr) {

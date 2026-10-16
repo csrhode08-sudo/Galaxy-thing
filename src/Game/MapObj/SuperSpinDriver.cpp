@@ -160,7 +160,7 @@ void SuperSpinDriver::initEmptyModel() {
 }
 
 void SuperSpinDriver::initEventCamera(const JMapInfoIter& rIter) {
-    mSpinDriverCamera = new SpinDriverCamera();
+    mSpinDriverCamera = new (JKRHeapToken::Dummy) SpinDriverCamera();
     mSpinDriverCamera->init(rIter, this);
 }
 
@@ -168,7 +168,7 @@ void SuperSpinDriver::initShootPath(const JMapInfoIter& rIter) {
     mPlayerLandRotation = 0.0f;
     MR::getJMapInfoArg5NoInit(rIter, &mPlayerLandRotation);
 
-    mShootPath = new SpinDriverShootPath();
+    mShootPath = new (JKRHeapToken::Dummy) SpinDriverShootPath();
     mShootPath->initUsingParabolic(rIter, mPosition);
     mShootPath->calcInitPose(&_100, &_E8, &_F4, mPlayerLandRotation);
 }
@@ -180,7 +180,7 @@ void SuperSpinDriver::initShootPathDraw(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg7NoInit(rIter, &drawPathRangeIdx);
     mDrawPathRangeIdx = MR::registerStorageSpinDriverPathDrawRange(this, rIter, drawPathRangeIdx, &coord);
 
-    mPathDrawer = new SpinDriverPathDrawer(mShootPath);
+    mPathDrawer = new (JKRHeapToken::Dummy) SpinDriverPathDrawer(mShootPath);
     mPathDrawer->setCoord(coord);
     mPathDrawer->initWithoutIter();
 }
@@ -206,7 +206,7 @@ void SuperSpinDriver::initColor() {
 }
 
 void SuperSpinDriver::initOperateRing() {
-    mOperateRing = new SpinDriverOperateRing("操作リング");
+    mOperateRing = new (JKRHeapToken::Dummy) SpinDriverOperateRing("操作リング");
     mOperateRing->initWithoutIter();
 }
 
@@ -1032,14 +1032,14 @@ bool SuperSpinDriver::isFarPlayer() const {
 
 namespace MR {
     NameObj* createSuperSpinDriverYellow(const char* pName) {
-        return new SuperSpinDriver(pName, 0);
+        return new (JKRHeapToken::Dummy) SuperSpinDriver(pName, 0);
     }
 
     NameObj* createSuperSpinDriverGreen(const char* pName) {
-        return new SuperSpinDriver(pName, 1);
+        return new (JKRHeapToken::Dummy) SuperSpinDriver(pName, 1);
     }
 
     NameObj* createSuperSpinDriverPink(const char* pName) {
-        return new SuperSpinDriver(pName, 2);
+        return new (JKRHeapToken::Dummy) SuperSpinDriver(pName, 2);
     }
 };  // namespace MR

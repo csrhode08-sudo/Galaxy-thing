@@ -75,7 +75,7 @@ void Jellyfish::init(const JMapInfoIter& rIter) {
     initBinder(130.0f, 0.0f, 0);
     MR::offBind(this);
 
-    mController = new AnimScaleController(nullptr);
+    mController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
 
     initEffectKeeper(2, nullptr, false);
 
@@ -90,8 +90,8 @@ void Jellyfish::init(const JMapInfoIter& rIter) {
 
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));
 
-    mController = new AnimScaleController(nullptr);
-    mBindStarPtr = new WalkerStateBindStarPointer(this, mController);
+    mController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPtr = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mController);
 
     if (MR::isConnectedWithRail(rIter)) {
         mIsConnectedRail = true;
@@ -398,7 +398,7 @@ bool Jellyfish::selectNerveAfterWait() {
     if (MR::isStep(this, 280)) {
         s32 randomVal;
         if (isNerve(GET_NERVE(Jellyfish, JellyfishNrvWait))) {
-            randomVal = MR::getRandom(0l, 3l);
+            randomVal = MR::getRandom(0, 3);
         } else {
             randomVal = 0;
         }

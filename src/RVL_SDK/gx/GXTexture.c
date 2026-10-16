@@ -2,7 +2,7 @@
 #include "revolution/gx/GXCommandList.h"
 #include "revolution/gx/GXTypes.h"
 #include "revolution/gx/shortcut_tx_reg.h"
-#include <mem.h>
+#include <cstring>
 #include "revolution/gx.h"
 #include "revolution/gx/GXRegs.h"
 

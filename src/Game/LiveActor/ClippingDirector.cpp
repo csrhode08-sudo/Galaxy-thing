@@ -8,13 +8,13 @@
 #include "Game/Util/ObjUtil.hpp"
 
 ClippingDirector::ClippingDirector() : NameObj("クリッピング指揮"), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
-    mJudge = new ClippingJudge("クリッピング判定者");
+    mJudge = new (JKRHeapToken::Dummy) ClippingJudge("クリッピング判定者");
     mJudge->initWithoutIter();
 
-    mActorHolder = new ClippingActorHolder();
+    mActorHolder = new (JKRHeapToken::Dummy) ClippingActorHolder();
     mActorHolder->initWithoutIter();
 
-    mGroupHolder = new ClippingGroupHolder();
+    mGroupHolder = new (JKRHeapToken::Dummy) ClippingGroupHolder();
     mGroupHolder->initWithoutIter();
 
     MR::connectToScene(this, MR::MovementType_ClippingDirector, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);

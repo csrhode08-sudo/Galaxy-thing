@@ -41,8 +41,8 @@ void TeresaWater::init(const JMapInfoIter& rIter) {
     ptrPos.set(0.0f, 0.0f, 0.0f);
     MR::initStarPointerTargetAtJoint(this, "SklRoot", 100.0f, ptrPos);
 
-    _8C = new AnimScaleController(nullptr);
-    _90 = new WalkerStateBindStarPointer(this, _8C);
+    _8C = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    _90 = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, _8C);
     MR::declareCoin(this, 1);
     MR::calcFrontVec(&_94, this);
     f32 arg0 = ::sDefaultMoveLength;

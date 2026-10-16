@@ -36,7 +36,7 @@ void RockCreator::init(const JMapInfoIter& rIter) {
         MR::declareStarPiece(this, Rock::getAppearStarPieceNum(rockType) * 3);
     }
 
-    mRocks = new Rock[mNumRocks];
+    mRocks = new (JKRHeapToken::Dummy) Rock[mNumRocks];
     for (s32 idx = 0; idx < mNumRocks; idx++) {
         mRocks[idx].mCreator = this;
         mRocks[idx].mMoveSpeed = mRockSpeed;

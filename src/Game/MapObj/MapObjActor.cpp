@@ -234,27 +234,27 @@ void MapObjActor::initialize(const JMapInfoIter& rIter, const MapObjActorInitInf
     }
 
     if (rInfo.mHasRailMover && hasRail) {
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
     }
 
     if (rInfo.mHasRotator) {
-        mRotator = new MapPartsRotator(this);
+        mRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
         mRotator->init(rIter);
     }
 
     if (rInfo.mHasRailRotator) {
-        mRailRotator = new MapPartsRailRotator(this);
+        mRailRotator = new (JKRHeapToken::Dummy) MapPartsRailRotator(this);
         mRailRotator->init(rIter);
     }
 
     if (rInfo._C) {
-        mRotator = new MapPartsSeesaw1AxisRotator(this, rInfo.mSeesaw1AxisRotatorName, rInfo.mSeesaw1AxisRotatorRadius);
+        mRotator = new (JKRHeapToken::Dummy) MapPartsSeesaw1AxisRotator(this, rInfo.mSeesaw1AxisRotatorName, rInfo.mSeesaw1AxisRotatorRadius);
         mRotator->init(rIter);
     }
 
     if (rInfo._D) {
-        mRotator = new MapPartsSeesaw2AxisRotator(this, rInfo.mSeesaw1AxisRotatorName, rInfo.mSeesaw1AxisRotatorRadius);
+        mRotator = new (JKRHeapToken::Dummy) MapPartsSeesaw2AxisRotator(this, rInfo.mSeesaw1AxisRotatorName, rInfo.mSeesaw1AxisRotatorRadius);
         mRotator->init(rIter);
     }
 
@@ -263,7 +263,7 @@ void MapObjActor::initialize(const JMapInfoIter& rIter, const MapObjActorInitInf
         MR::getMapPartsArgMovePosture(&posture, this);
 
         if (posture != 0) {
-            mRailPosture = new MapPartsRailPosture(this);
+            mRailPosture = new (JKRHeapToken::Dummy) MapPartsRailPosture(this);
             mRailPosture->init(rIter);
         }
     }

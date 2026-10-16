@@ -7,8 +7,8 @@ SpkSystem::SpkSystem(JKRHeap* pHeap) : JASGlobalInstance(true), mData() {
     }
 
     mHeap = pHeap;
-    mMixBuffer = new (pHeap, 0) SpkMixingBuffer(pHeap);
-    mSoundHolder = new (pHeap, 0) SpkSoundHolder();
+    mMixBuffer = new (JKRHeapToken::Dummy, pHeap, 0) SpkMixingBuffer(pHeap);
+    mSoundHolder = new (JKRHeapToken::Dummy, pHeap, 0) SpkSoundHolder();
     SpkSpeakerCtrl::setup();
     SpkSpeakerCtrl::setMixingBuffer(mMixBuffer);
 }
@@ -19,7 +19,7 @@ void SpkSystem_DUMMY() {
 }
 
 void SpkSystem::setResource(JKRArchive* pArchive, u16 tableOffset, u16 waveOffset) {
-    mData = new (mHeap, 0) SpkData(pArchive);
+    mData = new (JKRHeapToken::Dummy, mHeap, 0) SpkData(pArchive);
     mData->loadTable(tableOffset);
     mData->loadWave(waveOffset);
 }

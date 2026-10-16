@@ -40,7 +40,7 @@ void RingBeamer::init(const JMapInfoIter& rIter) {
     }
     MR::joinToGroupArray(this, rIter, nullptr, 32);
     // initializes to 5 long, but only uses 3?
-    mBeams = new RingBeam*[5];
+    mBeams = new (JKRHeapToken::Dummy) RingBeam*[5];
     for (int i = 0; i < 5; i++) {
         mBeams[i] = nullptr;
     }
@@ -49,7 +49,7 @@ void RingBeamer::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0NoInit(rIter, &arg0);
     MR::getJMapInfoArg1NoInit(rIter, &arg1);
     for (int i = 0; i < 3; i++) {
-        mBeams[i] = new RingBeam("リングビーム", this, false, false);
+        mBeams[i] = new (JKRHeapToken::Dummy) RingBeam("リングビーム", this, false, false);
         mBeams[i]->init(rIter);
         mBeams[i]->setSpeed(arg0);
         mBeams[i]->setLife(arg1);

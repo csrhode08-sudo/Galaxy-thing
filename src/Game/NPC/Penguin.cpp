@@ -40,12 +40,12 @@ namespace NrvPenguin {
 
 RemovableTurtle::RemovableTurtle(LiveActor* pHost, bool isGolden) {
     if (isGolden) {
-        mShellModel = new TurtlePartsModel(pHost, "ペンギン用ゴールデンコウラ", "KouraShine", nullptr,
+        mShellModel = new (JKRHeapToken::Dummy) TurtlePartsModel(pHost, "ペンギン用ゴールデンコウラ", "KouraShine", nullptr,
                                            MR::DrawBufferType_NoSilhouettedMapObjStrongLight, false);
-        mJetTurtle = new GoldenTurtle("ゴールデン甲羅");
+        mJetTurtle = new (JKRHeapToken::Dummy) GoldenTurtle("ゴールデン甲羅");
     } else {
-        mShellModel = new PartsModel(pHost, "ペンギン用コウラ", "Koura", nullptr, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, false);
-        mJetTurtle = new JetTurtle("ジェット亀さん");
+        mShellModel = new (JKRHeapToken::Dummy) PartsModel(pHost, "ペンギン用コウラ", "Koura", nullptr, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, false);
+        mJetTurtle = new (JKRHeapToken::Dummy) JetTurtle("ジェット亀さん");
     }
 
     mShellModel->_99 = true;
@@ -118,7 +118,7 @@ void Penguin::init(const JMapInfoIter& rIter) {
     }
 
     if (mBehavior == Behavior_SwimTurtle) {
-        mTurtle = new RemovableTurtle(this, false);
+        mTurtle = new (JKRHeapToken::Dummy) RemovableTurtle(this, false);
         mTurtle->tryAttach();
     }
 

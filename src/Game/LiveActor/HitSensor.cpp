@@ -6,7 +6,7 @@ HitSensor::HitSensor(u32 type, u16 groupSize, f32 radius, LiveActor* pHost)
     : mType(type), mPosition(0.0f, 0.0f, 0.0f), mRadius(radius), mSensorCount(0), mGroupSize(groupSize), mSensors(nullptr), mSensorGroup(nullptr),
       mValidBySystem(false), mValidByHost(true), mHost(pHost) {
     if (mGroupSize != 0) {
-        mSensors = new HitSensor*[mGroupSize];
+        mSensors = new (JKRHeapToken::Dummy) HitSensor*[mGroupSize];
 
         for (s32 i = 0; i < mGroupSize; i++) {
             mSensors[i] = nullptr;

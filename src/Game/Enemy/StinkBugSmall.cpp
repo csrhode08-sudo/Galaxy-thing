@@ -76,8 +76,8 @@ void StinkBugSmall::init(const JMapInfoIter& rIter) {
     v7.x = 0.0f;
     v7.z = 0.0f;
     MR::initStarPointerTarget(this, 130.0f * mScale.x, v7);
-    mScaleController = new AnimScaleController(nullptr);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     MR::useStageSwitchReadA(this, rIter);
     MR::startBrk(this, "Death");
     MR::setBrkFrameAndStop(this, 0.0f);

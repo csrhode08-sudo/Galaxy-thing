@@ -15,7 +15,7 @@ namespace NrvSeaGull {
 };  // namespace NrvSeaGull
 
 SeaGull::SeaGull(SeaGullGroup* pGroup)
-    : LiveActor("カモメ"), mSeaGullGroup(pGroup), mPointIndex(), mIsReverse(), mTargetUpdateTimer(MR::getRandom(0L, 180L)), mTargetPosition(),
+    : LiveActor("カモメ"), mSeaGullGroup(pGroup), mPointIndex(), mIsReverse(), mTargetUpdateTimer(MR::getRandom(0, 180)), mTargetPosition(),
       mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f), mBankedUp(0.0f, 1.0f, 0.0f), mSide(1.0f, 0.0f, 0.0f), mHoverTimer(), mBankAngle(),
       mGlideTimer(), mLiftTimer(), mChirpTimer() {
 }
@@ -55,14 +55,14 @@ void SeaGull::init(const JMapInfoIter& rIter) {
 
     initNerve(GET_NERVE(SeaGull, SeaGullNrvHoverFront));
     initSound(4, false);
-    mChirpTimer = MR::getRandom(60L, 480L);
+    mChirpTimer = MR::getRandom(60, 480);
     MR::invalidateClipping(this);
     makeActorAppeared();
 }
 
 void SeaGull::exeHoverFront() {
     if (MR::isFirstStep(this)) {
-        mHoverTimer = MR::getRandom(0L, 60L);
+        mHoverTimer = MR::getRandom(0, 60);
     }
 
     mBankAngle *= 0.995f;
@@ -87,7 +87,7 @@ void SeaGull::exeHoverFront() {
 
 void SeaGull::exeHoverLeft() {
     if (MR::isFirstStep(this)) {
-        mHoverTimer = MR::getRandom(60L, 120L);
+        mHoverTimer = MR::getRandom(60, 120);
     }
 
     mBankAngle -= 0.1f;
@@ -99,7 +99,7 @@ void SeaGull::exeHoverLeft() {
 
 void SeaGull::exeHoverRight() {
     if (MR::isFirstStep(this)) {
-        mHoverTimer = MR::getRandom(60L, 120L);
+        mHoverTimer = MR::getRandom(60, 120);
     }
 
     mBankAngle += 0.1f;
@@ -134,7 +134,7 @@ void SeaGull::control() {
 
     if (mChirpTimer <= 0) {
         MR::startSound(this, "SE_OJ_SEAGULL_CHIRP");
-        mChirpTimer = MR::getRandom(60L, 480L);
+        mChirpTimer = MR::getRandom(60, 480);
     } else {
         mChirpTimer--;
     }
@@ -177,7 +177,7 @@ void SeaGull::updateHover() {
         mLiftTimer--;
 
         if (mLiftTimer <= 0) {
-            mGlideTimer = MR::getRandom(60L, 300L);
+            mGlideTimer = MR::getRandom(60, 300);
         }
     } else {
         mVelocity.y -= 0.005f;
@@ -191,7 +191,7 @@ void SeaGull::updateHover() {
             mGlideTimer--;
 
             if (height > 500.0f || mGlideTimer <= 0) {
-                mLiftTimer = MR::getRandom(30L, 180L);
+                mLiftTimer = MR::getRandom(30, 180);
             }
         }
     }
@@ -225,14 +225,14 @@ void SeaGullGroup::init(const JMapInfoIter& rIter) {
     mPosition.set(MR::getRailPos(this));
     mPointCount = static_cast< s32 >(MR::getRailTotalLength(this) / 500.0f) + 1;
     f32 interval = MR::getRailTotalLength(this) / mPointCount;
-    mPoints = new TVec3f[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) TVec3f[mPointCount];
 
     for (s32 i = 0; i < mPointCount; i++) {
         MR::calcRailPosAtCoord(&mPoints[i], this, interval * i);
     }
 
     for (s32 i = 0; i < birdCount; i++) {
-        SeaGull* pSeaGull = new SeaGull(this);
+        SeaGull* pSeaGull = new (JKRHeapToken::Dummy) SeaGull(this);
         pSeaGull->init(rIter);
     }
 

@@ -124,10 +124,10 @@ void Snakehead::init(const JMapInfoIter& rIter) {
         MR::initStarPointerTarget(this, 500.0f, TVec3f(0.0f, 0.0f, 200.0f));
     }
 
-    mController = new AnimScaleController(nullptr);
+    mController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mController->setParamTight();
 
-    mStarPointer = new WalkerStateBindStarPointer(this, mController);
+    mStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mController);
 
     mBodyMtx.set(MR::getJointMtx(this, "Body04"));
 

@@ -54,7 +54,7 @@ SceneControlInfo::SceneControlInfo() : mStartIdInfo() {
     mStage[0] = '\0';
     mScenarioNo = 1;
     mSelectedScenarioNo = 1;
-    mStartIdInfo = new JMapIdInfo(MR::getInitializeStartIdInfo());
+    mStartIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(MR::getInitializeStartIdInfo());
 }
 
 void SceneControlInfo::setScene(const char* pSceneName) {
@@ -72,15 +72,15 @@ void SceneControlInfo::setStartIdInfo(const JMapIdInfo& rInfo) {
 GameSystemSceneController::GameSystemSceneController()
     : mSpine(), mNextNerve(), mIsResetProcessing(), mScenarioParser(), mObjHolder(), mScene(), mSceneInitializeState(), mIntermissionScene(),
       mPlayTimerScene(), mScenarioSelectScene() {
-    mObjHolder = new NameObjHolder(0x1300);
-    mSpine = new Spine(this, GET_NERVE(GameSystemSceneController, GameSystemSceneControllerNotInitialized));
+    mObjHolder = new (JKRHeapToken::Dummy) NameObjHolder(0x1300);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, GET_NERVE(GameSystemSceneController, GameSystemSceneControllerNotInitialized));
     mIntermissionScene = static_cast< IntermissionScene* >(MR::createScene("Intermission"));
-    mPlayTimerScene = new PlayTimerScene();
-    mScenarioSelectScene = new ScenarioSelectScene();
+    mPlayTimerScene = new (JKRHeapToken::Dummy) PlayTimerScene();
+    mScenarioSelectScene = new (JKRHeapToken::Dummy) ScenarioSelectScene();
 }
 
 void GameSystemSceneController::initAfterStationedResourceLoaded() {
-    mScenarioParser = new ScenarioDataParser("シナリオデータ解析");
+    mScenarioParser = new (JKRHeapToken::Dummy) ScenarioDataParser("シナリオデータ解析");
     mScenarioParser->initWithoutIter();
 
     mPlayTimerScene->init();

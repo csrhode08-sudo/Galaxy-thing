@@ -76,7 +76,7 @@ void J3DShape::addTexMtxIndexInVcd(GXAttr attr) {
     if (attrIdx == -1)
         return;
 
-    GXVtxDescList* newVtxDesc = new GXVtxDescList[attrCount + 2];
+    GXVtxDescList* newVtxDesc = new (JKRHeapToken::Dummy) GXVtxDescList[attrCount + 2];
     bool inserted = false;
 
     vtxDesc = getVtxDesc();

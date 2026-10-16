@@ -32,7 +32,7 @@ BallOpener::~BallOpener() {
 
 BallOpener::BallOpener(const char* pName)
     : LiveActor(pName), mBoundSensor(), _A0(0, 0, 0), mInitialVelocity(0, 0, 0), mBindVelocity(0, 0, 0), mSettledFrames() {
-    mCone = new BindCone(mPosition, TVec3f(0.0f, 1.0f, 0.0f), ::sHoleDepth, ::sHoleRadius);
+    mCone = new (JKRHeapToken::Dummy) BindCone(mPosition, TVec3f(0.0f, 1.0f, 0.0f), ::sHoleDepth, ::sHoleRadius);
 }
 
 void BallOpener::init(const JMapInfoIter& rIter) {

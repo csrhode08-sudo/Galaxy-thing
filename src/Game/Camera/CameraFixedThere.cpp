@@ -42,7 +42,7 @@ CameraTargetObj* CameraFixedThere::calc() {
 }
 
 CamTranslatorBase* CameraFixedThere::createTranslator() {
-    return new CamTranslatorFixedThere(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFixedThere(this);
 }
 
 void CameraFixedThere::copyStatusFromPrevCamera() {

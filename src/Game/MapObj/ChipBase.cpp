@@ -55,7 +55,7 @@ void ChipBase::init(const JMapInfoIter& rIter) {
         MR::setGroupClipping(this, rIter, 0x20);
     }
 
-    mFlashingCtrl = new FlashingCtrl(this, true);
+    mFlashingCtrl = new (JKRHeapToken::Dummy) FlashingCtrl(this, true);
 
     if (MR::useStageSwitchReadAppear(this, rIter)) {
         MR::syncStageSwitchAppear(this);
@@ -140,7 +140,7 @@ void ChipBase::initJMapParam(const JMapInfoIter& rIter) {
 
         if (MR::isConnectedWithRail(rIter)) {
             initRailRider(rIter);
-            mRailMover = new MapPartsRailMover(this);
+            mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
             mRailMover->init(rIter);
         }
     }

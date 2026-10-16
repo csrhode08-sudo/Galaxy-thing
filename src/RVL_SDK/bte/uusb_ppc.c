@@ -5,7 +5,7 @@
  */
 
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 
 #include "decomp.h"
 #include "macros.h"

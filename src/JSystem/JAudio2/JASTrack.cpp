@@ -2,7 +2,7 @@
 #include "JSystem/JAudio2/JASAiCtrl.hpp"
 #include "JSystem/JAudio2/JASBankTable.hpp"
 #include "JSystem/JAudio2/JASCriticalSection.hpp"
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
+#include "JSystem/JAudio2/JASDspInterface.hpp"
 #include "JSystem/JAudio2/JASDriverIF.hpp"
 #include "JSystem/JAudio2/JASLfo.hpp"
 #include "JSystem/JAudio2/JASSoundParams.hpp"
@@ -42,7 +42,7 @@ void JASTrack::setChannelMgrCount(u32 count) {
             continue;
         }
 
-        if (!(mChannelMgrs[i] = new TChannelMgr(this))) {
+        if (!(mChannelMgrs[i] = new (JKRHeapToken::Dummy) TChannelMgr(this))) {
             return;
         }
     }
@@ -268,7 +268,7 @@ JASTrack* JASTrack::openChild(u32 idx) {
             break;
         }
     } else {
-        if (!(child = new JASTrack())) {
+        if (!(child = new (JKRHeapToken::Dummy) JASTrack())) {
             return nullptr;
         }
 

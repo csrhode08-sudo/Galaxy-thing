@@ -83,14 +83,14 @@ void JumpBeamer::init(const JMapInfoIter& rIter) {
     s32 arg0 = 100;
     MR::getJMapInfoArg0NoInit(rIter, &arg1);
     MR::getJMapInfoArg1NoInit(rIter, &arg0);
-    mBeams = new RingBeam*[5];
+    mBeams = new (JKRHeapToken::Dummy) RingBeam*[5];
 
     for (s32 i = 0; i < 5; i++) {
         mBeams[i] = nullptr;
     }
 
     for (s32 i = 0; i < 3; i++) {
-        mBeams[i] = new RingBeam("リングビーム", this, false, false);
+        mBeams[i] = new (JKRHeapToken::Dummy) RingBeam("リングビーム", this, false, false);
         mBeams[i]->init(rIter);
         mBeams[i]->setSpeed(arg1);
         mBeams[i]->setLife(arg0);

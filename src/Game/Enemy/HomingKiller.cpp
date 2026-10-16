@@ -946,7 +946,7 @@ void HomingKillerLauncher::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
     initNerve(GET_NERVE(HomingKiller, HomingKillerLauncherNrvAppearKiller));
     MR::syncStageSwitchAppear(this);
-    mKiller = new HomingKiller("ホーミングキラー");
+    mKiller = new (JKRHeapToken::Dummy) HomingKiller("ホーミングキラー");
     mKiller->init(rIter);
     makeActorDead();
 }

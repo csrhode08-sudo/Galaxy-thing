@@ -42,7 +42,7 @@ TombSpiderAction2nd::TombSpiderAction2nd(TombSpider* pParent) : TombSpiderAction
 void TombSpiderAction2nd::init() {
     initNerve(GET_NERVE(TombSpiderAction2nd, TombSpiderAction2ndNrvWait));
     MR::initActorStateKeeper(this, 16);
-    MR::initActorState(this, new TombSpiderStateSwoon(mParent), GET_NERVE(TombSpiderAction2nd, TombSpiderAction2ndNrvSwoon), "Swoon");
+    MR::initActorState(this, new (JKRHeapToken::Dummy) TombSpiderStateSwoon(mParent), GET_NERVE(TombSpiderAction2nd, TombSpiderAction2ndNrvSwoon), "Swoon");
     TombSpiderActionBase::init();
 }
 

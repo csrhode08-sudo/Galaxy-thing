@@ -11,7 +11,7 @@ namespace nw4r {
         class Material;
 
         namespace detail {
-            inline bool IsCITexelFormat(_GXTexFmt fmt) {
+            inline bool IsCITexelFormat(GXTexFmt fmt) {
                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
             }
 

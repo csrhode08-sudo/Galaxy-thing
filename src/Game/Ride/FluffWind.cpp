@@ -83,14 +83,14 @@ void FluffWind::init(const JMapInfoIter& rIter) {
     s32 count = MR::getRailTotalLength(this) / ::sEffectEmitterInterval;
     mNumEffects = count + 1;
     f32 stepDistance = MR::getRailTotalLength(this) / (mNumEffects - 1);
-    mEffects = new FluffWindEffect*[mNumEffects];
+    mEffects = new (JKRHeapToken::Dummy) FluffWindEffect*[mNumEffects];
     for (s32 i = 0; i < mNumEffects; i++) {
         f32 currentRailPos = i * stepDistance;
         TVec3f pos;
         TVec3f dir;
         MR::calcRailPosAndDirectionAtCoord(&pos, &dir, this, currentRailPos);
 
-        FluffWindEffect* effect = new FluffWindEffect("わたげエフェクト");
+        FluffWindEffect* effect = new (JKRHeapToken::Dummy) FluffWindEffect("わたげエフェクト");
         effect->initEffectInfo(pos, dir, TVec3f(0.0f, 1.0f, 0.0f), "FluffWind", -1.0f);
         effect->initWithoutIter();
 

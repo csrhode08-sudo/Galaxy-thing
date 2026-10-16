@@ -495,8 +495,8 @@ namespace {
 };  // namespace
 
 StorySequenceExecutor::StorySequenceExecutor() : NerveExecutor("StorySequenceExecutor"), mNextNerve(), mDemoObj(), mSaveObj(), _48(), _6C(), _B0() {
-    mDemoObj = new NameObj("StorySequenceExecutor");
-    mSaveObj = new NameObj("Save");
+    mDemoObj = new (JKRHeapToken::Dummy) NameObj("StorySequenceExecutor");
+    mSaveObj = new (JKRHeapToken::Dummy) NameObj("Save");
     mStageName[0] = '\0';
     mScenarioNo = -1;
 

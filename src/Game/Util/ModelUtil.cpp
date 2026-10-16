@@ -32,11 +32,11 @@ namespace MR {
     XanimePlayer* newXanimePlayer(const ResourceHolder* pModelResourceHolder, const char* pChar, const ResourceHolder* pUnused, J3DMdlFlag mdlFlag,
                                   XanimeResourceTable* pAnimeResourceTable) {
         J3DModel* newModel = newJ3DModel(pModelResourceHolder, pChar, mdlFlag);
-        return new XanimePlayer(newModel, pAnimeResourceTable);
+        return new (JKRHeapToken::Dummy) XanimePlayer(newModel, pAnimeResourceTable);
     }
 
     XanimeResourceTable* newXanimeResourceTable(ResourceHolder* pResourceHolder) {
-        return new XanimeResourceTable(pResourceHolder);
+        return new (JKRHeapToken::Dummy) XanimeResourceTable(pResourceHolder);
     }
 
     void updateModelManager(LiveActor* pActor) {
@@ -298,7 +298,7 @@ namespace MR {
 
     inline void setShapeVcdVatCmdSelf(J3DShape* pShape) {
         void* vcdVatCmd = pShape->getVcdVatCmd();
-        u8* arr = new (0x20) u8[J3DShape::kVcdVatDLSize];
+        u8* arr = new (JKRHeapToken::Dummy, 0x20) u8[J3DShape::kVcdVatDLSize];
         copyMemory(arr, vcdVatCmd, J3DShape::kVcdVatDLSize);
         pShape->setVcdVatCmd(arr);
     }
@@ -577,11 +577,11 @@ namespace MR {
             strstr(pChar, "FlexibleSphere") || strstr(pChar, "FlexibleSandPlanetParts") || MR::isEqualString(pChar, "ScaleDownRelayPlanet") ||
             MR::isEqualString(pChar, "GhostMario") || MR::isEqualString(pChar, "GhostLuigi") || MR::isEqualString(pChar, "Koura")) {
             OSLockMutex(&MR::MutexHolder< 0 >::sMutex);
-            newModel = static_cast< J3DModel* >(new J3DModelX(modelData, mdlFlag, 1));
+            newModel = static_cast< J3DModel* >(new (JKRHeapToken::Dummy) J3DModelX(modelData, mdlFlag, 1));
             OSUnlockMutex(&MR::MutexHolder< 0 >::sMutex);
         } else {
             OSLockMutex(&MR::MutexHolder< 0 >::sMutex);
-            newModel = new J3DModel(modelData, mdlFlag, 1);
+            newModel = new (JKRHeapToken::Dummy) J3DModel(modelData, mdlFlag, 1);
             OSUnlockMutex(&MR::MutexHolder< 0 >::sMutex);
         }
 

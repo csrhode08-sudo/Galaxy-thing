@@ -1730,7 +1730,7 @@ u32 Mario::initSoundTable(SoundList* pList, u32 globalTablePosition) {
 
 void Mario::initSound() {
     u32 count = initSoundTable(soundlist, 0);
-    _96C = new HashSortTable(count);
+    _96C = new (JKRHeapToken::Dummy) HashSortTable(count);
     for (u32 i = 0; i < count; i++) {
         _96C->add(soundlist[i].name, i, false);
     }
@@ -1740,7 +1740,7 @@ void Mario::initSound() {
 }
 
 void Mario::playSoundJ(const char* pSoundName, s32 timing) {
-    u32 index;
+    uintptr_t index;
     if (_96C->search(pSoundName, &index)) {
         switch (soundlist[index]._8._4[0] & 0x3) {
         case 0:
@@ -1777,7 +1777,7 @@ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
 }
 
 void Mario::stopSoundJ(const char* pSoundName, u32 delay) {
-    u32 index;
+    uintptr_t index;
     if (_96C->search(pSoundName, &index)) {
         switch (soundlist[index]._8._4[0] & 0x3) {
         case 0:

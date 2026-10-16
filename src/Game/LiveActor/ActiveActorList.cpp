@@ -3,7 +3,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 
 ActiveActorList::ActiveActorList(int max) : mMaxCount(max), mActorList(), mCurCount() {
-    mActorList = new LiveActor*[max];
+    mActorList = new (JKRHeapToken::Dummy) LiveActor*[max];
     clear();
 }
 

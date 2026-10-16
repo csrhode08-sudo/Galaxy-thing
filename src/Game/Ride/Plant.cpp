@@ -111,17 +111,17 @@ void Plant::init(const JMapInfoIter& pMapInfoIter) {
     MR::initAndSetRailClipping(&mClippingCenter, this, 100.0f, 500.0f);
     MR::calcRailStartPointPos(&mPosition, this);
 
-    mStalk = new PlantStalk();
+    mStalk = new (JKRHeapToken::Dummy) PlantStalk();
     mStalk->init(pMapInfoIter);
 
-    mSeedPartsModel = new PartsModel(this, "種（伸び植物）", "PlantSeed", mSeedMtx, -1, false);
+    mSeedPartsModel = new (JKRHeapToken::Dummy) PartsModel(this, "種（伸び植物）", "PlantSeed", mSeedMtx, -1, false);
     mSeedPartsModel->initWithoutIter();
     MR::initShadowVolumeSphere(mSeedPartsModel, 50.0f);
     mSeedPartsModel->mPosition.set(mPosition);
     mSeedMtx.setTrans(mPosition);
 
     updateTopMtx();
-    mTopPartsModel = new PartsModel(this, "先端（伸び植物）", "PlantTop", mTopMtx, -1, false);
+    mTopPartsModel = new (JKRHeapToken::Dummy) PartsModel(this, "先端（伸び植物）", "PlantTop", mTopMtx, -1, false);
     mTopPartsModel->initWithoutIter();
     mTopPartsModel->kill();
 
@@ -366,7 +366,7 @@ void Plant::initLeaf() {
     f32 leafRatio, leafScale, leafPos;
 
     mNumLeaves = (s32)((MR::getRailTotalLength(this) - ::sLeafPosOffsetStart - ::sLeafPosOffsetEnd) / (::sLeafIntervalMax - ::sLeafIntervalMin)) + 2;
-    mLeaves = new PlantLeaf*[mNumLeaves];
+    mLeaves = new (JKRHeapToken::Dummy) PlantLeaf*[mNumLeaves];
 
     TRot3f mtx;
     mtx.identity();
@@ -395,7 +395,7 @@ void Plant::initLeaf() {
 
         leafScale = MR::getEaseOutValue(leafRatio, ::sLeafScaleMin, ::sLeafScaleMax, 1.0f);
 
-        mLeaves[leaf] = new PlantLeaf(leafPos, mPosition, growDirection, leafScale);
+        mLeaves[leaf] = new (JKRHeapToken::Dummy) PlantLeaf(leafPos, mPosition, growDirection, leafScale);
         mLeaves[leaf]->initWithoutIter();
         leafPos -= MR::getInterpolateValue(leafRatio, ::sLeafIntervalMin, ::sLeafIntervalMax);
 

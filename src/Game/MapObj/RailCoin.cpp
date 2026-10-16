@@ -55,11 +55,11 @@ void RailCoin::placementMercatorRail() {
 
 namespace MR {
     NameObj* createRailCoin(const char* pName) {
-        return new RailCoin(pName);
+        return new (JKRHeapToken::Dummy) RailCoin(pName);
     }
 
     NameObj* createRailPurpleCoin(const char* pName) {
-        RailCoin* coin = new RailCoin(pName);
+        RailCoin* coin = new (JKRHeapToken::Dummy) RailCoin(pName);
         coin->mIsPurpleCoinGroup = true;
         return coin;
     }

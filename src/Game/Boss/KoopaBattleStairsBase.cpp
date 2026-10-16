@@ -10,7 +10,7 @@ namespace {
 };  // namespace
 
 KoopaBattleStairsBase::KoopaBattleStairsBase(Koopa* pKoopa) : NerveExecutor("クッパ戦（階段の戦い）"), mKoopa(pKoopa), mStairsGroup() {
-    mStairsGroup = new LiveActorGroup("階段保持", 128);
+    mStairsGroup = new (JKRHeapToken::Dummy) LiveActorGroup("階段保持", 128);
     mStairsGroup->initWithoutIter();
 }
 

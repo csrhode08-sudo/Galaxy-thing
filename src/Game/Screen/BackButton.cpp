@@ -44,7 +44,7 @@ void BackButton::init(const JMapInfoIter& rIter) {
     initLayoutManager("BackButton", 1);
     MR::createAndAddPaneCtrl(this, "Back", 1);
 
-    mPaneCtrl = new ButtonPaneController(this, "Back", "BoxButton", 0, true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "Back", "BoxButton", 0, true);
 }
 
 void BackButton::control() {

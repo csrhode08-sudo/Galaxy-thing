@@ -30,10 +30,10 @@ SpinDriverPathDrawInit::SpinDriverPathDrawInit()
     : NameObj("スピンドライバーレール描画初期化"), mOrangeTexture(), mGreenTexture(), mPinkTexture(), mMaskTexture(), mIsPathAtOpa() {
     MR::registerPreDrawFunction(MR::Functor(this, &SpinDriverPathDrawInit::initDraw), MR::DrawType_SpinDriverPathDrawer);
 
-    mOrangeTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "NormalColor.bti"), 0);
-    mGreenTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Green.bti"), 0);
-    mPinkTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Pink.bti"), 0);
-    mMaskTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Mask.bti"), 0);
+    mOrangeTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "NormalColor.bti"), 0);
+    mGreenTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Green.bti"), 0);
+    mPinkTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Pink.bti"), 0);
+    mMaskTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Mask.bti"), 0);
 }
 
 SpinDriverPathDrawer::SpinDriverPathDrawer(SpinDriverShootPath* pShootPath)
@@ -148,10 +148,10 @@ s32 SpinDriverPathDrawer::calcPositionCount(f32 f1, f32 f2) const {
 
 void SpinDriverPathDrawer::initPositionList(f32 f1, f32 f2) {
     mPositionCount = calcPositionCount(f1, f2);
-    _90 = new (32) TVec3f[mPositionCount];
-    _94 = new (32) TVec3f[mPositionCount];
-    _98 = new (32) TVec3f[mPositionCount];
-    _9C = new f32[mPositionCount];
+    _90 = new (JKRHeapToken::Dummy, 32) TVec3f[mPositionCount];
+    _94 = new (JKRHeapToken::Dummy, 32) TVec3f[mPositionCount];
+    _98 = new (JKRHeapToken::Dummy, 32) TVec3f[mPositionCount];
+    _9C = new (JKRHeapToken::Dummy) f32[mPositionCount];
 
     s32 totalSteps = mShootPath->getTotalLength() / f1;
 

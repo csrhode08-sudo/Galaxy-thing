@@ -182,7 +182,7 @@ void StaffRollPicture::initReplaceTexture() {
     char replaceTextureName[64];
     const char* pReplaceTexturePrefix;
 
-    mReplaceTexture = new nw4r::lyt::TexMap*[PICTURE_TEXTURE_NUM];
+    mReplaceTexture = new (JKRHeapToken::Dummy) nw4r::lyt::TexMap*[PICTURE_TEXTURE_NUM];
 
     if (MR::isStarCompleteAllGalaxy()) {
         pReplaceTexturePrefix = ::cReplaceTexturePrefixComp;
@@ -258,7 +258,7 @@ void StaffRoll::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayout(this);
     initLayoutManager("StaffRollTitle", 1);
 
-    mInfo = new InformationMessage();
+    mInfo = new (JKRHeapToken::Dummy) InformationMessage();
     mInfo->initWithoutIter();
 
     MR::createAndAddPaneCtrl(this, ::cPaneNameTitleLogo, 1);
@@ -271,17 +271,17 @@ void StaffRoll::init(const JMapInfoIter& rIter) {
     MR::setFollowPos(&mEndLogoPos, this, ::cPaneNameTheEnd);
     MR::hidePane(this, ::cPaneNameTheEnd);
 
-    mLine = new StaffRollLine*[LINE_NUM];
+    mLine = new (JKRHeapToken::Dummy) StaffRollLine*[LINE_NUM];
 
     for (s32 i = 0; i < LINE_NUM; i++) {
-        mLine[i] = new StaffRollLine("スタッフロール一行");
+        mLine[i] = new (JKRHeapToken::Dummy) StaffRollLine("スタッフロール一行");
         mLine[i]->initWithoutIter();
     }
 
     mMsg = MR::getGameMessageDirect(::cStaffRollMsgId);
     mMsgLineNum = MR::countMessageLine(mMsg);
 
-    mPicture = new StaffRollPicture("スタッフロール写真");
+    mPicture = new (JKRHeapToken::Dummy) StaffRollPicture("スタッフロール写真");
     mPicture->initWithoutIter();
 
     initNerve(GET_NERVE(StaffRoll, StaffRollNrvPrepareDemo));

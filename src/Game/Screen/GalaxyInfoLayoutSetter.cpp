@@ -38,7 +38,7 @@ GalaxyInfoLayoutSetter::GalaxyInfoLayoutSetter(LayoutActor* pHost) : mHost(pHost
     MR::setInfluencedAlphaToChild(pHost);
     initReplaceTexture();
 
-    mIconComet = new IconComet();
+    mIconComet = new (JKRHeapToken::Dummy) IconComet();
     mIconComet->initWithoutIter();
 }
 
@@ -94,7 +94,7 @@ u32 GalaxyInfoLayoutSetter::getAnimLayerNum() {
 void GalaxyInfoLayoutSetter::initReplaceTexture() {
     ResTable* fileInfoTable = MR::createAndAddResourceHolder(::cTextureArcName)->mFileInfoTable;
 
-    mReplaceTexture = new nw4r::lyt::TexMap*[fileInfoTable->mCount];
+    mReplaceTexture = new (JKRHeapToken::Dummy) nw4r::lyt::TexMap*[fileInfoTable->mCount];
 
     for (u32 i = 0; i < fileInfoTable->mCount; i++) {
         const char* resName = fileInfoTable->getResName(i);

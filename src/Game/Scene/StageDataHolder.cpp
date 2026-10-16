@@ -330,7 +330,7 @@ JMapInfoIter StageDataHolder::getChildObjInfoFromDataIndex(const JMapInfoIter& r
 }
 
 const StageDataHolder* StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter& rIter) const {
-    s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
+    uintptr_t data = (uintptr_t)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
 
     if (_E4 <= data && data < _E8) {
         return this;
@@ -449,7 +449,7 @@ void StageDataHolder::initJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const 
     s32 count = fileCount > 0 ? fileCount : 0;
 
     if (count != 0) {
-        JMapInfo* pInfoArray = new JMapInfo[count];
+        JMapInfo* pInfoArray = new (JKRHeapToken::Dummy) JMapInfo[count];
         pInfo->mArr = pInfoArray;
         pInfo->mMaxSize = count;
         attachJmpInfoToArray(pInfoArray, pName);
@@ -470,7 +470,7 @@ void StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo
     }
 
     if (count != 0) {
-        JMapInfo* pInfoArray = new JMapInfo[count];
+        JMapInfo* pInfoArray = new (JKRHeapToken::Dummy) JMapInfo[count];
         pInfo->mMaxSize = count;
         pInfo->mArr = pInfoArray;
 
@@ -504,7 +504,7 @@ void StageDataHolder::initLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, c
     }
 
     if (count != 0) {
-        JMapInfo* pCurrent = new JMapInfo[count];
+        JMapInfo* pCurrent = new (JKRHeapToken::Dummy) JMapInfo[count];
         pInfo->mMaxSize = count;
         pInfo->mArr = pCurrent;
         for (u32 i = 0; i < 0x11; i++) {
@@ -540,7 +540,7 @@ JMapInfo* StageDataHolder::attachJmpInfoToArray(JMapInfo* pInfo, const char* pDi
 void StageDataHolder::initTableData() {
     void* tableFile = MR::receiveArchive("/StageData/ObjNameTable.arc")->getResource('????', "ObjNameTable.tbl");
 
-    mObjNameTbl = new JMapInfo();
+    mObjNameTbl = new (JKRHeapToken::Dummy) JMapInfo();
     mObjNameTbl->attach(tableFile);
 }
 
@@ -555,9 +555,9 @@ void StageDataHolder::initPlacementInfoOrderedCommon() {
         normalCount += localNormalCount;
     }
 
-    _FC = new PlacementInfoOrdered(priorityCount);
-    _100 = new PlacementInfoOrdered(normalCount);
-    _10C = new PlacementInfoOrdered(0x20);
+    _FC = new (JKRHeapToken::Dummy) PlacementInfoOrdered(priorityCount);
+    _100 = new (JKRHeapToken::Dummy) PlacementInfoOrdered(normalCount);
+    _10C = new (JKRHeapToken::Dummy) PlacementInfoOrdered(0x20);
     ::attachJmpInfoToPlacementInfoOrdered(_FC, _100, _10C, _EC);
 
     for (s32 i = 0; i < mStageDataHolderCount; i++) {
@@ -579,8 +579,8 @@ void StageDataHolder::initPlacementInfoOrderedScenario() {
         normalCount += localNormalCount;
     }
 
-    _104 = new PlacementInfoOrdered(priorityCount);
-    _108 = new PlacementInfoOrdered(normalCount);
+    _104 = new (JKRHeapToken::Dummy) PlacementInfoOrdered(priorityCount);
+    _108 = new (JKRHeapToken::Dummy) PlacementInfoOrdered(normalCount);
     ::attachJmpInfoToPlacementInfoOrdered(_104, _108, nullptr, _F4);
 
     for (s32 i = 0; i < mStageDataHolderCount; i++) {
@@ -645,11 +645,11 @@ void StageDataHolder::calcDataAddress() {
 
 void StageDataHolder::updateDataAddress(const MR::AssignableArray< JMapInfo >* pInfoArray) {
     for (const JMapInfo* pInfo = pInfoArray->begin(); pInfo != pInfoArray->end(); pInfo++) {
-        if ((u32)pInfo->mData < _E4) {
-            _E4 = (u32)pInfo->mData;
+        if ((uintptr_t)pInfo->mData < _E4) {
+            _E4 = (uintptr_t)pInfo->mData;
         }
 
-        u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
+        uintptr_t addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((uintptr_t)pInfo->mData + pInfo->mData->mDataOffset);
 
         if (_E8 < addr) {
             _E8 = addr;
@@ -665,7 +665,7 @@ void StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray< JMap
                 const char* pStageName = "";
                 MR::getObjectName(&pStageName, iter);
                 s32 zoneID = MR::makeCurrentGalaxyStatusAccessor().getZoneId(pStageName);
-                mStageDataArray[mStageDataHolderCount] = new StageDataHolder(pStageName, zoneID, loadCommon);
+                mStageDataArray[mStageDataHolderCount] = new (JKRHeapToken::Dummy) StageDataHolder(pStageName, zoneID, loadCommon);
                 mStageDataArray[mStageDataHolderCount]->initWithoutIter();
                 mStageDataArray[mStageDataHolderCount]->calcPlacementMtx(iter);
                 mStageDataHolderCount++;

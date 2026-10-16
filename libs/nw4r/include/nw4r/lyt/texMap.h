@@ -40,9 +40,9 @@ namespace nw4r {
                 mBits.anisotropy = aniso;
             }
 
-            void Get(_GXTexObj*) const;
-            void Get(_GXTlutObj*) const;
-            void Set(const _GXTexObj&);
+            void Get(GXTexObj*) const;
+            void Get(GXTlutObj*) const;
+            void Set(const GXTexObj&);
             void ReplaceImage(const TPLDescriptor*);
             void ReplaceImage(TPLPalette*, u32 = 0);
 

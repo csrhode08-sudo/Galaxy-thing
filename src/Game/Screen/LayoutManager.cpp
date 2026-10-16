@@ -155,7 +155,7 @@ LayoutManager::LayoutManager(const char* pLayoutName, bool useArchiveNamePrefix,
     }
 
     u32 len = strlen(fileName) + 1;
-    mLayoutName = new char[len];
+    mLayoutName = new (JKRHeapToken::Dummy) char[len];
     MR::copyString(mLayoutName, fileName, len);
 
     initArc(archiveName, pLayoutName);
@@ -228,7 +228,7 @@ LayoutPaneCtrl* LayoutManager::createAndAddRootPaneCtrl(u32 animLayerNum) {
         return mPaneInfoList[index].mPaneCtrl;
     }
 
-    LayoutPaneCtrl* pPaneCtrl = new LayoutPaneCtrl(this, mLayout->mpRootPane->mName, animLayerNum);
+    LayoutPaneCtrl* pPaneCtrl = new (JKRHeapToken::Dummy) LayoutPaneCtrl(this, mLayout->mpRootPane->mName, animLayerNum);
     addPaneCtrl(pPaneCtrl);
     return pPaneCtrl;
 }
@@ -240,7 +240,7 @@ LayoutPaneCtrl* LayoutManager::createAndAddPaneCtrl(const char* pName, u32 animL
         return mPaneInfoList[index].mPaneCtrl;
     }
 
-    LayoutPaneCtrl* pPaneCtrl = new LayoutPaneCtrl(this, pName, animLayerNum);
+    LayoutPaneCtrl* pPaneCtrl = new (JKRHeapToken::Dummy) LayoutPaneCtrl(this, pName, animLayerNum);
     addPaneCtrl(pPaneCtrl);
     return pPaneCtrl;
 }
@@ -282,7 +282,7 @@ void LayoutManager::addGroupCtrl(LayoutGroupCtrl* pGroupCtrl) {
     for (u32 i = 0; i < pGroupCtrl->getPaneNum(); i++) {
         s32 paneIndex = getIndexOfPane(pGroupCtrl->getPane(i)->mName);
         LayoutGroupCtrlLink* pNext = mPaneInfoList[paneIndex].mGroupCtrlLink;
-        LayoutGroupCtrlLink* pLink = new LayoutGroupCtrlLink;
+        LayoutGroupCtrlLink* pLink = new (JKRHeapToken::Dummy) LayoutGroupCtrlLink;
         pLink->mGroupCtrl = pGroupCtrl;
         pLink->mNext = pNext;
         mPaneInfoList[paneIndex].mGroupCtrlLink = pLink;
@@ -344,7 +344,7 @@ bool LayoutManager::isPointing(const nw4r::lyt::Pane* pPane, const TVec2f& rPos)
 }
 
 LayoutGroupCtrl* LayoutManager::createAndAddGroupCtrl(const char* pName, u32 animLayerNum) {
-    LayoutGroupCtrl* pGroupCtrl = new LayoutGroupCtrl(this, pName, animLayerNum);
+    LayoutGroupCtrl* pGroupCtrl = new (JKRHeapToken::Dummy) LayoutGroupCtrl(this, pName, animLayerNum);
     addGroupCtrl(pGroupCtrl);
     return pGroupCtrl;
 }
@@ -369,7 +369,7 @@ void LayoutManager::createPaneMtxRef(const char* pName) {
         index = getIndexOfPane(pName);
     }
 
-    mPaneInfoList[index].mMtxRef = new f32[3][4];
+    mPaneInfoList[index].mMtxRef = new (JKRHeapToken::Dummy) f32[3][4];
 }
 
 MtxPtr LayoutManager::getPaneMtxRef(const char* pName) const {
@@ -503,11 +503,11 @@ void LayoutManager::initArc(const char* pArchiveName, const char* pLayoutName) {
     snprintf(layoutResName, sizeof(layoutResName), "%s.brlyt", pLayoutName);
     void* pLayoutRes = mLayoutHolder->GetResource('blyt', layoutResName, nullptr);
 
-    mLayout = new nw4r::lyt::Layout();
+    mLayout = new (JKRHeapToken::Dummy) nw4r::lyt::Layout();
     mLayout->Build(pLayoutRes, mLayoutHolder);
 
     if (mLayoutHolder->mAnimRes.mCount != 0) {
-        mAnimTransList = new nw4r::lyt::AnimTransform*[mLayoutHolder->mAnimRes.mCount];
+        mAnimTransList = new (JKRHeapToken::Dummy) nw4r::lyt::AnimTransform*[mLayoutHolder->mAnimRes.mCount];
 
         for (u32 i = 0; i < mLayoutHolder->mAnimRes.mCount; i++) {
             void* pAnimRes = mLayoutHolder->mAnimRes.getRes(i);
@@ -530,7 +530,7 @@ void LayoutManager::initDrawInfo() {
 
 void LayoutManager::initPaneInfo() {
     mPaneCount = countPanes(mLayout->mpRootPane);
-    mPaneInfoList = new LayoutPaneInfo[mPaneCount];
+    mPaneInfoList = new (JKRHeapToken::Dummy) LayoutPaneInfo[mPaneCount];
 
     u32 rIndex = 0;
     initPaneInfoRecursive(rIndex, mLayout->mpRootPane);
@@ -567,7 +567,7 @@ u32 LayoutManager::countPanes(nw4r::lyt::Pane* pPane) {
 
 void LayoutManager::initGroupCtrlList() {
     mGroupCtrlCount = mLayout->mpGroupContainer->mGroupList.GetSize();
-    mGroupCtrlList = new LayoutGroupCtrl*[mGroupCtrlCount];
+    mGroupCtrlList = new (JKRHeapToken::Dummy) LayoutGroupCtrl*[mGroupCtrlCount];
 
     for (u32 i = 0; i < mGroupCtrlCount; i++) {
         mGroupCtrlList[i] = nullptr;
@@ -643,7 +643,7 @@ void LayoutManager::replaceIndDummyTexture() {
 
     JUTTexture screenTex(MR::getScreenResTIMG(), static_cast< u8 >(0));
 
-    mIndDummyTexMap = new nw4r::lyt::TexMap(screenTex.getTexObj());
+    mIndDummyTexMap = new (JKRHeapToken::Dummy) nw4r::lyt::TexMap(screenTex.getTexObj());
 
     void* pIndDummyResStart = mLayoutHolder->getResOther("IndDummy.tpl");
     void* pIndDummyResEnd = reinterpret_cast< void* >(-1);

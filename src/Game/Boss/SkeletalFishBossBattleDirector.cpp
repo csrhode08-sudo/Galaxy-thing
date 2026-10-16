@@ -24,7 +24,7 @@ SkeletalFishBossBattleDirector::SkeletalFishBossBattleDirector(SkeletalFishBoss*
     }
 
     for (s32 i = 0; i < ARRAY_SIZE(mGuardModels); i++) {
-        ModelObj* guardMdl = new ModelObj("デモ用スカルシャークガード", "SkeletalFishGuard", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
+        ModelObj* guardMdl = new (JKRHeapToken::Dummy) ModelObj("デモ用スカルシャークガード", "SkeletalFishGuard", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
         mGuardModels[i] = guardMdl;
         mGuardModels[i]->initWithoutIter();
         MR::initLightCtrl(mGuardModels[i]);

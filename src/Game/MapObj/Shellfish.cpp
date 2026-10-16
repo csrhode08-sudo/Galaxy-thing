@@ -67,9 +67,9 @@ void Shellfish::init(const JMapInfoIter& rIter) {
     MR::addEffectHitNormal(this, nullptr);
     initSound(4, false);
     MR::initStarPointerTarget(this, 260.0f, TVec3f(0.0f, 130.0f, -50.0f));
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
-    mStarPointerState = new WalkerStateBindStarPointer(this, mScaleController);
+    mStarPointerState = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     initNerve(GET_NERVE(Shellfish, ShellfishNrvWait));
     initItem(rIter);
     MR::addToAttributeGroupSearchTurtle(this);
@@ -270,7 +270,7 @@ void Shellfish::initCoin(const JMapInfoIter&) {
 void Shellfish::initYellowChip(const JMapInfoIter& rIter) {
     s32 groupId;
     MR::getJMapInfoArg0WithInit(rIter, &groupId);
-    YellowChip* chip = new YellowChip("イエローチップ");
+    YellowChip* chip = new (JKRHeapToken::Dummy) YellowChip("イエローチップ");
     chip->setHost(this);
     chip->setGroupID(groupId);
     mItem = chip;
@@ -280,7 +280,7 @@ void Shellfish::initYellowChip(const JMapInfoIter& rIter) {
 void Shellfish::initBlueChip(const JMapInfoIter& rIter) {
     s32 groupId;
     MR::getJMapInfoArg0WithInit(rIter, &groupId);
-    BlueChip* chip = new BlueChip("ブルーチップ");
+    BlueChip* chip = new (JKRHeapToken::Dummy) BlueChip("ブルーチップ");
     chip->setHost(this);
     chip->setGroupID(groupId);
     mItem = chip;
@@ -288,7 +288,7 @@ void Shellfish::initBlueChip(const JMapInfoIter& rIter) {
 }
 
 void Shellfish::initKinokoOneUp(const JMapInfoIter&) {
-    mItem = new BenefitItemOneUp("１ＵＰキノコ");
+    mItem = new (JKRHeapToken::Dummy) BenefitItemOneUp("１ＵＰキノコ");
     mItem->initWithoutIter();
 }
 

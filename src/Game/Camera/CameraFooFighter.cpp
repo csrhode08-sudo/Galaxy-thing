@@ -157,5 +157,5 @@ CameraTargetObj* CameraFooFighter::calc() {
 }
 
 CamTranslatorBase* CameraFooFighter::createTranslator() {
-    return new CamTranslatorFooFighter(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFooFighter(this);
 }

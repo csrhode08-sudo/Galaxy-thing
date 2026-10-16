@@ -156,7 +156,7 @@ void MarblePlanet::initCoreAndElectron() {
     MR::startBtk(mCorePlanetModel, "MarblePlanetCore");
     MR::setBckFrameAndStop(mCorePlanetModel, 0.0f);
     MR::setBtkFrameAndStop(mCorePlanetModel, 0.0f);
-    mPlanetElectrons = new MarblePlanetElectron*[mNumElectrons];
+    mPlanetElectrons = new (JKRHeapToken::Dummy) MarblePlanetElectron*[mNumElectrons];
 
     TVec3f front;
     MR::calcFrontVec(&front, this);
@@ -177,7 +177,7 @@ void MarblePlanet::initCoreAndElectron() {
             position.scaleAdd(1000.0f, front, *pos);
             TVec3f rotation;
             rotation.setAll< f32 >((360.0f * i) / mNumElectrons);
-            mPlanetElectrons[i] = new MarblePlanetElectron(this, position, rotation, "ビー玉惑星電子");
+            mPlanetElectrons[i] = new (JKRHeapToken::Dummy) MarblePlanetElectron(this, position, rotation, "ビー玉惑星電子");
             mPlanetElectrons[i]->initWithoutIter();
         }
     }
@@ -204,7 +204,7 @@ void MarblePlanetElectron::init(const JMapInfoIter& rIter) {
     MR::addEffectHitNormal(this, 0);
     initSound(4, false);
     MR::invalidateClipping(this);
-    mElectronShadow = new MarblePlanetElectronShadow(this, mParentPlanet->mPosition, "電子影");
+    mElectronShadow = new (JKRHeapToken::Dummy) MarblePlanetElectronShadow(this, mParentPlanet->mPosition, "電子影");
     mElectronShadow->initWithoutIter();
     MR::calcGravity(this);
     mGravity.negate();

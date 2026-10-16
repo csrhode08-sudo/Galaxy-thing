@@ -29,7 +29,7 @@
  * headers
  */
 
-#include <mem.h>  // memset
+#include <cstring>  // memset
 
 #include <bt_trace.h>
 

@@ -156,10 +156,10 @@ void CoconutTreeLeafGroup::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("CoconutTreeLeaf", nullptr, false);
     MR::connectToSceneMapObjNoCalcAnim(this);
     mNumLeaves = MR::getJointNum(this) - 1;
-    mLeaves = new CoconutTreeLeaf*[mNumLeaves];
+    mLeaves = new (JKRHeapToken::Dummy) CoconutTreeLeaf*[mNumLeaves];
 
     for (s32 i = 0; i < mNumLeaves; i++) {
-        mLeaves[i] = new CoconutTreeLeaf(this, MR::getJointMtx(this, i + 1), &mWindDirection);
+        mLeaves[i] = new (JKRHeapToken::Dummy) CoconutTreeLeaf(this, MR::getJointMtx(this, i + 1), &mWindDirection);
         mLeaves[i]->initWithoutIter();
     }
 

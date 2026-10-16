@@ -264,8 +264,8 @@ void Dodoryu_DUMMY() {
 
 Dodoryu::Dodoryu(const char* pName)
     : LiveActor(pName), _BC(0.0f, 0.0f, 0.0f), _C8(), _CC(), mState(), mMoveStateHolder(), mHill(), mLeadHill(), mBank(), mRabbit(),
-      _128(0.0f, 1.0f, 0.0f), _134(1.0f, 0.0f, 0.0f), mClosedAreaObj(), _144(), _148(new CameraTargetMtx("カメラターゲットダミー")),
-      _14C(new CameraTargetMtx("カメラターゲットダミー")), _150(), _154(), mAnimScaleCtrl(new AnimScaleController(nullptr)) {
+      _128(0.0f, 1.0f, 0.0f), _134(1.0f, 0.0f, 0.0f), mClosedAreaObj(), _144(), _148(new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー")),
+      _14C(new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー")), _150(), _154(), mAnimScaleCtrl(new (JKRHeapToken::Dummy) AnimScaleController(nullptr)) {
     mBaseMtx.identity();
 }
 
@@ -276,7 +276,7 @@ void Dodoryu::init(const JMapInfoIter& rIter) {
 
     initModelManagerWithAnm("Dodoryu", nullptr, false);
 
-    mMoveStateHolder = new DodoryuSub::MoveStateHolder(this);
+    mMoveStateHolder = new (JKRHeapToken::Dummy) DodoryuSub::MoveStateHolder(this);
 
     initState();
     MR::connectToSceneEnemy(this);
@@ -292,9 +292,9 @@ void Dodoryu::init(const JMapInfoIter& rIter) {
     MR::declareCameraRegisterVec(this, 0, &_BC);
     MR::declareGlobalEventCameraFixedThere(::sSpinOutCamera, true, 0.0f);
     createMogucchiHill();
-    mLeadHill = new DodoryuLeadHill(this);
+    mLeadHill = new (JKRHeapToken::Dummy) DodoryuLeadHill(this);
     createDodoryuBank();
-    mRabbit = new DodoryuRabbit(this, rIter);
+    mRabbit = new (JKRHeapToken::Dummy) DodoryuRabbit(this, rIter);
     MR::declarePowerStar(this);
     MR::createDepthOfFieldBlur();
     MR::declareStarPiece(this, 24);
@@ -736,12 +736,12 @@ void Dodoryu::initSwitch(const JMapInfoIter& rIter) {
 }
 
 void Dodoryu::createMogucchiHill() {
-    mHill = new DodoryuHill(this);
+    mHill = new (JKRHeapToken::Dummy) DodoryuHill(this);
     mHill->setAppearNum(5);
 }
 
 void Dodoryu::createDodoryuBank() {
-    mBank = new DodoryuBank();
+    mBank = new (JKRHeapToken::Dummy) DodoryuBank();
     mBank->initWithoutIter();
 }
 
@@ -774,14 +774,14 @@ void Dodoryu::checkHipDrop() {
 }
 
 void Dodoryu::initState() {
-    mState.push_back(new DodoryuStateWait(this, "DodoryuStateWait"));
-    mState.push_back(new DodoryuDemoOpening(this, "DodoryuDemoOpening"));
-    mState.push_back(new DodoryuStateLv1(this, "DodoryuStateLv1"));
-    mState.push_back(new DodoryuDemoAppear(this, "DodoryuDemoAppear"));
-    mState.push_back(new DodoryuStateLv2(this, &::sDodoryuChaseDataLv2, "DodoryuStateLv2"));
-    mState.push_back(new DodoryuDemoAngry(this, "DodoryuDemoAngry"));
-    mState.push_back(new DodoryuStateLv2(this, &::sDodoryuChaseDataLv3, "DodoryuStateLv3"));
-    mState.push_back(new DodoryuDemoDown(this, "DodoryuDemoDown"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuStateWait(this, "DodoryuStateWait"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuDemoOpening(this, "DodoryuDemoOpening"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuStateLv1(this, "DodoryuStateLv1"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuDemoAppear(this, "DodoryuDemoAppear"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuStateLv2(this, &::sDodoryuChaseDataLv2, "DodoryuStateLv2"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuDemoAngry(this, "DodoryuDemoAngry"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuStateLv2(this, &::sDodoryuChaseDataLv3, "DodoryuStateLv3"));
+    mState.push_back(new (JKRHeapToken::Dummy) DodoryuDemoDown(this, "DodoryuDemoDown"));
     _CC = 0;
 }
 
@@ -849,8 +849,8 @@ void DodoryuRabbit::init(const JMapInfoIter& rIter) {
     MR::addHitSensorAtJointEnemy(this, "body", "Spine", 8, 50.0f, TVec3f(0.0f, 0.0f, 0.0f));
     MR::initShadowFromCSV(this, "Shadow");
 
-    _D4 = new JointRumbler(this, "Spine", 4.0f, 0.2f, 60, true, 0);
-    _D8 = new JointRumbler(this, "Spine", 4.0f, 0.2f, 30, true, 0);
+    _D4 = new (JKRHeapToken::Dummy) JointRumbler(this, "Spine", 4.0f, 0.2f, 60, true, 0);
+    _D8 = new (JKRHeapToken::Dummy) JointRumbler(this, "Spine", 4.0f, 0.2f, 30, true, 0);
 
     MR::initLightCtrl(this);
     reset(false);

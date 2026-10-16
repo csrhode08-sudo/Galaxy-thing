@@ -25,7 +25,7 @@ void MapPartsAppearController::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(MapPartsAppearController, HostTypeWait));
     initSwitchMessenger(rIter);
     MR::getMapPartsArgSignMotionType(&mSignMotionType, rIter);
-    mPostureHolder = new PostureHolder(mHost);
+    mPostureHolder = new (JKRHeapToken::Dummy) PostureHolder(mHost);
 }
 
 void MapPartsAppearController::start() {

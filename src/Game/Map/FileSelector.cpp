@@ -3,7 +3,7 @@
 #include "Game/Map/FileSelectCameraController.hpp"
 #include "Game/Map/FileSelectEffect.hpp"
 #include "Game/Map/FileSelectFunc.hpp"
-#include "Game/Map/FileSelectItem.hpp"
+#include "Game/Map/FIleSelectItem.hpp"
 #include "Game/Map/FileSelectItemDelegator.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
@@ -134,7 +134,7 @@ void FileSelector_FORCE_MATCH_SDATA2() {
 
 FileSelector::FileSelector(const char* pName)
     : LiveActor(pName), mCameraController(), mSky(), mItems(), mOperationButton(), mBackButton(), mBrosButton(), mInfoMessage(), mSysInfoWindow(),
-      _B4(), _B8(), _BC(), _C0(), mUserFile(), _CC(), mTitle(), mMiiSelect(), mMiiId(new RFLCreateID()), mManual(), mIsMiiSelectStartFirst(),
+      _B4(), _B8(), _BC(), _C0(), mUserFile(), _CC(), mTitle(), mMiiSelect(), mMiiId(new (JKRHeapToken::Dummy) RFLCreateID()), mManual(), mIsMiiSelectStartFirst(),
       mBgmState(), mSelectEffect() {
 }
 
@@ -260,19 +260,19 @@ bool FileSelector::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRece
 }
 
 void FileSelector::initUserFileArray() {
-    mUserFile = new UserFile[USER_FILE_NUM]();
-    _CC = new bool[USER_FILE_NUM];
+    mUserFile = new (JKRHeapToken::Dummy) UserFile[USER_FILE_NUM]();
+    _CC = new (JKRHeapToken::Dummy) bool[USER_FILE_NUM];
 
     initUserFile();
 }
 
 void FileSelector::createCameraController() {
-    mCameraController = new FileSelectCameraController("ファイルセレクトカメラ制御");
+    mCameraController = new (JKRHeapToken::Dummy) FileSelectCameraController("ファイルセレクトカメラ制御");
     mCameraController->initWithoutIter();
 }
 
 void FileSelector::createSky() {
-    mSky = new FileSelectSky("ファイルセレクト画面の空");
+    mSky = new (JKRHeapToken::Dummy) FileSelectSky("ファイルセレクト画面の空");
     mSky->initWithoutIter();
     mSky->appear();
 }
@@ -281,18 +281,18 @@ namespace {
     inline FileSelectItem* createFileItem(s32 id) {
         FileSelectIconID iconId = FileSelectIconID();
 
-        return new FileSelectItem(id, true, iconId, "ファイルセレクトアイテム");
+        return new (JKRHeapToken::Dummy) FileSelectItem(id, true, iconId, "ファイルセレクトアイテム");
     }
 };  // namespace
 
 void FileSelector::createFileItems() {
-    mItems = new DeriveActorGroup< FileSelectItem >("全ファイルアイテム保持", USER_FILE_NUM);
-    _98 = new TVec3f[USER_FILE_NUM]();
+    mItems = new (JKRHeapToken::Dummy) DeriveActorGroup< FileSelectItem >("全ファイルアイテム保持", USER_FILE_NUM);
+    _98 = new (JKRHeapToken::Dummy) TVec3f[USER_FILE_NUM]();
 
     calcBasePos(0.0f);
     MR::createSceneObj(SceneObj_MiiFacePartsHolder);
 
-    FileSelectItemDelegator< FileSelector >* pDelegator = new FileSelectItemDelegator< FileSelector >(this, &FileSelector::notifyItem);
+    FileSelectItemDelegator< FileSelector >* pDelegator = new (JKRHeapToken::Dummy) FileSelectItemDelegator< FileSelector >(this, &FileSelector::notifyItem);
 
     for (int i = 0; i < USER_FILE_NUM; i++) {
         FileSelectItem* pItem = ::createFileItem(::sIndexOrder[i]);
@@ -305,7 +305,7 @@ void FileSelector::createFileItems() {
 }
 
 void FileSelector::createOperationButton() {
-    mOperationButton = new FileSelectButton("FileSelectButton");
+    mOperationButton = new (JKRHeapToken::Dummy) FileSelectButton("FileSelectButton");
     mOperationButton->initWithoutIter();
     mOperationButton->setCallbackFunctor(MR::Functor(this, &FileSelector::callbackStart), MR::Functor(this, &FileSelector::callbackCopy),
                                          MR::Functor(this, &FileSelector::callbackMii), MR::Functor(this, &FileSelector::callbackDelete),
@@ -313,19 +313,19 @@ void FileSelector::createOperationButton() {
 }
 
 void FileSelector::createBackButton() {
-    mBackButton = new BackButton("戻るボタン", false);
+    mBackButton = new (JKRHeapToken::Dummy) BackButton("戻るボタン", false);
     mBackButton->initWithoutIter();
 
     MR::connectToScene(mBackButton, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawBufferType_None, MR::DrawType_LayoutDecoration);
 }
 
 void FileSelector::createBrosButton() {
-    mBrosButton = new BrosButton("ルイージ切り替えボタン");
+    mBrosButton = new (JKRHeapToken::Dummy) BrosButton("ルイージ切り替えボタン");
     mBrosButton->initWithoutIter();
 }
 
 void FileSelector::createInfoMessage() {
-    mInfoMessage = new InformationMessage();
+    mInfoMessage = new (JKRHeapToken::Dummy) InformationMessage();
     mInfoMessage->initWithoutIter();
 }
 
@@ -338,22 +338,22 @@ void FileSelector::createSysInfoWindow() {
 }
 
 void FileSelector::createFileInfo() {
-    mFileInfo = new FileSelectInfo(RFL_NAME_LEN + 1, "ファイル情報");
+    mFileInfo = new (JKRHeapToken::Dummy) FileSelectInfo(RFL_NAME_LEN + 1, "ファイル情報");
     mFileInfo->initWithoutIter();
 }
 
 void FileSelector::createTitle() {
-    mTitle = new TitleSequenceProduct();
+    mTitle = new (JKRHeapToken::Dummy) TitleSequenceProduct();
     mTitle->kill();
 }
 
 void FileSelector::createMiiSelect() {
-    mMiiSelect = new MiiSelect("MiiSelect");
+    mMiiSelect = new (JKRHeapToken::Dummy) MiiSelect("MiiSelect");
     mMiiSelect->initWithoutIter();
 }
 
 void FileSelector::createMiiConfirmIcon() {
-    mMiiConfirmIcon = new MiiConfirmIcon("Mii確認用アイコン");
+    mMiiConfirmIcon = new (JKRHeapToken::Dummy) MiiConfirmIcon("Mii確認用アイコン");
     mMiiConfirmIcon->initWithoutIter();
     MR::connectToScene(mMiiConfirmIcon, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawBufferType_None, MR::DrawType_LayoutDecoration);
 }
@@ -361,7 +361,7 @@ void FileSelector::createMiiConfirmIcon() {
 #if (VERSION == RMGK01)
 void FileSelector::createMiiFont() {
     JKRMemArchive* pArchive = MR::receiveArchive("/LayoutData/MiiFont.arc");
-    mFont = new nw4r::ut::ResFont();
+    mFont = new (JKRHeapToken::Dummy) nw4r::ut::ResFont();
     mFont->SetResource(pArchive->getResource("/MiiFont26.brfnt"));
     mFont->SetAlternateChar('?');
     MR::setTextBoxFontRecursive(mFileInfo, "FileName", mFont);
@@ -371,12 +371,12 @@ void FileSelector::createMiiFont() {
 #endif
 
 void FileSelector::createManual() {
-    mManual = new Manual2P("２Ｐマニュアル");
+    mManual = new (JKRHeapToken::Dummy) Manual2P("２Ｐマニュアル");
     mManual->initWithoutIter();
 }
 
 void FileSelector::createSelectEffect() {
-    mSelectEffect = new FileSelectEffect[USER_FILE_NUM]();
+    mSelectEffect = new (JKRHeapToken::Dummy) FileSelectEffect[USER_FILE_NUM]();
 
     for (int i = 0; i < USER_FILE_NUM; i++) {
         mSelectEffect[i].initWithoutIter();
@@ -873,7 +873,7 @@ s32 FileSelector::getMissCount(s32 id) const {
 }
 
 void FileSelector::playSelectedME() {
-    switch (MR::getRandom(0L, 4L)) {
+    switch (MR::getRandom(0, 4)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_SELECT1");
         break;

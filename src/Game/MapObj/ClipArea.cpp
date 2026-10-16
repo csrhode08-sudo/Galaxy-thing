@@ -51,22 +51,22 @@ bool ClipArea::isInArea(const TVec3f& rParam1, f32 param2) const {
 
 namespace MR {
     void setClipSphereArea(ClipArea* pClipArea) {
-        pClipArea->setShape(new ClipAreaShapeSphere());
+        pClipArea->setShape(new (JKRHeapToken::Dummy) ClipAreaShapeSphere());
     }
 
     void setClipCenterBoxArea(ClipArea* pClipArea) {
-        pClipArea->setShape(new ClipAreaShapeBox(0));
+        pClipArea->setShape(new (JKRHeapToken::Dummy) ClipAreaShapeBox(0));
     }
 
     void setClipBottomBoxArea(ClipArea* pClipArea) {
-        pClipArea->setShape(new ClipAreaShapeBox(1));
+        pClipArea->setShape(new (JKRHeapToken::Dummy) ClipAreaShapeBox(1));
     }
 
     void setClipTopConeArea(ClipArea* pClipArea) {
-        pClipArea->setShape(new ClipAreaShapeCone(0));
+        pClipArea->setShape(new (JKRHeapToken::Dummy) ClipAreaShapeCone(0));
     }
 
     void setClipBottomConeArea(ClipArea* pClipArea) {
-        pClipArea->setShape(new ClipAreaShapeCone(1));
+        pClipArea->setShape(new (JKRHeapToken::Dummy) ClipAreaShapeCone(1));
     }
 };  // namespace MR

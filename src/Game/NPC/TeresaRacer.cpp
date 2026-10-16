@@ -85,7 +85,7 @@ void TeresaRacer::init(const JMapInfoIter& rIter) {
         _114 = 0.05f;
         mParam._4 = 3000.0f;
 
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStarTeresaRacer", "TakeOutStarTeresaRacer", GET_NERVE(TeresaRacer, TeresaRacerNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStarTeresaRacer", "TakeOutStarTeresaRacer", GET_NERVE(TeresaRacer, TeresaRacerNrvTakeOutStar));
     }
 }
 

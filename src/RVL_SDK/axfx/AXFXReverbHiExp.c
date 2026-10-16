@@ -1,6 +1,6 @@
 #include "revolution/axfx.h"
 #include <cmath>
-#include <mem.h>
+#include <cstring>
 
 static u32 __EarlySizeTable[8][3] = {{157, 479, 829},   {317, 809, 1117},  {479, 941, 1487},   {641, 1259, 1949},
                                      {797, 1667, 2579}, {967, 1901, 2903}, {1123, 2179, 3413}, {1279, 2477, 3889}};

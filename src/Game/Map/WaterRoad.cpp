@@ -131,9 +131,9 @@ void WaterRoadModelInfo::initPoints(WaterRoad* pRoad) {
     TVec3f up = pRoad->mBaseUp;
     f32 loopInterval = MR::toRadian(360.0f / mNumLoopPoints);
 
-    mPoints = new (0x20) TVec3f[mNumPoints];
-    mNormals = new (0x20) TVec3s[mNumPoints];
-    mRailCoords = new f32[mNumPoints];
+    mPoints = new (JKRHeapToken::Dummy, 0x20) TVec3f[mNumPoints];
+    mNormals = new (JKRHeapToken::Dummy, 0x20) TVec3s[mNumPoints];
+    mRailCoords = new (JKRHeapToken::Dummy) f32[mNumPoints];
 
     MR::moveCoordToStartPos(pRoad);
     TVec3f front = MR::getRailDirection(pRoad);
@@ -181,7 +181,7 @@ void WaterRoadModelInfo::initDisplayList() {
         (((((mIsLow ? sizeof(f32) * 4 : sizeof(f32) * 6) + sizeof(u16) * 2) * 2) * mNumLinePoints) + sizeof(u8) + sizeof(u16)) * mNumLoopPoints;
 
     u32 length = ((GDDataSize / 32) + 2) * 32;
-    mDispList = new (0x20) u8[length];
+    mDispList = new (JKRHeapToken::Dummy, 0x20) u8[length];
     DCInvalidateRange(mDispList, length);
     GDLObj obj;
     GDInitGDLObj(&obj, mDispList, length);
@@ -389,8 +389,8 @@ void WaterRoadModelInfo::loadMaterialHigh(const WaterRoad* pRoad) const {
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX1, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX2, GX_DIRECT);
-    GXSetArray(GX_VA_POS, mPoints, sizeof(TVec3f));
-    GXSetArray(GX_VA_NRM, mNormals, sizeof(TVec3s));
+    GXSETARRAY(GX_VA_POS, mPoints, mNumPoints * sizeof(TVec3f), sizeof(TVec3f), true);
+    GXSETARRAY(GX_VA_NRM, mNormals, mNumPoints * sizeof(TVec3s), sizeof(TVec3s), true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXLoadNrmMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);
@@ -490,8 +490,8 @@ void WaterRoadModelInfo::loadMaterialLow() const {
     GXSetVtxDesc(GX_VA_NRM, GX_INDEX16);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX1, GX_DIRECT);
-    GXSetArray(GX_VA_POS, mPoints, sizeof(TVec3f));
-    GXSetArray(GX_VA_NRM, mNormals, sizeof(TVec3s));
+    GXSETARRAY(GX_VA_POS, mPoints, mNumPoints * sizeof(TVec3f), sizeof(TVec3f), true);
+    GXSETARRAY(GX_VA_NRM, mNormals, mNumPoints * sizeof(TVec3s), sizeof(TVec3s), true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXLoadNrmMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);
@@ -580,8 +580,8 @@ void WaterRoad::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorCallbackBinder(this, "Binder", 8, mRadius);
 
-    mModelInfoHigh = new WaterRoadModelInfo(this, false);
-    mModelInfoLow = new WaterRoadModelInfo(this, true);
+    mModelInfoHigh = new (JKRHeapToken::Dummy) WaterRoadModelInfo(this, false);
+    mModelInfoLow = new (JKRHeapToken::Dummy) WaterRoadModelInfo(this, true);
 
     MR::moveCoordToStartPos(this);
 
@@ -589,12 +589,12 @@ void WaterRoad::init(const JMapInfoIter& rIter) {
     MR::setEffectHostMtx(this, "Top", mBaseMtx);
     MR::setEffectHostMtx(this, "End", mBaseMtx);
 
-    mTexture = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
-    mIndirect = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
-    mEnvMap = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "EnvMap.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "Water.bti"), 0);
+    mIndirect = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "WaterIndirect.bti"), 0);
+    mEnvMap = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "EnvMap.bti"), 0);
 
     initSound(3, false);
-    mSoundObj = new AudSoundObject(&mCamRailNearestPos, 4, MR::getCurrentHeap());
+    mSoundObj = new (JKRHeapToken::Dummy) AudSoundObject(&mCamRailNearestPos, 4, MR::getCurrentHeap());
 
     MR::calcBoundingBox(this, &mBoundingBox, ::sClippingRadiusOffset);
     mBoundingBox.pad(mRadius);

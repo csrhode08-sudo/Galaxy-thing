@@ -78,7 +78,7 @@ namespace {
 void BallRail::initRailPoints() {
     u32 numPoints = (u32)(MR::getRailTotalLength(this) / 100.0f) + 2;
     mNumPoints = numPoints;
-    mRailPoints = new BallRailPoint[numPoints];
+    mRailPoints = new (JKRHeapToken::Dummy) BallRailPoint[numPoints];
     MR::moveCoordToStartPos(this);
     MR::setRailCoordSpeed(this, 100.0f);
 

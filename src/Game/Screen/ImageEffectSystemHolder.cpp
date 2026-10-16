@@ -5,9 +5,9 @@
 #include "Game/Util/ObjUtil.hpp"
 
 ImageEffectSystemHolder::ImageEffectSystemHolder() : NameObj("画像効果管理") {
-    mResource = new ImageEffectResource();
+    mResource = new (JKRHeapToken::Dummy) ImageEffectResource();
     mDirector = nullptr;
-    mDirector = new ImageEffectDirector("全画面エフェクト管理");
+    mDirector = new (JKRHeapToken::Dummy) ImageEffectDirector("全画面エフェクト管理");
 }
 
 void ImageEffectSystemHolder::pauseOff() {

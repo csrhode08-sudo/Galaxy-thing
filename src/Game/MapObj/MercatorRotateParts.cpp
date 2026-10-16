@@ -53,10 +53,10 @@ void MercatorRotateParts::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorMapObj(this, "body", 4, 0.0f, TVec3f(0.0f, 0.0f, 0.0f));
     MR::initCollisionParts(this, objName, getSensor("body"), nullptr);
-    mRotator = new MapPartsRotator(this);
+    mRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
     mRotator->init(rIter);
     mRotator->start();
-    mAppearController = new MapPartsAppearController(this);
+    mAppearController = new (JKRHeapToken::Dummy) MapPartsAppearController(this);
     mAppearController->init(rIter);
     mAppearController->start();
 

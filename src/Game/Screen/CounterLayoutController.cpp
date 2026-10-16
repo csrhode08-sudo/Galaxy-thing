@@ -32,13 +32,13 @@ void CounterLayoutController::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayout(this);
     initNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving));
 
-    mCoinCounter = new CoinCounter("コインカウンタ");
+    mCoinCounter = new (JKRHeapToken::Dummy) CoinCounter("コインカウンタ");
     mCoinCounter->initWithoutIter();
-    mStarPieceCounter = new StarPieceCounter("スターピースカウンタ");
+    mStarPieceCounter = new (JKRHeapToken::Dummy) StarPieceCounter("スターピースカウンタ");
     mStarPieceCounter->initWithoutIter();
-    mPlayerLeft = new PlayerLeft("プレイヤー残機表示");
+    mPlayerLeft = new (JKRHeapToken::Dummy) PlayerLeft("プレイヤー残機表示");
     mPlayerLeft->initWithoutIter();
-    mStarCounter = new StarCounter();
+    mStarCounter = new (JKRHeapToken::Dummy) StarCounter();
     mStarCounter->initWithoutIter();
 
     appear();

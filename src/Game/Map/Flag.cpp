@@ -123,7 +123,7 @@ void Flag::init(const JMapInfoIter& rIter) {
         mUseAlpha = true;
     }
 
-    mFixPoints = new FixPoints[mNumPointsV];
+    mFixPoints = new (JKRHeapToken::Dummy) FixPoints[mNumPointsV];
 
     for (s32 idxV = 0; idxV < mNumPointsV; idxV++) {
         TVec3f pos = mUp;
@@ -131,23 +131,23 @@ void Flag::init(const JMapInfoIter& rIter) {
         pos.add(mPosition);
         mFixPoints[idxV].mPos.set(pos);
 
-        mFixPoints[idxV].mPoints = new SwingRopePoint*[mNumPointsU];
+        mFixPoints[idxV].mPoints = new (JKRHeapToken::Dummy) SwingRopePoint*[mNumPointsU];
         for (s32 idxU = 0; idxU < mNumPointsU; idxU++) {
             TVec3f posU = pos;
             if (mIsVerticalFlag) {
                 posU.add(mGravity * (mPointIntervalU * (idxU + 1)));
             }
 
-            mFixPoints[idxV].mPoints[idxU] = new SwingRopePoint(posU);
+            mFixPoints[idxV].mPoints[idxU] = new (JKRHeapToken::Dummy) SwingRopePoint(posU);
         }
     }
 
-    mColors = new Color8[mNumPointsV * (mNumPointsU + 1)];
+    mColors = new (JKRHeapToken::Dummy) Color8[mNumPointsV * (mNumPointsU + 1)];
     for (s32 idx = 0; idx < mNumPointsV * (mNumPointsU + 1); idx++) {
         mColors[idx].set(0xFF, 0xFF, 0xFF, 0xFF);
     }
 
-    mTexST = new f32[mNumPointsV * (mNumPointsU + 1) * 2];
+    mTexST = new (JKRHeapToken::Dummy) f32[mNumPointsV * (mNumPointsU + 1) * 2];
     s32 idx = 0;
     for (s32 idxV = 0; idxV < mNumPointsV; idxV++) {
         f32 texV = static_cast< f32 >(idxV) / static_cast< f32 >(mNumPointsV - 1);
@@ -163,9 +163,9 @@ void Flag::init(const JMapInfoIter& rIter) {
     }
 
     if (mObjName != nullptr) {
-        mTexture = new JUTTexture(MR::loadTexFromArc(mObjName), 0);
+        mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc(mObjName), 0);
     } else {
-        mTexture = new JUTTexture(MR::loadTexFromArc("Flag.arc", "Flag.bti"), 0);
+        mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("Flag.arc", "Flag.bti"), 0);
     }
 
     initSound(4, false);
@@ -424,7 +424,7 @@ void Flag::draw() const {
 
         const Vec2 stickCoords[] = {{1.0f, 0.0f}, {0.0f, 1.0f}, {-1.0f, 0.0f}, {1.0f, 0.0f}};
 
-        GXSetArray(GX_VA_CLR0, &::sStickColors, ARRAY_SIZE(::sStickColors));
+        GXSETARRAY(GX_VA_CLR0, &::sStickColors, sizeof(::sStickColors), ARRAY_SIZE(::sStickColors), true);
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 
         f32 length = mStickLength + mPointIntervalV * (mNumPointsV - 1);
@@ -462,8 +462,8 @@ void Flag::loadMaterial() const {
     GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 
-    GXSetArray(GX_VA_CLR0, mColors, 4);
-    GXSetArray(GX_VA_TEX0, mTexST, 8);
+    GXSETARRAY(GX_VA_CLR0, mColors, mNumPointsV * (mNumPointsU + 1) * 4, 4, true);
+    GXSETARRAY(GX_VA_TEX0, mTexST, mNumPointsV * (mNumPointsU + 1) * 8, 8, true);
 
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);

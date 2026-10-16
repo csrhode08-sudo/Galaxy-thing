@@ -105,25 +105,25 @@ void EffectKeeper::addEffect(const char* pParam1, LiveActor* pActor) {
 }
 
 void EffectKeeper::registerEffect(const char* pParam1, const TVec3f* pParam2, const TVec3f* pParam3, const TVec3f* pParam4, const char* pParam5) {
-    registMultiEmitter(new MultiEmitter(pParam1, pParam2, pParam3, pParam4, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam5);
+    registMultiEmitter(new (JKRHeapToken::Dummy) MultiEmitter(pParam1, pParam2, pParam3, pParam4, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam5);
 }
 
 void EffectKeeper::registerEffect(const char* pParam1, MtxPtr pParam2, const char* pParam3, const char*) {
-    registMultiEmitter(new MultiEmitter(pParam1, pParam2, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam3);
+    registMultiEmitter(new (JKRHeapToken::Dummy) MultiEmitter(pParam1, pParam2, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam3);
 }
 
 void EffectKeeper::registerEffect(const char* pParam1, MtxPtr pParam2, const TVec3f* pParam3, const char* pParam4, const char*) {
-    registMultiEmitter(new MultiEmitter(pParam1, pParam2, pParam3, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam4);
+    registMultiEmitter(new (JKRHeapToken::Dummy) MultiEmitter(pParam1, pParam2, pParam3, TVec3f(0.0f, 0.0f, 0.0f)), pParam1, pParam4);
 }
 
 void EffectKeeper::registerEffectWithoutSRT(const char* pParam1, const char* pParam2) {
-    registMultiEmitter(new MultiEmitter(pParam1), pParam1, pParam2);
+    registMultiEmitter(new (JKRHeapToken::Dummy) MultiEmitter(pParam1), pParam1, pParam2);
 }
 
 void EffectKeeper::registerSyncBckEffect(XanimePlayer* pParam1, const char* pParam2, const char* pParam3, s32 param4, f32 param5, f32 param6,
                                          bool param7) {
     if (_20 == nullptr) {
-        _20 = new SyncBckEffectChecker(pParam1);
+        _20 = new (JKRHeapToken::Dummy) SyncBckEffectChecker(pParam1);
     }
 
     MultiEmitter* emitter = getEmitter(pParam2);
@@ -149,11 +149,11 @@ void EffectKeeper::forceDeleteEmitter(const char* pParam1) {
 }
 
 void EffectKeeper::deleteEmitterAll() {
-    std::for_each(_C.begin(), _C.end(), std::mem_func(&MultiEmitter::deleteEmitter));
+    msl::for_each(_C.begin(), _C.end(), msl::mem_func(&MultiEmitter::deleteEmitter));
 }
 
 void EffectKeeper::forceDeleteEmitterAll() {
-    std::for_each(_C.begin(), _C.end(), std::mem_func(&MultiEmitter::forceDeleteEmitter));
+    msl::for_each(_C.begin(), _C.end(), msl::mem_func(&MultiEmitter::forceDeleteEmitter));
 }
 
 MultiEmitter* EffectKeeper::getEmitter(const char* pParam1) const {
@@ -171,7 +171,7 @@ MultiEmitter* EffectKeeper::getEmitter(const char* pParam1) const {
     }
 
     if (_18 != nullptr && _18->mHasBeenSorted) {
-        u32 result = 0;
+        uintptr_t result = 0;
 
         if (_18->search(pParam1, &result)) {
             return reinterpret_cast< MultiEmitter* >(result);
@@ -285,15 +285,15 @@ void EffectKeeper::updateAttributeEffect() {
 }
 
 void EffectKeeper::stopEmitterOnClipped() {
-    std::for_each(_C.begin(), _C.end(), std::mem_func(&MultiEmitter::stopEmitterOnClipped));
+    msl::for_each(_C.begin(), _C.end(), msl::mem_func(&MultiEmitter::stopEmitterOnClipped));
 }
 
 void EffectKeeper::playEmitterOffClipped() {
-    std::for_each(_C.begin(), _C.end(), std::mem_func(&MultiEmitter::playEmitterOffClipped));
+    msl::for_each(_C.begin(), _C.end(), msl::mem_func(&MultiEmitter::playEmitterOffClipped));
 }
 
 void EffectKeeper::clear() {
-    std::for_each(_C.begin(), _C.end(), std::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
+    msl::for_each(_C.begin(), _C.end(), msl::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
 }
 
 void EffectKeeper::changeBck() {
@@ -303,17 +303,17 @@ void EffectKeeper::changeBck() {
 }
 
 void EffectKeeper::onDraw() {
-    std::for_each(_C.begin(), _C.end(),
-                  std::binder2nd< std::mem_fun1_t< void, MultiEmitter, s32 >, s32 >(std::mem_func(&MultiEmitter::playDrawParticle), -1));
+    msl::for_each(_C.begin(), _C.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, MultiEmitter, s32 >, s32 >(msl::mem_func(&MultiEmitter::playDrawParticle), -1));
 }
 
 void EffectKeeper::offDraw() {
-    std::for_each(_C.begin(), _C.end(),
-                  std::binder2nd< std::mem_fun1_t< void, MultiEmitter, s32 >, s32 >(std::mem_func(&MultiEmitter::stopDrawParticle), -1));
+    msl::for_each(_C.begin(), _C.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, MultiEmitter, s32 >, s32 >(msl::mem_func(&MultiEmitter::stopDrawParticle), -1));
 }
 
 void EffectKeeper::enableSort() {
-    _18 = new HashSortTable(_C.capacity());
+    _18 = new (JKRHeapToken::Dummy) HashSortTable(_C.capacity());
 }
 
 void EffectKeeper::finalizeSort() {
@@ -346,11 +346,11 @@ void EffectKeeper::registMultiEmitter(MultiEmitter* pEmitter, const char* pParam
         pEmitter->setName(pParam3);
 
         if (_18 != nullptr) {
-            _18->add(pParam3, reinterpret_cast< u32 >(pEmitter), 0);
+            _18->add(pParam3, reinterpret_cast< uintptr_t >(pEmitter), 0);
         }
     } else {
         if (_18 != nullptr) {
-            _18->add(pParam2, reinterpret_cast< u32 >(pEmitter), 0);
+            _18->add(pParam2, reinterpret_cast< uintptr_t >(pEmitter), 0);
         }
     }
 

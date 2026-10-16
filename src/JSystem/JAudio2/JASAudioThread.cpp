@@ -2,7 +2,7 @@
 #include "JSystem/JAudio2/JASAiCtrl.hpp"
 #include "JSystem/JAudio2/JASChannel.hpp"
 #include "JSystem/JAudio2/JASDSPChannel.hpp"
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
+#include "JSystem/JAudio2/JASDspInterface.hpp"
 #include "JSystem/JAudio2/JASDriverIF.hpp"
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JASProbe.hpp"
@@ -19,7 +19,7 @@ inline JASAudioThread::JASAudioThread(int stackSize, int msgCount, u32 threadPri
 
 void JASAudioThread::create(s32 threadPriority) {
     const int size = 0x2000;
-    JASAudioThread* pAudioThread = new (JASDram, 0) JASAudioThread(threadPriority, 0x10, size);
+    JASAudioThread* pAudioThread = new (JKRHeapToken::Dummy, JASDram, 0) JASAudioThread(threadPriority, 0x10, size);
     JKRHeap* pCurrentHeap = JKRGetSystemHeap();
     pAudioThread->setCurrentHeap(pCurrentHeap);
     pAudioThread->resume();

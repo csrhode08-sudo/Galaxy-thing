@@ -29,12 +29,12 @@ void MultiSceneEffectKeeper::init(const MultiSceneActor* pActor, const EffectSys
 
 void MultiSceneEffectKeeper::add(const char* pName, const TVec3f* pScale, const TVec3f* pRotation, const TVec3f* pTranslation,
                                  const char* pEmitterName) {
-    MultiEmitter* pEmitter = new MultiEmitter(pName, pScale, pRotation, pTranslation, TVec3f(0.0f, 0.0f, 0.0f));
+    MultiEmitter* pEmitter = new (JKRHeapToken::Dummy) MultiEmitter(pName, pScale, pRotation, pTranslation, TVec3f(0.0f, 0.0f, 0.0f));
     registerEmitter(pEmitter, pEmitterName);
 }
 
 void MultiSceneEffectKeeper::add(const char* pName, MtxPtr pMtx, const char* pEmitterName) {
-    MultiEmitter* pEmitter = new MultiEmitter(pName, pMtx, TVec3f(0.0f, 0.0f, 0.0f));
+    MultiEmitter* pEmitter = new (JKRHeapToken::Dummy) MultiEmitter(pName, pMtx, TVec3f(0.0f, 0.0f, 0.0f));
     registerEmitter(pEmitter, pEmitterName);
 }
 
@@ -45,17 +45,17 @@ MultiEmitter* MultiSceneEffectKeeper::create(const char* pName, EffectSystem* pS
 }
 
 void MultiSceneEffectKeeper::deleteAll() {
-    std::for_each(mEmitter.begin(), mEmitter.end(), std::mem_func(&MultiEmitter::deleteEmitter));
+    msl::for_each(mEmitter.begin(), mEmitter.end(), msl::mem_func(&MultiEmitter::deleteEmitter));
 }
 
 void MultiSceneEffectKeeper::forceDeleteAll(EffectSystem* pSystem) {
-    std::for_each(
+    msl::for_each(
         mEmitter.begin(), mEmitter.end(),
-        std::binder2nd< std::mem_fun1_t< void, MultiEmitter, EffectSystem* >, EffectSystem* >(std::mem_func(&MultiEmitter::forceDelete), pSystem));
+        msl::binder2nd< msl::mem_fun1_t< void, MultiEmitter, EffectSystem* >, EffectSystem* >(msl::mem_func(&MultiEmitter::forceDelete), pSystem));
 }
 
 void MultiSceneEffectKeeper::clear() {
-    std::for_each(mEmitter.begin(), mEmitter.end(), std::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
+    msl::for_each(mEmitter.begin(), mEmitter.end(), msl::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
 }
 
 MultiEmitter* MultiSceneEffectKeeper::get(const char* pName) const {
@@ -69,8 +69,8 @@ MultiEmitter* MultiSceneEffectKeeper::find(const char* pName) const {
 
     u16 hash = MR::getHashCode(pName);
     MultiEmitter* const* pEmitter =
-        std::find_if(mEmitter.begin(), mEmitter.end(),
-                     std::binder2nd< std::const_mem_fun1_t< bool, MultiEmitter, u16 >, u16 >(std::mem_func(&MultiEmitter::isEqualName), hash));
+        msl::find_if(mEmitter.begin(), mEmitter.end(),
+                     msl::binder2nd< msl::const_mem_fun1_t< bool, MultiEmitter, u16 >, u16 >(msl::mem_func(&MultiEmitter::isEqualName), hash));
 
     if (pEmitter != mEmitter.end()) {
         return *pEmitter;

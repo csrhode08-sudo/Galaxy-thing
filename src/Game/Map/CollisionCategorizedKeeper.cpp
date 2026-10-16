@@ -9,7 +9,7 @@
 CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
     : NameObj("地形コリジョンカテゴリキーパー"), mHitInfoArray(), _10(), mPartsCount(), mCategory(category), mZonesInitialized(),
       mUpdateZoneBounds(true) {
-    mHitInfoArray = new HitInfo[32];
+    mHitInfoArray = new (JKRHeapToken::Dummy) HitInfo[32];
 }
 
 void CollisionCategorizedKeeper::movement() {
@@ -495,7 +495,7 @@ CollisionZone* CollisionCategorizedKeeper::getZone(int zone) {
         s32 count = MR::getZoneNum();
 
         for (int i = 0; i < count; i++) {
-            mZones.push_back(new CollisionZone(i));
+            mZones.push_back(new (JKRHeapToken::Dummy) CollisionZone(i));
         }
 
         mZonesInitialized = true;

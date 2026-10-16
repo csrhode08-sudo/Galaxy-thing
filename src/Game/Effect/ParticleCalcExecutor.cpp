@@ -69,17 +69,17 @@ void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
 }
 
 void ParticleCalcExecutor::initMovementAdaptor() {
-    mNormalAdaptor = new NameObjAdaptor("パーティクル");
+    mNormalAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("パーティクル");
     ::connectToSceneCalcAnimAdaptor(mNormalAdaptor, MR::Functor(this, &ParticleCalcExecutor::movementNormal), MR::CalcAnimType_AnimParticle);
 
-    mIgnorePause3DAdaptor = new NameObjAdaptor("ポーズ無効3Dパーティクル");
+    mIgnorePause3DAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("ポーズ無効3Dパーティクル");
     ::connectToSceneCalcAnimAdaptor(mIgnorePause3DAdaptor, MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D),
                                   MR::CalcAnimType_AnimParticleIgnorePause);
 
-    mIgnorePause2DAdaptor = new NameObjAdaptor("ポーズ無効2Dパーティクル");
+    mIgnorePause2DAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("ポーズ無効2Dパーティクル");
     ::connectToSceneCalcAnimAdaptor(mIgnorePause2DAdaptor, MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D),
                                   MR::CalcAnimType_AnimParticleIgnorePause);
 
-    mCheckUpdateAdaptor = new NameObjAdaptor("更新チェック");
+    mCheckUpdateAdaptor = new (JKRHeapToken::Dummy) NameObjAdaptor("更新チェック");
     ::connectToSceneMovementAdaptor(mCheckUpdateAdaptor, MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate), MR::MovementType_UNK_0x14);
 }

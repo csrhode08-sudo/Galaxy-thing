@@ -26,7 +26,7 @@ MiiFacePartsHolder::~MiiFacePartsHolder() {
 }
 
 void MiiFacePartsHolder::init(const JMapInfoIter& rIter) {
-    mRFLWorkBuffer = new (MR::getSceneHeapGDDR3(), 32) u8[RFLGetWorkSize(false)];
+    mRFLWorkBuffer = new (JKRHeapToken::Dummy, MR::getSceneHeapGDDR3(), 32) u8[RFLGetWorkSize(false)];
 
     JKRMemArchive* pArchive = MR::receiveArchive("/ObjectData/MiiFaceDatabase.arc");
     void* pResBuffer = pArchive->getResource("/RFL_Res.dat");
@@ -129,7 +129,7 @@ bool MiiFacePartsHolder::isError() const {
 }
 
 MiiFaceParts* MiiFacePartsHolder::createPartsFromReceipe(const char* pName, const MiiFaceRecipe& rRecipe) {
-    MiiFaceParts* pParts = new MiiFaceParts(pName, rRecipe);
+    MiiFaceParts* pParts = new (JKRHeapToken::Dummy) MiiFaceParts(pName, rRecipe);
 
     MR::getSceneObj< MiiFacePartsHolder >(SceneObj_MiiFacePartsHolder)->registerActor(pParts);
 

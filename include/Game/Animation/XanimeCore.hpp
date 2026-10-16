@@ -32,7 +32,7 @@ public:
     /* 0x38 */ TVec3f _38;
     /* 0x44 */ J3DTransformInfo _44;
     /* 0x64 */ MtxPtr _64;
-    /* 0x68 */ u32 _68;
+    /* 0x68 */ uintptr_t _68;
     /* 0x6C */ MtxPtr _6C;
 };
 

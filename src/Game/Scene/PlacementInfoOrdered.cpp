@@ -18,9 +18,9 @@ namespace {
 };  // namespace
 
 PlacementInfoOrdered::PlacementInfoOrdered(int count) : mIndexArray(), mIndexCount(), mSetArray(), mOrderedSetArray(), mCount(count) {
-    mIndexArray = new Index[count];
-    mSetArray = new SameIdSet[count];
-    mOrderedSetArray = new SameIdSet*[count];
+    mIndexArray = new (JKRHeapToken::Dummy) Index[count];
+    mSetArray = new (JKRHeapToken::Dummy) SameIdSet[count];
+    mOrderedSetArray = new (JKRHeapToken::Dummy) SameIdSet*[count];
     MR::zeroMemory(mOrderedSetArray, count * sizeof(SameIdSet*));
 }
 

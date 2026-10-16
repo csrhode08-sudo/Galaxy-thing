@@ -60,5 +60,5 @@ CameraTargetObj* CameraSlide::calc() {
 }
 
 CamTranslatorBase* CameraSlide::createTranslator() {
-    return new CamTranslatorSlide(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorSlide(this);
 }

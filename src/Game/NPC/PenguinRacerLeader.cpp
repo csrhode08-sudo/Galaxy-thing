@@ -50,7 +50,7 @@ void PenguinRacerLeader::init(const JMapInfoIter& rIter) {
         MR::declarePowerStar(this);
         RaceManagerFunction::entryRacerOthers(this);
         initRailRider(rIter);
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(PenguinRacerLeader, PenguinRacerLeaderNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(PenguinRacerLeader, PenguinRacerLeaderNrvTakeOutStar));
     }
 
     MR::addToAttributeGroupSearchTurtle(this);

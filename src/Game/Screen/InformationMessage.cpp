@@ -21,7 +21,7 @@ void InformationMessage::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "AButtonPosU", 1);
     MR::connectToSceneLayoutDecoration(this);
 
-    mAButtonIcon = new IconAButton(true, false);
+    mAButtonIcon = new (JKRHeapToken::Dummy) IconAButton(true, false);
     mAButtonIcon->initWithoutIter();
 
     if (MR::isExistSceneObj(SceneObj_DemoDirector)) {

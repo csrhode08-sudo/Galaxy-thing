@@ -34,7 +34,7 @@ CameraTargetObj* CameraTripodBossJoint::calc() {
 }
 
 CamTranslatorBase* CameraTripodBossJoint::createTranslator() {
-    return new CamTranslatorTripodBossJoint(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTripodBossJoint(this);
 }
 
 void CameraTripodBossJoint::calcIdealPose() {

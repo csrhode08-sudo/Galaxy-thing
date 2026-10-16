@@ -27,7 +27,7 @@ void GalaxyNamePlateDrawer::init(const JMapInfoIter&) {
 void GalaxyNamePlateDrawer::draw() const {
     const GalaxyNamePlatePrioritied* sortArray[16];
     MR::copyMemory(sortArray, &mPlateArray[0], mPlateArray.size() * sizeof(GalaxyNamePlatePrioritied*));
-    std::sort(sortArray, sortArray + mPlateArray.size(), ::PlatePriorityLt());
+    msl::sort(sortArray, sortArray + mPlateArray.size(), ::PlatePriorityLt());
 
     for(int i = 0; i < mPlateArray.size(); i++) {
         sortArray[i]->mHostActor->draw();
@@ -35,7 +35,7 @@ void GalaxyNamePlateDrawer::draw() const {
 }
 
 GalaxyNamePlatePrioritied* GalaxyNamePlateDrawer::registerPlate(const LayoutActor* pPlate) {
-    GalaxyNamePlatePrioritied* newEntry = new GalaxyNamePlatePrioritied(pPlate);
+    GalaxyNamePlatePrioritied* newEntry = new (JKRHeapToken::Dummy) GalaxyNamePlatePrioritied(pPlate);
     mPlateArray.mArray[mPlateArray.mCount] = newEntry;
     mPlateArray.mCount++;
     return newEntry;

@@ -193,7 +193,7 @@ void KinopioAstro::init(const JMapInfoIter& rIter) {
     }
 
     if (MR::isEqualStageName("PeachCastleFinalGalaxy")) {
-        _198 = new ReceiverTagMail("StaffLetter", ::sStaffLetterID, ::sSenderID);
+        _198 = new (JKRHeapToken::Dummy) ReceiverTagMail("StaffLetter", ::sStaffLetterID, ::sSenderID);
         _19C = MR::createAndAddResourceHolder("AllCompleteImage.arc");
         createLetterIcon(rIter);
         return;
@@ -214,7 +214,7 @@ void KinopioAstro::init(const JMapInfoIter& rIter) {
         }
 
         if (MR::isAnyPlayerLeftSupply()) {
-            mPeachLetter = new PeachLetter("ピーチ姫からの手紙");
+            mPeachLetter = new (JKRHeapToken::Dummy) PeachLetter("ピーチ姫からの手紙");
             mPeachLetter->initWithoutIter();
             _194 = true;
             if (MR::isLuigiLeftSupply()) {

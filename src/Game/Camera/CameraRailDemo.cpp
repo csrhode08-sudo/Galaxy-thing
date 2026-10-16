@@ -38,7 +38,7 @@ void CameraRailDemo::setParam(s32 zoneID, s32 railID, s32 calcType, s32 demoTime
 }
 
 CamTranslatorBase* CameraRailDemo::createTranslator() {
-    return new CamTranslatorRailDemo(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorRailDemo(this);
 }
 
 void CameraRailDemo::calcLinear() {

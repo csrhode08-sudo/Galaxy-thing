@@ -195,15 +195,15 @@ void MorphItemObjNeo::init(const JMapInfoIter& rIter) {
     }
 
     if (mContainerType == 2) {
-        mContainerModel = new ModelObj("クリスタルボックス", "CrystalBox", mBaseMtx, MR::DrawBufferType_CrystalBox, -2, -2, false);
+        mContainerModel = new (JKRHeapToken::Dummy) ModelObj("クリスタルボックス", "CrystalBox", mBaseMtx, MR::DrawBufferType_CrystalBox, -2, -2, false);
         mContainerModel->initWithoutIter();
         mContainerModel->appear();
         MR::startBck(mContainerModel, "CrystalBox");
 
-        mContainerBreakModel = new ModelObj("クリスタル破壊", "CrystalBoxBreak", mBaseMtx, MR::DrawBufferType_CrystalBox, -2, -2, false);
+        mContainerBreakModel = new (JKRHeapToken::Dummy) ModelObj("クリスタル破壊", "CrystalBoxBreak", mBaseMtx, MR::DrawBufferType_CrystalBox, -2, -2, false);
         mContainerBreakModel->makeActorDead();
     } else if (mContainerType == 1) {
-        mContainerModel = new ModelObj("アイテム泡", "ItemBubble", nullptr, -2, -2, -2, false);
+        mContainerModel = new (JKRHeapToken::Dummy) ModelObj("アイテム泡", "ItemBubble", nullptr, -2, -2, -2, false);
         mContainerModel->initWithoutIter();
         mContainerModel->mPosition = mPosition;
         mContainerModel->mRotation = mRotation;
@@ -283,7 +283,7 @@ void MorphItemObjNeo::init(const JMapInfoIter& rIter) {
             mCameraMode = 2;
         }
 
-        mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+        mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     }
 
     mRotateMode = arg6;

@@ -67,7 +67,7 @@ JASDrumSet::TPerc::TPerc() : mVolume(1.0f), mPitch(1.0f), mPan(0.5f), mRelease(1
 
 void JASDrumSet::TPerc::setVeloRegionCount(u32 count, JKRHeap* pHeap) {
     delete[] mVelomap;
-    mVelomap = new (pHeap, 0) TVelomap[count];
+    mVelomap = new (JKRHeapToken::Dummy, pHeap, 0) TVelomap[count];
     mVelomapCount = count;
 }
 

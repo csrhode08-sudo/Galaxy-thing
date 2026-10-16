@@ -25,10 +25,10 @@ namespace NrvPoltaBattleLv1 {
 
 PoltaBattleLv1::PoltaBattleLv1(Polta* pPolta) : PoltaActionBase("ポルタ1戦目", pPolta), mPoltaHealth(3), _24() {
     initNerve(GET_NERVE(PoltaBattleLv1, PoltaBattleLv1NrvWait));
-    mStateStagger = new PoltaStateStagger(pPolta);
-    mStateGroundRockAttack = new PoltaStateGroundRockAttack(pPolta);
+    mStateStagger = new (JKRHeapToken::Dummy) PoltaStateStagger(pPolta);
+    mStateGroundRockAttack = new (JKRHeapToken::Dummy) PoltaStateGroundRockAttack(pPolta);
     mStateGroundRockAttack->_10 = 4;
-    mStateGenerateRock = new PoltaStateGenerateRock(pPolta);
+    mStateGenerateRock = new (JKRHeapToken::Dummy) PoltaStateGenerateRock(pPolta);
     mStateGenerateRock->mMaxIndexIntoPattern = 5;
     mStateGenerateRock->mEndDelayStep = 120;
 }

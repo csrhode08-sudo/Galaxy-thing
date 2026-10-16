@@ -28,7 +28,7 @@ void MR::createStarPiece() {
     }
 
     for (int i = 0; i < max; i++) {
-        StarPiece* starPiece = new StarPiece("スターピースディレクターピース");
+        StarPiece* starPiece = new (JKRHeapToken::Dummy) StarPiece("スターピースディレクターピース");
         starPiece->initWithoutIter();
         starPiece->makeActorDead();
         getStarPieceDirector()->registerActor(starPiece);
@@ -70,16 +70,16 @@ StarPieceDirector::StarPieceDirector(const char* pName)
     MR::connectToSceneMapObjMovement(this);
 
     for (int i = 0; i < ARRAY_SIZE(mStarPieceShooters); i++) {
-        mStarPieceShooters[i] = new StarPieceShooter(i, "発射用アクター");
+        mStarPieceShooters[i] = new (JKRHeapToken::Dummy) StarPieceShooter(i, "発射用アクター");
         mStarPieceShooters[i]->initWithoutIter();
     }
 
     for (int i = 0; i < ARRAY_SIZE(mHostInfoArray); i++) {
-        mHostInfoArray[i] = new StarPieceHostInfo(nullptr, 0, 0, 0);
+        mHostInfoArray[i] = new (JKRHeapToken::Dummy) StarPieceHostInfo(nullptr, 0, 0, 0);
     }
 
     for (int i = 0; i < ARRAY_SIZE(mReceiverInfoArray); i++) {
-        mReceiverInfoArray[i] = new StarPieceReceiverInfo(nullptr, 0, 0, 0);
+        mReceiverInfoArray[i] = new (JKRHeapToken::Dummy) StarPieceReceiverInfo(nullptr, 0, 0, 0);
     }
 
     initCSDelay();

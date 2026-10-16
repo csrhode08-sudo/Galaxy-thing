@@ -1,4 +1,4 @@
-#include <mem.h>
+#include <cstring>
 #include "private/OSLoMem.h"
 #include "private/flipper.h"
 #include "revolution/dvd.h"

@@ -8,7 +8,7 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 
 MiiFaceIcon::MiiFaceIcon(u16 width, u16 height, const MiiFaceRecipe& rRecipe, const char* pName)
-    : NameObj(pName), mIndex(), mIsFavoriteColorBG(), mWidth(width), mHeight(height), mRecipe(new MiiFaceRecipe(rRecipe)), mImageBuffer(),
+    : NameObj(pName), mIndex(), mIsFavoriteColorBG(), mWidth(width), mHeight(height), mRecipe(new (JKRHeapToken::Dummy) MiiFaceRecipe(rRecipe)), mImageBuffer(),
       mIsCreated(), mMakeIconResult(RFLErrcode_Unknown), mIsRequestMakeIcon() {
     createImageBuffer();
     MR::registerMiiFaceIcon(this);
@@ -52,7 +52,7 @@ void MiiFaceIcon::createImageBuffer() {
     u16 height;
     u32 imageBufferSize = mWidth * mHeight * 2 + sizeof(ResTIMG);
 
-    mImageBuffer = new (sizeof(ResTIMG)) u8[imageBufferSize];
+    mImageBuffer = new (JKRHeapToken::Dummy, sizeof(ResTIMG)) u8[imageBufferSize];
     MR::zeroMemory(mImageBuffer, imageBufferSize);
 
     height = mHeight;

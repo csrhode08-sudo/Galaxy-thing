@@ -11,17 +11,17 @@ FurDrawer::FurDrawer(u32 numLayers, ResTIMG* pBody, ResTIMG* pIndirect)
     : mBodyTexture(), mFurTexture(), mIndirectTexture(), mNumLayers(numLayers), mLength(3.0f, 1.0f), mIndirect(0.2f, 1.5f), mBrightness(40.0f, 4.5f),
       mAlpha(210.0f, 1.8f), mFurUVScale(1.0f), mBodyUVScale(1.0f), mColorBlend(0.0f, 1.0f), mCullMode(GX_CULL_BACK), mMatIntensity(255),
       mAmbIntensity(50), mUseIndirect(1), mZCompLoc(), mZWrite(), mAdditive(), mAlphaRef(32) {
-    mBodyTexture = new JUTTexture(pBody, 0);
+    mBodyTexture = new (JKRHeapToken::Dummy) JUTTexture(pBody, 0);
 
     if (mIndirectTexture) {
-        mIndirectTexture = new JUTTexture(pIndirect, 0);
+        mIndirectTexture = new (JKRHeapToken::Dummy) JUTTexture(pIndirect, 0);
         mUseIndirect = 1;
     } else {
         mUseIndirect = 0;
     }
 
     u32 size = GXGetTexBufferSize(32, 32, GX_TF_IA8, GX_FALSE, 1);
-    ResTIMG* pImage = reinterpret_cast< ResTIMG* >(new (32) u8[size + sizeof(ResTIMG)]);
+    ResTIMG* pImage = reinterpret_cast< ResTIMG* >(new (JKRHeapToken::Dummy, 32) u8[size + sizeof(ResTIMG)]);
     pImage->mFormat = GX_TF_IA8;
     pImage->mWidth = 32;
     pImage->mHeight = 32;
@@ -42,7 +42,7 @@ FurDrawer::FurDrawer(u32 numLayers, ResTIMG* pBody, ResTIMG* pIndirect)
     pImage->mImageNum = 1;
     pImage->mLodBias = 0;
     pImage->mImageDataOffset = sizeof(ResTIMG);
-    mFurTexture = new JUTTexture(pImage, 0);
+    mFurTexture = new (JKRHeapToken::Dummy) JUTTexture(pImage, 0);
     mUseDensityMap = 0;
     PSMTXIdentity(mFurTexMtx);
     PSMTXIdentity(mIndirectTexMtx);

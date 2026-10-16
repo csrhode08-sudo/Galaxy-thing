@@ -8,7 +8,7 @@
 GameEventFlagChecker::GameEventFlagChecker(GameDataHolder* pHolder) : mDataHolder(pHolder), mFlagStorage() {
     SingletonHolder< GameEventFlagTableInstance >::init();
 
-    mFlagStorage = new GameEventFlagStorage();
+    mFlagStorage = new (JKRHeapToken::Dummy) GameEventFlagStorage();
 }
 
 bool GameEventFlagChecker::canOn(const char* pFlagName) const {

@@ -65,10 +65,10 @@ void PauseMenu::init(const JMapInfoIter& rIter) {
 
     MR::connectToSceneLayoutOnPause(this);
 
-    _20 = new ButtonPaneController(this, "NBackUp", "BoxButton1", 0, true);
+    _20 = new (JKRHeapToken::Dummy) ButtonPaneController(this, "NBackUp", "BoxButton1", 0, true);
     _20->_22 = false;
 
-    _24 = new ButtonPaneController(this, "NBackDown", "BoxButton2", 0, true);
+    _24 = new (JKRHeapToken::Dummy) ButtonPaneController(this, "NBackDown", "BoxButton2", 0, true);
     _24->_22 = false;
 
     MR::setTextBoxGameMessageRecursive(this, "NBackDown", ::isInvalidBackAstroDome() ? "PauseMenu_ButtonEndGame" : "PauseMenu_ButtonBackAstroDome");
@@ -95,7 +95,7 @@ void PauseMenu::init(const JMapInfoIter& rIter) {
         mLuigiLetter = MR::createLuigiLetterForMenu();
         mLuigiLetter->initWithoutIter();
 
-        _38 = new ButtonPaneController(this, "LetterButton", "BoxButton3", 0, true);
+        _38 = new (JKRHeapToken::Dummy) ButtonPaneController(this, "LetterButton", "BoxButton3", 0, true);
         _38->_22 = false;
     } else {
         MR::hidePaneRecursive(this, "LetterButton");

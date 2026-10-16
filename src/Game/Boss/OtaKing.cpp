@@ -136,7 +136,7 @@ void OtaKing::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, "OtaKing", false);
     MR::setClippingTypeSphere(this, 3000.0f);
     initSound(8, false);
-    mSoundObj = new AudAnmSoundObject(&mSoundObjPos, 4, MR::getCurrentHeap());
+    mSoundObj = new (JKRHeapToken::Dummy) AudAnmSoundObject(&mSoundObjPos, 4, MR::getCurrentHeap());
     mAnimCamera = MR::createActorCameraInfo(rIter);
     MR::initAnimCamera(this, mAnimCamera, "Appear");
     MR::initAnimCamera(this, mAnimCamera, "Down");
@@ -149,7 +149,7 @@ void OtaKing::init(const JMapInfoIter& rIter) {
     }
 
     MR::tryRegisterDemoCast(this, rIter);
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     initNerve(GET_NERVE(OtaKing, OtaKingNrvWait));
     makeActorAppeared();
 }
@@ -324,7 +324,7 @@ void OtaKing::initModel(const JMapInfoIter& rIter) {
     initModelManagerWithAnm(mIsLv2 ? "OtaKingLv2" : "OtaKing", nullptr, false);
 
     for (int i = 0; i < ARRAY_SIZE(mFeet); i++) {
-        mFeet[i] = new PartsModel(this, "前足モデル", mIsLv2 ? "OtaKingFootLv2" : "OtaKingFoot", nullptr, 18, false);
+        mFeet[i] = new (JKRHeapToken::Dummy) PartsModel(this, "前足モデル", mIsLv2 ? "OtaKingFootLv2" : "OtaKingFoot", nullptr, 18, false);
         mFeet[i]->mPosition.set(mPosition);
         mFeet[i]->initWithoutIter();
         MR::initLightCtrl(mFeet[i]);
@@ -335,7 +335,7 @@ void OtaKing::initModel(const JMapInfoIter& rIter) {
 
     initLongFoot(rIter);
 
-    mCocoNutBallArray = new CocoNutBall[3];
+    mCocoNutBallArray = new (JKRHeapToken::Dummy) CocoNutBall[3];
     for (int i = 0; i < 3; i++) {
         mCocoNutBallArray[i].initWithoutIter();
         mCocoNutBallArray[i]._8C = this;
@@ -353,24 +353,24 @@ void OtaKing::initModel(const JMapInfoIter& rIter) {
         }
     }
 
-    mFireBallArray = new FireBall[6];
+    mFireBallArray = new (JKRHeapToken::Dummy) FireBall[6];
 
     for (int i = 0; i < 6; i++) {
         mFireBallArray[i].initWithoutIter();
         mFireBallArray[i].mHost = this;
     }
 
-    mFireBubbleArray = new FireBubble[6];
+    mFireBubbleArray = new (JKRHeapToken::Dummy) FireBubble[6];
     for (int i = 0; i < 6; i++) {
         mFireBubbleArray[i].initWithoutIter();
     }
 
-    mThrowPos = new FixedPosition(this, "Lip", TVec3f(-50.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
-    mBubbleAppearPos = new FixedPosition(this, TVec3f(0.0f, 10.0f, 500.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    mThrowPos = new (JKRHeapToken::Dummy) FixedPosition(this, "Lip", TVec3f(-50.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    mBubbleAppearPos = new (JKRHeapToken::Dummy) FixedPosition(this, TVec3f(0.0f, 10.0f, 500.0f), TVec3f(0.0f, 0.0f, 0.0f));
 
-    mMagma = new OtaKingMagma(this, -1);
+    mMagma = new (JKRHeapToken::Dummy) OtaKingMagma(this, -1);
     mMagma->initWithoutIter();
-    mDownCocoNut = new CocoNutBall;
+    mDownCocoNut = new (JKRHeapToken::Dummy) CocoNutBall;
     mDownCocoNut->mScale.set(::cDownDemoCocoNutScale);
     mDownCocoNut->initWithoutIter();
 }
@@ -677,7 +677,7 @@ void OtaKing::appearStarPiece() {
 void OtaKing::initLongFoot(const JMapInfoIter& rIter) {
     if (!mIsLv2) {
         for (int i = 0; i < ARRAY_SIZE(mLongFeet); i++) {
-            mLongFeet[i] = new OtaKingLongFoot(this, ::cLongFootDemoBckStep[i], "飾り足");
+            mLongFeet[i] = new (JKRHeapToken::Dummy) OtaKingLongFoot(this, ::cLongFootDemoBckStep[i], "飾り足");
             mLongFeet[i]->init(rIter);
             mLongFeet[i]->mScale.set(::cLongFootScale);
         }

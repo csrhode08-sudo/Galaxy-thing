@@ -84,7 +84,7 @@ void Fluff::init(const JMapInfoIter& rIter) {
 
     MR::useStageSwitchWriteA(this, rIter);
 
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     MR::setClippingTypeSphere(this, 800.0f);
     mModel = MR::createModelObjMapObj("わたげの葉", "FluffLeaf", nullptr);
     MR::copyTransRotateScale(this, mModel);

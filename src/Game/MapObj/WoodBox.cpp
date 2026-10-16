@@ -85,7 +85,7 @@ void WoodBox::init(const JMapInfoIter& rIter) {
         mPlaySolveSE = true;
     }
 
-    mBreakModel = new ModelObj("壊れモデル", "WoodBoxBreak", getBaseMtx(), MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -2, -2, false);
+    mBreakModel = new (JKRHeapToken::Dummy) ModelObj("壊れモデル", "WoodBoxBreak", getBaseMtx(), MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -2, -2, false);
     mBreakModel->mScale = mScale;
     MR::initLightCtrl(mBreakModel);
     mBreakModel->kill();

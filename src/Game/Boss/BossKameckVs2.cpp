@@ -34,11 +34,11 @@ BossKameckVs2::BossKameckVs2() : BossKameckSequencer("ボスカメックVs2"), m
 void BossKameckVs2::init(BossKameck* pBoss, const JMapInfoIter& rIter) {
     BossKameckSequencer::init(pBoss, rIter);
 
-    mStateBattle = new BossKameckStateBattle(pBoss);
+    mStateBattle = new (JKRHeapToken::Dummy) BossKameckStateBattle(pBoss);
     mStateBattle->init();
     mStateBattle->mIsVs2 = true;
 
-    mBarrier = new BossKameckBarrier("カメックバリア", "BossKameckBarrier");
+    mBarrier = new (JKRHeapToken::Dummy) BossKameckBarrier("カメックバリア", "BossKameckBarrier");
     mBarrier->init(rIter);
 
     initNerve(GET_NERVE(BossKameckVs2, BossKameckVs2NrvOpeningDemo));

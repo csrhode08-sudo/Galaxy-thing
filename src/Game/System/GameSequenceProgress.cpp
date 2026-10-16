@@ -44,16 +44,16 @@ GameSequenceProgress::GameSequenceProgress()
       mIsForceWipe(true) {
     initNerve(GET_NERVE_ANON(GameSequenceProgressBooting));
 
-    mStarPointerOnOffController = new StarPointerOnOffController();
-    mStorySequenceExecutor = new StorySequenceExecutor();
-    mFindingLuigiEventScheduler = new FindingLuigiEventScheduler();
-    mLuigiLeftSupplier = new LuigiLeftSupplier();
+    mStarPointerOnOffController = new (JKRHeapToken::Dummy) StarPointerOnOffController();
+    mStorySequenceExecutor = new (JKRHeapToken::Dummy) StorySequenceExecutor();
+    mFindingLuigiEventScheduler = new (JKRHeapToken::Dummy) FindingLuigiEventScheduler();
+    mLuigiLeftSupplier = new (JKRHeapToken::Dummy) LuigiLeftSupplier();
 }
 
 void GameSequenceProgress::initAfterResourceLoaded() {
-    mGalaxyCometScheduler = new GalaxyCometScheduler();
+    mGalaxyCometScheduler = new (JKRHeapToken::Dummy) GalaxyCometScheduler();
 
-    mPlayerMissLeft = new PlayerMissLeft("ミス時のプレイヤー残機表示");
+    mPlayerMissLeft = new (JKRHeapToken::Dummy) PlayerMissLeft("ミス時のプレイヤー残機表示");
     mPlayerMissLeft->initWithoutIter();
 
     mFindingLuigiEventScheduler->initAfterResourceLoaded();

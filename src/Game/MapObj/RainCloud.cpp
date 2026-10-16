@@ -46,7 +46,7 @@ void RainCloud::init(const JMapInfoIter& rIter) {
 
     if (!mNoRain) {
         mRainCylinderMtx.set(getBaseMtx());
-        mCloudCylinder = new ModelObj("雨雲雨範囲", "RainCloudCylinder", mRainCylinderMtx, -2, -2, -2, false);
+        mCloudCylinder = new (JKRHeapToken::Dummy) ModelObj("雨雲雨範囲", "RainCloudCylinder", mRainCylinderMtx, -2, -2, -2, false);
         mCloudCylinder->initWithoutIter();
         MR::invalidateClipping(mCloudCylinder);
     }
@@ -73,7 +73,7 @@ void RainCloud::init(const JMapInfoIter& rIter) {
 
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
         mRailMover->start();
     }

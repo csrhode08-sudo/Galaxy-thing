@@ -15,12 +15,12 @@ NWC24SendThread::NWC24SendThread(s32 priority, JKRHeap* pHeap) {
         pHeap = MR::getCurrentHeap();
     }
 
-    mMessage = new (pHeap, 0) OSMessage[mMessageMax];
+    mMessage = new (JKRHeapToken::Dummy, pHeap, 0) OSMessage[mMessageMax];
 
     initMsgSendStatus();
     OSInitMessageQueue(&mMessageQueue, mMessage, mMessageMax);
 
-    u8* pStackBase = new (pHeap, 0) u8[STACK_SIZE];
+    u8* pStackBase = new (JKRHeapToken::Dummy, pHeap, 0) u8[STACK_SIZE];
 
     OSCreateThread(this, &NWC24SendThread::threadProc, nullptr, &pStackBase[STACK_SIZE], STACK_SIZE, priority, 1 /* OS_THREAD_ATTR_DETACH */);
     OSResumeThread(this);

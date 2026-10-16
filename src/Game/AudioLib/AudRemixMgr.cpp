@@ -9,8 +9,8 @@ AudRemixMgr::AudRemixMgr(JKRHeap* pHeap) {
 }
 
 void AudRemixMgr::init() {
-    mSoundObj = new (mHeap, 0) AudSoundObject(nullptr, 0x10, mHeap);
-    mRemixSeq = new (mHeap, 0) AudRemixSequencer();
+    mSoundObj = new (JKRHeapToken::Dummy, mHeap, 0) AudSoundObject(nullptr, 0x10, mHeap);
+    mRemixSeq = new (JKRHeapToken::Dummy, mHeap, 0) AudRemixSequencer();
 }
 
 void AudRemixMgr::update() {
@@ -23,7 +23,7 @@ void AudRemixMgr::setRemixSeqResource(void* ptr) {
     newPtr++;
     mGroupCount = groupCount;
     newPtr += mGroupCount;
-    mGroups = new (mHeap, 0) RemixNoteGroupData[mGroupCount];
+    mGroups = new (JKRHeapToken::Dummy, mHeap, 0) RemixNoteGroupData[mGroupCount];
     for (int i = 0; i < mGroupCount; i++) {
         RemixNoteGroupData* pGroupData = &mGroups[i];
         pGroupData->mIndex = i;
@@ -31,7 +31,7 @@ void AudRemixMgr::setRemixSeqResource(void* ptr) {
         pGroupData->mNoteCount = *newPtr++;
         pGroupData->_C = newPtr;
         newPtr += pGroupData->mNoteCount;
-        pGroupData->mRemixTracks = new (mHeap, 0) RemixNoteTrackData[pGroupData->mTrackCount];
+        pGroupData->mRemixTracks = new (JKRHeapToken::Dummy, mHeap, 0) RemixNoteTrackData[pGroupData->mTrackCount];
         for (int j = 0; j < pGroupData->mTrackCount; j++) {
             pGroupData->mRemixTracks[j]._0 = *newPtr++;
             pGroupData->mRemixTracks[j]._4 = reinterpret_cast< RemixNoteData* >(newPtr);

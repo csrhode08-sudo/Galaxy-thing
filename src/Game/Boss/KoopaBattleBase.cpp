@@ -26,8 +26,8 @@ KoopaBattleBase::KoopaBattleBase(const char* pName, Koopa* pKoopa)
 }
 
 void KoopaBattleBase::init() {
-    mStateDamageEscape = new KoopaStateDamageEscape(mHost);
-    mStateGuard = new KoopaStateGuard(mHost);
+    mStateDamageEscape = new (JKRHeapToken::Dummy) KoopaStateDamageEscape(mHost);
+    mStateGuard = new (JKRHeapToken::Dummy) KoopaStateGuard(mHost);
 }
 
 void KoopaBattleBase::kill() {

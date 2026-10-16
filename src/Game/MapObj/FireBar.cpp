@@ -223,12 +223,12 @@ void FireBar::updateHitSensor(HitSensor* pSensor) {
 
 // meh
 void FireBar::initFireBarBall(const JMapInfoIter& rIter) {
-    mFireBalls = new FireBarBall*[mFireBallCount];
+    mFireBalls = new (JKRHeapToken::Dummy) FireBarBall*[mFireBallCount];
     s32 totalNum = mFireBallCount / mStickCount;
     f32 startVal = 0.0f;
 
     for (s32 i = 0; i < mFireBallCount; i++) {
-        mFireBalls[i] = new FireBarBall(this);
+        mFireBalls[i] = new (JKRHeapToken::Dummy) FireBarBall(this);
         mFireBalls[i]->init(rIter);
         MR::startBtk(mFireBalls[i], "FireBarBall");
         s32 div = i / totalNum;

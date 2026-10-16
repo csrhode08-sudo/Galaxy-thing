@@ -24,7 +24,7 @@ MarioStick::MarioStick(MarioActor* pActor) : MarioState(pActor, MarioStatus_Stic
     _4C = 0;
     _50 = 0;
     _54.zero();
-    _48 = new Triangle();
+    _48 = new (JKRHeapToken::Dummy) Triangle();
     _14.zero();
     _20.zero();
     _2C.zero();
@@ -92,7 +92,7 @@ bool MarioStick::setStickSensor(const HitSensor* pSensor) {
 bool MarioStick::start() {
     _4C = 0;
     changeAnimation("ハチ壁くっつき", "ハチ壁くっつき中");
-    startPadVib(0ul);
+    startPadVib(0u);
     playEffectTrans("ハチ花くっつき", _38);
     playSound("ハチ壁くっつき");
     mActor->_F44 = 0;

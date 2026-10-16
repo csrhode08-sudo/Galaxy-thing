@@ -10,7 +10,7 @@ ClippingInfoGroup::ClippingInfoGroup(const char* pGroupName, int count) : NameOb
     _14 = 0;
     _18 = 0;
     _1C = 0;
-    _14 = new ClippingActorInfo*[count];
+    _14 = new (JKRHeapToken::Dummy) ClippingActorInfo*[count];
 
     for (s32 i = 0; i < _C; i++) {
         _14[i] = 0;
@@ -18,7 +18,7 @@ ClippingInfoGroup::ClippingInfoGroup(const char* pGroupName, int count) : NameOb
 }
 
 void ClippingInfoGroup::setGroupNo(const JMapInfoIter& rIter) {
-    _18 = new JMapIdInfo(MR::createJMapIdInfoFromClippingGroupId(rIter));
+    _18 = new (JKRHeapToken::Dummy) JMapIdInfo(MR::createJMapIdInfoFromClippingGroupId(rIter));
 }
 
 void ClippingInfoGroup::registerInfo(ClippingActorInfo* pInfo) {
@@ -92,7 +92,7 @@ void ClippingGroupHolder::createAndAdd(ClippingActorInfo* pInfo, const JMapInfoI
 }
 
 ClippingInfoGroup* ClippingGroupHolder::createGroup(ClippingActorInfo* pInfo, const JMapInfoIter& rIter, int count) {
-    ClippingInfoGroup* group = new ClippingInfoGroup(pInfo->mActor->mName, count);
+    ClippingInfoGroup* group = new (JKRHeapToken::Dummy) ClippingInfoGroup(pInfo->mActor->mName, count);
     group->setGroupNo(rIter);
     mInfoGroups[mNumGroups] = group;
     mNumGroups++;
@@ -122,7 +122,7 @@ ClippingGroupHolder::~ClippingGroupHolder() {
 ClippingGroupHolder::ClippingGroupHolder() : NameObj("クリッピングアクター保持") {
     mNumGroups = 0;
     mInfoGroups = 0;
-    mInfoGroups = new ClippingInfoGroup*[0x40];
+    mInfoGroups = new (JKRHeapToken::Dummy) ClippingInfoGroup*[0x40];
 
     for (s32 i = 0; i < 0x40; i++) {
         mInfoGroups[i] = 0;

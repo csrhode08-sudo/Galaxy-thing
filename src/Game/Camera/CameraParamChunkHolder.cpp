@@ -12,7 +12,7 @@
 #define CHUNK_CAPACITY 0x400
 
 CameraParamChunkHolder::CameraParamChunkHolder(CameraHolder* pCameraHolder, const char* pName)
-    : NameObj(pName), mCameraHolder(pCameraHolder), mChunkCapacity(CHUNK_CAPACITY), mNrChunks(), mChunks(new CameraParamChunk*[CHUNK_CAPACITY]),
+    : NameObj(pName), mCameraHolder(pCameraHolder), mChunkCapacity(CHUNK_CAPACITY), mNrChunks(), mChunks(new (JKRHeapToken::Dummy) CameraParamChunk*[CHUNK_CAPACITY]),
       mIsSorted() {
 }
 
@@ -25,11 +25,11 @@ CameraParamChunk* CameraParamChunkHolder::createChunk(const CameraParamChunkID& 
         CameraParamChunk* chunk;
 
         if (firstChar == 'e') {
-            chunk = new (pHeap, 0) CameraParamChunkEvent(mCameraHolder, rID);
+            chunk = new (JKRHeapToken::Dummy, pHeap, 0) CameraParamChunkEvent(mCameraHolder, rID);
         } else if (firstChar == 'g' || firstChar == 'c' || firstChar == 's') {
-            chunk = new (pHeap, 0) CameraParamChunkGame(mCameraHolder, rID);
+            chunk = new (JKRHeapToken::Dummy, pHeap, 0) CameraParamChunkGame(mCameraHolder, rID);
         } else {
-            chunk = new (pHeap, 0) CameraParamChunk(mCameraHolder, rID);
+            chunk = new (JKRHeapToken::Dummy, pHeap, 0) CameraParamChunk(mCameraHolder, rID);
         }
 
         mChunks[mNrChunks++] = chunk;

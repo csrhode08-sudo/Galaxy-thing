@@ -29,7 +29,7 @@
  * headers
  */
 
-#include <mem.h>
+#include <cstring>
 
 #include <bt_trace.h>
 #include <bt_types.h>  // BT_HDR

@@ -128,11 +128,11 @@ void Metbo::init(const JMapInfoIter& rIter) {
     MR::declareCoin(this, 1);
     MR::declareStarPiece(this, 3);
     MR::initStarPointerTarget(this, 100.0f);
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimScaleController->setParamTight();
-    mStarPointerBind = new WalkerStateBindStarPointer(this, mAnimScaleController);
+    mStarPointerBind = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleController);
     MR::calcFrontVec(&_A4, this);
-    mSpinHitController = new SpinHitController(this, 20, 20, 4, 0.2f, 40.0f, 20.0f, 3, false);
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 20, 20, 4, 0.2f, 40.0f, 20.0f, 3, false);
     _98.set(mPosition);
     initNerve(GET_NERVE(Metbo, MetboNrvWait));
     makeActorAppeared();
@@ -190,7 +190,7 @@ void Metbo::exeWalkAround() {
         TVec3f upVec;
         f32 angle;
         MR::calcUpVec(&upVec, this);
-        if (MR::getRandom(0l, 2l)) {
+        if (MR::getRandom(0, 2)) {
             angle = -1.0f;
         } else {
             angle = 1.0f;
@@ -202,7 +202,7 @@ void Metbo::exeWalkAround() {
     v.add(_B0, mPosition);
     moveOrFall(::sWalkAroundParam, &v);
     if (!trySearch() && MR::isStep(this, ::sStepForWalkAround)) {
-        if (MR::getRandom(0l, 2l)) {
+        if (MR::getRandom(0, 2)) {
             setNerve(GET_NERVE(Metbo, MetboNrvWait));
         } else {
             setNerve(GET_NERVE(Metbo, MetboNrvWalkAround));
@@ -257,7 +257,7 @@ void Metbo::exeChase() {
     }
 
     bool isNear = MR::isNearPlayer(this, 1200.0f) == false;
-    if (isNear || MR::isBindedWallOfMoveLimit(this) || MR::isStep(this, ::sStepForChaseMax) || !MR::getRandom(0l, 50l)) {
+    if (isNear || MR::isBindedWallOfMoveLimit(this) || MR::isStep(this, ::sStepForChaseMax) || !MR::getRandom(0, 50)) {
         setNerve(GET_NERVE(Metbo, MetboNrvRest));
     }
 }

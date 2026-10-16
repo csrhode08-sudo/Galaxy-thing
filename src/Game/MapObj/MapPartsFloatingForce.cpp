@@ -20,7 +20,7 @@ SpringStep::SpringStep(f32 cond, f32 speed, f32 angle) : mSpringValue() {
     mCondition = cond;
     mSpeed = speed;
     mAngle = angle;
-    mSpringValue = new SpringValue(cond, 0.0f, speed, angle, 0.0f);
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue(cond, 0.0f, speed, angle, 0.0f);
 }
 
 void SpringStep::addSpringVelocity(f32 vel) {
@@ -75,7 +75,7 @@ void MapPartsFloatingForce::initForSpringMotion(const JMapInfoIter& rIter) {
     s32 rotateAxis = 0;
     MR::getMapPartsArgRotateAxis(&rotateAxis, rIter);
     _5C = 0.1f * rotateAxis;
-    mSpringStep = new SpringStep(-conditionType, rotateSpeed, rotateAngle);
+    mSpringStep = new (JKRHeapToken::Dummy) SpringStep(-conditionType, rotateSpeed, rotateAngle);
 }
 
 void MapPartsFloatingForce::start() {

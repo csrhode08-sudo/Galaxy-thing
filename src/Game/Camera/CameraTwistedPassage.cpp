@@ -87,7 +87,7 @@ void CameraTwistedPassage::setParam(s32 zoneId, s32 railId, f32 distMin, f32 dis
 }
 
 CamTranslatorBase* CameraTwistedPassage::createTranslator() {
-    return new CamTranslatorTwistedPassage(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTwistedPassage(this);
 }
 
 void CameraTwistedPassage::initStartPos() {

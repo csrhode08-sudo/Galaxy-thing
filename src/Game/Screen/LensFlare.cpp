@@ -27,7 +27,7 @@ namespace {
 };  // namespace
 
 LensFlareModel::LensFlareModel(const char* pName, const char* pArcName)
-    : LiveActor(pName), _8C(), _90(), _94(), _98(new TriggerChecker()), _9C(new TriggerChecker()) {
+    : LiveActor(pName), _8C(), _90(), _94(), _98(new (JKRHeapToken::Dummy) TriggerChecker()), _9C(new (JKRHeapToken::Dummy) TriggerChecker()) {
     initModelManagerWithAnm(pArcName, nullptr, false);
 
     MR::connectToScene3DModelFor2D(this);
@@ -184,10 +184,10 @@ LensFlareDirector::~LensFlareDirector() {
 }
 
 void LensFlareDirector::init(const JMapInfoIter& rIter) {
-    mRing = new LensFlareRing();
-    mGlow = new LensFlareGlow();
-    mLine = new LensFlareLine();
-    mBrightCamInfo = new BrightCamInfo();
+    mRing = new (JKRHeapToken::Dummy) LensFlareRing();
+    mGlow = new (JKRHeapToken::Dummy) LensFlareGlow();
+    mLine = new (JKRHeapToken::Dummy) LensFlareLine();
+    mBrightCamInfo = new (JKRHeapToken::Dummy) BrightCamInfo();
 
     MR::connectToSceneMapObjMovement(this);
 }

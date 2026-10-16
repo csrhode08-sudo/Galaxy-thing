@@ -25,8 +25,8 @@ void PurpleCoinCounter::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "Counter", 1);
     initEffectKeeper(0, nullptr, nullptr);
 
-    mLayoutAppearer = new CounterLayoutAppearer(this, TVec2f(-50.0f, 0.0f));
-    mPaneRumbler = new CountUpPaneRumbler(this, "Counter");
+    mLayoutAppearer = new (JKRHeapToken::Dummy) CounterLayoutAppearer(this, TVec2f(-50.0f, 0.0f));
+    mPaneRumbler = new (JKRHeapToken::Dummy) CountUpPaneRumbler(this, "Counter");
 
     initNerve(GET_NERVE(PurpleCoinCounter, PurpleCoinCounterNrvAppear));
     MR::connectToSceneLayout(this);

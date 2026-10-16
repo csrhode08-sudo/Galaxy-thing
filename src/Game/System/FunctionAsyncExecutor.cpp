@@ -69,12 +69,12 @@ void FunctionAsyncExecutorOnMainThread::update() {
 
 FunctionAsyncExecutor::FunctionAsyncExecutor() : mMainThreadExec(nullptr), mHolders(), _410(nullptr), _414(nullptr) {
     for (s32 i = 0; i < ARRAY_SIZE(mThreads); i++) {
-        FunctionAsyncExecutorThread* thread = new FunctionAsyncExecutorThread(MR::getStationedHeapNapa());
+        FunctionAsyncExecutorThread* thread = new (JKRHeapToken::Dummy) FunctionAsyncExecutorThread(MR::getStationedHeapNapa());
         mThreads[i] = thread;
         OSResumeThread(thread->mThread);
     }
 
-    mMainThreadExec = new FunctionAsyncExecutorOnMainThread(OSGetCurrentThread());
+    mMainThreadExec = new (JKRHeapToken::Dummy) FunctionAsyncExecutorOnMainThread(OSGetCurrentThread());
     _410 = JKRUnitHeap::create(0x34, 0x34A8, 4, MR::getCurrentHeap(), false);
     _414 = JKRExpHeap::create(0x2800, MR::getCurrentHeap(), false);
 }
@@ -164,7 +164,7 @@ OSThread* FunctionAsyncExecutor::getOSThread(const char* pName) {
 
 FunctionAsyncExecInfo* FunctionAsyncExecutor::createAndAddExecInfo(const MR::FunctorBase& rFunc, int priority, const char* pName) {
     MR::FunctorBase* func = rFunc.clone(_414);
-    FunctionAsyncExecInfo* info = new (_410, 0) FunctionAsyncExecInfo(func, priority, pName);
+    FunctionAsyncExecInfo* info = new (JKRHeapToken::Dummy, _410, 0) FunctionAsyncExecInfo(func, priority, pName);
 
     OSLockMutex(&MR::MutexHolder< 2 >::sMutex);
     mHolders.push_back(info);

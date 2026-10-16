@@ -157,5 +157,5 @@ CameraTargetObj* CameraWaterFollow::calc() {
 }
 
 CamTranslatorBase* CameraWaterFollow::createTranslator() {
-    return new CamTranslatorWaterFollow(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorWaterFollow(this);
 }

@@ -26,14 +26,14 @@ void DemoExecutor::init(const JMapInfoIter& rIter) {
     DemoCastGroup::init(rIter);
 
     mSheetName = MR::getDemoSheetName(rIter);
-    mTimeKeeper = new DemoTimeKeeper(this);
-    mSubPartKeeper = new DemoSubPartKeeper(this);
-    mPlayerKeeper = new DemoPlayerKeeper(this);
-    mCameraKeeper = new DemoCameraKeeper(this, rIter);
-    mActionKeeper = new DemoActionKeeper(this);
-    mWipeKeeper = new DemoWipeKeeper(this);
+    mTimeKeeper = new (JKRHeapToken::Dummy) DemoTimeKeeper(this);
+    mSubPartKeeper = new (JKRHeapToken::Dummy) DemoSubPartKeeper(this);
+    mPlayerKeeper = new (JKRHeapToken::Dummy) DemoPlayerKeeper(this);
+    mCameraKeeper = new (JKRHeapToken::Dummy) DemoCameraKeeper(this, rIter);
+    mActionKeeper = new (JKRHeapToken::Dummy) DemoActionKeeper(this);
+    mWipeKeeper = new (JKRHeapToken::Dummy) DemoWipeKeeper(this);
     mSheetKeeper.push_back(mWipeKeeper);
-    mSoundKeeper = new DemoSoundKeeper(this);
+    mSoundKeeper = new (JKRHeapToken::Dummy) DemoSoundKeeper(this);
     mSheetKeeper.push_back(mSoundKeeper);
     _40 = MR::createStageSwitchCtrl(this, rIter);
 
@@ -65,10 +65,10 @@ void DemoExecutor::movement() {
             mPlayerKeeper->update();
             mCameraKeeper->update();
             mActionKeeper->update();
-            std::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), std::mem_func(&DemoSheetKeeperBase::update));
+            msl::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), msl::mem_func(&DemoSheetKeeperBase::update));
         }
 
-        std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::updateDemo));
+        msl::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), msl::mem_func(&DemoTalkAnimCtrl::updateDemo));
     }
 }
 
@@ -79,9 +79,9 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
 
     mTimeKeeper->start();
     mCameraKeeper->start();
-    std::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), std::mem_func(&DemoSheetKeeperBase::start));
+    msl::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), msl::mem_func(&DemoSheetKeeperBase::start));
 
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::startDemo));
+    msl::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), msl::mem_func(&DemoTalkAnimCtrl::startDemo));
 
     mActor.clear();
 
@@ -101,9 +101,9 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
 }
 
 void DemoExecutor::startPart(NameObj* pParam1, const char* pParam2, const char* pParam3, s32 param4) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
-                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
+    msl::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      msl::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
     start(pParam1, pParam2, param4);
     mTimeKeeper->setStartPart(pParam3);
 }
@@ -117,9 +117,9 @@ void DemoExecutor::startProperDemoSystem() {
 }
 
 void DemoExecutor::startDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
-                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    msl::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      msl::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     switch (param2) {
     case 1:
@@ -142,9 +142,9 @@ bool DemoExecutor::tryStartProperDemoSystem() {
 }
 
 bool DemoExecutor::tryStartDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
-                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    msl::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      msl::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     bool result = false;
 
@@ -217,7 +217,7 @@ void DemoExecutor::end() {
     mTimeKeeper->end();
     mSubPartKeeper->end();
     mCameraKeeper->end();
-    std::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), std::mem_func(&DemoSheetKeeperBase::end));
+    msl::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), msl::mem_func(&DemoSheetKeeperBase::end));
 
     switch (_4C) {
     case 1:
@@ -236,7 +236,7 @@ void DemoExecutor::end() {
     _48 = nullptr;
     _4C = -1;
 
-    std::for_each(mActor.begin(), mActor.end(), std::ptr_fun(MR::validateClipping));
+    msl::for_each(mActor.begin(), mActor.end(), msl::ptr_fun(MR::validateClipping));
 
     mActor.clear();
 }

@@ -37,7 +37,7 @@ CameraTargetObj* CameraParallel::calc() {
 }
 
 CamTranslatorBase* CameraParallel::createTranslator() {
-    return new CamTranslatorParallel(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorParallel(this);
 }
 
 bool CameraParallel::isEnableToRoundLeft() const {

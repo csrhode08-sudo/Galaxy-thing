@@ -77,9 +77,9 @@ void BasaBasa::init(const JMapInfoIter& rIter) {
     MR::declareCoin(this, 1);
     MR::onCalcGravity(this);
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f));
-    mScaleController = new AnimScaleController(nullptr);
-    mStampController = new AnimStampController();
-    mSpinHitController = new SpinHitController(this, 20, 20, 5, 0.0f, 20.0f, 10.0f, 3, false);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStampController = new (JKRHeapToken::Dummy) AnimStampController();
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 20, 20, 5, 0.0f, 20.0f, 10.0f, 3, false);
     initHangModel();
     MR::getJMapInfoArg0NoInit(rIter, &_A8);
     MR::getJMapInfoArg1NoInit(rIter, &_E4);

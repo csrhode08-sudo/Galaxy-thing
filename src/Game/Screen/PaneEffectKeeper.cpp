@@ -40,7 +40,7 @@ void PaneEffectKeeper::add(const char* pName1, const char* pName2, const char* p
         mHost->createPaneMtxRef(pName1);
     }
 
-    MultiEmitter* pEmitter = new MultiEmitter(pName2, mHost->getPaneMtxRef(pName1), TVec3f(0.0f, 0.0f, 0.0f));
+    MultiEmitter* pEmitter = new (JKRHeapToken::Dummy) MultiEmitter(pName2, mHost->getPaneMtxRef(pName1), TVec3f(0.0f, 0.0f, 0.0f));
 
     registerEffect(pEmitter, pName3);
 }
@@ -73,7 +73,7 @@ void PaneEffectKeeper::forceDeleteEmitterAll() {
 }
 
 void PaneEffectKeeper::clear() {
-    std::for_each(mEmitters.begin(), mEmitters.end(), std::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
+    msl::for_each(mEmitters.begin(), mEmitters.end(), msl::mem_func(&MultiEmitter::playCalcAndDeleteForeverEmitter));
 }
 
 MultiEmitter* PaneEffectKeeper::getEmitter(const char* pName) const {

@@ -29,8 +29,8 @@ void OceanRingPipeOutside::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_OceanRingPipeOutside);
     initDisplayList();
     MR::invalidateClipping(this);
-    mWaterPipeIndirectTex = new JUTTexture(MR::loadTexFromArc("OceanRing.arc", "WaterPipeIndirect.bti"), 0);
-    mWaterPipeHighLightTex = new JUTTexture(MR::loadTexFromArc("OceanRing.arc", "WaterPipeHighLight.bti"), 0);
+    mWaterPipeIndirectTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("OceanRing.arc", "WaterPipeIndirect.bti"), 0);
+    mWaterPipeHighLightTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("OceanRing.arc", "WaterPipeHighLight.bti"), 0);
     makeActorAppeared();
 }
 
@@ -43,7 +43,7 @@ void OceanRingPipeOutside::initDisplayList() {
 
     u32 x = (mRingPipe->_9C - 1) * (24 * mRingPipe->_98 + 3);
     u32 length = 0x20 * ((x >> 5) + 2);
-    mDispList = new (0x20) u8[length];
+    mDispList = new (JKRHeapToken::Dummy, 0x20) u8[length];
     DCInvalidateRange(mDispList, length);
     GDLObj obj;
     GDInitGDLObj(&obj, mDispList, length);
@@ -73,8 +73,8 @@ void OceanRingPipeOutside::loadMaterial() const {
     GXSetVtxDesc(GX_VA_POS, GX_INDEX16);
     GXSetVtxDesc(GX_VA_NRM, GX_INDEX16);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXSetArray(GX_VA_POS, mRingPipe->_A0, 12);
-    GXSetArray(GX_VA_NRM, mRingPipe->_A4, 6);
+    GXSETARRAY(GX_VA_POS, mRingPipe->_A0, mRingPipe->_94 * 12, 12, true);
+    GXSETARRAY(GX_VA_NRM, mRingPipe->_A4, mRingPipe->_94 * 6, 6, true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXLoadNrmMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);

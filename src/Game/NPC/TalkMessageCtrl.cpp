@@ -71,7 +71,7 @@ TalkMessageCtrl::~TalkMessageCtrl() {
 }
 
 void TalkMessageCtrl::createMessage(const JMapInfoIter& rIter, const char* pName) {
-    mNodeCtrl = new TalkNodeCtrl();
+    mNodeCtrl = new (JKRHeapToken::Dummy) TalkNodeCtrl();
     mNodeCtrl->createFlowNode(this, rIter, pName, &mCameraInfo);
 
     if (mNodeCtrl->mCurrentNode != nullptr) {
@@ -88,7 +88,7 @@ namespace {
 };  // namespace
 
 void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& rIter, const char* pName) {
-    mNodeCtrl = new TalkNodeCtrl();
+    mNodeCtrl = new (JKRHeapToken::Dummy) TalkNodeCtrl();
     mNodeCtrl->createFlowNodeDirect(this, rIter, pName, &mCameraInfo);
     _3C = 1;
 }

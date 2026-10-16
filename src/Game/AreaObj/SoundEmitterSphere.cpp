@@ -25,7 +25,7 @@ void SoundEmitterSphere::init(const JMapInfoIter& rIter) {
 
     mSoundName = ::cSoundNameTable[mObjArg0];
     mSoundIndex = mObjArg0;
-    mSoundObj = new AudAnmSoundObject(&_40, 4, MR::getCurrentHeap());
+    mSoundObj = new (JKRHeapToken::Dummy) AudAnmSoundObject(&_40, 4, MR::getCurrentHeap());
 
     MR::connectToSceneAreaObj(this);
     MR::registerDemoSimpleCastAll(this);

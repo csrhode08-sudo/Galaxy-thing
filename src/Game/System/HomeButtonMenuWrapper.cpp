@@ -38,12 +38,12 @@ void RSO::setupRsoHomeButtonMenu() {
         if (jumpCodeSize == 0) {
             jumps = nullptr;
         } else {
-            jumps = new (MR::getStationedHeapGDDR3(), 0) char[jumpCodeSize];
+            jumps = new (JKRHeapToken::Dummy, MR::getStationedHeapGDDR3(), 0) char[jumpCodeSize];
             RSOMakeJumpCode(symbolTable, jumps);
         }
         rsoPtr = reinterpret_cast< RSOObjectHeader* >(MR::receiveFile("/ModuleData/HomeButtonMenuWrapperRSO.rso"));
         if (rsoPtr->mBssSize) {
-            bss = new (MR::getStationedHeapGDDR3(), 0) char[rsoPtr->mBssSize];
+            bss = new (JKRHeapToken::Dummy, MR::getStationedHeapGDDR3(), 0) char[rsoPtr->mBssSize];
         }
 
         RSOLinkList((void*)rsoPtr, bss);

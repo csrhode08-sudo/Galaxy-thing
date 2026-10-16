@@ -14,7 +14,7 @@ SceneDataInitializer::SceneDataInitializer() : NameObj("SceneDataInitializer") {
 }
 
 void SceneDataInitializer::startStageFileLoad() {
-    mFileLoader = new StageFileLoader(MR::getCurrentStageName());
+    mFileLoader = new (JKRHeapToken::Dummy) StageFileLoader(MR::getCurrentStageName());
     mFileLoader->startLoadingStageFile();
 
     if (!MR::isStageDisablePauseMenu()) {

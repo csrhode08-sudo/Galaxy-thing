@@ -10,7 +10,7 @@ ClipAreaDropHolder::ClipAreaDropHolder() : DeriveActorGroup< ClipAreaDrop >("ク
     ClipAreaDrop* pClipAreaDrop = nullptr;
 
     for (int i = 0; i < ::sMaxClipAreaDrop; i++) {
-        pClipAreaDrop = new ClipAreaDrop("クリップエリアのしずく");
+        pClipAreaDrop = new (JKRHeapToken::Dummy) ClipAreaDrop("クリップエリアのしずく");
         pClipAreaDrop->initWithoutIter();
         registerActor(pClipAreaDrop);
     }

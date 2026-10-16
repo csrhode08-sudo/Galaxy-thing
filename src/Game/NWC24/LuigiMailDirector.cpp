@@ -21,12 +21,12 @@ void LuigiMailDirector::initAfterResourceLoaded() {
     u32 lostMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(::cLostMessageID)) + FileSelectFunc::getMiiNameBufferSize();
 
     mLostMessageLength = lostMessageLength;
-    mLostMessage = new wchar_t[lostMessageLength];
+    mLostMessage = new (JKRHeapToken::Dummy) wchar_t[lostMessageLength];
 
     u32 foundMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(::cFoundMessageID)) + FileSelectFunc::getMiiNameBufferSize();
 
     mFoundMessageLength = foundMessageLength;
-    mFoundMessage = new wchar_t[foundMessageLength];
+    mFoundMessage = new (JKRHeapToken::Dummy) wchar_t[foundMessageLength];
 }
 
 void LuigiMailDirector::lost() {

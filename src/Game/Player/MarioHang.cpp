@@ -544,8 +544,8 @@ MarioHang::MarioHang(MarioActor* pActor) : MarioState(pActor, MarioStatus_Hang) 
     _28.zero();
     _34.zero();
     mWallSensor = nullptr;
-    _20 = new Triangle;
-    _24 = new Triangle;
+    _20 = new (JKRHeapToken::Dummy) Triangle;
+    _24 = new (JKRHeapToken::Dummy) Triangle;
 }
 
 bool MarioHang::start() {

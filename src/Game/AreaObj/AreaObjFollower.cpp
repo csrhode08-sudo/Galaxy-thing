@@ -24,7 +24,7 @@ namespace MR {
             return false;
         }
 
-        AreaObjFollower* follower = new AreaObjFollower(pObj, rIter);
+        AreaObjFollower* follower = new (JKRHeapToken::Dummy) AreaObjFollower(pObj, rIter);
 
         MR::addBaseMatrixFollower(follower);
 

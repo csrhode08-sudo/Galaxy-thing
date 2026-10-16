@@ -22,7 +22,7 @@ ValveSwitch::ValveSwitch(const char* pName) : LiveActor(pName) {
     mObjConnector = nullptr;
     _C4 = false;
 
-    mObjConnector = new MapObjConnector(this);
+    mObjConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     _90.identity();
 }
 

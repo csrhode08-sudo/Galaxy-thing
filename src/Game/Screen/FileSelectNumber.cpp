@@ -19,7 +19,7 @@ void FileSelectNumber::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayout(this);
     initNerve(GET_NERVE_ANON(FileSelectNumberNrvWait));
 
-    mSelectAnimCtrl = new FileSelectNumberSub::SelectAnimController(this);
+    mSelectAnimCtrl = new (JKRHeapToken::Dummy) FileSelectNumberSub::SelectAnimController(this);
 }
 
 void FileSelectNumber::appear() {

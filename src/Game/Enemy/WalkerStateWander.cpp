@@ -29,7 +29,7 @@ WalkerStateWander::WalkerStateWander(LiveActor* pHost, TVec3f* pDirection, Walke
         mWanderParam = &::sDefaultParam;
     }
 
-    mTerritoryMover = new TerritoryMover(500.0f);
+    mTerritoryMover = new (JKRHeapToken::Dummy) TerritoryMover(500.0f);
     mTerritoryMover->setCenter(getHost()->mPosition);
 }
 

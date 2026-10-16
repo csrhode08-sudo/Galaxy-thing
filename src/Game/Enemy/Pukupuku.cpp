@@ -71,8 +71,8 @@ namespace {
 };  // namespace
 
 PukupukuStateLanding::PukupukuStateLanding(Pukupuku* pParent) : ActorStateBase< Pukupuku >("プクプク地上", pParent), mPath(), mValueCtrl(), _18() {
-    mPath = new ParabolicPath();
-    mValueCtrl = new ValueControl(30);
+    mPath = new (JKRHeapToken::Dummy) ParabolicPath();
+    mValueCtrl = new (JKRHeapToken::Dummy) ValueControl(30);
     initNerve(GET_NERVE_ANON(PukupukuStateLandingLandingMoveLand));
     kill();
 }
@@ -274,11 +274,11 @@ void Pukupuku::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, 50.0f);
     initSound(8, false);
     initNerve(GET_NERVE_ANON(PukupukuWait));
-    mStateLanding = new PukupukuStateLanding(this);
+    mStateLanding = new (JKRHeapToken::Dummy) PukupukuStateLanding(this);
     mStateLanding->kill();
     MR::initStarPointerTarget(this, 60.0f);
-    mScaleCtrl = new AnimScaleController(nullptr);
-    mStarPointer = new WalkerStateBindStarPointer(this, mScaleCtrl);
+    mScaleCtrl = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleCtrl);
     MR::addToAttributeGroupSearchTurtle(this);
     makeActorAppeared();
 }

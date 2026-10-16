@@ -37,7 +37,7 @@ void GameSystemException::init() {
     JUTAssertion::changeDevice(3);
     JUTConsoleManager::createManager(nullptr);
     JUTException::create(pDirectPrint);
-    JUTException::createConsole(new u8[0x24FC], 0x24FC);
+    JUTException::createConsole(new (JKRHeapToken::Dummy) u8[0x24FC], 0x24FC);
     JUTException::setPreUserCallback(GameSystemException::handleException);
     JUTException::sErrorManager->mPrintWaitTime1 = 0;
     JUTException::sErrorManager->mPrintWaitTime0 = 0;
@@ -52,7 +52,7 @@ void GameSystemException::init() {
         pConsole->mHeight = pConsole->mMaxLines;
     }
 
-    GameSystemException::sMapFileUsingBuffer = new u8[0x10];
+    GameSystemException::sMapFileUsingBuffer = new (JKRHeapToken::Dummy) u8[0x10];
 }
 
 void GameSystemException::handleException(OSError error, OSContext* pContext, u32 dsisr, u32 dar) {

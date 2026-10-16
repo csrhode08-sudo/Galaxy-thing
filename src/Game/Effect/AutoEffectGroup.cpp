@@ -4,12 +4,12 @@
 #include "Game/Util/JMapInfo.hpp"
 
 AutoEffectGroup::AutoEffectGroup(const char* pName, int capacity) : mName(pName), mEffects(), mCapacity(), mCount() {
-    mEffects = new AutoEffectInfo*[capacity];
+    mEffects = new (JKRHeapToken::Dummy) AutoEffectInfo*[capacity];
     mCapacity = capacity;
 }
 
 void AutoEffectGroup::add(const JMapInfoIter& rIter) {
-    AutoEffectInfo* pInfo = new AutoEffectInfo;
+    AutoEffectInfo* pInfo = new (JKRHeapToken::Dummy) AutoEffectInfo;
     pInfo->init(rIter);
     const s32 index = mCount++;
     mEffects[index] = pInfo;
@@ -42,7 +42,7 @@ namespace MR {
                 return nullptr;
             }
 
-            AutoEffectGroup* pGroup = new AutoEffectGroup(pName, getAutoEffectNum(pName));
+            AutoEffectGroup* pGroup = new (JKRHeapToken::Dummy) AutoEffectGroup(pName, getAutoEffectNum(pName));
 
             while (iter != getAutoEffectListBinary()->end()) {
                 pGroup->add(iter);

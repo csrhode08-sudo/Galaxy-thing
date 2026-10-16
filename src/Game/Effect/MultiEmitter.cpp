@@ -16,31 +16,31 @@ template JGeometry::TVec3< s16 >::TVec3(s16, s16, s16);
 
 MultiEmitter::MultiEmitter(const char* pName, const TVec3f* pScale, const TVec3f* pRotation, const TVec3f* pTranslation, const TVec3f& rVec)
     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
-    mCallBack = new MultiEmitterCallBack(this, pScale, pRotation, pTranslation, rVec);
-    mParticleCallBack = new MultiEmitterParticleCallBack();
+    mCallBack = new (JKRHeapToken::Dummy) MultiEmitterCallBack(this, pScale, pRotation, pTranslation, rVec);
+    mParticleCallBack = new (JKRHeapToken::Dummy) MultiEmitterParticleCallBack();
 
     allocateEmitter(pName);
 }
 
 MultiEmitter::MultiEmitter(const char* pName, MtxPtr pMtx, const TVec3f& rVec)
     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
-    mCallBack = new MultiEmitterCallBack(this, pMtx, rVec);
-    mParticleCallBack = new MultiEmitterParticleCallBack();
+    mCallBack = new (JKRHeapToken::Dummy) MultiEmitterCallBack(this, pMtx, rVec);
+    mParticleCallBack = new (JKRHeapToken::Dummy) MultiEmitterParticleCallBack();
 
     allocateEmitter(pName);
 }
 
 MultiEmitter::MultiEmitter(const char* pName, MtxPtr pMtx, const TVec3f* pTranslation, const TVec3f& rVec)
     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
-    mCallBack = new MultiEmitterCallBack(this, pMtx, pTranslation, rVec);
-    mParticleCallBack = new MultiEmitterParticleCallBack();
+    mCallBack = new (JKRHeapToken::Dummy) MultiEmitterCallBack(this, pMtx, pTranslation, rVec);
+    mParticleCallBack = new (JKRHeapToken::Dummy) MultiEmitterParticleCallBack();
 
     allocateEmitter(pName);
 }
 
 MultiEmitter::MultiEmitter(const char* pName) : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
-    mCallBack = new MultiEmitterCallBack(this, TVec3f(0.0f, 0.0f, 0.0f));
-    mParticleCallBack = new MultiEmitterParticleCallBack();
+    mCallBack = new (JKRHeapToken::Dummy) MultiEmitterCallBack(this, TVec3f(0.0f, 0.0f, 0.0f));
+    mParticleCallBack = new (JKRHeapToken::Dummy) MultiEmitterParticleCallBack();
 
     allocateEmitter(pName);
 }
@@ -54,14 +54,14 @@ void MultiEmitter::createEmitterWithCallBack(MultiEmitterCallBackBase* pCallBack
         MR::getEffectSystem()->createSingleEmitter(pEmitter, pCallBackBase, nullptr);
     }
 
-    std::for_each(mChildren.begin(), mChildren.end(),
-                  std::binder2nd< std::mem_fun1_t< void, MultiEmitter, MultiEmitterCallBackBase* >, MultiEmitterCallBackBase* >(
-                      std::mem_func(&MultiEmitter::createEmitterWithCallBack), pCallBackBase));
+    msl::for_each(mChildren.begin(), mChildren.end(),
+                  msl::binder2nd< msl::mem_fun1_t< void, MultiEmitter, MultiEmitterCallBackBase* >, MultiEmitterCallBackBase* >(
+                      msl::mem_func(&MultiEmitter::createEmitterWithCallBack), pCallBackBase));
 }
 
 void MultiEmitter::deleteEmitter() {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::mem_func(&SingleEmitter::deleteEmitter));
-    std::for_each(mChildren.begin(), mChildren.end(), std::mem_func(&MultiEmitter::deleteEmitter));
+    msl::for_each_array(mEmitters.begin(), mEmitters.end(), msl::mem_func(&SingleEmitter::deleteEmitter));
+    msl::for_each(mChildren.begin(), mChildren.end(), msl::mem_func(&MultiEmitter::deleteEmitter));
 }
 
 void MultiEmitter::forceDeleteEmitter() {
@@ -69,7 +69,7 @@ void MultiEmitter::forceDeleteEmitter() {
         MR::getEffectSystem()->forceDeleteSingleEmitter(pEmitter);
     }
 
-    std::for_each(mChildren.begin(), mChildren.end(), std::mem_func(&MultiEmitter::forceDeleteEmitter));
+    msl::for_each(mChildren.begin(), mChildren.end(), msl::mem_func(&MultiEmitter::forceDeleteEmitter));
 }
 
 void MultiEmitter::forceDelete(EffectSystem* pSystem) {
@@ -77,9 +77,9 @@ void MultiEmitter::forceDelete(EffectSystem* pSystem) {
         pSystem->forceDeleteSingleEmitter(pEmitter);
     }
 
-    std::for_each(
+    msl::for_each(
         mChildren.begin(), mChildren.end(),
-        std::binder2nd< std::mem_fun1_t< void, MultiEmitter, EffectSystem* >, EffectSystem* >(std::mem_func(&MultiEmitter::forceDelete), pSystem));
+        msl::binder2nd< msl::mem_fun1_t< void, MultiEmitter, EffectSystem* >, EffectSystem* >(msl::mem_func(&MultiEmitter::forceDelete), pSystem));
 }
 
 void MultiEmitter::deleteForeverEmitter() {
@@ -89,7 +89,7 @@ void MultiEmitter::deleteForeverEmitter() {
         }
     }
 
-    std::for_each(mChildren.begin(), mChildren.end(), std::mem_func(&MultiEmitter::deleteForeverEmitter));
+    msl::for_each(mChildren.begin(), mChildren.end(), msl::mem_func(&MultiEmitter::deleteForeverEmitter));
 }
 
 void MultiEmitter::playCalcAndDeleteForeverEmitter() {
@@ -163,9 +163,9 @@ void MultiEmitter::create(EffectSystem* pSystem) {
 }
 
 void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(),
-                        std::binder2nd< std::mem_fun1_t< void, SingleEmitter, EffectSystem* >, EffectSystem* >(
-                            std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
+    msl::for_each_array(mEmitters.begin(), mEmitters.end(),
+                        msl::binder2nd< msl::mem_fun1_t< void, SingleEmitter, EffectSystem* >, EffectSystem* >(
+                            msl::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
 }
 
 void MultiEmitter::forceFollowOn() {
@@ -181,7 +181,7 @@ void MultiEmitter::forceScaleOn() {
 }
 
 void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 capacity, f32 startFrame) {
-    _24 = new SyncBckEffectInfo(pPlayer, pName, capacity, 0.0f, -1.0f, false);
+    _24 = new (JKRHeapToken::Dummy) SyncBckEffectInfo(pPlayer, pName, capacity, 0.0f, -1.0f, false);
     _24->mStartFrame = startFrame;
 }
 
@@ -240,9 +240,9 @@ void MultiEmitter::playEmitterOffClipped() {
 }
 
 void MultiEmitter::setDrawOrder(s32 index) {
-    std::for_each_array(
+    msl::for_each_array(
         mEmitters.begin(), mEmitters.end(),
-        std::binder2nd< std::mem_fun1_t< void, SingleEmitter, u8 >, u8 >(std::mem_func(&SingleEmitter::setGroupID), static_cast< u8 >(index)));
+        msl::binder2nd< msl::mem_fun1_t< void, SingleEmitter, u8 >, u8 >(msl::mem_func(&SingleEmitter::setGroupID), static_cast< u8 >(index)));
 }
 
 void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {

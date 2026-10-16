@@ -15,7 +15,7 @@ namespace {
 
 MiniatureGalaxyHolder::MiniatureGalaxyHolder()
     : LiveActor("ミニチュアギャラクシー保持"), mMiniatureGalaxyGroup(), _90(), mCometGalaxy(), mCometID(-1), _9C() {
-    mMiniatureGalaxyGroup = new LiveActorGroup("ミニチュアギャラクシーグループ", 16);
+    mMiniatureGalaxyGroup = new (JKRHeapToken::Dummy) LiveActorGroup("ミニチュアギャラクシーグループ", 16);
 }
 
 void MiniatureGalaxyHolder::registerActor(LiveActor* pActor, const JMapInfoIter& rIter) {

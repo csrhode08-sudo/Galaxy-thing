@@ -9,7 +9,7 @@ NerveExecutor::~NerveExecutor() {
 }
 
 void NerveExecutor::initNerve(const Nerve* pNerve) {
-    mSpine = new Spine(this, pNerve);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, pNerve);
 }
 
 void NerveExecutor::updateNerve() {

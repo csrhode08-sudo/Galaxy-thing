@@ -97,7 +97,7 @@ void KoopaBattleMapPlanet::exeDemoGrandStarAppear() {
 }
 
 void KoopaBattleMapPlanet::createPlate() {
-    mDamagePlateGroup = new LiveActorGroup("ダメージプレートＧ", 6);
+    mDamagePlateGroup = new (JKRHeapToken::Dummy) LiveActorGroup("ダメージプレートＧ", 6);
     mDamagePlateGroup->initWithoutIter();
 
     for (s32 idx = 0; idx < 6; idx++) {
@@ -108,7 +108,7 @@ void KoopaBattleMapPlanet::createPlate() {
 
         mBaseMtx.mult(vec, vec);
 
-        KoopaBattleMapDamagePlate* pDamagePlate = new KoopaBattleMapDamagePlate("クッパダメージプレート");
+        KoopaBattleMapDamagePlate* pDamagePlate = new (JKRHeapToken::Dummy) KoopaBattleMapDamagePlate("クッパダメージプレート");
         pDamagePlate->mPosition.set(vec);
         pDamagePlate->initWithoutIter();
 
@@ -125,7 +125,7 @@ void KoopaBattleMapPlanet::createPlate() {
         return;
     }
 
-    mCoinPlateGroup = new LiveActorGroup("コインプレートＧ", 4);
+    mCoinPlateGroup = new (JKRHeapToken::Dummy) LiveActorGroup("コインプレートＧ", 4);
     mCoinPlateGroup->initWithoutIter();
 
     for (s32 idx = 0; idx < 4; idx++) {
@@ -136,14 +136,14 @@ void KoopaBattleMapPlanet::createPlate() {
 
         mBaseMtx.mult(vec, vec);
 
-        KoopaBattleMapCoinPlate* pCoinPlate = new KoopaBattleMapCoinPlate("クッパコインプレート");
+        KoopaBattleMapCoinPlate* pCoinPlate = new (JKRHeapToken::Dummy) KoopaBattleMapCoinPlate("クッパコインプレート");
         pCoinPlate->mPosition.set(vec);
         pCoinPlate->initWithoutIter();
 
         mCoinPlateGroup->registerActor(pCoinPlate);
     }
 
-    mPlateGroup = new LiveActorGroup("プレートＧ", 4);
+    mPlateGroup = new (JKRHeapToken::Dummy) LiveActorGroup("プレートＧ", 4);
     mPlateGroup->initWithoutIter();
 
     for (s32 idx = 0; idx < 4; idx++) {
@@ -154,7 +154,7 @@ void KoopaBattleMapPlanet::createPlate() {
 
         mBaseMtx.mult(vec, vec);
 
-        KoopaBattleMapPlate* pCoinPlate = new KoopaBattleMapPlate("クッパプレート");
+        KoopaBattleMapPlate* pCoinPlate = new (JKRHeapToken::Dummy) KoopaBattleMapPlate("クッパプレート");
         pCoinPlate->mPosition.set(vec);
         pCoinPlate->initWithoutIter();
 

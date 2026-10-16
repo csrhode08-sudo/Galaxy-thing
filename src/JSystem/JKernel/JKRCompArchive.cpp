@@ -11,7 +11,7 @@
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "JSystem/JUtility/JUTException.hpp"
 
-#include <mem.h>
+#include <cstring>
 #include <stdint.h>
 
 extern "C" int abs(int);
@@ -75,7 +75,7 @@ bool JKRCompArchive::open(s32 entryNum) {
     mFiles = NULL;
     mStringTable = NULL;
 
-    mDvdFile = new (JKRGetSystemHeap(), 0) JKRDvdFile(entryNum);
+    mDvdFile = new (JKRHeapToken::Dummy, JKRGetSystemHeap(), 0) JKRDvdFile(entryNum);
     if (mDvdFile == NULL) {
         mMountMode = 0;
         return 0;

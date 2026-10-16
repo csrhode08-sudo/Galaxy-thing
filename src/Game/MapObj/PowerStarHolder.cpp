@@ -13,7 +13,7 @@ void PowerStarHolder::init(const JMapInfoIter&) {
 }
 
 void PowerStarHolder::registerPowerStar(PowerStar* pStar, int starNum) {
-    PowerStarRequestInfo* info = new PowerStarRequestInfo();
+    PowerStarRequestInfo* info = new (JKRHeapToken::Dummy) PowerStarRequestInfo();
     info->mStar = pStar;
     info->mStarNum = starNum;
     info->mIsAppear = false;

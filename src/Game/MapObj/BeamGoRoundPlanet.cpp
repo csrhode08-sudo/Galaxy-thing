@@ -26,7 +26,7 @@ void BeamGoRoundBeam::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorCallbackEnemyAttack(this, "beam", 4, 100.0f);
     initEffectKeeper(0, nullptr, false);
-    mModelDrawer = new VolumeModelDrawer("ビームボリューム", "BeamGoRoundBeamVolume", getBaseMtx());
+    mModelDrawer = new (JKRHeapToken::Dummy) VolumeModelDrawer("ビームボリューム", "BeamGoRoundBeamVolume", getBaseMtx());
     mBloomModel = MR::createModelObjBloomModel("ビームブルーム", "BeamGoRoundBeamBloom", getBaseMtx());
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
     MR::startAllAnim(this, "BeamGoRoundBeam");
@@ -100,13 +100,13 @@ void BeamGoRoundPlanet::connectToScene(const MapObjActorInitInfo&) {
 }
 
 void BeamGoRoundPlanet::initBeam() {
-    mBeams = new BeamGoRoundBeam*[16];
+    mBeams = new (JKRHeapToken::Dummy) BeamGoRoundBeam*[16];
 
     for (s32 i = 0; i < 16; i++) {
         char buf[256];
         snprintf(buf, sizeof(buf), "beam%d", i + 1);
         MtxPtr jointMtx = MR::getJointMtx(this, buf);
-        mBeams[i] = new BeamGoRoundBeam(jointMtx);
+        mBeams[i] = new (JKRHeapToken::Dummy) BeamGoRoundBeam(jointMtx);
         mBeams[i]->initWithoutIter();
     }
 }

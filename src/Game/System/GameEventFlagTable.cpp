@@ -264,7 +264,7 @@ const GameEventFlag* GameEventFlagTableInstance::findFlag(const char* flagName) 
 }
 
 void GameEventFlagTableInstance::initSortTable() {
-    mSortTable = new GameEventFlagTableInstance::Key[GameEventFlagTable::getTableSize()];
+    mSortTable = new (JKRHeapToken::Dummy) GameEventFlagTableInstance::Key[GameEventFlagTable::getTableSize()];
     mLength = GameEventFlagTable::getTableSize();
 
     for (int i = 0; i < mLength; i++) {
@@ -274,7 +274,7 @@ void GameEventFlagTableInstance::initSortTable() {
         mSortTable[i].mHashCode = MR::getHashCode(pFlag->mName);
     }
 
-    std::sort(&mSortTable[0], &mSortTable[mLength], GameEventFlagSortLt());
+    msl::sort(&mSortTable[0], &mSortTable[mLength], GameEventFlagSortLt());
 }
 
 namespace GameEventFlagTable {

@@ -142,7 +142,7 @@ bool GalaxyMapDomeIcon::isComplete() const {
 void GalaxyMapDomeIcon::init(const JMapInfoIter& rIter) {
     initLayoutManager("MapDomeIcon", 3);
 
-    mNamePlate = new GalaxyNamePlate(nullptr, false);
+    mNamePlate = new (JKRHeapToken::Dummy) GalaxyNamePlate(nullptr, false);
     mNamePlate->initWithoutIter();
     mNamePlate->kill();
 

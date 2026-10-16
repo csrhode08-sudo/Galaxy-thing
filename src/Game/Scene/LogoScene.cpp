@@ -235,7 +235,7 @@ void LogoScene::initLayout() {
     mStrapLayout = MR::createSimpleLayout("ストラップ着用画面", "WiiRemoteStrap", 1);
     mStrapLayout->kill();
 
-    mLogoFader = new LogoFader("ロゴフェーダ");
+    mLogoFader = new (JKRHeapToken::Dummy) LogoFader("ロゴフェーダ");
     mLogoFader->initWithoutIter();
     mLogoFader->setBlank();
     mLogoFader->appear();

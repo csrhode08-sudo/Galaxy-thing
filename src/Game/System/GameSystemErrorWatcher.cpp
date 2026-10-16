@@ -62,17 +62,17 @@ GameSystemErrorWatcher::GameSystemErrorWatcher()
     : NerveExecutor("ErrorWatcher"), mWindow(nullptr), mMessage(nullptr), mUnplaggedTexMap(nullptr), mBatteryLayout(nullptr),
       mDriveStatus(DVD_STATE_END), _1C(nullptr), mWiiRemoteStatus(WII_REMOTE_STATUS_OK), mCounterIgnoreCheckFreeStyle(0),
       mCounterDecideDisconnect(::sCounterMaxDecideDisconnect), mWiiRemoteBattery(WPAD_BATTERY_LEVEL_MAX), mPermissionUpdateWiiRemoteStatus(false) {
-    mWindow = new ErrorMessageWindow();
+    mWindow = new (JKRHeapToken::Dummy) ErrorMessageWindow();
     mWindow->initWithoutIter();
 
-    _1C = new TriggerChecker();
+    _1C = new (JKRHeapToken::Dummy) TriggerChecker();
     _1C->setInput(false);
 
     initNerve(GET_NERVE_ANON(GameSystemErrorWatcherNoError));
 }
 
 void GameSystemErrorWatcher::initAfterResourceLoaded() {
-    mBatteryLayout = new BatteryLayout();
+    mBatteryLayout = new (JKRHeapToken::Dummy) BatteryLayout();
     mBatteryLayout->initWithoutIter();
 
     mUnplaggedTexMap = MR::createLytTexMap("ErrorMessageImage.arc", "FreeStyleUnplagged.bti");

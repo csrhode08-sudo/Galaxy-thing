@@ -14,7 +14,7 @@ KameckBeamHolder::KameckBeamHolder() : DeriveActorGroup< KameckBeam >("カメッ
     KameckBeam* pBeam;
 
     for (s32 i = 0; i < ::sMaxKameckBeam; i++) {
-        pBeam = new KameckBeam("カメックビーム");
+        pBeam = new (JKRHeapToken::Dummy) KameckBeam("カメックビーム");
         pBeam->initWithoutIter();
         registerActor(pBeam);
     }
@@ -24,7 +24,7 @@ KameckFireBallHolder::KameckFireBallHolder() : DeriveActorGroup< KameckFireBall 
     KameckFireBall* pFireBall;
 
     for (s32 i = 0; i < ::sMaxKameckFireBall; i++) {
-        pFireBall = new KameckFireBall("カメックビーム用炎");
+        pFireBall = new (JKRHeapToken::Dummy) KameckFireBall("カメックビーム用炎");
         pFireBall->initWithoutIter();
         pFireBall->makeActorDead();
         registerActor(pFireBall);
@@ -35,7 +35,7 @@ KameckBeamTurtleHolder::KameckBeamTurtleHolder() : DeriveActorGroup< KameckTurtl
     KameckTurtle* pTurtle;
 
     for (s32 i = 0; i < ::sMaxKameckBeamTurtle; i++) {
-        pTurtle = new KameckTurtle("カメックビーム用カメ");
+        pTurtle = new (JKRHeapToken::Dummy) KameckTurtle("カメックビーム用カメ");
         pTurtle->initWithoutIter();
         pTurtle->makeActorDead();
         registerActor(pTurtle);

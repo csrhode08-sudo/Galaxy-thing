@@ -243,7 +243,7 @@ s32 JAIStream::getNumChild() const {
 
 JAISoundChild* JAIStream::getChild(int index) {
     if (children[index] == nullptr) {
-        children[index] = new JAISoundChild();
+        children[index] = new (JKRHeapToken::Dummy) JAISoundChild();
     }
     return children[index];
 }

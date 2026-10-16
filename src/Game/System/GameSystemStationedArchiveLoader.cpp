@@ -56,7 +56,7 @@ JKRHeap* ConditionUsePlayerHeap::getProperHeap(const MR::StationedFileInfo* pInf
 }
 
 PlayerHeapHolder::PlayerHeapHolder() : mCondition(), mNapaHeap(), mGDDRHeap(), mIsDataMario(true) {
-    ConditionUsePlayerHeap* condition = new ConditionUsePlayerHeap();
+    ConditionUsePlayerHeap* condition = new (JKRHeapToken::Dummy) ConditionUsePlayerHeap();
     mNapaHeap = PlayerHeapHolder::createHeap(0x500000, MR::getStationedHeapNapa());
     JKRExpHeap* gddr = PlayerHeapHolder::createHeap(0x500000, MR::getStationedHeapGDDR3());
     mGDDRHeap = gddr;
@@ -69,12 +69,12 @@ PlayerHeapHolder::PlayerHeapHolder() : mCondition(), mNapaHeap(), mGDDRHeap(), m
 void PlayerHeapHolder::adjust() {
     JKRExpHeap* napa = mNapaHeap;
     if (!napa->isEmpty()) {
-        napa->alloc(0x10000, nullptr);
+        napa->alloc(0x10000, 0);
     }
 
     JKRExpHeap* gddr = mGDDRHeap;
     if (!gddr->isEmpty()) {
-        gddr->alloc(0x10000, nullptr);
+        gddr->alloc(0x10000, 0);
     }
 
     MR::adjustHeapSize(mNapaHeap, nullptr);
@@ -175,7 +175,7 @@ void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
             return;
         }
 
-        mHeapHolder = new PlayerHeapHolder();
+        mHeapHolder = new (JKRHeapToken::Dummy) PlayerHeapHolder();
 
         MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchivePlayer, true), 14,
                                       "常駐リソース読み込み");

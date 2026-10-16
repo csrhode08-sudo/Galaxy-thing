@@ -123,7 +123,7 @@ void GalaxyMapIcon::init(const JMapInfoIter& rIter) {
     initLayoutManager("MapGalaxyIcon", 2);
     MR::createAndAddPaneCtrl(this, "GalaxyIcon", 1);
 
-    mButtonPaneController = new ButtonPaneController(this, "GalaxyIcon", "GalaxyIcon", 0, true);
+    mButtonPaneController = new (JKRHeapToken::Dummy) ButtonPaneController(this, "GalaxyIcon", "GalaxyIcon", 0, true);
     mButtonPaneController->invalidateAppearance();
     mButtonPaneController->invalidateDecide();
     mButtonPaneController->_23 = true;

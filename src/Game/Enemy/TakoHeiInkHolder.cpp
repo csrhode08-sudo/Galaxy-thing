@@ -10,7 +10,7 @@ TakoHeiInkHolder::TakoHeiInkHolder() : DeriveActorGroup< TakoHeiInk >("タコヘ
     TakoHeiInk* pInk;
 
     for (int i = 0; i < ::sMaxTakoHeiInk; i++) {
-        pInk = new TakoHeiInk("タコヘイ墨");
+        pInk = new (JKRHeapToken::Dummy) TakoHeiInk("タコヘイ墨");
         pInk->initWithoutIter();
         registerActor(pInk);
     }

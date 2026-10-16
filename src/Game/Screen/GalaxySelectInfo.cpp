@@ -19,7 +19,7 @@ namespace NrvGalaxySelectInfo {
 
 GalaxySelectInfo::GalaxySelectInfo(bool param1)
     : LayoutActor("ギャラクシー選択情報", true), _20(param1), _24(nullptr), _28(false), mFadeinoutControl(nullptr), mInfoLayoutSetter(nullptr) {
-    mFadeinoutControl = new ValueControl(::cFadeinoutFrame);
+    mFadeinoutControl = new (JKRHeapToken::Dummy) ValueControl(::cFadeinoutFrame);
     mFadeinoutControl->setZero();
 }
 
@@ -27,7 +27,7 @@ void GalaxySelectInfo::init(const JMapInfoIter& rIter) {
     initLayoutManager("GalaxyInfo", GalaxyInfoLayoutSetter::getAnimLayerNum());
     MR::setInfluencedAlphaToChild(this);
 
-    mInfoLayoutSetter = new GalaxyInfoLayoutSetter(this);
+    mInfoLayoutSetter = new (JKRHeapToken::Dummy) GalaxyInfoLayoutSetter(this);
 
     if (_20) {
         MR::connectToSceneLayoutOnPause(this);

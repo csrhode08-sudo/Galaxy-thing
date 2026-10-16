@@ -55,7 +55,7 @@ void NormalMapBase::setup(const char* pName) {
     MR::invalidateClipping(this);
     mHeight = 128;
     mWidth = 128;
-    _4B8 = new (0x20) JUTTexture(mHeight, mWidth, GX_TF_IA8);
+    _4B8 = new (JKRHeapToken::Dummy, 0x20) JUTTexture(mHeight, mWidth, GX_TF_IA8);
     appear();
 }
 
@@ -109,16 +109,16 @@ void NormalMapBase::setupTexture() {
             strcpy(fileName, pName + 6);
             strcat(fileName, ".bti");
             pImage = MR::getTexFromArc(fileName, this);
-            mNormalTex = new JUTTexture(pImage, 0);
+            mNormalTex = new (JKRHeapToken::Dummy) JUTTexture(pImage, 0);
             mTextures[i] = mNormalTex;
             mTextures[i]->mMinType = GX_LINEAR;
             mTextures[i]->mMagType = GX_LINEAR;
             mTextures[i]->init();
         } else if (strstr(pName, "ormal") && !mNormalTex) {
-            mNormalTex = new JUTTexture(pImage, 0);
+            mNormalTex = new (JKRHeapToken::Dummy) JUTTexture(pImage, 0);
             mTextures[i] = mNormalTex;
         } else {
-            _90 = new JUTTexture(pImage, 0);
+            _90 = new (JKRHeapToken::Dummy) JUTTexture(pImage, 0);
             mTextures[i] = _90;
         }
 
@@ -127,7 +127,7 @@ void NormalMapBase::setupTexture() {
         }
     }
 
-    mImagePtr = new (MR::getSceneHeapGDDR3(), 0x20) u16[width * height];
+    mImagePtr = new (JKRHeapToken::Dummy, MR::getSceneHeapGDDR3(), 0x20) u16[width * height];
     createGradTexture();
 }
 

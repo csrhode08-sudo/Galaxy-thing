@@ -28,7 +28,7 @@ ActorAnimKeeper* ActorAnimKeeper::tryCreate(LiveActor* pActor) {
         return nullptr;
     }
 
-    return new ActorAnimKeeper(pActor);
+    return new (JKRHeapToken::Dummy) ActorAnimKeeper(pActor);
 }
 
 namespace {
@@ -127,7 +127,7 @@ bool ActorAnimKeeper::initAnimData() {
     }
     mNumInfo = numInfo;
 
-    ActorAnimKeeperInfo* infoArray = new ActorAnimKeeperInfo[mNumInfo];
+    ActorAnimKeeperInfo* infoArray = new (JKRHeapToken::Dummy) ActorAnimKeeperInfo[mNumInfo];
     mInfoArray = infoArray;
 
     for (int i = 0; i < mNumInfo; i++) {

@@ -29,13 +29,13 @@ KoopaParts::KoopaParts(Koopa* pKoopa, const JMapInfoIter& rIter)
       mFireShort(), mFireStairs(), mKoopaSwitchKeeper(), mKoopaViewSwitchKeeper(), mKoopaPowerUpSwitch(), mRock(), mRockBreak(), mRollBall(),
       mPlanetLv2(), mPlanetLv3(), mHoleSunPlanetOutside(), mHoleSunPlanetOutsideBloom(), mHoleSunPlanetInside(), mHoleSunPlanetInsideBloom(),
       mPeach(), mKoopaJr(), mKoopaJrShip(), mMeteor1(), mMeteor2(), mMeteor3(), mActorCameraInfo() {
-    mActorCameraInfo = new ActorCameraInfo(rIter);
+    mActorCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     MR::declareCameraRegisterVec(mKoopa, 0, &mKoopa->mPosition);
 }
 
 namespace {
     PartsModel* createKoopaBodyParts(LiveActor* pActor, const char* pName, const char* pModelName, const char* pJointName) {
-        PartsModel* pPartsModel = new PartsModel(pActor, pName, pModelName, nullptr, MR::DrawBufferType_Enemy, false);
+        PartsModel* pPartsModel = new (JKRHeapToken::Dummy) PartsModel(pActor, pName, pModelName, nullptr, MR::DrawBufferType_Enemy, false);
 
         pPartsModel->loadFixedPosition(pJointName);
         pPartsModel->initWithoutIter();
@@ -48,7 +48,7 @@ namespace {
 
     KoopaBattleMapPlanet* createKoopaBattleMapPlanet(const char* pName1, const char* pName2, const char* pResetPositionName, bool a1, bool a2,
                                                      bool a3) {
-        KoopaBattleMapPlanet* pBattleMapPlanet = new KoopaBattleMapPlanet(pName1, pName2, a1, a2, a3);
+        KoopaBattleMapPlanet* pBattleMapPlanet = new (JKRHeapToken::Dummy) KoopaBattleMapPlanet(pName1, pName2, a1, a2, a3);
         MR::resetPosition(pBattleMapPlanet, pResetPositionName);
         pBattleMapPlanet->initWithoutIter();
         return pBattleMapPlanet;
@@ -155,7 +155,7 @@ void KoopaParts::killHoleSunPlanetOutside() {
 }
 
 void KoopaParts::createPlanetShadow() {
-    mPlanetShadow = new KoopaPlanetShadow(mKoopa);
+    mPlanetShadow = new (JKRHeapToken::Dummy) KoopaPlanetShadow(mKoopa);
     mPlanetShadow->initWithoutIter();
     mPlanetShadow->kill();
 }
@@ -177,7 +177,7 @@ void KoopaParts::initVs2() {
 
 namespace {
     ModelObjNpc* createDemoNpc(const char* pName, const char* pModelArcName) {
-        ModelObjNpc* pModelObjNpc = new ModelObjNpc(pName, pModelArcName, nullptr);
+        ModelObjNpc* pModelObjNpc = new (JKRHeapToken::Dummy) ModelObjNpc(pName, pModelArcName, nullptr);
         pModelObjNpc->initWithoutIter();
         MR::resetPosition(pModelObjNpc, "デモ中心");
 
@@ -254,7 +254,7 @@ void KoopaParts::createRock() {
     mRock = ::createKoopaBodyParts(mKoopa, "クッパ岩", "KoopaRock", "RockFixPos");
     mRock->kill();
 
-    mRockBreak = new KoopaRockBreak(mKoopa);
+    mRockBreak = new (JKRHeapToken::Dummy) KoopaRockBreak(mKoopa);
     mRockBreak->initWithoutIter();
 }
 
@@ -276,31 +276,31 @@ void KoopaParts::createCommonParts() {
     mThornBreak = ::createKoopaBodyParts(mKoopa, "トゲ破片", "KoopaThornBreak", "ThornBreakFixPos");
     mThornBreak->kill();
 
-    mFireShort = new LiveActorGroup("ショート炎", ::sFireShortNum);
+    mFireShort = new (JKRHeapToken::Dummy) LiveActorGroup("ショート炎", ::sFireShortNum);
     mFireShort->initWithoutIter();
 
     for (int idx = 0; idx < ::sFireShortNum; idx++) {
-        KoopaFireShort* pFireShort = new KoopaFireShort(mKoopa);
+        KoopaFireShort* pFireShort = new (JKRHeapToken::Dummy) KoopaFireShort(mKoopa);
         pFireShort->initWithoutIter();
         mFireShort->registerActor(pFireShort);
     }
 
-    mShockWave = new LiveActorGroup("衝撃波（球状）", ::sShockWaveNum);
+    mShockWave = new (JKRHeapToken::Dummy) LiveActorGroup("衝撃波（球状）", ::sShockWaveNum);
     mShockWave->initWithoutIter();
 
     for (int idx = 0; idx < ::sShockWaveNum; idx++) {
-        KoopaShockWave* pShockWave = new KoopaShockWave(mKoopa);
+        KoopaShockWave* pShockWave = new (JKRHeapToken::Dummy) KoopaShockWave(mKoopa);
         pShockWave->initWithoutIter();
         mShockWave->registerActor(pShockWave);
     }
 }
 
 void KoopaParts::createFireStairs(bool a1) {
-    mFireStairs = new LiveActorGroup("炎（階段用）保持", ::sFireStairsNum);
+    mFireStairs = new (JKRHeapToken::Dummy) LiveActorGroup("炎（階段用）保持", ::sFireStairsNum);
     mFireStairs->initWithoutIter();
 
     for (int idx = 0; idx < ::sFireStairsNum; idx++) {
-        KoopaFireStairs* pFireStairs = new KoopaFireStairs("炎（階段用）", a1);
+        KoopaFireStairs* pFireStairs = new (JKRHeapToken::Dummy) KoopaFireStairs("炎（階段用）", a1);
         pFireStairs->initWithoutIter();
         mFireStairs->registerActor(pFireStairs);
     }

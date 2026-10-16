@@ -7,7 +7,7 @@
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
 GameEventFlagStorage::GameEventFlagStorage() : mFlagBitArray(nullptr) {
-    mFlagBitArray = new MR::BitArray(GameEventFlagTable::getTableSize());
+    mFlagBitArray = new (JKRHeapToken::Dummy) MR::BitArray(GameEventFlagTable::getTableSize());
 }
 
 void GameEventFlagStorage::set(const GameEventFlag* pFlag, bool isOn) {

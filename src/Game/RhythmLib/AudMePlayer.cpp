@@ -30,7 +30,7 @@ void AudMe::requestStart(void* pData, u32 a1) {
 }
 
 bool AudMe::start(void* pData, u32 a1) {
-    mTrack = new AudMeTrack();
+    mTrack = new (JKRHeapToken::Dummy) AudMeTrack();
     if (mTrack == nullptr) {
         return false;
     }
@@ -263,7 +263,7 @@ bool AudMeMgr::startMe(u32 meId, AudMeHandle* pHandle, const TVec3f* pPos) {
         }
     }
 
-    AudMe* me = new AudMe();
+    AudMe* me = new (JKRHeapToken::Dummy) AudMe();
     if (me == nullptr) {
         return false;
     }
@@ -377,6 +377,19 @@ void AudMeMgr::setOuterPlayingParam(s32 meId, AudMe* pMe) {
 }
 
 void AudMePlayingParamsHolder::setResource(void* pRes) {
+#ifdef TARGET_PC
+    // File data is big-endian and stores 32-bit name offsets; build a separate pointer table.
+    const BE(s32)* cursor = (const BE(s32)*)pRes;
+    s32 numEntries = cursor[0];
+    mNumEntries = numEntries;
+    mParams = (AudMePlayingParams*)((u8*)pRes + (s32)cursor[1]);
+    const BE(u32)* nameOffsets = (const BE(u32)*)((u8*)pRes + (s32)cursor[2]);
+    const char** names = new (JKRHeapToken::Dummy) const char*[numEntries];
+    for (s32 i = 0; i < numEntries; i++) {
+        names[i] = (const char*)pRes + (u32)nameOffsets[i];
+    }
+    mNames = names;
+#else
     s32* cursor = (s32*)pRes;
 
     s32 numEntries = *cursor++;
@@ -393,4 +406,5 @@ void AudMePlayingParamsHolder::setResource(void* pRes) {
     }
 
     mNames = (const char**)offsets;
+#endif
 }

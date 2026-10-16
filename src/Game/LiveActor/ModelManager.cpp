@@ -342,19 +342,19 @@ void ModelManager::initMaterialAnm() {
     }
 
     if (pResourceHolder->mBtkResTable->mCount != 0) {
-        mBtkPlayer = new BtkPlayer(pResourceHolder, pModelData);
+        mBtkPlayer = new (JKRHeapToken::Dummy) BtkPlayer(pResourceHolder, pModelData);
     }
 
     if (pResourceHolder->mBrkResTable->mCount != 0) {
-        mBrkPlayer = new BrkPlayer(pResourceHolder, pModelData);
+        mBrkPlayer = new (JKRHeapToken::Dummy) BrkPlayer(pResourceHolder, pModelData);
     }
 
     if (pResourceHolder->mBtpResTable->mCount != 0) {
-        mBtpPlayer = new BtpPlayer(pResourceHolder, pModelData);
+        mBtpPlayer = new (JKRHeapToken::Dummy) BtpPlayer(pResourceHolder, pModelData);
     }
 
     if (pResourceHolder->mBpkResTable->mCount != 0) {
-        mBpkPlayer = new BpkPlayer(pResourceHolder, pModelData);
+        mBpkPlayer = new (JKRHeapToken::Dummy) BpkPlayer(pResourceHolder, pModelData);
     }
 }
 
@@ -362,7 +362,7 @@ void ModelManager::initVisibilityAnm() {
     ResourceHolder* pResourceHolder = getResourceHolder();
 
     if (pResourceHolder->mBvaResTable->mCount != 0) {
-        mBvaPlayer = new BvaPlayer(pResourceHolder->getBvaResTable(), getJ3DModel());
+        mBvaPlayer = new (JKRHeapToken::Dummy) BvaPlayer(pResourceHolder->getBvaResTable(), getJ3DModel());
     }
 }
 
@@ -427,7 +427,7 @@ void ModelManager::init(const char* pModelName, const char* pAnimationName, bool
     }
 
     if (flags & J3DMdlFlag_DifferedDLBuffer) {
-        mDisplayListMaker = new DisplayListMaker(getJ3DModel(), getResourceHolder());
+        mDisplayListMaker = new (JKRHeapToken::Dummy) DisplayListMaker(getJ3DModel(), getResourceHolder());
         if (!deferDisplayList) {
             mDisplayListMaker->newDifferedDisplayList();
         }

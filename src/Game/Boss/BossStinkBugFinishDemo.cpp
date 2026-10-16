@@ -26,7 +26,7 @@ namespace NrvBossStinkBugFinishDemo {
 BossStinkBugFinishDemo::BossStinkBugFinishDemo(BossStinkBug* pHost, const JMapInfoIter& rIter)
     : BossStinkBugActionBase("終了デモ", pHost), mDemoPositionController(nullptr) {
     initNerve(GET_NERVE(BossStinkBugFinishDemo, BossStinkBugFinishDemoNrvDemo));
-    mDemoPositionController = new DemoPositionController("BossStinkBugDemo", rIter);
+    mDemoPositionController = new (JKRHeapToken::Dummy) DemoPositionController("BossStinkBugDemo", rIter);
     mDemoPositionController->initAnimCamera("FinishDemo");
 }
 

@@ -71,7 +71,7 @@ NANDRequestInfo* NANDRequestInfo::setCheck(u32 fsBlock, u32 inode, u32* pAnswer)
 }
 
 NANDManager::NANDManager() : mManagerThread(nullptr) {
-    mManagerThread = new NANDManagerThread(13, 256, MR::getStationedHeapNapa());
+    mManagerThread = new (JKRHeapToken::Dummy) NANDManagerThread(13, 256, MR::getStationedHeapNapa());
 
     OSResumeThread(mManagerThread->mThread);
     OSInitMutex(&mMutex);

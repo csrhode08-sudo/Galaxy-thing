@@ -79,7 +79,7 @@ namespace DemoExecutorFunction {
     }
 
     bool tryCreateDemoTalkAnimCtrlForActor(DemoExecutor* pExecutor, LiveActor* pActor, const char* a3, const char* a4) {
-        DemoTalkAnimCtrl* pTalkAnimCtrl = new DemoTalkAnimCtrl(pActor, pExecutor->mName, a4);
+        DemoTalkAnimCtrl* pTalkAnimCtrl = new (JKRHeapToken::Dummy) DemoTalkAnimCtrl(pActor, pExecutor->mName, a4);
 
         pTalkAnimCtrl->initForActor(a3);
         pExecutor->addTalkAnimCtrl(pTalkAnimCtrl);
@@ -89,7 +89,7 @@ namespace DemoExecutorFunction {
 
     bool tryCreateDemoTalkAnimCtrlForScene(DemoExecutor* pExecutor, LiveActor* pActor, const JMapInfoIter& rIter, const char* a4, const char* a5,
                                            s32 a6, s32 a7) {
-        DemoTalkAnimCtrl* pTalkAnimCtrl = new DemoTalkAnimCtrl(pActor, pExecutor->mName, a5);
+        DemoTalkAnimCtrl* pTalkAnimCtrl = new (JKRHeapToken::Dummy) DemoTalkAnimCtrl(pActor, pExecutor->mName, a5);
 
         pTalkAnimCtrl->initForScene(a4, a4, rIter);
         pTalkAnimCtrl->_40 = a6;

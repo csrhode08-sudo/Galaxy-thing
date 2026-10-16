@@ -19,7 +19,7 @@ void MapPartsFunction::movement() {
 }
 
 void MapPartsFunction::initNerve(const Nerve* pNerve) {
-    mSpine = new Spine(this, pNerve);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, pNerve);
 }
 
 void MapPartsFunction::setNerve(const Nerve* pNerve) {

@@ -10,7 +10,7 @@
 #define KPAD_STATUS_ARRAY_SIZE 120
 
 WPadReadDataInfo::WPadReadDataInfo() : mStatusArray(), mValidStatusCount() {
-    mStatusArray = new KPADStatus[KPAD_STATUS_ARRAY_SIZE];
+    mStatusArray = new (JKRHeapToken::Dummy) KPADStatus[KPAD_STATUS_ARRAY_SIZE];
 
     MR::zeroMemory(mStatusArray, sizeof(KPADStatus) * KPAD_STATUS_ARRAY_SIZE);
 }
@@ -31,10 +31,10 @@ WPadHolder::WPadHolder() : mReadDataInfoArray(), mMode(WPAD_SENSOR_BAR_POS_TOP) 
     WPADRegisterAllocator(MR::allocFromWPadHeap, MR::freeFromWPadHeap);
     KPADInit();
 
-    mReadDataInfoArray = new WPadReadDataInfo[WPAD_MAX_CONTROLLERS];
+    mReadDataInfoArray = new (JKRHeapToken::Dummy) WPadReadDataInfo[WPAD_MAX_CONTROLLERS];
 
     for (u32 i = 0; i < ARRAY_SIZE(mPad); i++) {
-        mPad[i] = new WPad(i);
+        mPad[i] = new (JKRHeapToken::Dummy) WPad(i);
         mPad[i]->setReadInfo(&mReadDataInfoArray[i]);
     }
 

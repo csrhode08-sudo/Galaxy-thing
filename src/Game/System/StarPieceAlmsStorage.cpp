@@ -8,7 +8,7 @@ namespace {
 };  // namespace
 
 StarPieceAlmsStorage::StarPieceAlmsStorage() : mValueArray() {
-    mValueArray = new u16[16];
+    mValueArray = new (JKRHeapToken::Dummy) u16[16];
 
     for (s32 idx = 0; idx < 16; idx++) {
         mValueArray[idx] = 0;

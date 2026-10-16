@@ -17,7 +17,7 @@ Binder::Binder(MtxPtr pMtx, const TVec3f* pPosition, const TVec3f* pGravity, f32
     if (_24 == 0) {
         mPlane = nullptr;
     } else {
-        mPlane = new HitInfo[_24];
+        mPlane = new (JKRHeapToken::Dummy) HitInfo[_24];
     }
 
     clear();
@@ -64,7 +64,7 @@ u32 Binder::copyPlaneArrayAndSortingSensor(HitInfo** pPlanes, u32 capacity) {
             pPlanes[count++] = &mRoofInfo;
         }
 
-        std::sort(pPlanes, pPlanes + count, compSensor);
+        msl::sort(pPlanes, pPlanes + count, compSensor);
         return count;
     }
 
@@ -72,7 +72,7 @@ u32 Binder::copyPlaneArrayAndSortingSensor(HitInfo** pPlanes, u32 capacity) {
         pPlanes[i] = &mPlane[i];
     }
 
-    std::sort(pPlanes, pPlanes + mPlaneNum, compSensor);
+    msl::sort(pPlanes, pPlanes + mPlaneNum, compSensor);
     return mPlaneNum;
 }
 

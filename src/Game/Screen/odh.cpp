@@ -569,7 +569,7 @@ u32 CArGBAOdh::huffmanCoder(u16* pCoefficients, SArCDJ_HuffmanRequest* pRequest)
             }
         }
 
-        if ((reinterpret_cast< u32 >(pCoefficients) & 2) == 0) {
+        if ((reinterpret_cast< uintptr_t >(pCoefficients) & 2) == 0) {
             break;
         }
 

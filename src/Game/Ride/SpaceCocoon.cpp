@@ -151,7 +151,7 @@ void SpaceCocoon::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(SpaceCocoon, SpaceCocoonNrvStop));
 
     mNumPoints = mHeight / ::sPointInterval;
-    mPlantPoints = new PlantPoint*[mNumPoints];
+    mPlantPoints = new (JKRHeapToken::Dummy) PlantPoint*[mNumPoints];
 
     f32 delta = mHeight / (mNumPoints + 1);
 
@@ -167,14 +167,14 @@ void SpaceCocoon::init(const JMapInfoIter& rIter) {
             thickness = MR::getEaseOutValue(static_cast< f32 >((mNumPoints - 1) - idx) / ::sWidthBottomPointNum, ::sWidthTop, ::sWidthBottom, 1.0f);
         }
 
-        mPlantPoints[idx] = new PlantPoint(spawnPos, mUp, thickness);
+        mPlantPoints[idx] = new (JKRHeapToken::Dummy) PlantPoint(spawnPos, mUp, thickness);
     }
 
     PlantPoint* topPoint = mPlantPoints[0];
     mTopMtx.setXYZDir(topPoint->mSide, topPoint->mUp, topPoint->mFront);
     mTopMtx.setTrans(topPoint->mPosition);
 
-    mCocoonModel = new PartsModel(this, "先端", "SpaceCocoon", mTopMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
+    mCocoonModel = new (JKRHeapToken::Dummy) PartsModel(this, "先端", "SpaceCocoon", mTopMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
     mCocoonModel->initWithoutIter();
 
     updateDrawPoints();
@@ -185,12 +185,12 @@ void SpaceCocoon::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, 100.0f);
     MR::setClippingFar200m(this);
 
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     MR::initMultiActorCamera(this, rIter, &mCameraInfo, "ウェイト");  // "wait"
     MR::initMultiActorCamera(this, rIter, &mCameraInfo, "狙い中");    // "aim"
     MR::initMultiActorCamera(this, rIter, &mCameraInfo, "攻撃中");    // "attack"
 
-    mTexture = new JUTTexture(MR::loadTexFromArc("SpaceCocoon.arc", "SpaceCocoon.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("SpaceCocoon.arc", "SpaceCocoon.bti"), 0);
     makeActorAppeared();
 }
 
@@ -242,7 +242,7 @@ void SpaceCocoon::exeFreeInvalid() {
 void SpaceCocoon::exeBindLand() {
     if (MR::isFirstStep(this)) {
         if (!isKinopioAttached()) {
-            MR::startBckPlayer("CocoonLand", 1L);
+            MR::startBckPlayer("CocoonLand", 1);
             MR::startMultiActorCameraTargetOther(this, mCameraInfo, "ウェイト", CameraTargetArg(mCameraTargetMtx));
             MR::startSound(mRider, "SE_PV_CATCH");
         } else {

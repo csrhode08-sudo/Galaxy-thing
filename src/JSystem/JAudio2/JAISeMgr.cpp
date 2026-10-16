@@ -250,7 +250,7 @@ JAISe* JAISeMgr::newSe_(int category, u32 priority) {
         return nullptr;
     }
 
-    JAISe* se = new JAISe(this, mStrategyMgr, priority);
+    JAISe* se = new (JKRHeapToken::Dummy) JAISe(this, mStrategyMgr, priority);
     if (se == nullptr) {
         return nullptr;
     }

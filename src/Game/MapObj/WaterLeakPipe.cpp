@@ -76,7 +76,7 @@ void WaterLeakPipe::init(const JMapInfoIter& rIter) {
     MR::calcUpVec(&upVec, this);
     _9C.scaleAdd(0.5f * mPipeHeight, upVec, mPosition);
     MR::setClippingTypeSphere(this, (0.5f * mPipeHeight), &_9C);
-    mIceStep = new IceStepNoSlip(mTopMtx);
+    mIceStep = new (JKRHeapToken::Dummy) IceStepNoSlip(mTopMtx);
     mIceStep->initWithoutIter();
     mIceStep->makeActorDead();
     initNerve(GET_NERVE(WaterLeakPipe, WaterLeakPipeNrvWait));

@@ -47,7 +47,7 @@ void TrickRabbitFreeRun::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     MR::makeQuatAndFrontFromRotate(&mRotateQuat, &mFrontVec, this);
 
-    mSpotMarkLight = new SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
+    mSpotMarkLight = new (JKRHeapToken::Dummy) SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
     mSpotMarkLight->initWithoutIter();
 
     MR::initShadowFromCSV(this, "Shadow");
@@ -82,16 +82,16 @@ void TrickRabbitFreeRun::initSensor() {
 }
 
 void TrickRabbitFreeRun::initState() {
-    mStateCaught = new RabbitStateCaught(this, mMsgCtrl);
+    mStateCaught = new (JKRHeapToken::Dummy) RabbitStateCaught(this, mMsgCtrl);
     mStateCaught->init();
 
-    mStateWaitStart = new RabbitStateWaitStart(this, &mFrontVec, mMsgCtrl);
+    mStateWaitStart = new (JKRHeapToken::Dummy) RabbitStateWaitStart(this, &mFrontVec, mMsgCtrl);
     mStateWaitStart->init();
 
-    mStateRunaway = new WalkerStateRunaway(this, &mFrontVec, nullptr);
+    mStateRunaway = new (JKRHeapToken::Dummy) WalkerStateRunaway(this, &mFrontVec, nullptr);
     mStateRunaway->init();
 
-    mStateBlowDamage = new WalkerStateBlowDamage(this, &mFrontVec, nullptr);
+    mStateBlowDamage = new (JKRHeapToken::Dummy) WalkerStateBlowDamage(this, &mFrontVec, nullptr);
     mStateBlowDamage->init();
 }
 

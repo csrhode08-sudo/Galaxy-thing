@@ -22,7 +22,7 @@ GalaxyMapGalaxyDetail::GalaxyMapGalaxyDetail() : LayoutActor("GalaxyDetail", tru
 void GalaxyMapGalaxyDetail::init(const JMapInfoIter& rIter) {
     u32 layerNum = GalaxyInfoLayoutSetter::getAnimLayerNum();
     initLayoutManager("GalaxyDetail", layerNum);
-    mInfoLayoutSetter = new GalaxyInfoLayoutSetter(this);
+    mInfoLayoutSetter = new (JKRHeapToken::Dummy) GalaxyInfoLayoutSetter(this);
     mAButtonIcon = MR::createAndSetupIconAButton(this, false, false);
     initNerve(GET_NERVE_ANON(GalaxyMapGalaxyDetailAppear));
     kill();

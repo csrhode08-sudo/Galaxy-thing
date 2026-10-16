@@ -162,7 +162,7 @@ s32 JKRExpHeap::adjustSize() {
 }
 
 u32 JKRHeap::getMaxAllocatableSize(int alignment) {
-    u32 address = reinterpret_cast< u32 >(getMaxFreeBlock());
+    u32 address = (u32)reinterpret_cast< uintptr_t >(getMaxFreeBlock());
     return ~(alignment - 1) & (getFreeSize() - ((alignment - 1) & (alignment - (address & 0xF))));
 }
 
@@ -1051,22 +1051,22 @@ void JPADrawRotYBillboard(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle)
 
 void JKRAramPiece::startDMA(JKRAMCommand* pCommand) {
     if (pCommand->mSrc < 0x80000000) {
-        doneDMA(reinterpret_cast< u32 >(pCommand));
+        doneDMA(reinterpret_cast< uintptr_t >(pCommand));
         return;
     }
 
     if (pCommand->mDst >= 0x04000000) {
-        doneDMA(reinterpret_cast< u32 >(pCommand));
+        doneDMA(reinterpret_cast< uintptr_t >(pCommand));
         return;
     }
 
     if (pCommand->mDataLength > 0x00E00000) {
-        doneDMA(reinterpret_cast< u32 >(pCommand));
+        doneDMA(reinterpret_cast< uintptr_t >(pCommand));
         return;
     }
 
     ARStartDMA(pCommand->mTransferDirection, pCommand->mSrc, pCommand->mDst, pCommand->mDataLength);
-    doneDMA(reinterpret_cast< u32 >(pCommand));
+    doneDMA(reinterpret_cast< uintptr_t >(pCommand));
 }
 
 void JAU_JASInitializer::initJASystem(JKRSolidHeap* pHeap) {
@@ -1153,5 +1153,5 @@ JKRAram::JKRAram(u32 audioSize, u32 graphSize, s32 priority) : JKRThread(::sAram
         mAramMemoryPtr = 0;
     }
 
-    mAramHeap = new (JKRGetSystemHeap(), 0) JKRAramHeap(mGraphMemoryPtr, mGraphMemorySize);
+    mAramHeap = new (JKRHeapToken::Dummy, JKRGetSystemHeap(), 0) JKRAramHeap(mGraphMemoryPtr, mGraphMemorySize);
 }

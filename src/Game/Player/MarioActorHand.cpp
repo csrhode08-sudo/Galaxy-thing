@@ -38,20 +38,20 @@ void MarioActor::initHand() {
     _A44 = nullptr;
 
     if (_9C0 != nullptr) {
-        _A40 = new ModelHolder("IceMarioHandL", true);
+        _A40 = new (JKRHeapToken::Dummy) ModelHolder("IceMarioHandL", true);
         MR::initDLMakerFog(_A40, true);
         MR::newDifferedDLBuffer(_A40);
 
-        _A44 = new ModelHolder("IceMarioHandR", true);
+        _A44 = new (JKRHeapToken::Dummy) ModelHolder("IceMarioHandR", true);
         MR::initDLMakerFog(_A44, true);
         MR::newDifferedDLBuffer(_A44);
     }
 
-    _A48 = new ModelHolder("MarioHandL", true);
+    _A48 = new (JKRHeapToken::Dummy) ModelHolder("MarioHandL", true);
     MR::initDLMakerFog(_A48, true);
     MR::newDifferedDLBuffer(_A48);
 
-    _A4C = new ModelHolder("MarioHandR", true);
+    _A4C = new (JKRHeapToken::Dummy) ModelHolder("MarioHandR", true);
     MR::initDLMakerFog(_A4C, true);
     MR::newDifferedDLBuffer(_A4C);
 
@@ -59,11 +59,11 @@ void MarioActor::initHand() {
     _A54 = nullptr;
 
     if (_9C8 != nullptr) {
-        _A50 = new ModelHolder("InvincibleMarioHandL", true);
+        _A50 = new (JKRHeapToken::Dummy) ModelHolder("InvincibleMarioHandL", true);
         MR::initDLMakerFog(_A50, true);
         MR::newDifferedDLBuffer(_A50);
 
-        _A54 = new ModelHolder("InvincibleMarioHandR", true);
+        _A54 = new (JKRHeapToken::Dummy) ModelHolder("InvincibleMarioHandR", true);
         MR::initDLMakerFog(_A54, true);
         MR::newDifferedDLBuffer(_A54);
     }

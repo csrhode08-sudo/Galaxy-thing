@@ -102,15 +102,15 @@ void StarPointerLayout::initWithPort(s32 channel) {
 
     initNerve(GET_NERVE(StarPointerLayout, HostTypeNrvHideImmediately));
 
-    mBlur = new StarPointerBlur(new JUTTexture(MR::loadTexFromArc("StarPointerBlur.arc", "Blur.bti"), 0));
+    mBlur = new (JKRHeapToken::Dummy) StarPointerBlur(new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("StarPointerBlur.arc", "Blur.bti"), 0));
 
-    mCommandStream = new StarPointerCommandStream(&mPosition);
+    mCommandStream = new (JKRHeapToken::Dummy) StarPointerCommandStream(&mPosition);
 
     mBlur->setPortAndColor(mPadChannel, &::sColorA[mPadChannel], &::sColorB[mPadChannel]);
     mCommandStream->setPortAndColor(mPadChannel, &::sColorA[mPadChannel]);
     mCommandStream->initWithoutIter();
 
-    mNumber = new StarPointerNumber(this, mPadChannel, "スターポインタナンバー");
+    mNumber = new (JKRHeapToken::Dummy) StarPointerNumber(this, mPadChannel, "スターポインタナンバー");
     mNumber->initWithoutIter();
     mNumber->appear();
 

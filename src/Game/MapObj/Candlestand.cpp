@@ -88,7 +88,7 @@ void Candlestand::init(const JMapInfoIter& rIter) {
         }
     }
 
-    mSpinPtclCb = new SpinPullParticleCallBack();
+    mSpinPtclCb = new (JKRHeapToken::Dummy) SpinPullParticleCallBack();
 }
 
 void Candlestand::makeActorAppeared() {

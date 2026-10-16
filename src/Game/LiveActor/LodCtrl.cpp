@@ -356,7 +356,7 @@ ModelObj* LodCtrl::initLodModel(int drawBufferType, int movementType, int calcAn
 
     const char* objName = isLowModel ? MR::createLowModelObjName(mActor) : MR::createMiddleModelObjName(mActor);
     snprintf(buf, sizeof(buf), "%s%s", res, type);
-    ModelObj* obj = new ModelObj(objName, buf, mActor->getBaseMtx(), drawBufferType, movementType, calcAnimType, false);
+    ModelObj* obj = new (JKRHeapToken::Dummy) ModelObj(objName, buf, mActor->getBaseMtx(), drawBufferType, movementType, calcAnimType, false);
     obj->initWithoutIter();
     obj->makeActorDead();
     MR::setClippingTypeSphereContainsModelBoundingBox(obj, 100.0f);

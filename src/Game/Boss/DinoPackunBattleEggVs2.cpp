@@ -37,9 +37,9 @@ void DinoPackunBattleEggVs2::setTrackFire(DinoPackunTrackFireHolder* pHolder) {
 
 void DinoPackunBattleEggVs2::init() {
     initNerve(GET_NERVE(DinoPackunBattleEgg, DinoPackunBattleEggVs2NrvTurn));
-    mStateDamage = new DinoPackunStateDamage(getHost());
+    mStateDamage = new (JKRHeapToken::Dummy) DinoPackunStateDamage(getHost());
     mStateDamage->setDamageEgg();
-    mStateFire = new DinoPackunStateFire(getHost());
+    mStateFire = new (JKRHeapToken::Dummy) DinoPackunStateFire(getHost());
     mStateFire->init();
 }
 

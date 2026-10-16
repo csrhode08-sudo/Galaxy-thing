@@ -7,7 +7,7 @@
 DemoPositionController::DemoPositionController(const char* pName, const JMapInfoIter& rIter) : LiveActor("デモアクター位置"), pCameraInfo() {
     MR::initDefaultPos(this, rIter);
     initModelManagerWithAnm(pName, nullptr, false);
-    pCameraInfo = new ActorCameraInfo(rIter);
+    pCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     MR::invalidateClipping(this);
     makeActorDead();
 }

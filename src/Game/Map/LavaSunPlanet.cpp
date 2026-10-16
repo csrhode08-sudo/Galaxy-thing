@@ -54,7 +54,7 @@ void LavaSunPlanet::init(const JMapInfoIter& rIter) {
     }
 
     if (MR::isEqualString(mObjName, "LavaRotatePlanet")) {
-        mRotator = new MapPartsRotator(this);
+        mRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
         mRotator->init(rIter);
         mRotator->start();
         mLodCtrl->syncJointAnimation();

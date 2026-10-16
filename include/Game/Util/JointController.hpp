@@ -79,7 +79,7 @@ namespace MR {
     JointController* createJointController(T* pHost, const LiveActor* pActor, const char* pJointName,
                                            bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                            bool (T::*calcChild)(TPos3f*, const JointControllerInfo&)) {
-        JointControlDelegator< T >* pController = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        JointControlDelegator< T >* pController = new (JKRHeapToken::Dummy) JointControlDelegator< T >(pHost, calcFunc, calcChild);
         setJointControllerParam(pController, pActor, pJointName);
         return pController;
     }
@@ -88,7 +88,7 @@ namespace MR {
     JointController* createJointController(T* pHost, const LiveActor* pActor, u16 jointIndex,
                                            bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                            bool (T::*calcChild)(TPos3f*, const JointControllerInfo&)) {
-        JointControlDelegator< T >* controller = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        JointControlDelegator< T >* controller = new (JKRHeapToken::Dummy) JointControlDelegator< T >(pHost, calcFunc, calcChild);
         setJointControllerParam(controller, pActor, jointIndex);
         return controller;
     }
@@ -96,7 +96,7 @@ namespace MR {
     template < class T >
     JointControlDelegator< T >* createJointDelegator(T* pHost, const LiveActor* pActor, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                                      bool (T::*calcChild)(TPos3f*, const JointControllerInfo&), const char* pName) {
-        JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        JointControlDelegator< T >* delegator = new (JKRHeapToken::Dummy) JointControlDelegator< T >(pHost, calcFunc, calcChild);
         setJointControllerParam(delegator, pActor, pName);
         return delegator;
     }
@@ -104,7 +104,7 @@ namespace MR {
     template < class T >
     JointControlDelegator< T >* createJointDelegatorWithNullChildFunc(T* pHost, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                                                       const char* pName) {
-        JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, 0);
+        JointControlDelegator< T >* delegator = new (JKRHeapToken::Dummy) JointControlDelegator< T >(pHost, calcFunc, 0);
         setJointControllerParam(delegator, pHost, pName);
         return delegator;
     }
@@ -112,14 +112,14 @@ namespace MR {
     template < class T >
     JointControlDelegator< T >* createJointDelegatorWithNullMtxFunc(T* pHost, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                                                     const char* pName) {
-        JointControlDelegator< T >* delegator = new JointControlDelegator< T >(calcFunc, pHost, 0);
+        JointControlDelegator< T >* delegator = new (JKRHeapToken::Dummy) JointControlDelegator< T >(calcFunc, pHost, 0);
         setJointControllerParam(delegator, pHost, pName);
         return delegator;
     }
 
     template < class T >
     JointController* createJointController(T* pHost, const char* pName, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&)) {
-        JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, 0);
+        JointControlDelegator< T >* delegator = new (JKRHeapToken::Dummy) JointControlDelegator< T >(pHost, calcFunc, 0);
         setJointControllerParam(delegator, pHost, pName);
         return delegator;
     }

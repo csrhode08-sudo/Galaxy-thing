@@ -45,7 +45,7 @@ void ModelObj::calcAndSetBaseMtx() {
 
 void ModelObjNpc::init(const JMapInfoIter& rIter) {
     mLodCtrl = MR::createLodCtrlNPC(this, rIter);
-    mJointCtrl = new ActorJointCtrl(this);
+    mJointCtrl = new (JKRHeapToken::Dummy) ActorJointCtrl(this);
 
     makeActorAppeared();
 }

@@ -5,7 +5,7 @@ class SingletonHolder {
 public:
     static void init() {
         if (sInstance == nullptr) {
-            sInstance = new T();
+            sInstance = new (JKRHeapToken::Dummy) T();
         }
     }
 
@@ -25,7 +25,7 @@ class AudSingletonHolder {
 public:
     static void init() {
         if (sInstance == nullptr) {
-            sInstance = new T();
+            sInstance = new (JKRHeapToken::Dummy) T();
         }
     }
 

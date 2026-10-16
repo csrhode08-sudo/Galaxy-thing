@@ -68,7 +68,7 @@ MainLoopFramework* MainLoopFramework::createManager(const GXRenderModeObj* pRend
         JUTVideo::getManager()->setRenderMode(pRenderModeObj);
     }
     if (!sManager) {
-        sManager = new MainLoopFramework(xfb1, xfb2, xfb3, useAlpha);
+        sManager = new (JKRHeapToken::Dummy) MainLoopFramework(xfb1, xfb2, xfb3, useAlpha);
     }
     return sManager;
 }

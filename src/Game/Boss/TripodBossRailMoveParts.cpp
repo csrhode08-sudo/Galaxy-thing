@@ -9,7 +9,7 @@ void TripodBossRailMoveParts::init(const JMapInfoIter& rIter) {
     TripodBossFixParts::init(rIter);
     initRailRider(rIter);
 
-    mRailMover = new MapPartsRailMover(this);
+    mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
     mRailMover->init(rIter);
 }
 

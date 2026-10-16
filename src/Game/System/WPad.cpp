@@ -13,18 +13,18 @@
 WPad::WPad(s32 channel)
     : mChannel(channel), mReadInfo(), mButton(), mPointer(), mCorePadAccel(), mCorePadSwing(), _18(), _1C(), mStick(), mSubPadAccel(), mSubPadSwing(),
       mLeaveWatcher(), mInfoChecker(), _34(true), mIsConnected(), mIsSubPadConnected() {
-    mButton = new WPadButton(this);
-    mPointer = new WPadPointer(this);
-    mCorePadAccel = new WPadAcceleration(this, WPAD_DEV_CORE);
-    mCorePadSwing = new WPadHVSwing(this, WPAD_DEV_CORE);
-    _18 = new WPadRumble(this);
-    _1C = new WPadRumble(this);
+    mButton = new (JKRHeapToken::Dummy) WPadButton(this);
+    mPointer = new (JKRHeapToken::Dummy) WPadPointer(this);
+    mCorePadAccel = new (JKRHeapToken::Dummy) WPadAcceleration(this, WPAD_DEV_CORE);
+    mCorePadSwing = new (JKRHeapToken::Dummy) WPadHVSwing(this, WPAD_DEV_CORE);
+    _18 = new (JKRHeapToken::Dummy) WPadRumble(this);
+    _1C = new (JKRHeapToken::Dummy) WPadRumble(this);
     _18->registInstance();
-    mSubPadAccel = new WPadAcceleration(this, WPAD_DEV_FREESTYLE);
-    mSubPadSwing = new WPadHVSwing(this, WPAD_DEV_FREESTYLE);
-    mStick = new WPadStick(this);
-    mLeaveWatcher = new WPadLeaveWatcher(this);
-    mInfoChecker = new WPadInfoChecker(this);
+    mSubPadAccel = new (JKRHeapToken::Dummy) WPadAcceleration(this, WPAD_DEV_FREESTYLE);
+    mSubPadSwing = new (JKRHeapToken::Dummy) WPadHVSwing(this, WPAD_DEV_FREESTYLE);
+    mStick = new (JKRHeapToken::Dummy) WPadStick(this);
+    mLeaveWatcher = new (JKRHeapToken::Dummy) WPadLeaveWatcher(this);
+    mInfoChecker = new (JKRHeapToken::Dummy) WPadInfoChecker(this);
     mSubPadSwing->mDistanceSwingThreshold = 2.0f;
 }
 

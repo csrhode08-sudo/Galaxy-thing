@@ -11,7 +11,7 @@ DemoPadRumbler::DemoPadRumbler(const char* pName) : mNumPadRumbleEntries(), mPad
     JMapInfo* map = MR::createCsvParser(buf, "PadRumbleData.bcsv");
 
     mNumPadRumbleEntries = MR::getCsvDataElementNum(map);
-    PadRumbleInfo* infos = new PadRumbleInfo[mNumPadRumbleEntries];
+    PadRumbleInfo* infos = new (JKRHeapToken::Dummy) PadRumbleInfo[mNumPadRumbleEntries];
     mPadRumbleEntries = infos;
 
     for (int i = 0; i < mNumPadRumbleEntries; i++) {

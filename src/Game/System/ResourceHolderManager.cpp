@@ -86,12 +86,12 @@ void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* pHeap) {
 }
 
 void ResourceHolderManager::startCreateResourceHolderOnMainThread(const char* pParam1, CreateResourceHolderArgs* pArgs) {
-    MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(SingletonHolder< ResourceHolderManager >::get(), createResourceHolder, pParam1, pArgs),
+    MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(SingletonHolder< ResourceHolderManager >::get(), &ResourceHolderManager::createResourceHolder, pParam1, pArgs),
                                               pParam1);
 }
 
 void ResourceHolderManager::startCreateLayoutHolderOnMainThread(const char* pParam1, CreateResourceHolderArgs* pArgs) {
-    MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(SingletonHolder< ResourceHolderManager >::get(), createLayoutHolder, pParam1, pArgs),
+    MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(SingletonHolder< ResourceHolderManager >::get(), &ResourceHolderManager::createLayoutHolder, pParam1, pArgs),
                                               pParam1);
 }
 
@@ -135,7 +135,7 @@ void ResourceHolderManager::createResourceHolder(const char* pParam1, CreateReso
     MR::getMountedArchiveAndHeap(pParam1, &pArchive, &pArgs->mHeap);
     MR::CurrentHeapRestorer heapRestorer(pArgs->mHeap);
 
-    pArgs->mResourceHolder = new ResourceHolder(*pArchive);
+    pArgs->mResourceHolder = new (JKRHeapToken::Dummy) ResourceHolder(*pArchive);
 }
 
 void ResourceHolderManager::createLayoutHolder(const char* pParam1, CreateResourceHolderArgs* pArgs) {
@@ -145,7 +145,7 @@ void ResourceHolderManager::createLayoutHolder(const char* pParam1, CreateResour
     MR::getMountedArchiveAndHeap(pParam1, &pArchive, &pArgs->mHeap);
     MR::CurrentHeapRestorer heapRestorer(pArgs->mHeap);
 
-    pArgs->mLayoutHolder = new LayoutHolder(*pArchive);
+    pArgs->mLayoutHolder = new (JKRHeapToken::Dummy) LayoutHolder(*pArchive);
 }
 
 ResourceHolderManagerName2Resource* ResourceHolderManager::add(const char* pParam1, const CreateResourceHolderArgs& rArgs) {

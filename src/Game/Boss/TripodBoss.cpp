@@ -95,7 +95,7 @@ TripodBoss::TripodBoss(const char* pName)
         mLegs[i] = nullptr;
     }
 
-    mStepSequence = new TripodBossStepSequence[32];
+    mStepSequence = new (JKRHeapToken::Dummy) TripodBossStepSequence[32];
     _62C = 32;
 }
 
@@ -118,7 +118,7 @@ void TripodBoss::init(const JMapInfoIter& rIter) {
     char lowName[32];
     sprintf(lowName, "%sLow", objName);
 
-    mLowModel = new ModelObj("三脚ボスLODモデル", lowName, getBaseMtx(), MR::DrawBufferType_TripodBoss, -2, -2, false);
+    mLowModel = new (JKRHeapToken::Dummy) ModelObj("三脚ボスLODモデル", lowName, getBaseMtx(), MR::DrawBufferType_TripodBoss, -2, -2, false);
     mLowModel->initWithoutIter();
     MR::invalidateClipping(mLowModel);
     mLowModel->makeActorAppeared();
@@ -173,8 +173,8 @@ void TripodBoss::initLeg(const JMapInfoIter& rIter) {
     sprintf(legShadowName, "%sLegShadow", objName);
 
     for (u32 i = 0; i < ARRAY_SIZE(mLegs); i++) {
-        mLegs[i] = new TripodBossLeg("三脚ボス足");
-        mStepPoints[i] = new TripodBossStepPoint("ステップ位置");
+        mLegs[i] = new (JKRHeapToken::Dummy) TripodBossLeg("三脚ボス足");
+        mStepPoints[i] = new (JKRHeapToken::Dummy) TripodBossStepPoint("ステップ位置");
         mLegs[i]->setBody(this);
         mLegs[i]->setMovableArea(mMovableArea);
         mLegs[i]->initWithoutIter();
@@ -243,7 +243,7 @@ void TripodBoss::initMovableArea(const TPos3f& rPos) {
     TVec3f trans;
     rPos.getTrans(trans);
 
-    mMovableArea = new TripodBossMovableArea();
+    mMovableArea = new (JKRHeapToken::Dummy) TripodBossMovableArea();
     mMovableArea->setCenter(trans);
     mMovableArea->setRadius(_61C);
 
@@ -1199,10 +1199,10 @@ void TripodBossBone::setAttachBaseMatrix(const TPos3f& rPos) {
 
 namespace MR {
     NameObj* createTripodBoss(const char* pName) {
-        return new TripodBoss(pName);
+        return new (JKRHeapToken::Dummy) TripodBoss(pName);
     }
 
     NameObj* createTripod2Boss(const char* pName) {
-        return new TripodBoss(pName);
+        return new (JKRHeapToken::Dummy) TripodBoss(pName);
     }
 };  // namespace MR

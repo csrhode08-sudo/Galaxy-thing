@@ -41,7 +41,7 @@ void TrickRabbitSnowCollect::init(const JMapInfoIter& rIter) {
     initRabbits(rIter);
     initTalk(rIter);
 
-    mTimerLayout = new BombTimerLayout(true);
+    mTimerLayout = new (JKRHeapToken::Dummy) BombTimerLayout(true);
     mTimerLayout->initWithoutIter();
 
     MR::initMultiActorCamera(this, rIter, &mCameraInfo, "ウサギと会話");
@@ -58,15 +58,15 @@ void TrickRabbitSnowCollect::init(const JMapInfoIter& rIter) {
 
 void TrickRabbitSnowCollect::initRabbits(const JMapInfoIter& rIter) {
     mRabbitNum = MR::getChildObjNum(rIter);
-    mRabbit = new TrickRabbitSnow*[mRabbitNum];
+    mRabbit = new (JKRHeapToken::Dummy) TrickRabbitSnow*[mRabbitNum];
 
-    TrickRabbitCollectListener* listener = new TrickRabbitCollectListener(this);
+    TrickRabbitCollectListener* listener = new (JKRHeapToken::Dummy) TrickRabbitCollectListener(this);
 
     for (s32 i = 0; i < mRabbitNum; i++) {
         const char* childObjName;
         MR::getChildObjName(&childObjName, rIter, i);
 
-        mRabbit[i] = new TrickRabbitSnow("雪ウサギ");
+        mRabbit[i] = new (JKRHeapToken::Dummy) TrickRabbitSnow("雪ウサギ");
         mRabbit[i]->setListener(listener);
         MR::initChildObj(mRabbit[i], rIter, i);
     }

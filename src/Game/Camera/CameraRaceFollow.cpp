@@ -84,7 +84,7 @@ CameraTargetObj* CameraRaceFollow::calc() {
 }
 
 CamTranslatorBase* CameraRaceFollow::createTranslator() {
-    return new CamTranslatorRaceFollow(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorRaceFollow(this);
 }
 
 void CameraRaceFollow::goRound() {

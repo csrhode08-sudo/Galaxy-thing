@@ -24,7 +24,7 @@ namespace NrvDinoPackunBattleVs1Lv1 {
 DinoPackunBattleVs1Lv1::DinoPackunBattleVs1Lv1(DinoPackun* pPackun) : DinoPackunAction("２戦目", pPackun) {
     mStateDamage = nullptr;
     initNerve(GET_NERVE(DinoPackunBattleVs1Lv1, DinoPackunBattleVs1Lv1NrvStart));
-    mStateDamage = new DinoPackunStateDamage(pPackun);
+    mStateDamage = new (JKRHeapToken::Dummy) DinoPackunStateDamage(pPackun);
     mStateDamage->setDamageNormal();
 }
 

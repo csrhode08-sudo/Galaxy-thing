@@ -81,8 +81,8 @@ void Gesso::init(const JMapInfoIter& rIter) {
     pointerOffset.y = 0.0f;
     pointerOffset.z = 0.0f;
     MR::initStarPointerTarget(this, 100.0f, pointerOffset);
-    mScaleController = new AnimScaleController(nullptr);
-    mStateBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     MR::initShadowVolumeSphere(this, 90.0f);
     MR::calcFrontVec(&_A0, this);
     MR::calcUpVec(&_AC, this);

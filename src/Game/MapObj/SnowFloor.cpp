@@ -44,8 +44,8 @@ SnowFloor::SnowFloor(const char* pName) : LiveActor(pName), _E4(), _E8() {
 void SnowFloor::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorEye(this, "eye", 16, 1.4142f * (::sTextureSize * ::sCellSize), TVec3f(0.0f, 0.0f, 0.0f));
-    mSnowDepth = new f32[::sTextureSize * ::sTextureSize];
-    mBaseDepth = new u8[::sTextureSize * ::sTextureSize];
+    mSnowDepth = new (JKRHeapToken::Dummy) f32[::sTextureSize * ::sTextureSize];
+    mBaseDepth = new (JKRHeapToken::Dummy) u8[::sTextureSize * ::sTextureSize];
 
     for (u32 y = 0; y < ::sTextureSize; y++) {
         for (u32 x = 0; x < ::sTextureSize; x++) {
@@ -57,8 +57,8 @@ void SnowFloor::init(const JMapInfoIter& rIter) {
 
     initLocalPoint(rIter);
     drawSetup();
-    mTextures[0] = new JUTTexture(::sTextureSize, ::sTextureSize, GX_TF_I8);
-    mTextures[1] = new JUTTexture(::sTextureSize, ::sTextureSize, GX_TF_I8);
+    mTextures[0] = new (JKRHeapToken::Dummy) JUTTexture(::sTextureSize, ::sTextureSize, GX_TF_I8);
+    mTextures[1] = new (JKRHeapToken::Dummy) JUTTexture(::sTextureSize, ::sTextureSize, GX_TF_I8);
     mTexture = mTextures[0];
     mTextureIndex = 0;
     mImage = mTexture->mImage;
@@ -83,8 +83,8 @@ void SnowFloor::init(const JMapInfoIter& rIter) {
 }
 
 void SnowFloor::drawSetup() {
-    mTexCoords = new f32[::sStripCount + 1];
-    mDirections = new TVec3f[::sStripCount];
+    mTexCoords = new (JKRHeapToken::Dummy) f32[::sStripCount + 1];
+    mDirections = new (JKRHeapToken::Dummy) TVec3f[::sStripCount];
     f32 halfStripAngle = mHalfAngle / ::sStripCount;
     f32 angleRange = 2.0f * mHalfAngle - 2.0f * halfStripAngle;
     u32 i;
@@ -134,7 +134,7 @@ bool SnowFloor::calcLocalPoint(const TVec3f& rPosition, TVec3f* pPoint) {
 void SnowFloor::createReduceMap(u16 size) {
     u32 count = size * size;
     mReduceMapSize = size;
-    mReduceMap = new f32[count];
+    mReduceMap = new (JKRHeapToken::Dummy) f32[count];
 
     for (u32 i = 0; i < count; i++) {
         mReduceMap[i] = -1.0f;
@@ -366,10 +366,10 @@ f32 SnowFloor::doMove(TVec2f from, TVec2f to, f32 radius, f32 amount) {
     s32 top = static_cast< s16 >(to.y - outerRadius) - 1;
     s32 right = static_cast< s16 >(to.x + outerRadius) + 1;
     s32 bottom = static_cast< s16 >(to.y + outerRadius) + 1;
-    minX = MR::clamp(left, 0L, static_cast< s32 >(::sTextureSize));
-    u32 minY = MR::clamp(top, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxX = MR::clamp(right, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxY = MR::clamp(bottom, 0L, static_cast< s32 >(::sTextureSize));
+    minX = MR::clamp(left, 0, static_cast< s32 >(::sTextureSize));
+    u32 minY = MR::clamp(top, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxX = MR::clamp(right, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxY = MR::clamp(bottom, 0, static_cast< s32 >(::sTextureSize));
     f32 outerRadiusSq = outerRadius * outerRadius;
     f32 radiusSq = radius * radius;
 
@@ -426,10 +426,10 @@ void SnowFloor::doErase(TVec2f point, f32 radius, f32 amount) {
     s32 top = static_cast< s16 >(point.y - radius) - 1;
     s32 right = static_cast< s16 >(point.x + radius) + 1;
     s32 bottom = static_cast< s16 >(point.y + radius) + 1;
-    minX = MR::clamp(left, 0L, static_cast< s32 >(::sTextureSize));
-    u32 minY = MR::clamp(top, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxX = MR::clamp(right, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxY = MR::clamp(bottom, 0L, static_cast< s32 >(::sTextureSize));
+    minX = MR::clamp(left, 0, static_cast< s32 >(::sTextureSize));
+    u32 minY = MR::clamp(top, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxX = MR::clamp(right, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxY = MR::clamp(bottom, 0, static_cast< s32 >(::sTextureSize));
     f32 radiusSq = radius * radius;
 
     for (u32 y = minY; y < maxY; y++) {
@@ -539,10 +539,10 @@ f32 SnowFloor::calcCoverSnow(const TVec2f& rPoint, f32 radius) {
     s32 top = static_cast< s16 >(point.y - outerRadius) - 1;
     s32 right = static_cast< s16 >(point.x + outerRadius) + 1;
     s32 bottom = static_cast< s16 >(point.y + outerRadius) + 1;
-    u32 minX = MR::clamp(left, 0L, static_cast< s32 >(::sTextureSize));
-    u32 minY = MR::clamp(top, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxX = MR::clamp(right, 0L, static_cast< s32 >(::sTextureSize));
-    u32 maxY = MR::clamp(bottom, 0L, static_cast< s32 >(::sTextureSize));
+    u32 minX = MR::clamp(left, 0, static_cast< s32 >(::sTextureSize));
+    u32 minY = MR::clamp(top, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxX = MR::clamp(right, 0, static_cast< s32 >(::sTextureSize));
+    u32 maxY = MR::clamp(bottom, 0, static_cast< s32 >(::sTextureSize));
     f32 radiusSq = radius * radius;
 
     for (u32 y = minY; y < maxY; y++) {
@@ -612,10 +612,10 @@ void SnowFloor::draw() const {
         s32 g = ::sColorG + i * ::sColorStepG;
         s32 b = ::sColorB + i * ::sColorStepB;
         s32 a = ::sColorA + i * ::sColorStepA;
-        MR::clamp(static_cast< s32 >(r), 0L, 255L);
-        MR::clamp(static_cast< s32 >(g), 0L, 255L);
-        MR::clamp(static_cast< s32 >(b), 0L, 255L);
-        MR::clamp(static_cast< s32 >(a), 0L, 255L);
+        MR::clamp(static_cast< s32 >(r), 0, 255);
+        MR::clamp(static_cast< s32 >(g), 0, 255);
+        MR::clamp(static_cast< s32 >(b), 0, 255);
+        MR::clamp(static_cast< s32 >(a), 0, 255);
         Color8 color(r, g, b, a);
         GXSetTevColor(GX_TEVREG1, color);
         drawLayer(i);

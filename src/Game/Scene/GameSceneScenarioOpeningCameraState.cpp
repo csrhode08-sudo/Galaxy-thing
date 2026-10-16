@@ -22,7 +22,7 @@ namespace {
 GameSceneScenarioOpeningCameraState::GameSceneScenarioOpeningCameraState() : NerveExecutor("シナリオ開始カメラ再生") {
     mBaseMtx.identity();
     initNerve(GET_NERVE_ANON(GameSceneScenarioOpeningCameraStatePlay));
-    mScenarioTitle = new ScenarioTitle();
+    mScenarioTitle = new (JKRHeapToken::Dummy) ScenarioTitle();
     mScenarioTitle->initWithoutIter();
     mScenarioTitle->kill();
 }

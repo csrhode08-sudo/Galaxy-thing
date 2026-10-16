@@ -5,7 +5,7 @@ namespace MR {
     BitArray::BitArray(int bitNum) : mArray(nullptr), mArraySize(bitNum) {
         int byteNum = (bitNum + 7 & ~7) / 8;
 
-        mArray = new u8[byteNum];
+        mArray = new (JKRHeapToken::Dummy) u8[byteNum];
 
         MR::zeroMemory(mArray, byteNum);
     }

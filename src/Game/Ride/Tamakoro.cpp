@@ -112,8 +112,8 @@ Tamakoro::Tamakoro(const char* pName)
       mRingUp(0, 1, 0), mKickVel(0, 0, 0), mMarioBindRequestPos(0, 0, 0), mMarioUp(0, 1, 0), mMarioPos(0, 0, 0), mMoment(0, 0, 0),
       mMarioFront(0, 0, 1), mDirectionToMario(0, 0, 0), mAccelDir(0, 0, 0), mAirTime(0), mAccelRate(0.0f), mMarioRotateYAngle(0.0f),
       mMarioOffset(0.0f), mMarioOffsetVelocity(0.0f), mBgmCtrl(nullptr), mControlDisabled(false), mHasTutorial(false) {
-    mAccelSensorCtrl = new SphereAccelSensorController();
-    mBgmCtrl = new AudTamakoroBgmCtrl();
+    mAccelSensorCtrl = new (JKRHeapToken::Dummy) SphereAccelSensorController();
+    mBgmCtrl = new (JKRHeapToken::Dummy) AudTamakoroBgmCtrl();
 }
 
 void Tamakoro::init(const JMapInfoIter& rIter) {
@@ -138,7 +138,7 @@ void Tamakoro::init(const JMapInfoIter& rIter) {
 
     if (mHasTutorial) {
         setNerve(GET_NERVE(Tamakoro, TamakoroNrvStandByTutorial));
-        mTutorial = new TamakoroTutorial("タマコロチュートリアル");
+        mTutorial = new (JKRHeapToken::Dummy) TamakoroTutorial("タマコロチュートリアル");
         mTutorial->mHost = this;
         MR::initChildObj(mTutorial, rIter, 0);
     }
@@ -1116,7 +1116,7 @@ void Tamakoro::startRotateLevelSound() {
 
 namespace MR {
     NameObj* createTamakoroWithTutorial(const char* pName) {
-        Tamakoro* tamakoro = new Tamakoro(pName);
+        Tamakoro* tamakoro = new (JKRHeapToken::Dummy) Tamakoro(pName);
         tamakoro->setTutorial();
         return tamakoro;
     }

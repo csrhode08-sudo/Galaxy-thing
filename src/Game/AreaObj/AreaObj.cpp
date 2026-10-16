@@ -14,19 +14,19 @@ AreaObj::AreaObj(int formType, const char* pName)
       mObjArg4(-1), mObjArg5(-1), mObjArg6(-1), mObjArg7(-1), mSwitchCtrl() {
     switch (formType) {
     case AreaForm::Type_Cube1:
-        mForm = new AreaFormCube(0);
+        mForm = new (JKRHeapToken::Dummy) AreaFormCube(0);
         break;
     case AreaForm::Type_Cube2:
-        mForm = new AreaFormCube(1);
+        mForm = new (JKRHeapToken::Dummy) AreaFormCube(1);
         break;
     case AreaForm::Type_Sphere:
-        mForm = new AreaFormSphere();
+        mForm = new (JKRHeapToken::Dummy) AreaFormSphere();
         break;
     case AreaForm::Type_Bowl:
-        mForm = new AreaFormBowl();
+        mForm = new (JKRHeapToken::Dummy) AreaFormBowl();
         break;
     case AreaForm::Type_Cylinder:
-        mForm = new AreaFormCylinder();
+        mForm = new (JKRHeapToken::Dummy) AreaFormCylinder();
         break;
     }
 }
@@ -111,9 +111,9 @@ void AreaObjMgr::entry(AreaObj* pAreaObj) {
 AreaObj* AreaObjMgr::find_in(const TVec3f& rVec) const {
     AreaObj* const* Begin = mArray.begin();
     AreaObj* const* End = mArray.end();
-    AreaObj* const* p = std::rfind_if(
+    AreaObj* const* p = msl::rfind_if(
         End - 1, Begin - 1,
-        std::binder2nd< std::const_mem_fun1_t< bool, AreaObj, const TVec3f& >, const TVec3f& >(std::mem_func(&AreaObj::isInVolume), rVec));
+        msl::binder2nd< msl::const_mem_fun1_t< bool, AreaObj, const TVec3f& >, const TVec3f& >(msl::mem_func(&AreaObj::isInVolume), rVec));
 
     p = (p == Begin - 1 ? End : p);
 

@@ -32,11 +32,11 @@ void Scene::calcAnim() {
 }
 
 void Scene::initNameObjListExecutor() {
-    SceneNameObjListExecutor* exec = new SceneNameObjListExecutor();
+    SceneNameObjListExecutor* exec = new (JKRHeapToken::Dummy) SceneNameObjListExecutor();
     exec->init();
     mListExecutor = exec;
 }
 
 void Scene::initSceneObjHolder() {
-    mSceneObjHolder = new SceneObjHolder();
+    mSceneObjHolder = new (JKRHeapToken::Dummy) SceneObjHolder();
 }

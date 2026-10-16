@@ -68,7 +68,7 @@ namespace NrvTrickRabbit {
 TrickRabbit::TrickRabbit(const char* pName)
     : LiveActor(pName), _8C(0.0f, 0.0f, 0.0f, 1.0f), _9C(0, 0, 1), mRabbitStateWaitStart(), mRabbitStateCaught(), mMultiEventCamera(),
       mTalkMessageCtrl(), mFootPrint(), mRailGraphIter(), mSpotMarkLight(), _CC(), _D0(), _D4(), _D8(), _DC(), _E0(), _E1() {
-    mParabolicPath = new ParabolicPath();
+    mParabolicPath = new (JKRHeapToken::Dummy) ParabolicPath();
 }
 
 void TrickRabbit::init(const JMapInfoIter& rIter) {
@@ -100,7 +100,7 @@ void TrickRabbit::init(const JMapInfoIter& rIter) {
     initState();
     initTimer();
 
-    mSpotMarkLight = new SpotMarkLight(this, 100.0f, 1500.0f, 0);
+    mSpotMarkLight = new (JKRHeapToken::Dummy) SpotMarkLight(this, 100.0f, 1500.0f, 0);
     mSpotMarkLight->initWithoutIter();
 
     MR::declarePowerStar(this);
@@ -153,17 +153,17 @@ void TrickRabbit::initDemoCamera(const JMapInfoIter& rIter) {
         return;
     }
 
-    mMultiEventCamera = new MultiEventCamera();
-    mMultiEventCamera->setUp(mName, new ActorCameraInfo(rIter), 1);
+    mMultiEventCamera = new (JKRHeapToken::Dummy) MultiEventCamera();
+    mMultiEventCamera->setUp(mName, new (JKRHeapToken::Dummy) ActorCameraInfo(rIter), 1);
 }
 
 void TrickRabbit::initState() {
     initNerve(GET_NERVE(TrickRabbit, TrickRabbitNrvWaitStart));
 
-    mRabbitStateCaught = new RabbitStateCaught(this, mTalkMessageCtrl);
+    mRabbitStateCaught = new (JKRHeapToken::Dummy) RabbitStateCaught(this, mTalkMessageCtrl);
     mRabbitStateCaught->init();
 
-    mRabbitStateWaitStart = new RabbitStateWaitStart(this, &_9C, mTalkMessageCtrl);
+    mRabbitStateWaitStart = new (JKRHeapToken::Dummy) RabbitStateWaitStart(this, &_9C, mTalkMessageCtrl);
     mRabbitStateWaitStart->init();
     mRabbitStateWaitStart->setTalkActionName("StartEvent");
     mRabbitStateWaitStart->_1C = true;

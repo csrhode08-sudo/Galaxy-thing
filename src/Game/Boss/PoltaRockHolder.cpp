@@ -9,7 +9,7 @@ PoltaRockHolder::PoltaRockHolder() : DeriveActorGroup< PoltaRock >("ポルタの
     PoltaRock* pRock;
 
     for (int i = 0; i < ::sMaxPoltaRock; i++) {
-        pRock = new PoltaRock("ポルタ岩");
+        pRock = new (JKRHeapToken::Dummy) PoltaRock("ポルタ岩");
         pRock->initWithoutIter();
         registerActor(pRock);
     }

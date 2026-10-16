@@ -23,7 +23,7 @@ namespace NrvBombHeiLauncher {
 };  // namespace NrvBombHeiLauncher
 
 BombHeiLauncher::BombHeiLauncher(const char* pName) : LiveActor(pName), mBomb(), mCountdown(), mConnector(), mIsActive(true) {
-    mConnector = new MapObjConnector(this);
+    mConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
 }
 
 void BombHeiLauncher::init(const JMapInfoIter& rIter) {
@@ -66,10 +66,10 @@ void BombHeiLauncher::init(const JMapInfoIter& rIter) {
     makeActorDead();
 
     if (isBombHeiLauncher) {
-        mBomb = new BombHei("ボム兵");
+        mBomb = new (JKRHeapToken::Dummy) BombHei("ボム兵");
         mBomb->mType = BombHei::BOMB_HEI;
     } else {
-        mBomb = new BombHei("ボム");
+        mBomb = new (JKRHeapToken::Dummy) BombHei("ボム");
         mBomb->mType = BombHei::BOMB;
     }
 

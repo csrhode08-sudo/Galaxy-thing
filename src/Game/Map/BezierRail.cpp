@@ -402,7 +402,7 @@ int BezierRail::getCurrentCtrlPointIndex(f32 t, bool forward) const {
 
 BezierRail::BezierRail(const JMapInfoIter& rIter, const JMapInfo* pInfo) {
     mInfo = pInfo;
-    mIter = new JMapInfoIter(rIter);
+    mIter = new (JKRHeapToken::Dummy) JMapInfoIter(rIter);
 
     const char* closedValue = "";
     const JMapInfo* info = rIter.mInfo;
@@ -420,8 +420,8 @@ BezierRail::BezierRail(const JMapInfoIter& rIter, const JMapInfo* pInfo) {
     f32 pointCoord = 0.0f;
     f32 railStartCoord = 0.0f;
 
-    mRailParts = new RailPart[mNumRailParts];
-    mPointCoords = new f32[mNumRailParts];
+    mRailParts = new (JKRHeapToken::Dummy) RailPart[mNumRailParts];
+    mPointCoords = new (JKRHeapToken::Dummy) f32[mNumRailParts];
 
     for (int i = 0; i < mNumRailParts; i++) {
         JMapInfoIter iterPoint1 = JMapInfoIter(pInfo, i);

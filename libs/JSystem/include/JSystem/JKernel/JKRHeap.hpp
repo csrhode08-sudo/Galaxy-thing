@@ -80,7 +80,7 @@ public:
 
     JKRHeap* find(void*) const;
     JKRHeap* findAllHeap(void*) const;
-    void dispose_subroutine(u32, u32);
+    void dispose_subroutine(uintptr_t, uintptr_t);
     s32 getTotalFreeSize();
 
     u32 getMaxAllocatableSize(int alignment);
@@ -189,8 +189,8 @@ public:
         sCurrentHeap = pHeap;
     }
 
-    static void setAltAramStartAdr(u32);
-    static u32 getAltAramStartAdr();
+    static void setAltAramStartAdr(uintptr_t);
+    static uintptr_t getAltAramStartAdr();
 
     /* 0x806B70A8 */ static JKRHeap* sGameHeap;
     /* 0x806B70AC */ static JKRHeap* sCurrentHeap;
@@ -226,6 +226,16 @@ public:
     /* 0x68 */ bool mErrorFlag;
     /* 0x69 */ u8 _69;
 };
+
+#ifdef TARGET_PC
+// Game allocations carry a JKRHeapToken (see tools/rewrite_new.py); host libraries use the normal allocator.
+void* operator new(size_t size, JKRHeapToken) noexcept;
+void* operator new(size_t size, JKRHeapToken, int align) noexcept;
+void* operator new(size_t size, JKRHeapToken, JKRHeap* pHeap, int align) noexcept;
+void* operator new[](size_t size, JKRHeapToken) noexcept;
+void* operator new[](size_t size, JKRHeapToken, int align) noexcept;
+void* operator new[](size_t size, JKRHeapToken, JKRHeap* pHeap, int align) noexcept;
+#endif
 
 #ifdef __MWERKS__
 void* operator new(u32, int);

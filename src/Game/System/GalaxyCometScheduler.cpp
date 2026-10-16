@@ -165,7 +165,7 @@ const GalaxyCometSerializeInfo cSerializeInfoFirstContact[] = {
 
 GalaxyCometTimeTable::GalaxyCometTimeTable(const GalaxyCometTimePaper* pTimePaper)
     : mState(nullptr), mTimePaper(nullptr), mTimePaperPos(0), mIsReady(false), mIsHide(false) {
-    mState = new GalaxyCometState();
+    mState = new (JKRHeapToken::Dummy) GalaxyCometState();
     mTimePaper = pTimePaper;
     mTimePaperPos = 0;
 }
@@ -287,7 +287,7 @@ void GalaxyCometTimeTable::advance() {
 GalaxyCometScheduler::GalaxyCometScheduler() : mTimeTables(), mEnabled(true) {
     mTimeTables.init(6);
     for (s32 i = 0; i < mTimeTables.size(); i++) {
-        mTimeTables[i] = new GalaxyCometTimeTable(sGalaxyCometTimerPaper[i]);
+        mTimeTables[i] = new (JKRHeapToken::Dummy) GalaxyCometTimeTable(sGalaxyCometTimerPaper[i]);
     }
 }
 

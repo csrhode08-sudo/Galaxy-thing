@@ -46,5 +46,5 @@ CameraTargetObj* CameraObjParallel::calc() {
 }
 
 CamTranslatorBase* CameraObjParallel::createTranslator() {
-    return new CamTranslatorObjParallel(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorObjParallel(this);
 }

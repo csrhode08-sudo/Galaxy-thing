@@ -26,7 +26,7 @@ void SimpleTimerObj::init(const JMapInfoIter& rIter) {
     info.setupNerve(GET_NERVE(SimpleTimerObj, SimpleTimerObjNrvTimer));
     initialize(rIter, info);
     MR::getJMapInfoArg7NoInit(rIter, &mTimeLimit);
-    mFlashingCtrl = new FlashingCtrl(this, true);
+    mFlashingCtrl = new (JKRHeapToken::Dummy) FlashingCtrl(this, true);
     MR::invalidateShadow(this, 0);
 }
 

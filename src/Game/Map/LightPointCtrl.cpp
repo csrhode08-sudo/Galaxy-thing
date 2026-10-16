@@ -11,9 +11,9 @@ namespace {
 LightPointCtrl::LightPointCtrl()
     : mStep(-1), mBlendTime(::sDefaultBlendTime), mCurrentActor(), mPreviousActor(), mCandidateActor(), mCurrentInfo(), mTargetInfo(),
       mPreviousInfo() {
-    mCurrentInfo = new PointLightInfo();
-    mTargetInfo = new PointLightInfo();
-    mPreviousInfo = new PointLightInfo();
+    mCurrentInfo = new (JKRHeapToken::Dummy) PointLightInfo();
+    mTargetInfo = new (JKRHeapToken::Dummy) PointLightInfo();
+    mPreviousInfo = new (JKRHeapToken::Dummy) PointLightInfo();
 
     clearPointLight(mCurrentInfo);
     clearPointLight(mTargetInfo);

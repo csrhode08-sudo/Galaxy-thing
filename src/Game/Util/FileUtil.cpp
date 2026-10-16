@@ -155,7 +155,7 @@ namespace MR {
             adjustedFileSize = decompressedSize;
         }
 
-        u8* buffer = new (pHeap, align) u8[adjustedFileSize];
+        u8* buffer = new (JKRHeapToken::Dummy, pHeap, align) u8[adjustedFileSize];
 
         JKRMemArchive::fetchResource_subroutine(fileData, fileSize, buffer, adjustedFileSize, compressionType);
 

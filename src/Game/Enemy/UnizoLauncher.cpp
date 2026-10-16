@@ -28,11 +28,11 @@ void UnizoLauncher::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(UnizoLauncher, UnizoLauncherNrvWait));
 
     mUnizoNum = ::sUnizoNumber;
-    mUnizos = new Unizo*[::sUnizoNumber];
+    mUnizos = new (JKRHeapToken::Dummy) Unizo*[::sUnizoNumber];
     MR::setGroupClipping(this, rIter, 16);
 
     for (s32 i = 0; i < mUnizoNum; i++) {
-        mUnizos[i] = new Unizo("陸ウニゾー");
+        mUnizos[i] = new (JKRHeapToken::Dummy) Unizo("陸ウニゾー");
         mUnizos[i]->init(rIter);
         mUnizos[i]->makeActorDead();
         MR::setGroupClipping(mUnizos[i], rIter, 16);

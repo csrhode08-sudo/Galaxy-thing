@@ -7,7 +7,7 @@ BossKameckSequencer::BossKameckSequencer(const char* pName) : NerveExecutor(pNam
 void BossKameckSequencer::init(BossKameck* pBoss, const JMapInfoIter& rIter) {
     mBossKameck = pBoss;
 
-    mBattleDemo = new BossKameckBattleDemo(pBoss, rIter);
+    mBattleDemo = new (JKRHeapToken::Dummy) BossKameckBattleDemo(pBoss, rIter);
     mBattleDemo->init();
 }
 

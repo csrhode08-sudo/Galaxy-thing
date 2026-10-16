@@ -419,7 +419,7 @@ void BrightSun::init(const JMapInfoIter& rIter) {
 
     MR::connectToScene(this, MR::MovementType_Environment, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BrightSun);
 
-    mSun = new Sun("太陽");
+    mSun = new (JKRHeapToken::Dummy) Sun("太陽");
     mSun->initWithoutIter();
 
     MR::tryRegisterDemoCast(this, rIter);

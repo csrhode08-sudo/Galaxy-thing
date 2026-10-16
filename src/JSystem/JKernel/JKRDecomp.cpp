@@ -7,15 +7,15 @@ JKRDecomp* JKRDecomp::sDecompObject;
 OSMessage JKRDecomp::sMessageBuffer[8];
 OSMessageQueue JKRDecomp::sMessageQueue;
 
-JKRDecomp* JKRDecomp::create(long a1) {
+JKRDecomp* JKRDecomp::create(s32 a1) {
     if (sDecompObject == nullptr) {
-        sDecompObject = new (JKRHeap::sSystemHeap, 0) JKRDecomp(a1);
+        sDecompObject = new (JKRHeapToken::Dummy, JKRHeap::sSystemHeap, 0) JKRDecomp(a1);
     }
 
     return sDecompObject;
 }
 
-JKRDecomp::JKRDecomp(long a1) : JKRThread(0x4000, 0x10, a1) {
+JKRDecomp::JKRDecomp(s32 a1) : JKRThread(0x4000, 0x10, a1) {
     OSResumeThread(mThread);
 }
 
@@ -43,7 +43,7 @@ void* JKRDecomp::run() {
         }
 
         if (command._14 != nullptr) {
-            command._14(reinterpret_cast< u32 >(&command));
+            command._14(reinterpret_cast< uintptr_t >(&command));
             continue;
         }
 
@@ -55,15 +55,15 @@ void* JKRDecomp::run() {
     }
 }
 
-JKRDecompCommand* JKRDecomp::prepareCommand(unsigned char* pSrc, unsigned char* pDst, unsigned long compressedSize, unsigned long decompressedSize,
-                                            void (*a5)(unsigned long)) {
-    JKRDecompCommand* command = new (JKRHeap::sSystemHeap, -4) JKRDecompCommand();
+JKRDecompCommand* JKRDecomp::prepareCommand(unsigned char* pSrc, unsigned char* pDst, u32 compressedSize, u32 decompressedSize,
+                                            void (*a5)(u32)) {
+    JKRDecompCommand* command = new (JKRHeapToken::Dummy, JKRHeap::sSystemHeap, -4) JKRDecompCommand();
 
     command->mSrc = pSrc;
     command->mDst = pDst;
     command->mCompressedSize = compressedSize;
     command->mDecompressedSize = decompressedSize;
-    command->_14 = a5;
+    command->_14 = reinterpret_cast< void (*)(uintptr_t) >(a5);
 
     return command;
 }
@@ -83,7 +83,7 @@ bool JKRDecomp::sync(JKRDecompCommand* pCommand, int noBlock) {
     }
 }
 
-bool JKRDecomp::orderSync(unsigned char* pSrc, unsigned char* pDst, unsigned long compressedSize, unsigned long decompressedSize) {
+bool JKRDecomp::orderSync(unsigned char* pSrc, unsigned char* pDst, u32 compressedSize, u32 decompressedSize) {
     JKRDecompCommand* command = prepareCommand(pSrc, pDst, compressedSize, decompressedSize, nullptr);
 
     OSSendMessage(&sMessageQueue, command, OS_MESSAGE_NOBLOCK);
@@ -96,7 +96,7 @@ bool JKRDecomp::orderSync(unsigned char* pSrc, unsigned char* pDst, unsigned lon
     return received;
 }
 
-void JKRDecomp::decode(unsigned char* pSrc, unsigned char* pDst, unsigned long compressedSize, unsigned long decompressedSize) {
+void JKRDecomp::decode(unsigned char* pSrc, unsigned char* pDst, u32 compressedSize, u32 decompressedSize) {
     EJKRCompression compression = checkCompressed(pSrc);
 
     if (compression == JKR_COMPRESSION_SZP) {
@@ -193,7 +193,8 @@ void JKRDecomp::decodeSZP(u8* src, u8* dst, u32 srcLength, u32 dstLength) {
 }
 
 void JKRDecomp::decodeSZS(u8* pSrc, u8* pDst, u32 compressedSize, u32 a4) {
-    u32 decompSize = ((s32)pDst + *(u32*)(pSrc + 4)) - a4;
+    // Yaz0 header fields are big-endian.
+    u8* decompEnd = (pDst + (u32)*(BE(u32)*)(pSrc + 4)) - a4;
     u8* copySrc;
     s32 validBitCount = 0;
     u32 curBlock;
@@ -202,7 +203,7 @@ void JKRDecomp::decodeSZS(u8* pSrc, u8* pDst, u32 compressedSize, u32 a4) {
         return;
     }
 
-    if (a4 > *(u32*)pSrc) {
+    if (a4 > (u32)*(BE(u32)*)pSrc) {
         return;
     }
 
@@ -259,7 +260,7 @@ void JKRDecomp::decodeSZS(u8* pSrc, u8* pDst, u32 compressedSize, u32 a4) {
 
         curBlock <<= 1;
         validBitCount--;
-    } while ((u32)pDst != decompSize);
+    } while (pDst != decompEnd);
 }
 
 EJKRCompression JKRDecomp::checkCompressed(unsigned char* pSrc) {

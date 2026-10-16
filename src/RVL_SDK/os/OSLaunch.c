@@ -13,7 +13,7 @@
 #include "revolution/sc.h"
 #include "revolution/vi.h"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 #define TitleIdLo(t) ((u32)(((u64)t)&0xffffffff))
 #define TitleIdHi(t) ((u32)((((u64)t)>>32)&0xffffffff))

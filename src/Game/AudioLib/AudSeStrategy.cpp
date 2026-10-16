@@ -74,7 +74,7 @@ void AudSeStrategy::mix(JAISe* pSe, JASSoundParams* pParams) {
 }
 
 JAISoundStrategy< JAISe >* AudSeStrategyMgr::newStrategy(JAISoundID soundID) {
-    AudSeStrategy* strategy = new AudSeStrategy();
+    AudSeStrategy* strategy = new (JKRHeapToken::Dummy) AudSeStrategy();
     if (strategy == nullptr) {
         return nullptr;
     }

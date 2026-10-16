@@ -40,7 +40,7 @@ TripodBossBreakMovement::TripodBossBreakMovement(const char* pName)
     _8C.identity();
     initNerve(GET_NERVE(TripodBossBreakMovement, TripodBossBreakMovementNrvWait));
     MR::invalidateClipping(this);
-    mSpring = new SpringValue();
+    mSpring = new (JKRHeapToken::Dummy) SpringValue();
     mSpring->setParam(0.0f, 0.0f, 0.2f, 0.9f, 0.0f);
     setBreakDownLevel(1);
 }

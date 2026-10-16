@@ -173,10 +173,10 @@ SkeletalFishGuardHolder::~SkeletalFishGuardHolder() {
 }
 
 void SkeletalFishGuardHolder::createAndInitGuard() {
-    mGuards = new SkeletalFishGuard*[mNumGuards];
+    mGuards = new (JKRHeapToken::Dummy) SkeletalFishGuard*[mNumGuards];
 
     for (s32 i = 0; i < mNumGuards; i++) {
-        mGuards[i] = new SkeletalFishGuard(mFishBoss, "スカルシャークガード");
+        mGuards[i] = new (JKRHeapToken::Dummy) SkeletalFishGuard(mFishBoss, "スカルシャークガード");
         mGuards[i]->initWithoutIter();
     }
 }

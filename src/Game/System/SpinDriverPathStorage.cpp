@@ -198,7 +198,7 @@ s32 SpinDriverPathStorageScenario::calcMaxZoneId() const {
 SpinDriverPathStorageGalaxy::SpinDriverPathStorageGalaxy(const GalaxyStatusAccessor& rAccessor)
     : mScenarioStorage(nullptr), mNumScenarios(0), mGalaxyName(nullptr) {
     s32 numScenarios = rAccessor.getScenarioNum();
-    mScenarioStorage = new SpinDriverPathStorageScenario[rAccessor.getScenarioNum()];
+    mScenarioStorage = new (JKRHeapToken::Dummy) SpinDriverPathStorageScenario[rAccessor.getScenarioNum()];
     mNumScenarios = numScenarios;
     mGalaxyName = rAccessor.getName();
     resetAllData();
@@ -255,7 +255,7 @@ SpinDriverPathStorage::SpinDriverPathStorage() {
     ScenarioDataIter iter = MR::makeBeginScenarioDataIter();
     while (!iter.isEnd()) {
         GalaxyStatusAccessor accessor = iter.makeAccessor();
-        mGalaxyStorage.push_back(new SpinDriverPathStorageGalaxy(accessor));
+        mGalaxyStorage.push_back(new (JKRHeapToken::Dummy) SpinDriverPathStorageGalaxy(accessor));
         iter.goNext();
     }
 }

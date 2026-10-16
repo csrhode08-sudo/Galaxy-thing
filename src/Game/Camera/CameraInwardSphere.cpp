@@ -106,7 +106,7 @@ CameraTargetObj* CameraInwardSphere::calc() {
 }
 
 CamTranslatorBase* CameraInwardSphere::createTranslator() {
-    return new CamTranslatorInwardSphere(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorInwardSphere(this);
 }
 
 void CameraInwardSphere::calcGravityCenter() {

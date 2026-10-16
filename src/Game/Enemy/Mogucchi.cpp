@@ -76,7 +76,7 @@ void Mogucchi::init(const JMapInfoIter& rIter) {
 
 void Mogucchi::initAfterPlacement() {
     MR::moveCoordToNearestPos(this, mPosition);
-    MR::calcGravityVector(this, MR::getRailPos(this), &mRailGravity, nullptr, nullptr);
+    MR::calcGravityVector(this, MR::getRailPos(this), &mRailGravity, nullptr, 0);
     updatePosition();
     updateReferenceMtx();
 }
@@ -276,7 +276,7 @@ void Mogucchi::createMogucchiHill() {
     }
 
     // "Mogucchi hill"
-    mHill = new MogucchiHill(this, railLength, "モグッチ塚");
+    mHill = new (JKRHeapToken::Dummy) MogucchiHill(this, railLength, "モグッチ塚");
     mHill->initWithoutIter();
     if (railLength > 5) {
         mHill->setAppearNum(mHill->_94 - 5);
@@ -335,7 +335,7 @@ void Mogucchi::updatePosition() {
 
 void Mogucchi::createHole() {
     // "Mogucchi hole"
-    mHole = new ModelObj("モグッチ穴", "MogucchiHole", mNewHolePos, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
+    mHole = new (JKRHeapToken::Dummy) ModelObj("モグッチ穴", "MogucchiHole", mNewHolePos, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
     mHole->initWithoutIter();
 }
 

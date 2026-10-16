@@ -141,11 +141,11 @@ void BegomanSpike::init(const JMapInfoIter& rIter) {
     MR::setEffectHostMtx(this, "WaterColumn", mWaterColumnMatrix);
     initSound(8, false);
     initShadow(70.0f, "Center");
-    mHead = new BegomanHead(this, "トゲ頭", "BegomanSpikeHead", mHeadMatrix, MR::DrawBufferType_Enemy, false);
+    mHead = new (JKRHeapToken::Dummy) BegomanHead(this, "トゲ頭", "BegomanSpikeHead", mHeadMatrix, MR::DrawBufferType_Enemy, false);
     MR::initLightCtrl(mHead);
     mHead->_9C = &_B4;
     mHead->initWithoutIter();
-    mBrokenModel = new ModelObj("ベーゴマン壊れモデル", "BegomanBrokenPiece", getBaseMtx(), MR::DrawBufferType_Enemy, -2, -2, false);
+    mBrokenModel = new (JKRHeapToken::Dummy) ModelObj("ベーゴマン壊れモデル", "BegomanBrokenPiece", getBaseMtx(), MR::DrawBufferType_Enemy, -2, -2, false);
     mBrokenModel->mScale.set(mScale);
     mBrokenModel->initWithoutIter();
     MR::invalidateClipping(mBrokenModel);

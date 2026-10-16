@@ -1,7 +1,7 @@
 #include "revolution/os.h"
 #include "revolution/nand.h"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 static OSStateFlags StateFlags __attribute__ ((aligned(32)));
 

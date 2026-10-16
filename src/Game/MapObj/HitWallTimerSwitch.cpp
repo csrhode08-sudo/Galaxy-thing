@@ -29,7 +29,7 @@ void HitWallTimerSwitch::init(const JMapInfoIter& rIter) {
     MR::addHitSensor(this, "hit", ATYPE_SWITCH_BIND, 0x10, 50.f, TVec3f(0.0f, 0.0f, 0.0f));
     MR::initCollisionParts(this, "HitWallTimerSwitch", getSensor("body"), nullptr);
     _8C = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("hit"), MR::CollisionScaleType_Unk2);
-    mConnector = new MapObjConnector(this);
+    mConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     initSound(4, false);
     MR::needStageSwitchWriteA(this, rIter);
     MR::getJMapInfoArg0NoInit(rIter, &mTimer);

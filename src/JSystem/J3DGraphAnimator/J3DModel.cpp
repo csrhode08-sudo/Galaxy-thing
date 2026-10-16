@@ -32,7 +32,7 @@ s32 J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags, u32 mtxNum)
     int ret = kJ3DError_Success;
 
     mModelData = pModelData;
-    mMtxBuffer = new J3DMtxBuffer();
+    mMtxBuffer = new (JKRHeapToken::Dummy) J3DMtxBuffer();
 
     ret = mMtxBuffer->create(pModelData, mtxNum);
     if (ret != kJ3DError_Success) {
@@ -82,7 +82,7 @@ s32 J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags, u32 mtxNum)
 
 s32 J3DModel::createShapePacket(J3DModelData* pModelData) {
     if (pModelData->getShapeNum() != 0) {
-        mShapePacket = new J3DShapePacket[pModelData->getShapeNum()];
+        mShapePacket = new (JKRHeapToken::Dummy) J3DShapePacket[pModelData->getShapeNum()];
 
         for (int i = 0; i < pModelData->getShapeNum(); i++) {
             mShapePacket[i].setShape(pModelData->getShapeNodePointer(i));
@@ -95,7 +95,7 @@ s32 J3DModel::createShapePacket(J3DModelData* pModelData) {
 
 s32 J3DModel::createMatPacket(J3DModelData* pModelData, u32 mdlFlags) {
     if (pModelData->getMaterialNum() != 0) {
-        mMatPacket = new J3DMatPacket[pModelData->getMaterialNum()];
+        mMatPacket = new (JKRHeapToken::Dummy) J3DMatPacket[pModelData->getMaterialNum()];
     }
 
     u16 matNum = pModelData->getMaterialNum();

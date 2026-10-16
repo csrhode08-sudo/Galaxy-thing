@@ -21,7 +21,7 @@ void GlaringLightArea::init(const JMapInfoIter& rIter) {
     mPos.y = pos.y;
     mPos.z = pos.z;
 
-    mSoundObj = new AudSoundObject(&mPos, 4, MR::getCurrentHeap());
+    mSoundObj = new (JKRHeapToken::Dummy) AudSoundObject(&mPos, 4, MR::getCurrentHeap());
 
     if (isValidSwitchA()) {
         MR::connectToSceneAreaObj(this);

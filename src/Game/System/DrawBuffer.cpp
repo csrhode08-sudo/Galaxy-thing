@@ -13,10 +13,10 @@ DrawBufferShapeDrawer::DrawBufferShapeDrawer(J3DMaterial* pMaterial, J3DMatPacke
 
 void DrawBufferShapeDrawer::init(s32 a1) {
     mMaxPackets = a1 * _8;
-    mPackets = new PacketInfo*[mMaxPackets];
+    mPackets = new (JKRHeapToken::Dummy) PacketInfo*[mMaxPackets];
 
     for (s32 idx = 0; idx < mMaxPackets; idx++) {
-        PacketInfo* packet = new PacketInfo();
+        PacketInfo* packet = new (JKRHeapToken::Dummy) PacketInfo();
         mPackets[idx] = packet;
         mPackets[idx]->mShapePacket = nullptr;
         mPackets[idx]->mLightLoader = nullptr;
@@ -231,12 +231,12 @@ void DrawBuffer::initTable() {
     }
     mNumOpaShapeDrawers = numOpaMaterials;
 
-    mMaterialNos = new s32[mNumMaterials];
+    mMaterialNos = new (JKRHeapToken::Dummy) s32[mNumMaterials];
     for (s32 idx = 0; idx < mNumMaterials; idx++) {
         mMaterialNos[idx] = -1;
     }
 
-    mShapeDrawers = new DrawBufferShapeDrawer*[mNumShapeDrawers];
+    mShapeDrawers = new (JKRHeapToken::Dummy) DrawBufferShapeDrawer*[mNumShapeDrawers];
 
     for (s32 idx = 0; idx < mNumShapeDrawers; idx++) {
         mShapeDrawers[idx] = nullptr;
@@ -257,11 +257,11 @@ void DrawBuffer::initTable() {
 
         if (!material->isDrawModeOpaTexEdge()) {
             mMaterialNos[idx] = opaIndex;
-            mShapeDrawers[opaIndex] = new DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
+            mShapeDrawers[opaIndex] = new (JKRHeapToken::Dummy) DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
             opaIndex++;
         } else {
             mMaterialNos[idx] = xluIndex + mNumOpaShapeDrawers;
-            mShapeDrawers[xluIndex + mNumOpaShapeDrawers] = new DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
+            mShapeDrawers[xluIndex + mNumOpaShapeDrawers] = new (JKRHeapToken::Dummy) DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
             xluIndex++;
         }
     }

@@ -165,7 +165,7 @@ void Creeper::init(const JMapInfoIter& rIter) {
 
     initSound(4, false);
 
-    mTexture = new JUTTexture(MR::loadTexFromArc("Creeper.arc", "Stalk.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("Creeper.arc", "Stalk.bti"), 0);
 
     mFlowerModel = MR::createPartsModelNoSilhouettedMapObj(this, "花（つる花）", "CreeperFlower", mTopMtx.toMtxPtr());
     mLeafModel = MR::createPartsModelNoSilhouettedMapObj(this, "葉（つる花）", "CreeperLeaf", nullptr);
@@ -239,7 +239,7 @@ void Creeper::initPoints() {
     s32 numPoints = MR::getRailTotalLength(this) / ::sInterval;
     mNumPoints = numPoints + 1;
 
-    mPoints = new CreeperPoint*[mNumPoints];
+    mPoints = new (JKRHeapToken::Dummy) CreeperPoint*[mNumPoints];
 
     CreeperPoint* prevPoint = nullptr;
 
@@ -247,14 +247,14 @@ void Creeper::initPoints() {
 
     for (s32 i = 0; i < mNumPoints - 1; i++) {
         MR::setRailCoord(this, ::sInterval * i);
-        mPoints[i] = new CreeperPoint(MR::getRailPos(this), MR::getRailDirection(this), prevPoint);
+        mPoints[i] = new (JKRHeapToken::Dummy) CreeperPoint(MR::getRailPos(this), MR::getRailDirection(this), prevPoint);
         bendSum.add(MR::getRailDirection(this));
         prevPoint = mPoints[i];
     }
 
     MR::moveCoordToEndPos(this);
 
-    CreeperPoint* point = new CreeperPoint(MR::getRailPos(this), MR::getRailDirection(this), prevPoint);
+    CreeperPoint* point = new (JKRHeapToken::Dummy) CreeperPoint(MR::getRailPos(this), MR::getRailDirection(this), prevPoint);
     s32 index = mNumPoints - 1;
     mPoints[index] = point;
 

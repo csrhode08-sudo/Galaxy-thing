@@ -92,5 +92,5 @@ CameraTargetObj* CameraCharmedVecReg::calc() {
 }
 
 CamTranslatorBase* CameraCharmedVecReg::createTranslator() {
-    return new CamTranslatorCharmedVecReg(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorCharmedVecReg(this);
 }

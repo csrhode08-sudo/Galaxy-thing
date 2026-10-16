@@ -103,7 +103,7 @@ void MarioSearchLight::calcAndSetBaseMtx() {
 }
 
 void MarioActor::initThrowing() {
-    mSearchLightThrowPos = new FixedPosition(this, "HandR", TVec3f(13.19f, 41.57f, 19.02f), TVec3f(-3.63f, -41.69f, 15.76f));
+    mSearchLightThrowPos = new (JKRHeapToken::Dummy) FixedPosition(this, "HandR", TVec3f(13.19f, 41.57f, 19.02f), TVec3f(-3.63f, -41.69f, 15.76f));
 }
 
 void MarioActor::updateSearchLight() {
@@ -129,13 +129,13 @@ namespace {
 
     inline void initExtraMtxBuffer(J3DModelX* pModel, s32 num) {
         for (u32 i = 0; i < pModel->_DD; i++) {
-            pModel->mExtraMtxBuffer[i] = new (0x20) Mtx[num];
+            pModel->mExtraMtxBuffer[i] = new (JKRHeapToken::Dummy, 0x20) Mtx[num];
         }
     }
 };  // namespace
 
 void MarioActor::initSearchLight() {
-    mSearchLight = new MarioSearchLight(this);
+    mSearchLight = new (JKRHeapToken::Dummy) MarioSearchLight(this);
     mSearchLight->initWithoutIter();
     mSearchLight->makeActorDead();
     J3DModelX* model = static_cast< J3DModelX* >(MR::getJ3DModel(mSearchLight));
@@ -144,7 +144,7 @@ void MarioActor::initSearchLight() {
     s32 drawMtxNum = model->getModelData()->getDrawMtxNum();
     ::initExtraMtxBuffer(model, drawMtxNum);
 
-    mDrawSearchLight = new DrawAdaptor(MR::Functor(this, &MarioActor::drawSearchLight), MR::DrawType_0x33);
+    mDrawSearchLight = new (JKRHeapToken::Dummy) DrawAdaptor(MR::Functor(this, &MarioActor::drawSearchLight), MR::DrawType_0x33);
 }
 
 void MarioActor::updateThrowing() {

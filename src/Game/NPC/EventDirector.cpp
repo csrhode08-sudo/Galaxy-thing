@@ -12,13 +12,13 @@ EventDirector::EventDirector()
 }
 
 void EventDirector::init(const JMapInfoIter& rIter) {
-    mPowerStarEventKeeper = new PowerStarEventKeeper();
-    mStageStateKeeper = new StageStateKeeper();
-    mPowerStarHolder = new PowerStarHolder("パワースター保持");
+    mPowerStarEventKeeper = new (JKRHeapToken::Dummy) PowerStarEventKeeper();
+    mStageStateKeeper = new (JKRHeapToken::Dummy) StageStateKeeper();
+    mPowerStarHolder = new (JKRHeapToken::Dummy) PowerStarHolder("パワースター保持");
     mPowerStarHolder->initWithoutIter();
-    mCometEventKeeper = new CometEventKeeper();
+    mCometEventKeeper = new (JKRHeapToken::Dummy) CometEventKeeper();
     mCometEventKeeper->init();
-    mTimeAttackEventKeeper = new TimeAttackEventKeeper();
+    mTimeAttackEventKeeper = new (JKRHeapToken::Dummy) TimeAttackEventKeeper();
     mTimeAttackEventKeeper->init(mCometEventKeeper->isStartTimeLimitEvent());
 }
 

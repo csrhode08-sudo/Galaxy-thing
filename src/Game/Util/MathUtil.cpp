@@ -51,7 +51,7 @@ namespace MR {
     }
 
     void initAcosTable() {
-        ::gAcosTable = new f32[256];
+        ::gAcosTable = new (JKRHeapToken::Dummy) f32[256];
 
         for (u32 i = 0; i < 256; i++) {
             f64 x = (i / 255.0) * (1.0 - 0.98) + 0.98;
@@ -1556,10 +1556,10 @@ namespace MR {
     }
 
     void setNan(TVec3f& rDst) {
-        JGeometry::TVec3< int >* tmp = (JGeometry::TVec3< int >*)&rDst;
-        tmp->x = -1;
-        tmp->y = -1;
-        tmp->z = -1;
+        s32* tmp = reinterpret_cast< s32* >(&rDst);
+        tmp[0] = -1;
+        tmp[1] = -1;
+        tmp[2] = -1;
     }
 
     bool isNan(const TVec3f& rVec) {
@@ -1629,7 +1629,7 @@ f32 JMASqrt(__REGISTER f32 value) {
     }
 
     __REGISTER f32 inverse;
-    __asm { frsqrte inverse, value }
+    inverse = __frsqrte(value);
     f32 estimate = inverse * value;
     inverse = -(estimate * inverse - 3.0f);
     inverse *= estimate;

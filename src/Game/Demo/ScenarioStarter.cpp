@@ -55,7 +55,7 @@ void ScenarioStarter::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0NoInit(rIter, &mFlightTime);
     initShootPath(rIter);
 
-    mSpinDriverCamera = new SpinDriverCamera();
+    mSpinDriverCamera = new (JKRHeapToken::Dummy) SpinDriverCamera();
     mSpinDriverCamera->init(rIter, this);
 
     initHitSensor(1);
@@ -64,7 +64,7 @@ void ScenarioStarter::init(const JMapInfoIter& rIter) {
     mWelcomeLayout = MR::createSimpleLayout("Welcome表示", "Welcome", 1);
     mWelcomeLayout->kill();
     MR::registerDemoSimpleCastAll(mWelcomeLayout);
-    mTitle = new ScenarioTitle();
+    mTitle = new (JKRHeapToken::Dummy) ScenarioTitle();
     mTitle->initWithoutIter();
     mTitle->kill();
     _10C.set(*MR::getPlayerPos());
@@ -201,7 +201,7 @@ void ScenarioStarter::initShootPath(const JMapInfoIter& rIter) {
     initRailRider(rIter);
     mInitalPlayerRotation = 0.0f;
     MR::getJMapInfoArg5NoInit(rIter, &mInitalPlayerRotation);
-    _B8 = new SpinDriverShootPath();
+    _B8 = new (JKRHeapToken::Dummy) SpinDriverShootPath();
     _B8->init(rIter);
     _B8->calcInitPose(&_C0, &_CC, &_D8, mInitalPlayerRotation);
 }

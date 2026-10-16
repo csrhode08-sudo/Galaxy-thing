@@ -5,7 +5,7 @@
 #include "revolution/ipc.h"
 #include "revolution/os/OSInterrupt.h"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 #define ROUNDUP(sz) (((u32)(sz) + 32 - 1) & ~(u32)(32 - 1))
 

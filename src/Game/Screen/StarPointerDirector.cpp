@@ -17,9 +17,9 @@
 StarPointerDirector::StarPointerDirector()
     : mIsUpdateTransHolder(), mIsAllowP1StarPieceShot(), mIsAllowP2StarPieceShot(), mControllers(), mStarPointerLayouts(), mTransHolder(), mPeekZ(),
       mGuidance(), mNozzleAimPos(0.0f, 0.0f, 0.0f) {
-    mPeekZ = new StarPointerPeekZ();
-    mTransHolder = new StarPointerTransformHolder();
-    mControllers = new StarPointerController[StarPointerFunction::getNumStarPointer()];
+    mPeekZ = new (JKRHeapToken::Dummy) StarPointerPeekZ();
+    mTransHolder = new (JKRHeapToken::Dummy) StarPointerTransformHolder();
+    mControllers = new (JKRHeapToken::Dummy) StarPointerController[StarPointerFunction::getNumStarPointer()];
 
     for (s32 channel = 0; channel < StarPointerFunction::getNumStarPointer(); channel++) {
         mControllers[channel].initAndSetPort(channel);
@@ -123,14 +123,14 @@ StarPointerLayout* StarPointerDirector::getStarPointerLayout(s32 channel) const 
 }
 
 void StarPointerDirector::createLayout() {
-    mStarPointerLayouts = new StarPointerLayout[StarPointerFunction::getNumStarPointer()];
+    mStarPointerLayouts = new (JKRHeapToken::Dummy) StarPointerLayout[StarPointerFunction::getNumStarPointer()];
 
     for (u32 channel = 0; channel < StarPointerFunction::getNumStarPointer(); channel++) {
         mStarPointerLayouts[channel].initWithPort(channel);
         mStarPointerLayouts[channel].mDirector = this;
     }
 
-    mGuidance = new StarPointerGuidance("スターポインタガイダンス");
+    mGuidance = new (JKRHeapToken::Dummy) StarPointerGuidance("スターポインタガイダンス");
     mGuidance->initWithoutIter();
 }
 
@@ -147,7 +147,7 @@ void StarPointerTransformHolder::movement() {
 }
 
 StarPointerPeekZ::StarPointerPeekZ() {
-    mInfos = new DpdInfo*[2];
+    mInfos = new (JKRHeapToken::Dummy) DpdInfo*[2];
     mToken = DrawSyncManager::sInstance->setCallback(2, 1, this);
 }
 

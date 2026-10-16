@@ -599,10 +599,10 @@ BezierSurface::BezierSurface(s32 divideLevel, u32 a1)
     s32 numPoints = ::sTrianglePatchTableGroup[mDivideLevel].mNumPoints;
 
     if ((a1 & 4) != 0) {
-        mTrianglePatchVertices = new TVec3f[numPoints];
+        mTrianglePatchVertices = new (JKRHeapToken::Dummy) TVec3f[numPoints];
 
         if ((a1 & 1) != 0) {
-            mTrianglePatchNormals = new TVec3f[numPoints];
+            mTrianglePatchNormals = new (JKRHeapToken::Dummy) TVec3f[numPoints];
         }
     }
 

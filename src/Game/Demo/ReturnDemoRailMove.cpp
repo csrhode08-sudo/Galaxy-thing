@@ -17,10 +17,10 @@ ReturnDemoRailMove::ReturnDemoRailMove(LiveActor* pDemoStarter, LiveActor* pPowe
                                        TPos3f* pTransform)
     : mDemoStarter(pDemoStarter), mPowerStar(pPowerStar), mIsGrandStar(isGrandstar), mTransform(pTransform), mShootPath(nullptr),
       mPathDrawer(nullptr), mForward(0.0f, 0.0f, 1.0f) {
-    mShootPath = new SpinDriverShootPath();
+    mShootPath = new (JKRHeapToken::Dummy) SpinDriverShootPath();
     mShootPath->init(rIter);
 
-    mPathDrawer = new SpinDriverPathDrawer(mShootPath);
+    mPathDrawer = new (JKRHeapToken::Dummy) SpinDriverPathDrawer(mShootPath);
     mPathDrawer->initWithoutIter();
     mPathDrawer->setColorNormal();
 

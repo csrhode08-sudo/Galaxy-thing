@@ -105,7 +105,7 @@ CameraTargetObj* CameraWonderPlanet::calc() {
 }
 
 CamTranslatorBase* CameraWonderPlanet::createTranslator() {
-    return new CamTranslatorWonderPlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorWonderPlanet(this);
 }
 
 void CameraWonderPlanet::updateCameraReset() {

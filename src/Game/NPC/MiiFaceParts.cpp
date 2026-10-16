@@ -10,7 +10,7 @@
 
 MiiFaceParts::MiiFaceParts(const char* pName, const MiiFaceRecipe& rRecipe)
     : LiveActor(pName), mCharModel(nullptr), _90(nullptr), mRecipe(nullptr), _CC(nullptr), _D0(false) {
-    mRecipe = new MiiFaceRecipe(rRecipe);
+    mRecipe = new (JKRHeapToken::Dummy) MiiFaceRecipe(rRecipe);
 
     MR::createSceneObj(SceneObj_MiiFacePartsHolder);
 }
@@ -19,8 +19,8 @@ MiiFaceParts::~MiiFaceParts() {
 }
 
 void MiiFaceParts::init(const JMapInfoIter& rIter) {
-    _90 = new (32) u8[mRecipe->getModelBufferSize()];
-    mCharModel = new RFLCharModel;
+    _90 = new (JKRHeapToken::Dummy, 32) u8[mRecipe->getModelBufferSize()];
+    mCharModel = new (JKRHeapToken::Dummy) RFLCharModel;
     _D1 = true;
 }
 
@@ -71,7 +71,7 @@ void MiiFaceParts::drawXlu(const RFLDrawCoreSetting* pSetting) const {
 }
 
 void MiiFaceParts::initFixedPosition(MtxPtr pParam1, const TVec3f& rParam2, const TVec3f& rParam3) {
-    _CC = new FixedPosition(pParam1, rParam2, rParam3);
+    _CC = new (JKRHeapToken::Dummy) FixedPosition(pParam1, rParam2, rParam3);
     _C8 = _CC->mMtx;
 }
 

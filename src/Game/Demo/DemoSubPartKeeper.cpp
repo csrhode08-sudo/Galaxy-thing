@@ -6,7 +6,7 @@
 DemoSubPartKeeper::DemoSubPartKeeper(const DemoExecutor* pExecutor) : mExecutor(pExecutor), mNumSubPartInfos(), mSubPartInfos() {
     JMapInfo* map = nullptr;
     mNumSubPartInfos = DemoFunction::createSheetParser(mExecutor, "SubPart", &map);
-    mSubPartInfos = new DemoSubPartInfo[mNumSubPartInfos];
+    mSubPartInfos = new (JKRHeapToken::Dummy) DemoSubPartInfo[mNumSubPartInfos];
     for (int i = 0; i < mNumSubPartInfos; i++) {
         DemoSubPartInfo* subpart = &mSubPartInfos[i];
         MR::getCsvDataStrOrNULL(&subpart->mSubPartName, map, "SubPartName", i);

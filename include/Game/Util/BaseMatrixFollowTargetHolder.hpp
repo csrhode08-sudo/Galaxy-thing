@@ -86,7 +86,7 @@ public:
 namespace MR {
     template < typename T >
     BaseMatrixFollowValidater* createBaseMatrixFollowValidateDelegator(T* pHost, bool (T::*func)(s32) const) {
-        return new BaseMatrixFollowValidateDelegator< T >(pHost, func);
+        return new (JKRHeapToken::Dummy) BaseMatrixFollowValidateDelegator< T >(pHost, func);
     }
 
     bool isValidFollowID(const JMapInfoIter&);

@@ -74,7 +74,7 @@ void TripodBossGuardWall::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(TriPodBossGuardWall, TripodBossGuardWallNrvWait));
     mCameraInfo = MR::createActorCameraInfo(rIter);
     MR::initAnimCamera(this, mCameraInfo, "2ndDemo");
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
 
     if (MR::useStageSwitchReadAppear(this, rIter)) {
         MR::listenStageSwitchOnAppear(this, MR::Functor(this, &TripodBossGuardWall::requestStart));

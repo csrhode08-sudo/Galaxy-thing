@@ -28,8 +28,8 @@ namespace NrvHipDropSwitch {
 };  // namespace NrvHipDropSwitch
 
 HipDropSwitch::HipDropSwitch(const char* pName) : LiveActor(pName), _8C(), mConnector(), mSpringModel(), _CC(), _CD(), _CE() {
-    mSpringValue = new SpringValue();
-    mConnector = new MapObjConnector(this);
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue();
+    mConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
     mSpringValue->setParam(0.0f, 0.0f, 0.2f, 0.90f, 0.0f);
     _9C.identity();
 }

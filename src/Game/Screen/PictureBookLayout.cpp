@@ -91,7 +91,7 @@ PictureBookLayout::PictureBookLayout(s32 chapterMin, s32 chapterMax, bool isRose
       mTextIndex(), mNotReadedChapterNo(-1), mNotReadedPageNo(-1), mNotReadedTextIndex(-1), _44(), _48(), mTitleTexMap(), mCoverFrontTexMap(),
       mCoverBackTexMap(), mNextItemDir(1), mIsNextItemFast(), mIconAButton(), mContentsButtonPaneController(), mCloseButton() {
     if (!isRosettaReading) {
-        mContentsButtonPaneController = new ButtonPaneController*[getChapterMax()];
+        mContentsButtonPaneController = new (JKRHeapToken::Dummy) ButtonPaneController*[getChapterMax()];
     }
 }
 
@@ -107,7 +107,7 @@ void PictureBookLayout::init(const JMapInfoIter& rIter) {
     if (mContentsButtonPaneController != nullptr) {
         initContentsButton();
 
-        mCloseButton = new PictureBookCloseButton(true);
+        mCloseButton = new (JKRHeapToken::Dummy) PictureBookCloseButton(true);
         mCloseButton->initWithoutIter();
     }
 
@@ -196,7 +196,7 @@ void PictureBookLayout::initTexture() {
         textureNum += ::getTextureNum(c);
     }
 
-    _44 = new nw4r::lyt::TexMap*[textureNum];
+    _44 = new (JKRHeapToken::Dummy) nw4r::lyt::TexMap*[textureNum];
 
     s32 textureIndex = 0;
 
@@ -222,7 +222,7 @@ void PictureBookLayout::initContentsButton() {
     char messageId[64];
 
     for (s32 i = 0; i < getChapterMax(); i++) {
-        mContentsButtonPaneController[i] = new ButtonPaneController(this, ::cContentsPaneName[i], ::cContentsPointingPaneName[i], 0, false);
+        mContentsButtonPaneController[i] = new (JKRHeapToken::Dummy) ButtonPaneController(this, ::cContentsPaneName[i], ::cContentsPointingPaneName[i], 0, false);
         mContentsButtonPaneController[i]->invalidateAppearance();
 
         snprintf(messageId, sizeof(messageId), "PictureBookChapter%d_Title", i + 1);

@@ -113,8 +113,8 @@ void RunawayRabbit::init(const JMapInfoIter& rIter) {
     MR::onCalcGravity(this);
 
     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, MR::createBaseMatrixFollowValidateDelegator(this, &RunawayRabbit::isValidFollow));
-    mStateRunaway = new WalkerStateRunaway(this, &mFrontVec, &::sParam);
-    mStateBlowDamage = new WalkerStateBlowDamage(this, &mFrontVec, nullptr);
+    mStateRunaway = new (JKRHeapToken::Dummy) WalkerStateRunaway(this, &mFrontVec, &::sParam);
+    mStateBlowDamage = new (JKRHeapToken::Dummy) WalkerStateBlowDamage(this, &mFrontVec, nullptr);
     MR::getJMapInfoArg0WithInit(rIter, &mGroupId);
     MR::getJMapInfoArg1WithInit(rIter, &mHideLocation);
     MR::getJMapInfoArg3WithInit(rIter, &mNearSoundRadius);
@@ -130,7 +130,7 @@ void RunawayRabbit::init(const JMapInfoIter& rIter) {
         MR::declareCameraRegisterVec(this, cameraRegisterVec, &mPosition);
     }
 
-    mSpotMarkLight = new SpotMarkLight(this, 100.0f, ::sLightLength, nullptr);
+    mSpotMarkLight = new (JKRHeapToken::Dummy) SpotMarkLight(this, 100.0f, ::sLightLength, nullptr);
     mSpotMarkLight->initWithoutIter();
     initSensor();
     initBinder(::sBindRadius, ::sBindYOffset, 0);

@@ -16,9 +16,9 @@
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 
 EffectSystem::EffectSystem(const char* pName, bool createAdaptors)
-    : NameObj(pName), mEmitterManager(), mDrawExec(), mCalcExec(), mGroupHolder(new AutoEffectGroupHolder()), _20(true) {
-    mDrawExec = new ParticleDrawExecutor(this, createAdaptors);
-    mCalcExec = new ParticleCalcExecutor(this, createAdaptors);
+    : NameObj(pName), mEmitterManager(), mDrawExec(), mCalcExec(), mGroupHolder(new (JKRHeapToken::Dummy) AutoEffectGroupHolder()), _20(true) {
+    mDrawExec = new (JKRHeapToken::Dummy) ParticleDrawExecutor(this, createAdaptors);
+    mCalcExec = new (JKRHeapToken::Dummy) ParticleCalcExecutor(this, createAdaptors);
 }
 
 void EffectSystem::init(const JMapInfoIter& rIter) {
@@ -101,8 +101,8 @@ EffectSystem::~EffectSystem() {
 }
 
 void EffectSystem::entry(ParticleResourceHolder* pResourceHolder, u32 particleCount, u32 emitterCount) {
-    mEmitterManager = new JPAEmitterManager(particleCount, emitterCount, MR::getCurrentHeap(), 9, 1);
+    mEmitterManager = new (JKRHeapToken::Dummy) JPAEmitterManager(particleCount, emitterCount, MR::getCurrentHeap(), 9, 1);
     mEmitterManager->entryResourceManager(pResourceHolder->mResourceMgr, 0);
-    mEmitterHolder = new ParticleEmitterHolder(this, emitterCount);
+    mEmitterHolder = new (JKRHeapToken::Dummy) ParticleEmitterHolder(this, emitterCount);
     pResourceHolder->swapTexture(MR::getScreenResTIMG(), "IndDummy");
 }

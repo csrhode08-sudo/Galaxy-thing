@@ -49,9 +49,9 @@ void DrawBufferHolder::initTable(const DrawBufferInitialTable* pInitialTable, s3
 
 void DrawBufferHolder::allocateActorListBuffer() {
     mTableInitialized = false;
-    // NOTE: this symbol does not appear in the debug map, instead it likely uses std::for_each. However the current std::for_each does not support
+    // NOTE: this symbol does not appear in the debug map, instead it likely uses msl::for_each. However the current msl::for_each does not support
     // flat array iteration
-    std::for_each_array(mBufferGroups.begin(), mBufferGroups.end(), std::mem_func(&DrawBufferGroup::allocateActorListBuffer));
+    msl::for_each_array(mBufferGroups.begin(), mBufferGroups.end(), msl::mem_func(&DrawBufferGroup::allocateActorListBuffer));
 }
 
 s32 DrawBufferHolder::registerDrawBuffer(LiveActor* pActor, s32 drawBufferType) {
@@ -73,7 +73,7 @@ void DrawBufferHolder::deactive(LiveActor* pActor, s32 drawBufferType, s32 execu
 
     if (isBufferGroupEmpty(drawBufferType)) {
         ExecutorList& executeList = getExecuteList(drawBufferType);
-        executeList[std::find(executeList.begin(), executeList.end(), &mBufferGroups[drawBufferType]) - executeList.begin()] =
+        executeList[msl::find(executeList.begin(), executeList.end(), &mBufferGroups[drawBufferType]) - executeList.begin()] =
             executeList[executeList.mCount - 1];
         executeList.mCount--;
     }
@@ -84,7 +84,7 @@ void DrawBufferHolder::findLightInfo(LiveActor* pActor, s32 drawBufferType, s32 
 }
 
 void DrawBufferHolder::entry(s32 drawBufferType) {
-    std::for_each(mExecuteLists[drawBufferType].begin(), mExecuteLists[drawBufferType].end(), std::mem_func(&DrawBufferGroup::entry));
+    msl::for_each(mExecuteLists[drawBufferType].begin(), mExecuteLists[drawBufferType].end(), msl::mem_func(&DrawBufferGroup::entry));
 }
 
 void DrawBufferHolder::drawOpa(s32 drawBufferType) const {
@@ -106,7 +106,7 @@ void DrawBufferHolder::drawXlu(s32 drawBufferType) const {
 void DrawBufferHolder::dummy(s32 drawBufferType) {
     // TODO: This SHOULD NOT be here, this is only here because for_each and Vector<>.end are emitted in this file for DrawBufferGroups,
     // indicating some stripped function uses them. (Check Debug symbols for candidates)
-    std::for_each(mExecuteLists[drawBufferType].begin(), mExecuteLists[drawBufferType].end(), std::mem_func(&DrawBufferGroup::entry));
+    msl::for_each(mExecuteLists[drawBufferType].begin(), mExecuteLists[drawBufferType].end(), msl::mem_func(&DrawBufferGroup::entry));
 }
 
 ExecutorList& DrawBufferHolder::getExecuteList(s32 drawBufferType) {

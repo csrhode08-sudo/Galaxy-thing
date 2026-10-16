@@ -17,7 +17,7 @@ ResTable::ResTable() : mFileInfoTable(0), mCount(0) {
 }
 
 void ResTable::newFileInfoTable(u32 count) {
-    mFileInfoTable = new ResFileInfo[count];
+    mFileInfoTable = new (JKRHeapToken::Dummy) ResFileInfo[count];
 }
 
 ResFileInfo* ResTable::add(const char* pName, void* pRes, bool stripExt) {
@@ -98,7 +98,7 @@ const char* ResTable::getResName(const void* pResource) const {
 
 void ResFileInfo::setName(const char* pName, bool stripExt) {
     size_t len = strlen(pName) + 1;
-    mName = new char[len];
+    mName = new (JKRHeapToken::Dummy) char[len];
 
     snprintf(mName, len, "%s", pName);
 

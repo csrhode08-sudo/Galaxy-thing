@@ -58,5 +58,5 @@ CameraTargetObj* CameraTrundle::calc() {
 }
 
 CamTranslatorBase* CameraTrundle::createTranslator() {
-    return new CamTranslatorTrundle(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTrundle(this);
 }

@@ -18,7 +18,7 @@ DinoPackunTrackFireHolder::DinoPackunTrackFireHolder(s32 max) : DeriveActorGroup
     DinoPackunTrackFire* pTrackFire;
 
     for (s32 i = 0; i < max; i++) {
-        pTrackFire = new DinoPackunTrackFire("シッポ跡炎");
+        pTrackFire = new (JKRHeapToken::Dummy) DinoPackunTrackFire("シッポ跡炎");
         pTrackFire->initWithoutIter();
         registerActor(pTrackFire);
     }

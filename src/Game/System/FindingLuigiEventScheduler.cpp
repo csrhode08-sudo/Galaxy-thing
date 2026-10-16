@@ -18,7 +18,7 @@ FindingLuigiEventScheduler::FindingLuigiEventScheduler() : mLuigiLostStageName(n
 }
 
 void FindingLuigiEventScheduler::initAfterResourceLoaded() {
-    mLuigiMailDirector = new LuigiMailDirector();
+    mLuigiMailDirector = new (JKRHeapToken::Dummy) LuigiMailDirector();
     mLuigiMailDirector->initAfterResourceLoaded();
 }
 

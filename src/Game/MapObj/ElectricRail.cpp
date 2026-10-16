@@ -95,7 +95,7 @@ ElectricRailShadowDrawer::ElectricRailShadowDrawer(const LiveActor* pActor, Elec
     mDisplayListBufferSize += ElectricRailFunction::calcDisplayListSize(12, count * 2);
     mDisplayListBufferSize += ElectricRailFunction::calcDisplayListSize(12, count * 2);
 
-    mDisplayListBuffer = new (32) u8[mDisplayListBufferSize];
+    mDisplayListBuffer = new (JKRHeapToken::Dummy, 32) u8[mDisplayListBufferSize];
 
     GDLObj pObj;
     GDInitGDLObj(&pObj, mDisplayListBuffer, mDisplayListBufferSize);
@@ -342,7 +342,7 @@ void ElectricRail::initMapToolInfo(const JMapInfoIter& rIter) {
 void ElectricRail::initSensor() {
     initHitSensor(mRailHeight);
 
-    _94 = new TVec3f[mRailHeight];
+    _94 = new (JKRHeapToken::Dummy) TVec3f[mRailHeight];
 
     for (s32 i = 0; i < mRailHeight; i++) {
         MR::addHitSensorPosMapObj(this, ::cSensorNameTable[i], 8, ElectricRailFunction::getHitSensorRadius(), &_94[i], TVec3f(0.0f, 0.0f, 0.0f));
@@ -371,7 +371,7 @@ void ElectricRail::initPoints() {
     }
 
     mPointCount *= mRailHeight;
-    mPoints = new ElectricRailPoint[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) ElectricRailPoint[mPointCount];
 
     s32 curPointIdx = 0;
     s32 curRailPoint = 0;
@@ -419,7 +419,7 @@ void ElectricRail::initPoints() {
 
 void ElectricRail::initSeparators() {
     mSeparatorCount = static_cast< s32 >(MR::getRailTotalLength(this) / 200.0f) + 1;
-    mSeparators = new ElectricRailSeparator[mSeparatorCount];
+    mSeparators = new (JKRHeapToken::Dummy) ElectricRailSeparator[mSeparatorCount];
 
     TVec3f railPos, gravity;
 
@@ -457,7 +457,7 @@ void ElectricRail::initDisplayList() {
 
     mDisplayListSize = ElectricRailFunction::calcDisplayListSize(20, mSeparatorCount * 4 * mRailHeight);
 
-    mDisplayListBuffer = new (32) u8[mDisplayListSize];
+    mDisplayListBuffer = new (JKRHeapToken::Dummy, 32) u8[mDisplayListSize];
 
     GDLObj obj;
     GDInitGDLObj(&obj, mDisplayListBuffer, mDisplayListSize);
@@ -581,7 +581,7 @@ void ElectricRail::initShadow(const JMapInfoIter& rIter) {
     MR::onCalcShadowDropPrivateGravity(this, "end");
 
     if (flag) {
-        mShadowDrawer = new ElectricRailShadowDrawer(this, mSeparators, mSeparatorCount);
+        mShadowDrawer = new (JKRHeapToken::Dummy) ElectricRailShadowDrawer(this, mSeparators, mSeparatorCount);
     } else {
         MR::addShadowVolumeLine(this, "line", this, "start", 20.0, this, "end", 20.0);
     }

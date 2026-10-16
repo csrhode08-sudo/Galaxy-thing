@@ -35,7 +35,7 @@ void WhirlPoolAccelerator::init(const JMapInfoIter& rIter) {
     mHeight = 100.0f * mScale.y;
     MR::calcActorAxisY(&mAxis, this);
     initPoints();
-    mTexture = new JUTTexture(MR::loadTexFromArc("Whirlpool.arc", "Whirlpool.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("Whirlpool.arc", "Whirlpool.bti"), 0);
     initSound(4, false);
     mClippingCenter.set(mPosition);
     mClippingCenter.y += mHeight / 2.0f;
@@ -73,7 +73,7 @@ void WhirlPoolAccelerator::movement() {
 
 void WhirlPoolAccelerator::initPoints() {
     mPointCount = static_cast< s32 >(mHeight / 50.0f) + 1;
-    mPoints = new WhirlPoolPoint*[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) WhirlPoolPoint*[mPointCount];
     TPos3f rotation;
     rotation.identity();
     MR::makeMtxRotate(rotation, 0.0f, -10.0f, 0.0f);
@@ -97,7 +97,7 @@ void WhirlPoolAccelerator::initPoints() {
             alpha = 50.0f + 205.0f * ((mPointCount - 1 - i) / ::sAlphaPointNum);
         }
 
-        mPoints[i] = new WhirlPoolPoint(position, mAxis, normal, radius, angle / 360.0f, alpha);
+        mPoints[i] = new (JKRHeapToken::Dummy) WhirlPoolPoint(position, mAxis, normal, radius, angle / 360.0f, alpha);
         rotation.mult(normal, normal);
         angle -= 10.0f;
     }

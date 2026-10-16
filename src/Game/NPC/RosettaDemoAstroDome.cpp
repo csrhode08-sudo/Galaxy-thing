@@ -44,7 +44,7 @@ RosettaMonologue::RosettaMonologue() : SimpleLayout("ロゼッタの語り", "Pr
     MR::createAndAddPaneCtrl(this, "CrossFade2", 1);
     MR::createAndAddPaneCtrl(this, "CrossFade3", 1);
 
-    mIconAButton = new IconAButton(true, false);
+    mIconAButton = new (JKRHeapToken::Dummy) IconAButton(true, false);
     mIconAButton->initWithoutIter();
     mIconAButton->kill();
     mMessageNo = 0;
@@ -141,7 +141,7 @@ RosettaDemoAstroDomeExplain::RosettaDemoAstroDomeExplain(Rosetta* pRosetta, cons
     DemoFunction::tryCreateDemoTalkAnimCtrlForSceneDirect(mRosetta, sDemoExplain, rIter, "DemoWithButler", nullptr, 0, 0);
     DemoFunction::registerDemoTalkMessageCtrlDirect(mRosetta, mRosetta->mMsgCtrl, sDemoExplain);
     MR::registerDemoActionFunctorDirect(mRosetta, MR::Functor(this, &RosettaDemoAstroDomeExplain::startDemo), sDemoExplain, "状況説明[開始]");
-    mMonologue = new RosettaMonologue();
+    mMonologue = new (JKRHeapToken::Dummy) RosettaMonologue();
     initNerve(GET_NERVE(RosettaDemoAstroDomeExplain, RosettaDemoAstroDomeExplainNrvExplainDemo));
 }
 

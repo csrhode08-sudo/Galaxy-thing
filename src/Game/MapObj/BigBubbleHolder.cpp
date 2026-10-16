@@ -25,7 +25,7 @@ BigBubbleHolder::BigBubbleHolder(const char* pName) : NameObj(pName), mDrawer(),
         mLimitters[idx] = nullptr;
     }
 
-    mDrawer = new BigBubbleDrawer();
+    mDrawer = new (JKRHeapToken::Dummy) BigBubbleDrawer();
     MR::registerPreDrawFunction(MR::Functor(&MR::setUpBigBubbleDraw), MR::DrawType_BigBubble);
     MR::connectToScene(this, MR::MovementType_EnemyDecoration, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BigBubble);
 }
@@ -146,7 +146,7 @@ BigBubbleHolder::~BigBubbleHolder() {
 
 void BigBubbleHolder::init(const JMapInfoIter& rIter) {
     for (s32 idx = 0; idx < 16; idx++) {
-        mBubbles[idx] = new BigBubble("オオアワ[共有]");
+        mBubbles[idx] = new (JKRHeapToken::Dummy) BigBubble("オオアワ[共有]");
         mBubbles[idx]->initWithoutIter();
     }
 }

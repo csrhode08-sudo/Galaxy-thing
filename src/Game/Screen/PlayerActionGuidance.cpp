@@ -72,7 +72,7 @@ void PlayerActionGuidance::createSpinLayout() {
         return;
     }
 
-    mSpinLayout = new SimpleLayout("スピンガイダンス", "SpinGuidance", 1, -1);
+    mSpinLayout = new (JKRHeapToken::Dummy) SimpleLayout("スピンガイダンス", "SpinGuidance", 1, -1);
     mSpinLayout->appear();
 }
 
@@ -81,7 +81,7 @@ void PlayerActionGuidance::createTamakoroLayout() {
         return;
     }
 
-    mTamakoroLayout = new SimpleLayout("たまころガイダンス", "BallGuidance", 1, -1);
+    mTamakoroLayout = new (JKRHeapToken::Dummy) SimpleLayout("たまころガイダンス", "BallGuidance", 1, -1);
     mTamakoroLayout->appear();
 }
 

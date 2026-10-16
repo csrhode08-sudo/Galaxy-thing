@@ -57,7 +57,7 @@ namespace NrvBossKamecBattleDemo {
 
 BossKameckBattleDemo::BossKameckBattleDemo(BossKameck* pBoss, const JMapInfoIter& rIter)
     : BossKameckAction("ボスカメック戦デモ", pBoss), mDemoPos(), mCurDemoName(), mDemoNerve() {
-    mDemoPos = new BossKameckDemoPosition();
+    mDemoPos = new (JKRHeapToken::Dummy) BossKameckDemoPosition();
     mDemoPos->init(rIter);
 }
 

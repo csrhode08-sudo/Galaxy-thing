@@ -15,9 +15,9 @@ void LightDirector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     LightFunction::loadAllLightWhite();
 
-    mDataHolder = new LightDataHolder();
-    mZoneDataHolder = new LightZoneDataHolder();
-    mPointCtrl = new LightPointCtrl();
+    mDataHolder = new (JKRHeapToken::Dummy) LightDataHolder();
+    mZoneDataHolder = new (JKRHeapToken::Dummy) LightZoneDataHolder();
+    mPointCtrl = new (JKRHeapToken::Dummy) LightPointCtrl();
 }
 
 void LightDirector::initData() {

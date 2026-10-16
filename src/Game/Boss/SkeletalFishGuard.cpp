@@ -37,7 +37,7 @@ SkeletalFishGuard::SkeletalFishGuard(SkeletalFishBoss* pFishBoss, const char* pN
     : LiveActor(pName), _8C(), mFishBoss(pFishBoss), _94(0.0f, 0.0f, 0.0f), _A0(), _A4(0.0f, 0.0f, 0.0f), _B0(), _B4(), _B8(), _BC(), mAttackDelay(),
       _C4(), _C8(), _CC(), _D0(0.0f, 0.0f, 0.0f), _DC(0.0f, 0.0f, 0.0f), _E8(0.0f, 0.0f, 0.0f), _F4(0.0f, 0.0f, 0.0f), _100(0.0f, 0.0f, 1.0f),
       _10C(0.0f, 0.0f, 0.0f) {
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
 }
 
 void SkeletalFishGuard::init(const JMapInfoIter& rIter) {

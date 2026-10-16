@@ -47,7 +47,7 @@ void WormEatenPlanet::init(const JMapInfoIter& rIter) {
     MR::listenStageSwitchOnA(this, MR::Functor(this, &WormEatenPlanet::startSecondDemo));
     MR::listenStageSwitchOnB(this, MR::Functor(this, &WormEatenPlanet::startThirdDemo));
 
-    mCaterpillar = new GreenCaterpillarBig("虫食い惑星オオムイムイ");
+    mCaterpillar = new (JKRHeapToken::Dummy) GreenCaterpillarBig("虫食い惑星オオムイムイ");
     mCaterpillar->init(rIter);
 
     initWormEatenHill();
@@ -127,14 +127,14 @@ void WormEatenPlanet::endClipped() {
 }
 
 void WormEatenPlanet::initWormEatenHill() {
-    mWormEatenHill = new PartsModel*[::sNumWormEatenHill];
+    mWormEatenHill = new (JKRHeapToken::Dummy) PartsModel*[::sNumWormEatenHill];
 
     for (s32 i = 0; i < ::sNumWormEatenHill; i++) {
         char jointName[256];
         snprintf(jointName, sizeof(jointName), "ConnectParts%c", i + 'A');
         MtxPtr jointMtx = MR::getJointMtx(this, jointName);
 
-        mWormEatenHill[i] = new PartsModel(this, "食い破り塚", "WormEatenHill", jointMtx, -1, false);
+        mWormEatenHill[i] = new (JKRHeapToken::Dummy) PartsModel(this, "食い破り塚", "WormEatenHill", jointMtx, -1, false);
         mWormEatenHill[i]->initWithoutIter();
         mWormEatenHill[i]->makeActorDead();
     }

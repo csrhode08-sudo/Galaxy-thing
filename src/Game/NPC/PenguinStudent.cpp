@@ -55,7 +55,7 @@ void PenguinStudent::init(const JMapInfoIter& rIter) {
     MR::setGroupClipping(this, rIter, 8);
     MR::invalidateClipping(this);
     if (_15C == -1) {
-        mRemovableTurtle = new RemovableTurtle(this, true);
+        mRemovableTurtle = new (JKRHeapToken::Dummy) RemovableTurtle(this, true);
         setNerve(GET_NERVE(PenguinStudent, PenguinStudentNrvSlow));
     } else {
         s32 arg1 = 10;

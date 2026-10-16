@@ -135,7 +135,7 @@ void ElectricRailMoving::initMapToolInfo(const JMapInfoIter& rIter) {
 
 void ElectricRailMoving::initSensor() {
     initHitSensor(mStackHeight);
-    mSensorOffsets = new TVec3f[mStackHeight];
+    mSensorOffsets = new (JKRHeapToken::Dummy) TVec3f[mStackHeight];
 
     for (s32 i = 0; i < mStackHeight; i++) {
         MR::addHitSensorPosMapObj(this, ::cSensorNameTable[i], 8, ElectricRailFunction::getHitSensorRadius(), &mSensorOffsets[i],
@@ -156,7 +156,7 @@ void ElectricRailMoving::initRail(const JMapInfoIter& rIter) {
     }
 
     _E4 = static_cast< s32 >(MR::getRailTotalLength(this) / 100.0f) + 2;
-    _E8 = new TVec3f[_E4];
+    _E8 = new (JKRHeapToken::Dummy) TVec3f[_E4];
 
     for (s32 i = 0; i < _E4; i++) {
         f32 totalLength = MR::getRailTotalLength(this);
@@ -174,7 +174,7 @@ void ElectricRailMoving::initPoints() {
     }
 
     _D8 *= mStackHeight;
-    mMovingPoints = new ElectricRailMovingPoint[_D8];
+    mMovingPoints = new (JKRHeapToken::Dummy) ElectricRailMovingPoint[_D8];
 
     if (!MR::isLoopRail(this)) {
         u32 v4 = _D8 - 2 * mStackHeight;
@@ -229,7 +229,7 @@ void ElectricRailMoving::initPoints() {
 void ElectricRailMoving::initDisplayList() {
     MR::ProhibitSchedulerAndInterrupts interrupt(false);
     _E0 = ElectricRailFunction::calcDisplayListSize(20, _E4 * 4 * mStackHeight);
-    _DC = new (32) u8[_E0];
+    _DC = new (JKRHeapToken::Dummy, 32) u8[_E0];
 
     GDLObj dl;
     GDInitGDLObj(&dl, _DC, _E0);

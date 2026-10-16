@@ -16,7 +16,7 @@ LightDataHolder::LightDataHolder() {
 void LightDataHolder::initLightData() {
     JMapInfo* data = NULL;
     mLightCount = LightFunction::createLightDataParser(&data);
-    mLights = new AreaLightInfo[mLightCount];
+    mLights = new (JKRHeapToken::Dummy) AreaLightInfo[mLightCount];
 
     for (s32 i = 0; i < mLightCount; i++) {
         LightFunction::getAreaLightLightData(data, i, &mLights[i]);

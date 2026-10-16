@@ -60,7 +60,8 @@ void MapPartsRailPosture::exeMove() {
         TVec3f v9(0.0f, 1.0f, 0.0f);
         TVec3f v8(0.0f, 0.0f, 1.0f);
 
-        if (mMovePosture == 1 || isPostureTypeRailDirRailUseShadowGravity) {
+        // Original game tests the member-function pointer (always true), not its result; keep that behaviour.
+        if (mMovePosture == 1 || true) {
             v9.set(-shadowVector);
             v10.cross(v9, v11);
             MR::normalize(&v10);

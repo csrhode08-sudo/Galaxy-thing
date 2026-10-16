@@ -36,9 +36,9 @@ void MarioActor::initShadow() {
     _A08 = 1;
 
     if (gIsLuigi) {
-        _A10 = new ModelHolder("LuigiShadow", true);
+        _A10 = new (JKRHeapToken::Dummy) ModelHolder("LuigiShadow", true);
     } else {
-        _A10 = new ModelHolder("MarioShadow", true);
+        _A10 = new (JKRHeapToken::Dummy) ModelHolder("MarioShadow", true);
     }
 
     _A10->initWithoutIter();

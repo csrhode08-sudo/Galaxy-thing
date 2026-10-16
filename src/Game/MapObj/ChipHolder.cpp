@@ -111,14 +111,14 @@ ChipHolder::~ChipHolder() {
 }
 
 void ChipHolder::init(const JMapInfoIter& rIter) {
-    mChipGroups = new ChipGroup*[64];
+    mChipGroups = new (JKRHeapToken::Dummy) ChipGroup*[64];
 
     switch (mChipType) {
     case ChipBase::Type_Blue:
-        mChipCounter = new ChipCounter("ブルーチップカウンター", mChipType);
+        mChipCounter = new (JKRHeapToken::Dummy) ChipCounter("ブルーチップカウンター", mChipType);
         break;
     case ChipBase::Type_Yellow:
-        mChipCounter = new ChipCounter("イエローチップカウンター", mChipType);
+        mChipCounter = new (JKRHeapToken::Dummy) ChipCounter("イエローチップカウンター", mChipType);
         break;
     }
 

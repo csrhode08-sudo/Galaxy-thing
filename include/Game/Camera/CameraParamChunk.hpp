@@ -25,6 +25,10 @@ public:
     /* 0x30 */ s32 mNum1;
     /* 0x34 */ s32 mNum2;
     /* 0x38 */ CameraParamString mString;
+#ifdef TARGET_PC
+    // The original stores the animation-camera data pointer in mNum1; pointers don't fit on PC.
+    const u8* mAnimData = nullptr;
+#endif
 };
 
 class CameraParamChunk {

@@ -26,7 +26,7 @@ OSThreadWrapper::~OSThreadWrapper() {
 
 void OSThreadWrapper::initMessageQueue(JKRHeap* pHeap, int messageCount) {
     mMessageCount = messageCount;
-    mMessageArray = new (pHeap, 0) OSMessage[mMessageCount];
+    mMessageArray = new (JKRHeapToken::Dummy, pHeap, 0) OSMessage[mMessageCount];
 
     OSInitMessageQueue(&mQueue, mMessageArray, mMessageCount);
 }
@@ -34,8 +34,8 @@ void OSThreadWrapper::initMessageQueue(JKRHeap* pHeap, int messageCount) {
 void OSThreadWrapper::initHeapSpecified(JKRHeap* pHeap, u32 stackSize, int priority) {
     mHeap = pHeap;
     mStackSize = stackSize & ~31;
-    mStack = new (mHeap, 32) u8[mStackSize];
-    mThread = new (mHeap, 32) OSThread();
+    mStack = new (JKRHeapToken::Dummy, mHeap, 32) u8[mStackSize];
+    mThread = new (JKRHeapToken::Dummy, mHeap, 32) OSThread();
 
     OSCreateThread(mThread, &OSThreadWrapper::start, this, &mStack[mStackSize], mStackSize, priority, 1 /* OS_THREAD_ATTR_DETACH */);
 }

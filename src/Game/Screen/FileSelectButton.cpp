@@ -118,11 +118,11 @@ void FileSelectButton::createPaneControl() {
 }
 
 void FileSelectButton::createButtonController() {
-    mButtonCtrl[1] = new ButtonPaneController(this, "CopyButton", "PicCopy", 0, true);
-    mButtonCtrl[2] = new ButtonPaneController(this, "MiiButton", "PicMii", 0, true);
-    mButtonCtrl[3] = new ButtonPaneController(this, "DeleteButton", "PicDelete", 0, true);
-    mButtonCtrl[0] = new ButtonPaneController(this, "StartButton", "BoxStartButton", 0, true);
-    mButtonCtrl[4] = new ButtonPaneController(this, "P2ManualButton", "BoxP2", 0, true);
+    mButtonCtrl[1] = new (JKRHeapToken::Dummy) ButtonPaneController(this, "CopyButton", "PicCopy", 0, true);
+    mButtonCtrl[2] = new (JKRHeapToken::Dummy) ButtonPaneController(this, "MiiButton", "PicMii", 0, true);
+    mButtonCtrl[3] = new (JKRHeapToken::Dummy) ButtonPaneController(this, "DeleteButton", "PicDelete", 0, true);
+    mButtonCtrl[0] = new (JKRHeapToken::Dummy) ButtonPaneController(this, "StartButton", "BoxStartButton", 0, true);
+    mButtonCtrl[4] = new (JKRHeapToken::Dummy) ButtonPaneController(this, "P2ManualButton", "BoxP2", 0, true);
 
     for (int i = 0; i < ARRAY_SIZE(mButtonCtrl); i++) {
         mButtonCtrl[i]->_22 = false;
@@ -130,7 +130,7 @@ void FileSelectButton::createButtonController() {
 }
 
 void FileSelectButton::createOthers() {
-    _48 = new GalaxyMapGalaxyPlain(this);
+    _48 = new (JKRHeapToken::Dummy) GalaxyMapGalaxyPlain(this);
     _48->initWithoutIter();
 
     MR::connectToSceneLayoutDecoration(_48);

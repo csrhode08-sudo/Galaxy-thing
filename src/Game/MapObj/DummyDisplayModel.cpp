@@ -87,7 +87,7 @@ namespace {
         }
 
         pInfo = &::cDummyDisplayModelInfoTable[modelId];
-        DummyDisplayModel* mdl = new DummyDisplayModel(pHost, pInfo, itemIdx < 0 ? pInfo->_10 : itemIdx, modelId, getItemType(rIter));
+        DummyDisplayModel* mdl = new (JKRHeapToken::Dummy) DummyDisplayModel(pHost, pInfo, itemIdx < 0 ? pInfo->_10 : itemIdx, modelId, getItemType(rIter));
         mdl->initWithoutIter();
         return mdl;
     }
@@ -150,7 +150,7 @@ void DummyDisplayModel::init(const JMapInfoIter& rIter) {
     }
 
     case ITEM_TYPE_KINOPIO:
-        _A8 = new LodCtrl(this, rIter);
+        _A8 = new (JKRHeapToken::Dummy) LodCtrl(this, rIter);
         _A8->createLodModel(33, -1, -1);
         _A8->syncMaterialAnimation();
         _A8->syncJointAnimation();

@@ -44,7 +44,7 @@ namespace nw4r {
                 const res::Material* const pResMaterial =
                     detail::ConvertOffsToPtr< res::Material >(rBlockSet.pMaterialList, pMatOffsetTbl[pRes->materialIdx]);
 
-                Material* pMaterial = new (pMaterialBuf) Material(pResMaterial, rBlockSet);
+                Material* pMaterial = new (JKRHeapToken::Dummy, pMaterialBuf) Material(pResMaterial, rBlockSet);
 
                 mpMaterial = pMaterial;
             }

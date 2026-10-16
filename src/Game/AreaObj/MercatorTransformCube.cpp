@@ -300,7 +300,7 @@ namespace MR {
         TVec3f placementPos;
         getJMapInfoTrans(rIter, &placementPos);
         pActor->mPosition.set(placementPos);
-        MapPartsRailMover* pMover = new MapPartsRailMover(pActor);
+        MapPartsRailMover* pMover = new (JKRHeapToken::Dummy) MapPartsRailMover(pActor);
         pMover->init(rIter);
         if (setRailPos) {
             ::calcRailPosForMercator(&pActor->mPosition, pActor, getRailCoord(pActor));

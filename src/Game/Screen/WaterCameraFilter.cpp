@@ -50,7 +50,7 @@ void WaterCameraFilter::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
     initNerve(GET_NERVE(WaterCameraFilter, WaterCameraFilterNrvAir));
     initScreenTex();
-    JUTTexture* pFilterTex = new JUTTexture(MR::loadTexFromArc("WaterCameraFilter.arc", "WaterCameraFilter.bti"), 0);
+    JUTTexture* pFilterTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterCameraFilter.arc", "WaterCameraFilter.bti"), 0);
     mFilterTex = pFilterTex;
     makeActorAppeared();
 }
@@ -63,7 +63,7 @@ namespace {
 
 void WaterCameraFilter::initScreenTex() {
     MR::CurrentHeapRestorer restorer(MR::getSceneHeapGDDR3());
-    mScreenTex = new JUTTexture(::getFrameBufferWidth(), ::getScreenHeight(), GX_TF_RGB565);
+    mScreenTex = new (JKRHeapToken::Dummy) JUTTexture(::getFrameBufferWidth(), ::getScreenHeight(), GX_TF_RGB565);
 }
 
 void WaterCameraFilter::exeAirToWater() {

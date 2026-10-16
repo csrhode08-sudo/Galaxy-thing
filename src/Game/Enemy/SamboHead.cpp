@@ -67,8 +67,8 @@ void SamboHead::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, (60.0f * mScale.y));
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);
-    mScaleController = new AnimScaleController(nullptr);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 
     if (MR::isValidSwitchAppear(this)) {
         makeActorDead();
@@ -76,7 +76,7 @@ void SamboHead::init(const JMapInfoIter& rIter) {
         makeActorAppeared();
     }
 
-    mSpinCtrl = new SpinHitController(this, 3, false);
+    mSpinCtrl = new (JKRHeapToken::Dummy) SpinHitController(this, 3, false);
 }
 
 void SamboHead::appear() {

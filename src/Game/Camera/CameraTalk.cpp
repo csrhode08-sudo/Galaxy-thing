@@ -113,5 +113,5 @@ void CameraTalk::setParam(const TVec3f& pos, const TVec3f& up, f32 height, f32 d
 }
 
 CamTranslatorBase* CameraTalk::createTranslator() {
-    return new CamTranslatorTalk(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorTalk(this);
 }

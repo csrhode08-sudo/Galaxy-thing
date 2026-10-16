@@ -57,7 +57,7 @@ Syati::Syati(const char* pName)
     _8C.set(0.0f, 0.0f, 0.0f, 1.0f);
     mMarioMoveLocalOffsetVec.zero();
     mBalloonFollowMtx.identity();
-    mPrizeRingGroup = new LiveActorGroup("リング保持", 5);
+    mPrizeRingGroup = new (JKRHeapToken::Dummy) LiveActorGroup("リング保持", 5);
 }
 
 void Syati::init(const JMapInfoIter& rIter) {
@@ -75,7 +75,7 @@ void Syati::init(const JMapInfoIter& rIter) {
         MR::declarePowerStar(this);
         initRailRider(rIter);
         MR::moveCoordAndTransToRailPoint(this, 0);
-        mRaceManagerLayout = new RaceManagerLayout("レース管理用レイアウト");
+        mRaceManagerLayout = new (JKRHeapToken::Dummy) RaceManagerLayout("レース管理用レイアウト");
         mRaceManagerLayout->initWithoutIter();
     }
 
@@ -460,7 +460,7 @@ void Syati::initRings(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg3NoInit(rIter, &mPrizeRingLife);
 
     for (int i = 0; i < 5; i++) {
-        PrizeRing* pNewRing = new PrizeRing();
+        PrizeRing* pNewRing = new (JKRHeapToken::Dummy) PrizeRing();
         pNewRing->initWithoutIter();
         mPrizeRingGroup->registerActor(pNewRing);
     }
@@ -472,7 +472,7 @@ PlayerPoseSetterInWater::PlayerPoseSetterInWater(const TVec3f& rVec, Syati* pSya
 
 void Syati::initPose() {
     MR::makeQuatFromRotate(&_8C, this);
-    mPlayerPoseSetterInWater = new PlayerPoseSetterInWater(mPosition, this);
+    mPlayerPoseSetterInWater = new (JKRHeapToken::Dummy) PlayerPoseSetterInWater(mPosition, this);
 }
 
 void Syati::initTalking(const JMapInfoIter& rIter) {
@@ -593,7 +593,7 @@ void Syati::updateBlink() {
     if (mBlinkTimer < 0) {
         MR::startBva(this, "Blink");
         s16 frame = MR::getBvaCtrl(this)->mEnd;
-        u32 rand = MR::getRandom(0x78L, 0xF0L);
+        u32 rand = MR::getRandom(0x78, 0xF0);
         mBlinkTimer = frame + rand;
     } else if (MR::isBvaStopped(this)) {
         MR::startBva(this, "Open");

@@ -43,10 +43,10 @@ void StarPieceFollowGroup::init(const JMapInfoIter& rIter) {
 
     initNerve(GET_NERVE(StarPieceFollowGroup, HostTypeNrvFollowEnd));
 
-    mPieces = new StarPiece*[mNumPiecesTotal];
-    _90 = new TVec3f[mNumPiecesTotal];
+    mPieces = new (JKRHeapToken::Dummy) StarPiece*[mNumPiecesTotal];
+    _90 = new (JKRHeapToken::Dummy) TVec3f[mNumPiecesTotal];
     for (int i = 0; i < mNumPiecesTotal; i++) {
-        mPieces[i] = new StarPiece("フォロースターピース");
+        mPieces[i] = new (JKRHeapToken::Dummy) StarPiece("フォロースターピース");
         mPieces[i]->initWithoutIter();
         mPieces[i]->makeActorDead();
     }

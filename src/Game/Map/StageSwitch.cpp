@@ -27,7 +27,7 @@ ZoneSwitch::ZoneSwitch() : BitFlag128() {
 }
 
 SwitchIdInfo::SwitchIdInfo(s32 switchID, const JMapInfoIter& rIter) : mIDInfo(), mIsGlobal(switchID >= 1000) {
-    mIDInfo = new JMapIdInfo(switchID, rIter);
+    mIDInfo = new (JKRHeapToken::Dummy) JMapIdInfo(switchID, rIter);
 }
 
 s32 SwitchIdInfo::getSwitchNo() const {
@@ -43,7 +43,7 @@ void StageSwitchContainer::createAndAddZone(const SwitchIdInfo& rInfo) {
         return;
     }
 
-    ZoneSwitch* pZoneSwitch = new ZoneSwitch();
+    ZoneSwitch* pZoneSwitch = new (JKRHeapToken::Dummy) ZoneSwitch();
     ContainerSwitch sw;
     sw.mZoneId = rInfo.mIDInfo->mZoneID;
     sw.mSwitch = pZoneSwitch;
@@ -172,7 +172,7 @@ SwitchIdInfo* StageSwitchFunction::createSwitchIdInfo(const char* pSwitchName, c
         return nullptr;
     }
 
-    SwitchIdInfo* idInfo = new SwitchIdInfo(switchNo, rIter);
+    SwitchIdInfo* idInfo = new (JKRHeapToken::Dummy) SwitchIdInfo(switchNo, rIter);
 
     if (switchNo < 1000) {
         ::getStageSwitchContainer()->createAndAddZone(*idInfo);
@@ -207,14 +207,14 @@ bool StageSwitchFunction::isOnSwitchBySwitchIdInfo(const SwitchIdInfo& rIdInfo) 
 }
 
 StageSwitchCtrl* MR::createStageSwitchCtrl(NameObj*, const JMapInfoIter& rIter) {
-    return new StageSwitchCtrl(rIter);
+    return new (JKRHeapToken::Dummy) StageSwitchCtrl(rIter);
 }
 
 StageSwitchContainer::~StageSwitchContainer() {
 }
 
 StageSwitchContainer::StageSwitchContainer() : NameObj("ステージスイッチ"), mSwitches(), mGlobalSwitches() {
-    mGlobalSwitches = new ZoneSwitch();
+    mGlobalSwitches = new (JKRHeapToken::Dummy) ZoneSwitch();
 }
 
 StageSwitchCtrl::StageSwitchCtrl(const JMapInfoIter& rIter) : mSwitchA(), mSwitchB(), mSwitchAppear(), mSwitchDead() {

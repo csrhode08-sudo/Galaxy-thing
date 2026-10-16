@@ -28,13 +28,13 @@ void CometEventKeeper::init() {
     initCometStatus();
 
     if (isStartEvent("Red") || isStartEvent("Black")) {
-        mExecutorTimeLimit = new CometEventExecutorTimeLimit(getTimeLimitFromTable(::sTimeLimitInfoTable, ARRAY_SIZE(::sTimeLimitInfoTable)) / 60);
+        mExecutorTimeLimit = new (JKRHeapToken::Dummy) CometEventExecutorTimeLimit(getTimeLimitFromTable(::sTimeLimitInfoTable, ARRAY_SIZE(::sTimeLimitInfoTable)) / 60);
         mExecutorTimeLimit->initWithoutIter();
         mExecutorTimeLimit->kill();
     }
 
     if (mCometName != nullptr) {
-        mScreenFilter = new GalaxyCometScreenFilter();
+        mScreenFilter = new (JKRHeapToken::Dummy) GalaxyCometScreenFilter();
         mScreenFilter->initWithoutIter();
         mScreenFilter->_20 = true;
         mScreenFilter->setCometType(mCometName);

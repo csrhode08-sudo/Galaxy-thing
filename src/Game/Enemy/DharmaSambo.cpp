@@ -136,14 +136,14 @@ void DharmaSambo::init(const JMapInfoIter& rIter) {
         makeActorAppeared();
     }
 
-    mAnimScaleParam = new AnimScaleParam;
+    mAnimScaleParam = new (JKRHeapToken::Dummy) AnimScaleParam;
     mAnimScaleController = SamboFunction::createAnimScaleController(mAnimScaleParam);
     mParts.init(::hBodyPartsNum);
     mFixedPositions.init(::hBodyPartsNum);
 
     for (i = 0; i < ::hBodyPartsNum; i++) {
         MR::hideJoint(this, joint_name[i]);
-        DharmaSamboParts* part = new DharmaSamboParts(this, "だるまサンボパーツ", "DharmaSamboParts", nullptr, 18, 43, -2);
+        DharmaSamboParts* part = new (JKRHeapToken::Dummy) DharmaSamboParts(this, "だるまサンボパーツ", "DharmaSamboParts", nullptr, 18, 43, -2);
         part->initWithoutIter();
         part->mOriginalIndex = i;
         part->setHead(i == ::hBodyPartsNum - 1);
@@ -155,7 +155,7 @@ void DharmaSambo::init(const JMapInfoIter& rIter) {
         }
 
         mParts.push_back(part);
-        mFixedPositions.push_back(new FixedPosition(this, joint_name[i], TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, -90.0f, -90.0f)));
+        mFixedPositions.push_back(new (JKRHeapToken::Dummy) FixedPosition(this, joint_name[i], TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, -90.0f, -90.0f)));
     }
 }
 
@@ -742,7 +742,7 @@ DharmaSamboParts::DharmaSamboParts(DharmaSambo* pHost, const char* pName, const 
 }
 
 void DharmaSamboParts::init(const JMapInfoIter& rIter) {
-    mSpinHitController = new SpinHitController(this, 0, false);
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 0, false);
     initNerve(GET_NERVE(DharmaSamboParts, HostTypeNrvDoNothing));
     f32 scale = mScale.y;
     initHitSensor(1);

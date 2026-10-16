@@ -49,7 +49,7 @@ void JAISeq::playSeqData_(const JASSoundParams& params, JAISoundActivity activit
 
 void JAISeq::reserveChildTracks_(int n) {
     for (int i = 0; i < 2; i++) {
-        JASTrack* const track = new JASTrack();
+        JASTrack* const track = new (JKRHeapToken::Dummy) JASTrack();
         if (track != nullptr) {
             track->setAutoDelete(true);
             inner_.outputTrack.connectChild(i, track);
@@ -59,7 +59,7 @@ void JAISeq::reserveChildTracks_(int n) {
                     continue;
                 }
 
-                JASTrack* child = new JASTrack();
+                JASTrack* child = new (JKRHeapToken::Dummy) JASTrack();
                 if (child != nullptr) {
                     child->setAutoDelete(true);
                     track->connectChild(j, child);
@@ -239,7 +239,7 @@ JAISoundChild* JAISeq::getChild(int index) {
         return inner_.mSoundChild[index];
     }
 
-    inner_.mSoundChild[index] = new JAISoundChild();
+    inner_.mSoundChild[index] = new (JKRHeapToken::Dummy) JAISoundChild();
     if (!inner_.mSoundChild[index]) {
         return nullptr;
     }

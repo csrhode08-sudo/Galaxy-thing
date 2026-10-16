@@ -16,7 +16,7 @@ void* JKRHeap::mUserRamEnd;
 u32 JKRHeap::mMemorySize;
 
 static bool byte_806B26D8 = true;
-u32 ARALT_AramStartAdr = 0x90000000;
+uintptr_t ARALT_AramStartAdr = 0x90000000;
 
 JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDisposer(), mChildTree(this), mDisposerList() {
     OSInitMutex(&mMutex);
@@ -75,8 +75,8 @@ bool JKRHeap::initArena(char** memory, u32* size, int maxHeaps) {
 
     arenaStart = OSInitAlloc(arenaLo, arenaHi, maxHeaps);
     OSBootInfo* code = (OSBootInfo*)OSPhysicalToCached(0);
-    ramStart = (void*)(((u32)arenaStart + 31) & 0xFFFFFFE0);
-    ramEnd = (void*)((u32)arenaHi & 0xFFFFFFE0);
+    ramStart = (void*)(((uintptr_t)arenaStart + 31) & ~(uintptr_t)31);
+    ramEnd = (void*)((uintptr_t)arenaHi & ~(uintptr_t)31);
 
     JKRHeap::mCodeStart = code;
     JKRHeap::mCodeEnd = ramStart;
@@ -88,7 +88,7 @@ bool JKRHeap::initArena(char** memory, u32* size, int maxHeaps) {
     OSSetArenaHi(ramEnd);
 
     *memory = (char*)ramStart;
-    *size = (u32)ramEnd - (u32)ramStart;
+    *size = (u32)((uintptr_t)ramEnd - (uintptr_t)ramStart);
     return true;
 }
 
@@ -222,7 +222,7 @@ JKRHeap* JKRHeap::findAllHeap(void* ptr) const {
     return nullptr;
 }
 
-void JKRHeap::dispose_subroutine(u32 start, u32 end) {
+void JKRHeap::dispose_subroutine(uintptr_t start, uintptr_t end) {
     JSUListIterator< JKRDisposer > it(mDisposerList.getFirst());
     JSUListIterator< JKRDisposer > last_it;
 
@@ -247,14 +247,14 @@ void JKRHeap::dispose_subroutine(u32 start, u32 end) {
 }
 
 bool JKRHeap::dispose(void* ptr, u32 size) {
-    u32 begin = (u32)ptr;
-    u32 end = (u32)ptr + size;
+    uintptr_t begin = (uintptr_t)ptr;
+    uintptr_t end = (uintptr_t)ptr + size;
     dispose_subroutine(begin, end);
     return false;
 }
 
 void JKRHeap::dispose(void* begin, void* end) {
-    dispose_subroutine((u32)begin, (u32)end);
+    dispose_subroutine((uintptr_t)begin, (uintptr_t)end);
 }
 
 void JKRHeap::dispose() {
@@ -295,6 +295,53 @@ JKRErrorHandler JKRHeap::setErrorHandler(JKRErrorHandler errorHandler) {
     return prev;
 }
 
+#ifdef TARGET_PC
+void* operator new(size_t size, JKRHeapToken) noexcept {
+    return JKRHeap::alloc(size, 4, nullptr);
+}
+
+void* operator new(size_t size, JKRHeapToken, int align) noexcept {
+    return JKRHeap::alloc(size, align, nullptr);
+}
+
+void* operator new(size_t size, JKRHeapToken, JKRHeap* pHeap, int align) noexcept {
+    return JKRHeap::alloc(size, align, pHeap);
+}
+
+void* operator new[](size_t size, JKRHeapToken) noexcept {
+    return JKRHeap::alloc(size, 4, nullptr);
+}
+
+void* operator new[](size_t size, JKRHeapToken, int align) noexcept {
+    return JKRHeap::alloc(size, align, nullptr);
+}
+
+void* operator new[](size_t size, JKRHeapToken, JKRHeap* pHeap, int align) noexcept {
+    return JKRHeap::alloc(size, align, pHeap);
+}
+
+// Global delete is shared with host libraries: free game-heap memory through JKRHeap and
+// everything else through the C runtime (which backs the default operator new).
+void operator delete(void* pData) noexcept {
+    if (pc_isGameHeapPtr(pData)) {
+        JKRHeap::free(pData, nullptr);
+    } else {
+        free(pData);
+    }
+}
+
+void operator delete[](void* pData) noexcept {
+    operator delete(pData);
+}
+
+void operator delete(void* pData, size_t) noexcept {
+    operator delete(pData);
+}
+
+void operator delete[](void* pData, size_t) noexcept {
+    operator delete(pData);
+}
+#else
 void* operator new(u32 size) {
     return JKRHeap::alloc(size, 4, nullptr);
 }
@@ -327,6 +374,8 @@ void operator delete[](void* pData) {
     JKRHeap::free(pData, nullptr);
 }
 
+#endif
+
 void JKRHeap::state_register(TState*, u32) const {
     return;
 }
@@ -339,11 +388,11 @@ void JKRHeap::state_dump(const TState&) const {
     return;
 }
 
-void JKRHeap::setAltAramStartAdr(u32 addr) {
+void JKRHeap::setAltAramStartAdr(uintptr_t addr) {
     ARALT_AramStartAdr = addr;
 }
 
-u32 JKRHeap::getAltAramStartAdr() {
+uintptr_t JKRHeap::getAltAramStartAdr() {
     return ARALT_AramStartAdr;
 }
 

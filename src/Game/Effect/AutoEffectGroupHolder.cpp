@@ -21,7 +21,7 @@ AutoEffectGroupHolder::AutoEffectGroupHolder() : mCount() {
 }
 
 AutoEffectGroup* AutoEffectGroupHolder::find(const char* pName) const {
-    AutoEffectGroup* const* pGroup = std::find_if(mGroups, mGroups + mCount, MR::eq_ptr_case< AutoEffectGroup* >(pName));
+    AutoEffectGroup* const* pGroup = msl::find_if(mGroups, mGroups + mCount, MR::eq_ptr_case< AutoEffectGroup* >(pName));
 
     if (pGroup != mGroups + mCount) {
         return *pGroup;
@@ -31,7 +31,7 @@ AutoEffectGroup* AutoEffectGroupHolder::find(const char* pName) const {
 }
 
 bool AutoEffectGroupHolder::isExist(const char* pName) const {
-    return std::find_if(mGroups, mGroups + mCount, MR::eq_ptr_case< AutoEffectGroup* >(pName)) != mGroups + mCount;
+    return msl::find_if(mGroups, mGroups + mCount, MR::eq_ptr_case< AutoEffectGroup* >(pName)) != mGroups + mCount;
 }
 
 namespace MR {

@@ -15,7 +15,7 @@
 #define ICON_ID_PEACH 5
 
 ConfigDataMii::ConfigDataMii() : mFlag(), mIconId(ICON_ID_MARIO), mMiiId() {
-    mMiiId = new u8[sizeof(RFLCreateID)];
+    mMiiId = new (JKRHeapToken::Dummy) u8[sizeof(RFLCreateID)];
 
     initializeData();
 }

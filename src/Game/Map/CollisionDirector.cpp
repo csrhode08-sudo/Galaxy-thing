@@ -8,11 +8,11 @@
 #define CATEGORY_KEEPER_NUM 4
 
 CollisionDirector::CollisionDirector() : NameObj("地形コリジョン"), mCategoryKeeper(), mCode() {
-    mCode = new CollisionCode();
-    mCategoryKeeper = new CollisionCategorizedKeeper*[CATEGORY_KEEPER_NUM];
+    mCode = new (JKRHeapToken::Dummy) CollisionCode();
+    mCategoryKeeper = new (JKRHeapToken::Dummy) CollisionCategorizedKeeper*[CATEGORY_KEEPER_NUM];
 
     for (s32 i = 0; i < CATEGORY_KEEPER_NUM; i++) {
-        mCategoryKeeper[i] = new CollisionCategorizedKeeper(i);
+        mCategoryKeeper[i] = new (JKRHeapToken::Dummy) CollisionCategorizedKeeper(i);
     }
 
     MR::connectToScene(this, MR::MovementType_CollisionDirector, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);

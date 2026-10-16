@@ -28,7 +28,7 @@ void IKJointCtrl::init(const IKJointCtrlParam& rParam) {
     J3DJoint* endJoint = MR::getJoint(mActor, mName);
     J3DJoint* middleJoint = MR::getParentJoint(mActor, endJoint);
     J3DJoint* rootJoint = MR::getParentJoint(mActor, middleJoint);
-    mJoint = new IKJoint;
+    mJoint = new (JKRHeapToken::Dummy) IKJoint;
     _B0 = rootJoint->getJntNo();
     _B2 = middleJoint->getJntNo();
     _B4 = endJoint->getJntNo();
@@ -93,13 +93,13 @@ bool IKJointCtrl::updateEndJointCallBack(TPos3f* pMtx, const JointControllerInfo
 }
 
 IKJointCtrlHolder::IKJointCtrlHolder(LiveActor* pActor, u32 count) : mControls(), mNumControls(), _8(), mActor(pActor), _10(true) {
-    mControls = new IKJointCtrl*[count];
+    mControls = new (JKRHeapToken::Dummy) IKJointCtrl*[count];
     mNumControls = count;
 }
 
 void IKJointCtrlHolder::addCtrl(const IKJointCtrlParam& rParam) {
     if (mNumControls > _8) {
-        IKJointCtrl* ctrl = new IKJointCtrl(mActor);
+        IKJointCtrl* ctrl = new (JKRHeapToken::Dummy) IKJointCtrl(mActor);
         ctrl->init(rParam);
         u32 cnt = _8;
         _8 = cnt + 1;
@@ -109,7 +109,7 @@ void IKJointCtrlHolder::addCtrl(const IKJointCtrlParam& rParam) {
 
 void IKJointCtrlHolder::startUpdate() {
     _10 = false;
-    std::for_each(mControls, mControls + _8, std::mem_fun(&IKJointCtrl::disableCallBack));
+    msl::for_each(mControls, mControls + _8, msl::mem_fun(&IKJointCtrl::disableCallBack));
 }
 
 void IKJointCtrlHolder::setEndPosition(const char* pName, const TVec3f& rPos, f32 a3) {
@@ -121,17 +121,17 @@ void IKJointCtrlHolder::setEndDirection(const char* pName, const TVec3f& rDirect
 }
 
 void IKJointCtrlHolder::endUpdate() {
-    std::for_each(mControls, mControls + _8, std::mem_fun(&IKJointCtrl::enableCallBack));
+    msl::for_each(mControls, mControls + _8, msl::mem_fun(&IKJointCtrl::enableCallBack));
     _10 = true;
 }
 
 void IKJointCtrlHolder::endCtrlAll() {
-    std::for_each(mControls, mControls + _8, std::mem_fun(&IKJointCtrl::endCtrl));
+    msl::for_each(mControls, mControls + _8, msl::mem_fun(&IKJointCtrl::endCtrl));
 }
 
 void IKJointCtrlHolder::setCallBackFunction() {
     if (_10) {
-        std::for_each(mControls, mControls + _8, std::mem_fun(&IKJointCtrl::setCallBackFunction));
+        msl::for_each(mControls, mControls + _8, msl::mem_fun(&IKJointCtrl::setCallBackFunction));
     }
 }
 
@@ -160,7 +160,7 @@ IKJointCtrlHolder* ActorJoint::createIKJointCtrlHolder(LiveActor* pActor) {
         return nullptr;
     }
 
-    IKJointCtrlHolder* holder = new IKJointCtrlHolder(pActor, count);
+    IKJointCtrlHolder* holder = new (JKRHeapToken::Dummy) IKJointCtrlHolder(pActor, count);
 
     for (s32 i = 0; i < count; i++) {
         IKJointCtrlParam param;

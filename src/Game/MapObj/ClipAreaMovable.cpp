@@ -48,11 +48,11 @@ void ClipAreaMovable::initMoveFunction(const JMapInfoIter& rIter) {
     if (MR::isConnectedWithRail(rIter)) {
         initRailRider(rIter);
 
-        mMapPartsRailMover = new MapPartsRailMover(this);
+        mMapPartsRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mMapPartsRailMover->init(rIter);
     }
 
-    mMapPartsRotator = new MapPartsRotator(this);
+    mMapPartsRotator = new (JKRHeapToken::Dummy) MapPartsRotator(this);
     mMapPartsRotator->init(rIter);
 }
 
@@ -103,7 +103,7 @@ void ClipAreaMovable::updateMatrix() {
 }
 
 NameObj* MR::createClipAreaSphere(const char* pParam1) {
-    ClipArea* pClipArea = new ClipAreaMovable(pParam1);
+    ClipArea* pClipArea = new (JKRHeapToken::Dummy) ClipAreaMovable(pParam1);
 
     MR::setClipSphereArea(pClipArea);
 
@@ -111,7 +111,7 @@ NameObj* MR::createClipAreaSphere(const char* pParam1) {
 }
 
 NameObj* MR::createClipAreaCenterBox(const char* pParam1) {
-    ClipArea* pClipArea = new ClipAreaMovable(pParam1);
+    ClipArea* pClipArea = new (JKRHeapToken::Dummy) ClipAreaMovable(pParam1);
 
     MR::setClipCenterBoxArea(pClipArea);
 
@@ -119,7 +119,7 @@ NameObj* MR::createClipAreaCenterBox(const char* pParam1) {
 }
 
 NameObj* MR::createClipAreaBottomBox(const char* pParam1) {
-    ClipArea* pClipArea = new ClipAreaMovable(pParam1);
+    ClipArea* pClipArea = new (JKRHeapToken::Dummy) ClipAreaMovable(pParam1);
 
     MR::setClipBottomBoxArea(pClipArea);
 
@@ -127,7 +127,7 @@ NameObj* MR::createClipAreaBottomBox(const char* pParam1) {
 }
 
 NameObj* MR::createClipAreaTopCone(const char* pParam1) {
-    ClipArea* pClipArea = new ClipAreaMovable(pParam1);
+    ClipArea* pClipArea = new (JKRHeapToken::Dummy) ClipAreaMovable(pParam1);
 
     MR::setClipTopConeArea(pClipArea);
 
@@ -135,7 +135,7 @@ NameObj* MR::createClipAreaTopCone(const char* pParam1) {
 }
 
 NameObj* MR::createClipAreaBottomCone(const char* pParam1) {
-    ClipArea* pClipArea = new ClipAreaMovable(pParam1);
+    ClipArea* pClipArea = new (JKRHeapToken::Dummy) ClipAreaMovable(pParam1);
 
     MR::setClipBottomConeArea(pClipArea);
 

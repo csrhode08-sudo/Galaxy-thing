@@ -13,7 +13,7 @@ PowerStarEventKeeper::PowerStarEventKeeper() : mStartScenario(1), mPowerStarNum(
 }
 
 void PowerStarEventKeeper::initStarInfoTable() {
-    mInfoTbl = new PowerStarInfo[mPowerStarNum];
+    mInfoTbl = new (JKRHeapToken::Dummy) PowerStarInfo[mPowerStarNum];
 
     for (s32 starID = 0; starID < mPowerStarNum; starID++) {
         PowerStarInfo* pInfo = getStarInfo(starID + mStartScenario - 1);

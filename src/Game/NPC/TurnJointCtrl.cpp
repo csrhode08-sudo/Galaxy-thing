@@ -20,7 +20,7 @@ namespace {
 };  // namespace
 
 TurnJointCtrl::TurnJointCtrl(LiveActor* pActor)
-    : mActor(pActor), mCtrlRate(new JointCtrlRate()), mHorizontalDegreeMax(45.0f), mPositiveDegreeMax(22.5f), mNegativeDegreeMax(22.5f),
+    : mActor(pActor), mCtrlRate(new (JKRHeapToken::Dummy) JointCtrlRate()), mHorizontalDegreeMax(45.0f), mPositiveDegreeMax(22.5f), mNegativeDegreeMax(22.5f),
       mStarePos(0.0f, 0.0f, 0.0f), _5C(1000.0f), _60(0.04f), mCtrlFrames(60), mEnabled(true) {
     mFace.mEnabled = false;
     mFace.mBlendRate = 0.0f;

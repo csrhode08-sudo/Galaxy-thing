@@ -64,7 +64,7 @@ void LightCylinder::initLightCylinderByOwner(const JMapInfoIter& rIter) {
 void LightCylinder::initLightVolume(const char* pName) {
     char modelName[0x100];
     snprintf(modelName, sizeof(modelName), "%sLightVolume", pName ? pName : mObjectName);
-    VolumeModelDrawer* lightVolume = new VolumeModelDrawer("光", modelName, mHostMtx ? mHostMtx : getBaseMtx());
+    VolumeModelDrawer* lightVolume = new (JKRHeapToken::Dummy) VolumeModelDrawer("光", modelName, mHostMtx ? mHostMtx : getBaseMtx());
     mLightVolume = lightVolume;
     lightVolume->mColor.set(mColor);
 }
@@ -111,7 +111,7 @@ void SwingLight::initCaseNoUseSwitchA(const MapObjActorInitInfo&) {
 
 void SwingLight::makeSubModels(const JMapInfoIter& rIter, const MapObjActorInitInfo&) {
     const char* modelName = ::getGlaringLightModelName(mObjectName);
-    mLightCylinder = new LightCylinder(modelName, getBaseMtx(), Color8(0));
+    mLightCylinder = new (JKRHeapToken::Dummy) LightCylinder(modelName, getBaseMtx(), Color8(0));
     mLightCylinder->initLightCylinderByOwner(rIter);
     mLightCylinder->makeActorDead();
 }

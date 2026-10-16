@@ -67,7 +67,7 @@ void Petari::init(const JMapInfoIter& rIter) {
     MR::setEffectHostMtx(this, "PointerTouchManual", mHeadMtx);
     initSound(4, false);
     MR::initShadowFromCSV(this, "Shadow");
-    mAnimScaleCtrl = new AnimScaleController(nullptr);
+    mAnimScaleCtrl = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     initFootPrint(rIter);
     initNerve(GET_NERVE_ANON(PetariNrvLurk));
     initFrontVec();
@@ -457,7 +457,7 @@ bool Petari::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) 
 }
 
 void Petari::initFootPrint(const JMapInfoIter& rIter) {
-    mFootPrint = new FootPrint("ペタリの足跡", 32);
+    mFootPrint = new (JKRHeapToken::Dummy) FootPrint("ペタリの足跡", 32);
 
     ResTIMG* texture = MR::getTexFromArc("Footprint.bti", this);
     mFootPrint->setTexture(texture);

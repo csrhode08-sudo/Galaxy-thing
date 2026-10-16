@@ -118,12 +118,12 @@ public:
 
     void setModelDrawMtx(Mtx* pMtxArr) {
         mModelDrawMtx = pMtxArr;
-        GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+        GXSETARRAY(GX_POS_MTX_ARRAY, mModelDrawMtx, 10 * sizeof(Mtx), sizeof(*mModelDrawMtx), true);
     }
 
     void setModelNrmMtx(Mtx33* pMtxArr) {
         mModelNrmMtx = pMtxArr;
-        GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+        GXSETARRAY(GX_NRM_MTX_ARRAY, mModelNrmMtx, 10 * sizeof(Mtx33), sizeof(*mModelNrmMtx), true);
     }
 
     void setNBTScale(Vec* scale) {

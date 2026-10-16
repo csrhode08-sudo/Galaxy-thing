@@ -9,7 +9,7 @@ PoltaGroundRockHolder::PoltaGroundRockHolder() : DeriveActorGroup< PoltaGroundRo
     PoltaGroundRock* pGroundRock;
 
     for (int i = 0; i < ::sMaxPoltaGroundRock; i++) {
-        pGroundRock = new PoltaGroundRock("ポルタ地面岩");
+        pGroundRock = new (JKRHeapToken::Dummy) PoltaGroundRock("ポルタ地面岩");
         pGroundRock->initWithoutIter();
         registerActor(pGroundRock);
     }

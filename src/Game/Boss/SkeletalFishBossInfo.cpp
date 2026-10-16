@@ -35,7 +35,7 @@ SkeletalFishBossInfo::LevelStatus* SkeletalFishBossInfo::getLevelStatus(s32 idx)
 }
 
 void SkeletalFishBossInfo::createLevelStatus() {
-    mLevelStatusArray = new LevelStatus[mLevelNum];
+    mLevelStatusArray = new (JKRHeapToken::Dummy) LevelStatus[mLevelNum];
 
     for (s32 i = 0; i < mLevelNum; i++) {
         getLevelStatus(i)->mEnergyLevel = 1;
@@ -43,7 +43,7 @@ void SkeletalFishBossInfo::createLevelStatus() {
         getLevelStatus(i)->mRailIDLevel = 0;
         getLevelStatus(i)->mGuardOffsLevel = 2000.0f;
         getLevelStatus(i)->mGuardAppearNumLevel = 0;
-        getLevelStatus(i)->mStatusArray = new GuardStatus[mGuardNum];
+        getLevelStatus(i)->mStatusArray = new (JKRHeapToken::Dummy) GuardStatus[mGuardNum];
 
         for (s32 j = 0; j < mGuardNum; j++) {
             mLevelStatusArray[i].getGuardStatus(j)->mGuardPosLevel.zero();

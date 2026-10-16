@@ -100,8 +100,8 @@ void Kuribo::init(const JMapInfoIter& rIter) {
         mGravity.set(v8);
     }
 
-    mScaleController = new AnimScaleController(nullptr);
-    mItemGenerator = new ItemGenerator();
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mItemGenerator = new (JKRHeapToken::Dummy) ItemGenerator();
     MR::initStarPointerTarget(this, 70.0f * mScale.y, TVec3f(0.0f, 75.0f * mScale.y, 0.0f));
     initSound(4, false);
     if (MR::isEqualStageName("KoopaBattleVs2Galaxy")) {
@@ -140,11 +140,11 @@ void Kuribo::initAfterPlacement() {
 }
 
 void Kuribo::initState() {
-    mStateFindPlayer = new WalkerStateFindPlayer(this, &_B8, &::sParam.mStateParam, &::sParam.mFindPlayerParam);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
-    mStateStagger = new WalkerStateStagger(this, &_B8, &::sParam.mStateParam, &::sParam.mStaggerParam);
-    mStateWander = new WalkerStateWander(this, &_B8, &::sParam.mStateParam, &::sParam.mWanderParam);
-    mStateChase = new WalkerStateChase(this, &_B8, &::sParam.mStateParam, &::sParam.mChaseParam);
+    mStateFindPlayer = new (JKRHeapToken::Dummy) WalkerStateFindPlayer(this, &_B8, &::sParam.mStateParam, &::sParam.mFindPlayerParam);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
+    mStateStagger = new (JKRHeapToken::Dummy) WalkerStateStagger(this, &_B8, &::sParam.mStateParam, &::sParam.mStaggerParam);
+    mStateWander = new (JKRHeapToken::Dummy) WalkerStateWander(this, &_B8, &::sParam.mStateParam, &::sParam.mWanderParam);
+    mStateChase = new (JKRHeapToken::Dummy) WalkerStateChase(this, &_B8, &::sParam.mStateParam, &::sParam.mChaseParam);
 }
 
 void Kuribo::initSensor() {
@@ -787,7 +787,7 @@ void Kuribo::exeBlowLand() {
 
 namespace MR {
     LiveActor* createNoItemKuriboActor(const char* pName) {
-        Kuribo* kuribo = new Kuribo(pName);
+        Kuribo* kuribo = new (JKRHeapToken::Dummy) Kuribo(pName);
         kuribo->_C5 = 0;
         return kuribo;
     }

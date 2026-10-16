@@ -327,9 +327,9 @@ void TreasureBoxCracked::initItem(const JMapInfoIter& rIter) {
     } else if (mItemType == 4) {
         mItem = initKinokoOneUp(rIter);
     } else if (mItemType == 5) {
-        mItem = new BenefitItemLifeUp("ライフＵＰキノコ");
+        mItem = new (JKRHeapToken::Dummy) BenefitItemLifeUp("ライフＵＰキノコ");
     } else if (mItemType == 6) {
-        mItem = new AirBubble("空気泡");
+        mItem = new (JKRHeapToken::Dummy) AirBubble("空気泡");
     }
 
     initItemTrans();
@@ -367,7 +367,7 @@ void TreasureBoxCracked::initItemTrans() {
 LiveActor* TreasureBoxCracked::initYellowChip(const JMapInfoIter& rIter) {
     s32 groupId;
     MR::getJMapInfoArg0WithInit(rIter, &groupId);
-    YellowChip* chip = new YellowChip("イエローチップ");
+    YellowChip* chip = new (JKRHeapToken::Dummy) YellowChip("イエローチップ");
     chip->setHost(this);
     chip->setGroupID(groupId);
     return chip;
@@ -376,14 +376,14 @@ LiveActor* TreasureBoxCracked::initYellowChip(const JMapInfoIter& rIter) {
 LiveActor* TreasureBoxCracked::initBlueChip(const JMapInfoIter& rIter) {
     s32 groupId;
     MR::getJMapInfoArg0WithInit(rIter, &groupId);
-    BlueChip* chip = new BlueChip("ブルーチップ");
+    BlueChip* chip = new (JKRHeapToken::Dummy) BlueChip("ブルーチップ");
     chip->setHost(this);
     chip->setGroupID(groupId);
     return chip;
 }
 
 LiveActor* TreasureBoxCracked::initKinokoOneUp(const JMapInfoIter& rIter) {
-    return new BenefitItemOneUp("１ＵＰキノコ");
+    return new (JKRHeapToken::Dummy) BenefitItemOneUp("１ＵＰキノコ");
 }
 
 bool TreasureBoxCracked::checkItemPos() {

@@ -110,5 +110,5 @@ CameraTargetObj* CameraWaterPlanet::calc() {
 }
 
 CamTranslatorBase* CameraWaterPlanet::createTranslator() {
-    return new CamTranslatorWaterPlanet(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorWaterPlanet(this);
 }

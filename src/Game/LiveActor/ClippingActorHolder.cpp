@@ -11,11 +11,11 @@ namespace {
 };  // namespace
 
 ClippingActorHolder::ClippingActorHolder() : NameObj("クリッピングアクター保持"), mActorNum(), _10(), _14(), _18(), _1C(), mViewGroupCtrl() {
-    _10 = new ClippingActorInfoList(::sActorNumMax);
-    _14 = new ClippingActorInfoList(::sActorNumMax);
-    _18 = new ClippingActorInfoList(::sActorNumMax);
-    _1C = new ClippingActorInfoList(::sActorNumMax);
-    mViewGroupCtrl = new ViewGroupCtrl();
+    _10 = new (JKRHeapToken::Dummy) ClippingActorInfoList(::sActorNumMax);
+    _14 = new (JKRHeapToken::Dummy) ClippingActorInfoList(::sActorNumMax);
+    _18 = new (JKRHeapToken::Dummy) ClippingActorInfoList(::sActorNumMax);
+    _1C = new (JKRHeapToken::Dummy) ClippingActorInfoList(::sActorNumMax);
+    mViewGroupCtrl = new (JKRHeapToken::Dummy) ViewGroupCtrl();
 }
 
 void ClippingActorHolder::movement() {
@@ -27,7 +27,7 @@ void ClippingActorHolder::movement() {
 }
 
 void ClippingActorHolder::registerActor(LiveActor* pActor) {
-    _18->add(new ClippingActorInfo(pActor));
+    _18->add(new (JKRHeapToken::Dummy) ClippingActorInfo(pActor));
 
     mActorNum++;
 }

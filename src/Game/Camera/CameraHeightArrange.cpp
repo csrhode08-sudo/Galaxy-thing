@@ -22,8 +22,8 @@ CameraHeightArrange::~CameraHeightArrange() {
 }
 
 CameraHeightArrange::CameraHeightArrange(Camera* pCamera)
-    : NameObj("CameraHeightArrange"), mCamera(pCamera), mIsJumping(), mIsStartJump(), mIsEndJump(), mNextParam(new CameraPoseParam()),
-      mCurrParam(new CameraPoseParam()), mCameraWatchPosBaseHeight(), mCameraTargetPosHeight(), mCameraWatchPosHeight(), mCameraPosHeight(),
+    : NameObj("CameraHeightArrange"), mCamera(pCamera), mIsJumping(), mIsStartJump(), mIsEndJump(), mNextParam(new (JKRHeapToken::Dummy) CameraPoseParam()),
+      mCurrParam(new (JKRHeapToken::Dummy) CameraPoseParam()), mCameraWatchPosBaseHeight(), mCameraTargetPosHeight(), mCameraWatchPosHeight(), mCameraPosHeight(),
       mCameraWatchPosOffset(), mCameraPosOffset(), mJumpState(), mStateTime(), mIsCatchup(), mChaseTime(), mRiseTime(), mDropTime(), mRiseEaseTime(),
       mUpdateGlobalAxis(), mGlobalAxis(0.0f, 1.0f, 0.0f), mOffsetScale(0.1f), mOffsetScaleMax(15.0f), mFocalScaleUpper(0.3f), mFocalScaleLower(0.1f),
       mGndInt(160), mPosOffsetMinRiseLag(500.0f), mPosOffsetMinDropLag(800.0f), mRiseDelay(120), mDropDelay(120), mMaxRiseEaseTime(120),

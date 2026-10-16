@@ -59,7 +59,7 @@ bool JMapInfo::getValueFast(int entryIndex, int itemIndex, const char** pValueOu
     switch (item->mType) {
     case JMAP_VALUE_TYPE_STRING_PTR:
         const char* pStringTable = getEntryAddress(mData, mData->mDataOffset, getNumEntries());
-        *pValueOut = pStringTable + *reinterpret_cast< const u32* >(valuePtr);
+        *pValueOut = pStringTable + *reinterpret_cast< const BE(u32)* >(valuePtr);
         break;
     default:
         *pValueOut = valuePtr;
@@ -77,10 +77,10 @@ bool JMapInfo::getValueFast(int entryIndex, int itemIndex, u32* pValueOut) const
     switch (item->mType) {
     case JMAP_VALUE_TYPE_LONG:
     case JMAP_VALUE_TYPE_LONG_2:
-        rawValue = *reinterpret_cast< const u32* >(valuePtr);
+        rawValue = *reinterpret_cast< const BE(u32)* >(valuePtr);
         break;
     case JMAP_VALUE_TYPE_SHORT:
-        rawValue = *reinterpret_cast< const u16* >(valuePtr);
+        rawValue = *reinterpret_cast< const BE(u16)* >(valuePtr);
         break;
     case JMAP_VALUE_TYPE_BYTE:
         rawValue = *reinterpret_cast< const u8* >(valuePtr);
@@ -95,21 +95,22 @@ bool JMapInfo::getValueFast(int entryIndex, int itemIndex, u32* pValueOut) const
 
 bool JMapInfo::getValueFast(int entryIndex, int itemIndex, s32* pValueOut) const {
     const JMapItem* item = &mData->mItems[itemIndex];
+    const char* valuePtr;
     if (item->mShift != 0) {
         goto FAIL;
     }
-    const char* valuePtr = getEntryAddress(mData, mData->mDataOffset, entryIndex) + item->mOffsData;
+    valuePtr = getEntryAddress(mData, mData->mDataOffset, entryIndex) + item->mOffsData;
 
     switch (item->mType) {
     case JMAP_VALUE_TYPE_LONG:
         if (item->mMask == 0xffffffff) {
-            *pValueOut = *reinterpret_cast< const s32* >(valuePtr);
+            *pValueOut = *reinterpret_cast< const BE(s32)* >(valuePtr);
             break;
         }
         goto FAIL;
     case JMAP_VALUE_TYPE_SHORT:
         if (item->mMask == 0xffff) {
-            *pValueOut = *reinterpret_cast< const s16* >(valuePtr);
+            *pValueOut = *reinterpret_cast< const BE(s16)* >(valuePtr);
             break;
         }
         goto FAIL;

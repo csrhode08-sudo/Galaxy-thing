@@ -34,7 +34,7 @@ s32 SkeletalFishBossRail::getFillUpNamePos(s32 idx) const {
 }
 
 void SkeletalFishBossRail::createFillUpFlag() {
-    mFillUpFlags = new bool[MR::getRailPointNum(this)];
+    mFillUpFlags = new (JKRHeapToken::Dummy) bool[MR::getRailPointNum(this)];
 
     for (u32 i = 0; i < MR::getRailPointNum(this); i++) {
         s32 pointArg;
@@ -49,7 +49,7 @@ void SkeletalFishBossRail::createFillUpFlag() {
 }
 
 void SkeletalFishBossRail::createFillUpNamePosID() {
-    mNamePosIDs = new s32[MR::getRailPointNum(this)];
+    mNamePosIDs = new (JKRHeapToken::Dummy) s32[MR::getRailPointNum(this)];
 
     for (s32 i = 0; i < MR::getRailPointNum(this); i++) {
         mNamePosIDs[i] = -1;

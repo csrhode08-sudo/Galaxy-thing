@@ -321,7 +321,7 @@ void LiveActor::endClipped() {
 }
 
 void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAnimName, bool a3) {
-    mModelManager = new ModelManager();
+    mModelManager = new (JKRHeapToken::Dummy) ModelManager();
     mModelManager->init(pModelName, pAnimName, a3);
 
     MR::getJ3DModel(this)->setBaseScale(mScale);
@@ -333,15 +333,15 @@ void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAni
 }
 
 void LiveActor::initNerve(const Nerve* pNerve) {
-    mSpine = new Spine(this, pNerve);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, pNerve);
 }
 
 void LiveActor::initHitSensor(int numSensors) {
-    mSensorKeeper = new HitSensorKeeper(numSensors);
+    mSensorKeeper = new (JKRHeapToken::Dummy) HitSensorKeeper(numSensors);
 }
 
 void LiveActor::initBinder(f32 radius, f32 offsetY, u32 planeNum) {
-    mBinder = new Binder(getBaseMtx(), &mPosition, &mGravity, radius, offsetY, planeNum);
+    mBinder = new (JKRHeapToken::Dummy) Binder(getBaseMtx(), &mPosition, &mGravity, radius, offsetY, planeNum);
 
     MR::onBind(this);
 
@@ -351,11 +351,11 @@ void LiveActor::initBinder(f32 radius, f32 offsetY, u32 planeNum) {
 }
 
 void LiveActor::initRailRider(const JMapInfoIter& rIter) {
-    mRailRider = new RailRider(rIter);
+    mRailRider = new (JKRHeapToken::Dummy) RailRider(rIter);
 }
 
 void LiveActor::initEffectKeeper(int a1, const char* a2, bool doSort) {
-    mEffectKeeper = new EffectKeeper(getName(), MR::getModelResourceHolder(this), a1, a2);
+    mEffectKeeper = new (JKRHeapToken::Dummy) EffectKeeper(getName(), MR::getModelResourceHolder(this), a1, a2);
 
     if (doSort) {
         mEffectKeeper->enableSort();
@@ -370,14 +370,14 @@ void LiveActor::initEffectKeeper(int a1, const char* a2, bool doSort) {
 
 void LiveActor::initSound(int param1, bool is2D) {
     if (!is2D) {
-        mSoundObject = new AudAnmSoundObject(&mPosition, param1, MR::getCurrentHeap());
+        mSoundObject = new (JKRHeapToken::Dummy) AudAnmSoundObject(&mPosition, param1, MR::getCurrentHeap());
     } else {
-        mSoundObject = new AudAnmSoundObject(nullptr, param1, MR::getCurrentHeap());
+        mSoundObject = new (JKRHeapToken::Dummy) AudAnmSoundObject(nullptr, param1, MR::getCurrentHeap());
     }
 }
 
 void LiveActor::initShadowControllerList(u32 shadowNum) {
-    mShadowControllerList = new ShadowControllerList(this, shadowNum);
+    mShadowControllerList = new (JKRHeapToken::Dummy) ShadowControllerList(this, shadowNum);
 }
 
 void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2, ResourceHolder* pParam3, MtxPtr pParam4, bool param5, bool param6) {
@@ -417,11 +417,11 @@ void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
 }
 
 void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pTrans, MtxPtr pMtx, TVec3f offset) {
-    mStarPointerTarget = new StarPointerTarget(radius, pTrans, pMtx, offset);
+    mStarPointerTarget = new (JKRHeapToken::Dummy) StarPointerTarget(radius, pTrans, pMtx, offset);
 }
 
 void LiveActor::initActorLightCtrl() {
-    mActorLightCtrl = new ActorLightCtrl(this);
+    mActorLightCtrl = new (JKRHeapToken::Dummy) ActorLightCtrl(this);
 }
 
 void LiveActor::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {

@@ -1120,7 +1120,7 @@ bool MarioFireDance::update() {
             _28++;
             _20 = -mActor->getConst().getTable()->mFireDanceSecondJump;
             impact();
-            startPadVib(0UL);
+            startPadVib(0u);
             playSound("炎ダメージ復帰バウンド");
             if (_29 == 1) {
                 playSound("声針ダメージ中");

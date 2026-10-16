@@ -48,7 +48,7 @@ void CollisionArea::init(const JMapInfoIter& rIter) {
     if (_60 == 0) {
         mPolygon = nullptr;
     } else {
-        mPolygon = new AreaPolygon();
+        mPolygon = new (JKRHeapToken::Dummy) AreaPolygon();
         mPolygon->mForm = mForm;
         mPolygon->init(rIter);
         MR::validateCollisionParts(mPolygon->mParts);
@@ -462,14 +462,14 @@ void AreaPolygon::init(const JMapInfoIter& rIter) {
     mKCLFile = nullptr;
     mPositionNum = 4;
     _94 = 2;
-    mPositions = new TVec3f[mPositionNum];
+    mPositions = new (JKRHeapToken::Dummy) TVec3f[mPositionNum];
     setSurface(0);
 
     initHitSensor(1);
     MR::addHitSensorEye(this, "body", 8, 1.0f, TVec3f(0.0f));
 
-    mIndices = new TriangleIndexing[_94];
-    _9C = new TVec3f[_94];
+    mIndices = new (JKRHeapToken::Dummy) TriangleIndexing[_94];
+    _9C = new (JKRHeapToken::Dummy) TVec3f[_94];
 
     TriangleIndexing& rFirst = mIndices[0];
     rFirst.mIndex[0] = 0;

@@ -2,7 +2,7 @@
 #include "Game/LiveActor/Binder.hpp"
 
 SledRopePoint::SledRopePoint(const TVec3f& rPos, f32 bindRadius) : SwingRopePoint(rPos), mBinder(), mNoBind() {
-    mBinder = new Binder(nullptr, &mPosition, new TVec3f(0.0f, -1.0f, 0.0f), bindRadius, 0.0f, 8);
+    mBinder = new (JKRHeapToken::Dummy) Binder(nullptr, &mPosition, new (JKRHeapToken::Dummy) TVec3f(0.0f, -1.0f, 0.0f), bindRadius, 0.0f, 8);
 }
 
 void SledRopePoint::updatePos(f32 friction) {

@@ -10,7 +10,7 @@ MapPartsRailGuideDrawer* MapPartsRailGuideHolder::createRailGuide(LiveActor* pHo
     rIter.getValue("CommonPath_ID", &railId);
     MapPartsRailGuideDrawer* pDrawer = find(railId);
     if (pDrawer == nullptr) {
-        pDrawer = new MapPartsRailGuideDrawer(pHost, pModelName);
+        pDrawer = new (JKRHeapToken::Dummy) MapPartsRailGuideDrawer(pHost, pModelName);
         pDrawer->init(rIter);
 
         u32 index = mNumRailGuides;

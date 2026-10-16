@@ -6,8 +6,8 @@
 #define MSG_SIZE 32
 
 MarioMessenger::MarioMessenger(HitSensor* pSender) : NameObj("マリオメッセンジャー"), mSender(pSender) {
-    mReceiverArray = new HitSensor*[MSG_SIZE];
-    mMsgArray = new u32[MSG_SIZE];
+    mReceiverArray = new (JKRHeapToken::Dummy) HitSensor*[MSG_SIZE];
+    mMsgArray = new (JKRHeapToken::Dummy) u32[MSG_SIZE];
     mArraySize = 0;
 
     MR::connectToScene(this, MR::MovementType_PlayerMessenger, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);

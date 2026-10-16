@@ -8,7 +8,7 @@
 DemoPlayerKeeper::DemoPlayerKeeper(const DemoExecutor* pExecutor) : mExecutor(pExecutor), mNumPlayerInfos(), mPlayerInfos() {
     JMapInfo* map = nullptr;
     mNumPlayerInfos = DemoFunction::createSheetParser(mExecutor, "Player", &map);
-    mPlayerInfos = new DemoPlayerInfo[mNumPlayerInfos];
+    mPlayerInfos = new (JKRHeapToken::Dummy) DemoPlayerInfo[mNumPlayerInfos];
     for (int i = 0; i < mNumPlayerInfos; i++) {
         DemoPlayerInfo* playerinfo = &mPlayerInfos[i];
         MR::getCsvDataStrOrNULL(&playerinfo->mPartName, map, "PartName", i);

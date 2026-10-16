@@ -16,7 +16,7 @@ void SunshadeMapParts::calcAnim() {
 
 namespace MR {
     NameObj* createSunshadeMapParts(const char* pName) {
-        return new SunshadeMapParts(pName);
+        return new (JKRHeapToken::Dummy) SunshadeMapParts(pName);
     }
 };  // namespace MR
 

@@ -8,7 +8,7 @@ LayoutGroupCtrl::LayoutGroupCtrl(LayoutManager* pManager, const char* pName, u32
     mGroup = pManager->getGroup(pName);
 
     for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
-        mAnmPlayerArray[i] = new LayoutAnmPlayer(pManager);
+        mAnmPlayerArray[i] = new (JKRHeapToken::Dummy) LayoutAnmPlayer(pManager);
     }
 }
 

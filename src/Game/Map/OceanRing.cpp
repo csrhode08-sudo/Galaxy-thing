@@ -81,14 +81,14 @@ void OceanRing::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     initRailRider(rIter);
     initPoints();
-    mRingDrawer = new OceanRingDrawer(this);
+    mRingDrawer = new (JKRHeapToken::Dummy) OceanRingDrawer(this);
     calcClippingBox();
     WaterAreaFunction::entryOceanRing(this);
     s32 arg0 = 0;
     MR::getJMapInfoArg0NoInit(rIter, &arg0);
 
     if (arg0 == 0) {
-        mOceanRingPipe = new OceanRingPipe(this, mWidthMax, ::sDefaultWidth);
+        mOceanRingPipe = new (JKRHeapToken::Dummy) OceanRingPipe(this, mWidthMax, ::sDefaultWidth);
         mOceanRingPipe->init(rIter);
     } else {
         if (arg0 == 2) {
@@ -103,10 +103,10 @@ void OceanRing::init(const JMapInfoIter& rIter) {
     }
 
     MR::getJMapInfoArg1NoInit(rIter, &mObjArg1);
-    mBloomDrawer = new OceanRingBloomDrawer(this);
+    mBloomDrawer = new (JKRHeapToken::Dummy) OceanRingBloomDrawer(this);
     mBloomDrawer->initWithoutIter();
-    mSoundObj1 = new AudSoundObject(&mNearestToWatchCam, 4, MR::getCurrentHeap());
-    mSoundObj2 = new AudSoundObject(&mNerarestToCam, 4, MR::getCurrentHeap());
+    mSoundObj1 = new (JKRHeapToken::Dummy) AudSoundObject(&mNearestToWatchCam, 4, MR::getCurrentHeap());
+    mSoundObj2 = new (JKRHeapToken::Dummy) AudSoundObject(&mNerarestToCam, 4, MR::getCurrentHeap());
     MR::registerDemoSimpleCastAll(this);
     makeActorAppeared();
 }
@@ -344,7 +344,7 @@ void OceanRing::initPoints() {
     f32 totalLength = MR::getRailTotalLength(this);
     f32 v6 = (totalLength / mSegCount);
     mWidthMax = ::sDefaultWidth;
-    mWaterPoints = new WaterPoint*[mWaterPointNum];
+    mWaterPoints = new (JKRHeapToken::Dummy) WaterPoint*[mWaterPointNum];
     s32 v7 = 0;
 
     for (s32 i = 0; i < mSegCount; i++) {
@@ -372,7 +372,7 @@ void OceanRing::initPoints() {
                 ease = MR::getEaseOutValue(y, 0.0f, 1.0f, 1.0f);
             }
 
-            mWaterPoints[v15] = new WaterPoint(v21, v23, ((j + 7) * 171.42857f), (i * v6), ease, currentFlowSpeed);
+            mWaterPoints[v15] = new (JKRHeapToken::Dummy) WaterPoint(v21, v23, ((j + 7) * 171.42857f), (i * v6), ease, currentFlowSpeed);
             v7++;
             v15++;
         }

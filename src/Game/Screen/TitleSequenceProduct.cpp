@@ -40,13 +40,13 @@ TitleSequenceProduct::TitleSequenceProduct()
         initNerve(GET_NERVE_ANON(TitleSequenceProductBgmPrepare));
     }
 
-    mLogoLayout = new TitleSequenceProductSub::LogoLayout();
-    mPressStartLayout = new SimpleLayout("Press[A][B]", "PressStart", 1, -1);
+    mLogoLayout = new (JKRHeapToken::Dummy) TitleSequenceProductSub::LogoLayout();
+    mPressStartLayout = new (JKRHeapToken::Dummy) SimpleLayout("Press[A][B]", "PressStart", 1, -1);
     mPressStartLayout->initWithoutIter();
-    mAButtonChecker = new TriggerChecker();
-    mBButtonChecker = new TriggerChecker();
+    mAButtonChecker = new (JKRHeapToken::Dummy) TriggerChecker();
+    mBButtonChecker = new (JKRHeapToken::Dummy) TriggerChecker();
     mIsDisplayEncouragePal60Window = MR::isDisplayEncouragePal60Window();
-    mEncouragePal60Window = new EncouragePal60Window();
+    mEncouragePal60Window = new (JKRHeapToken::Dummy) EncouragePal60Window();
     mEncouragePal60Window->initWithoutIter();
     mEncouragePal60Window->kill();
 }

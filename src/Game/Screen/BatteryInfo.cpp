@@ -200,8 +200,8 @@ BatteryLayout::BatteryLayout() : LayoutActor("BatteryLayout", true), mInfo1P(nul
 void BatteryLayout::init(const JMapInfoIter& rIter) {
     initLayoutManager("BatteryInfo", 1);
 
-    mInfo1P = new BatteryInfo(this, "WinBattery1", 0);
-    mInfo2P = new BatteryInfo(this, "WinBattery2", 1);
+    mInfo1P = new (JKRHeapToken::Dummy) BatteryInfo(this, "WinBattery1", 0);
+    mInfo2P = new (JKRHeapToken::Dummy) BatteryInfo(this, "WinBattery2", 1);
 
     appear();
 }

@@ -47,7 +47,7 @@ LightZoneDataHolder::LightZoneDataHolder() {
 
 void LightZoneDataHolder::initZoneData() {
     mCount = MR::getZoneNum();
-    mZoneInfo = new LightZoneInfo[mCount];
+    mZoneInfo = new (JKRHeapToken::Dummy) LightZoneInfo[mCount];
 
     for (s32 i = 0; i < mCount; i++) {
         mZoneInfo[i].init(i);
@@ -73,7 +73,7 @@ void LightZoneInfo::init(s32 zoneID) {
     const char* zoneName = MR::getZoneNameFromZoneId(zoneID);
     JMapInfo* parser = 0;
     mAreaCount = LightFunction::createZoneDataParser(zoneName, &parser);
-    mAreaInfo = new AreaInfo[mAreaCount];
+    mAreaInfo = new (JKRHeapToken::Dummy) AreaInfo[mAreaCount];
 
     for (int i = 0; i < mAreaCount; i++) {
         AreaInfo* inf = &mAreaInfo[i];

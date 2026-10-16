@@ -13,7 +13,7 @@ MatrixControl::MatrixControl(const char* pName, MatrixMap* pMap, MatrixSelectLis
     u32 size;
     for (size = 0; _C[size].mName[0] != '\0'; size++) {
         if (!_1C) {
-            _C[size]._8 = new u8[8];
+            _C[size]._8 = new (JKRHeapToken::Dummy) u8[8];
 
             for (u32 i = 0; i < 8; i++) {
                 _C[size]._8[i] = (_C[size]._4 >> ((7 - i) * 4)) & 0xF;
@@ -21,7 +21,7 @@ MatrixControl::MatrixControl(const char* pName, MatrixMap* pMap, MatrixSelectLis
         }
     }
 
-    _14 = new HashSortTable(size);
+    _14 = new (JKRHeapToken::Dummy) HashSortTable(size);
 
     for (u32 i = 0; i < size; i++) {
         _14->add(_C[i].mName, i, false);
@@ -31,13 +31,13 @@ MatrixControl::MatrixControl(const char* pName, MatrixMap* pMap, MatrixSelectLis
 }
 
 u8 MatrixControl::getValue(const char* pName, u8 value) const {
-    u32 index;
+    uintptr_t index;
     _14->search(pName, &index);
     return _C[index]._8[value];
 }
 
 bool MatrixControl::getValueOrNone(const char* pName, u8 idx, u8* pValue) const {
-    u32 index;
+    uintptr_t index;
     if (!_14->search(pName, &index)) {
         return false;
     }
@@ -50,18 +50,18 @@ bool MatrixControl::getValueOrNone(const char* pName, u8 idx, u8* pValue) const 
 }
 
 bool MatrixControl::getBit(const char* pName, u8 bit) const {
-    u32 index;
+    uintptr_t index;
     _14->search(pName, &index);
     return _C[index]._4 & (1 << (31 - bit));
 }
 
 bool MatrixControl::isExist(const char* pName) const {
-    u32 index;
+    uintptr_t index;
     return _14->search(pName, &index);
 }
 
 bool MatrixControl::getBitOrNone(const char* pName, u8 bit) const {
-    u32 index;
+    uintptr_t index;
     if (_14->search(pName, &index) == false) {
         return _1D;
     }
@@ -74,7 +74,7 @@ MatrixValueGetter::MatrixValueGetter(const char* pName, MatrixValueTable* pTable
     for (size = 0; _C[size].mName[0] != '\x00'; size++)
         ;
 
-    _10 = new HashSortTable(size);
+    _10 = new (JKRHeapToken::Dummy) HashSortTable(size);
 
     for (u32 idx = 0; idx < size; idx++) {
         _10->add(_C[idx].mName, idx, false);
@@ -83,7 +83,7 @@ MatrixValueGetter::MatrixValueGetter(const char* pName, MatrixValueTable* pTable
 }
 
 bool MatrixValueGetter::getValue(const char* pName, f32* pValue) const {
-    u32 index;
+    uintptr_t index;
     if (!_10->search(pName, &index)) {
         return false;
     }

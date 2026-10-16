@@ -52,16 +52,16 @@ void AstroDomeGalaxySelector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
 
-    mCameraController = new AstroDomeCameraController("天文ドームカメラ制御");
+    mCameraController = new (JKRHeapToken::Dummy) AstroDomeCameraController("天文ドームカメラ制御");
     mCameraController->initWithoutIter();
 
-    mBackButton = new GalaxySelectBackButton();
+    mBackButton = new (JKRHeapToken::Dummy) GalaxySelectBackButton();
     mBackButton->initWithoutIter();
 
-    mInfo = new GalaxySelectInfo(false);
+    mInfo = new (JKRHeapToken::Dummy) GalaxySelectInfo(false);
     mInfo->initWithoutIter();
 
-    mConfirmLayout = new GalaxyConfirmLayout();
+    mConfirmLayout = new (JKRHeapToken::Dummy) GalaxyConfirmLayout();
     mConfirmLayout->initWithoutIter();
 
     MR::needStageSwitchWriteA(this, rIter);

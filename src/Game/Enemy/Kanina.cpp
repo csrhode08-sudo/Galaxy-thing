@@ -188,7 +188,7 @@ void Kanina::init(const JMapInfoIter& rIter) {
 
     MR::getObjectName(&objectName, rIter);
     initModelManagerWithAnm(objectName, nullptr, false);
-    mAnimationRandomPlayer = new AnimationRandomPlayer(this, "Blink", "Normal", ::sAnimIntervalBlink, 0.25f);
+    mAnimationRandomPlayer = new (JKRHeapToken::Dummy) AnimationRandomPlayer(this, "Blink", "Normal", ::sAnimIntervalBlink, 0.25f);
     MR::connectToSceneEnemy(this);
     MR::initLightCtrl(this);
     initSound(4, false);
@@ -201,7 +201,7 @@ void Kanina::init(const JMapInfoIter& rIter) {
     MR::onCalcGravity(this);
     MR::initShadowVolumeSphere(this, ::sShadowRadius);
     MR::addToAttributeGroupSearchTurtle(this);
-    mJointRumbler = new JointRumbler(this, "Root", 6.0f, 0.1f, 45, true, 0);
+    mJointRumbler = new (JKRHeapToken::Dummy) JointRumbler(this, "Root", 6.0f, 0.1f, 45, true, 0);
 
     if (MR::isEqualString(objectName, "KaninaRed")) {
         initForType(rIter, KaninaType_Red);

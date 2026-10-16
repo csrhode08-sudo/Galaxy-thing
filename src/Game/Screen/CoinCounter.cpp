@@ -32,8 +32,8 @@ void CoinCounter::init(const JMapInfoIter& rIter) {
     MR::setFollowPos(&mFollowPos, this, "CoinCounter");
     initEffectKeeper(0, nullptr, nullptr);
 
-    mLayoutAppearer = new CounterLayoutAppearer(this, TVec2f(50.0f, 0.0f));
-    mPaneRumbler = new CountUpPaneRumbler(this, "Counter");
+    mLayoutAppearer = new (JKRHeapToken::Dummy) CounterLayoutAppearer(this, TVec2f(50.0f, 0.0f));
+    mPaneRumbler = new (JKRHeapToken::Dummy) CountUpPaneRumbler(this, "Counter");
 
     initNerve(GET_NERVE(CoinCounter, CoinCounterNrvHide));
     MR::connectToSceneLayout(this);

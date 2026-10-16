@@ -16,12 +16,12 @@ namespace DodoryuSub {
     }
 
     MoveStateHolder::MoveStateHolder(Dodoryu* pHost) : mHost(pHost) {
-        mRailState = new MoveStateRail(this);
-        mChaseState = new MoveStateChase(this);
-        mDetourState = new MoveStateDetour(this);
-        mEscapeState = new MoveStateEscape(this);
-        mJumpOutState = new MoveStateJumpOut(this);
-        mNullState = new MoveStateNull(this);
+        mRailState = new (JKRHeapToken::Dummy) MoveStateRail(this);
+        mChaseState = new (JKRHeapToken::Dummy) MoveStateChase(this);
+        mDetourState = new (JKRHeapToken::Dummy) MoveStateDetour(this);
+        mEscapeState = new (JKRHeapToken::Dummy) MoveStateEscape(this);
+        mJumpOutState = new (JKRHeapToken::Dummy) MoveStateJumpOut(this);
+        mNullState = new (JKRHeapToken::Dummy) MoveStateNull(this);
         mCurrentState = mNullState;
         mNextState = nullptr;
         mCurrentState->mStep = 0;

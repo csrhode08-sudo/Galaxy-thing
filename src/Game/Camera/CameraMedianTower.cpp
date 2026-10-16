@@ -77,7 +77,7 @@ CameraTargetObj* CameraMedianTower::calc() {
 }
 
 CamTranslatorBase* CameraMedianTower::createTranslator() {
-    return new CamTranslatorMedianTower(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorMedianTower(this);
 }
 
 void CameraMedianTower::calcFovyPos(TVec3f* pFovPos, const TVec3f& rFront, const TVec3f& rVec, const TVec3f& rPos) {

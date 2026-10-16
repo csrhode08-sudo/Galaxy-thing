@@ -1,7 +1,7 @@
 #include "revolution/nwc24.h"
 #include "revolution/nwc24/NWC24Internal.h"
 
-#include <mem.h>
+#include <cstring>
 
 static const char* DLFilePath = "/shared2/wc24/nwc24dl.bin";
 

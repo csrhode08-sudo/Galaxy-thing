@@ -20,7 +20,7 @@ namespace NrvBossStinkBugOpeningDemo {
 BossStinkBugOpeningDemo::BossStinkBugOpeningDemo(BossStinkBug* pStinkBug, const JMapInfoIter& rIter)
     : BossStinkBugActionBase("オープニングデモ", pStinkBug), mDemoPositionController(nullptr) {
     initNerve(GET_NERVE(BossStinkBugOpeningDemo, BossStinkBugOpeningDemoNrvDemo));
-    mDemoPositionController = new DemoPositionController("BossStinkBugDemo", rIter);
+    mDemoPositionController = new (JKRHeapToken::Dummy) DemoPositionController("BossStinkBugDemo", rIter);
     mDemoPositionController->initAnimCamera("OpeningDemo");
 }
 

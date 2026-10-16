@@ -28,12 +28,12 @@ J3DShapeFactory::J3DShapeFactory(J3DShapeBlock const& block) {
 }
 
 J3DShape* J3DShapeFactory::create(int no, u32 flag, GXVtxDescList* vtxDesc) {
-    J3DShape* shape = new J3DShape;
+    J3DShape* shape = new (JKRHeapToken::Dummy) J3DShape;
     shape->mMtxGroupNum = getMtxGroupNum(no);
     shape->mRadius = mShapeInitData[mIndexTable[no]].mRadius;
     shape->mVtxDesc = getVtxDescList(no);
-    shape->mShapeMtx = new J3DShapeMtx*[shape->mMtxGroupNum];
-    shape->mShapeDraw = new J3DShapeDraw*[shape->mMtxGroupNum];
+    shape->mShapeMtx = new (JKRHeapToken::Dummy) J3DShapeMtx*[shape->mMtxGroupNum];
+    shape->mShapeDraw = new (JKRHeapToken::Dummy) J3DShapeDraw*[shape->mMtxGroupNum];
     shape->mMin = getMin(no);
     shape->mMax = getMax(no);
     shape->mVcdVatCmd = mVcdVatCmdBuffer + no * J3DShape::kVcdVatDLSize;
@@ -56,16 +56,16 @@ J3DShapeMtx* J3DShapeFactory::newShapeMtx(u32 flag, int shapeNo, int mtxGroupNo)
     case J3DMdlDataFlag_ConcatView:
         switch (shapeInitData.mShapeMtxType) {
         case J3DShapeMtxType_Mtx:
-            ret = new J3DShapeMtxConcatView(mtxInitData.mUseMtxIndex);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtxConcatView(mtxInitData.mUseMtxIndex);
             break;
         case J3DShapeMtxType_BBoard:
-            ret = new J3DShapeMtxBBoardConcatView(mtxInitData.mUseMtxIndex);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtxBBoardConcatView(mtxInitData.mUseMtxIndex);
             break;
         case J3DShapeMtxType_YBBoard:
-            ret = new J3DShapeMtxYBBoardConcatView(mtxInitData.mUseMtxIndex);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtxYBBoardConcatView(mtxInitData.mUseMtxIndex);
             break;
         case J3DShapeMtxType_Multi:
-            ret = new J3DShapeMtxMultiConcatView(mtxInitData.mUseMtxIndex, mtxInitData.mUseMtxCount, &mMtxTable[mtxInitData.mFirstUseMtxIndex]);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtxMultiConcatView(mtxInitData.mUseMtxIndex, mtxInitData.mUseMtxCount, &mMtxTable[mtxInitData.mFirstUseMtxIndex]);
             break;
         default:
             break;
@@ -78,10 +78,10 @@ J3DShapeMtx* J3DShapeFactory::newShapeMtx(u32 flag, int shapeNo, int mtxGroupNo)
         case J3DShapeMtxType_Mtx:
         case J3DShapeMtxType_BBoard:
         case J3DShapeMtxType_YBBoard:
-            ret = new J3DShapeMtx(mtxInitData.mUseMtxIndex);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtx(mtxInitData.mUseMtxIndex);
             break;
         case J3DShapeMtxType_Multi:
-            ret = new J3DShapeMtxMulti(mtxInitData.mUseMtxIndex, mtxInitData.mUseMtxCount, &mMtxTable[mtxInitData.mFirstUseMtxIndex]);
+            ret = new (JKRHeapToken::Dummy) J3DShapeMtxMulti(mtxInitData.mUseMtxIndex, mtxInitData.mUseMtxCount, &mMtxTable[mtxInitData.mFirstUseMtxIndex]);
             break;
         default:
             break;
@@ -95,11 +95,11 @@ J3DShapeMtx* J3DShapeFactory::newShapeMtx(u32 flag, int shapeNo, int mtxGroupNo)
 J3DShapeDraw* J3DShapeFactory::newShapeDraw(int shapeNo, int mtxGroupNo) const {
     J3DShapeInitData& shapeInitData = mShapeInitData[mIndexTable[shapeNo]];
     const J3DShapeDrawInitData& drawInitData = (&mDrawInitData[shapeInitData.mDrawInitDataIndex])[mtxGroupNo];
-    return new J3DShapeDraw(&mDisplayListData[drawInitData.mDisplayListIndex], drawInitData.mDisplayListSize);
+    return new (JKRHeapToken::Dummy) J3DShapeDraw(&mDisplayListData[drawInitData.mDisplayListIndex], drawInitData.mDisplayListSize);
 }
 
 void J3DShapeFactory::allocVcdVatCmdBuffer(u32 count) {
-    mVcdVatCmdBuffer = new (0x20) u8[J3DShape::kVcdVatDLSize * count];
+    mVcdVatCmdBuffer = new (JKRHeapToken::Dummy, 0x20) u8[J3DShape::kVcdVatDLSize * count];
     for (u32 i = 0; i < (J3DShape::kVcdVatDLSize * count) / 4; i++)
         ((u32*)mVcdVatCmdBuffer)[i] = 0;
 }

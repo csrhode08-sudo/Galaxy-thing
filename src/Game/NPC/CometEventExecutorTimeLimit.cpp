@@ -22,7 +22,7 @@ void CometEventExecutorTimeLimit::init(const JMapInfoIter&) {
     MR::connectToSceneLayoutMovement(this);
     MR::invalidateClipping(this);
 
-    mTimeLimitLayout = new TimeLimitLayout(getTimeLimit());
+    mTimeLimitLayout = new (JKRHeapToken::Dummy) TimeLimitLayout(getTimeLimit());
     mTimeLimitLayout->setDisplayModeOnNormal(true);
     mTimeLimitLayout->initWithoutIter();
     mTimeLimitLayout->kill();

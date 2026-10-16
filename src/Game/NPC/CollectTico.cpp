@@ -28,9 +28,9 @@ CollectTico::CollectTico(const char* pName) : LiveActor(pName) {
 void CollectTico::init(const JMapInfoIter& rIter) {
     MR::connectToSceneNpcMovement(this);
     mTicoNum = MR::getChildObjNum(rIter);
-    mStrayTicos = new StrayTico*[mTicoNum];
+    mStrayTicos = new (JKRHeapToken::Dummy) StrayTico*[mTicoNum];
     for (s32 i = 0; i < mTicoNum; i++) {
-        mStrayTicos[i] = new StrayTico("はぐれチコ", this);
+        mStrayTicos[i] = new (JKRHeapToken::Dummy) StrayTico("はぐれチコ", this);
         MR::initChildObj(mStrayTicos[i], rIter, i);
     }
 

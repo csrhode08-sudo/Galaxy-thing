@@ -11,9 +11,9 @@ RailGraph::RailGraph() {
     mEdgeCount = 0;
     _14 = 0;
 
-    mNodes = new RailGraphNode[0x100];
+    mNodes = new (JKRHeapToken::Dummy) RailGraphNode[0x100];
     mNodeCount = 0x100;
-    mEdges = new RailGraphEdge[0x100];
+    mEdges = new (JKRHeapToken::Dummy) RailGraphEdge[0x100];
     mEdgeCount = 0x200;
 }
 

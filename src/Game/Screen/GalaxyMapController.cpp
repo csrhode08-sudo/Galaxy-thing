@@ -77,34 +77,34 @@ namespace {
 void GalaxyMapController::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayoutOnPause(this);
 
-    mMap = new GalaxyMap();
+    mMap = new (JKRHeapToken::Dummy) GalaxyMap();
     mMap->initWithoutIter();
     mMap->kill();
 
-    mPowerStarList = new PowerStarList();
+    mPowerStarList = new (JKRHeapToken::Dummy) PowerStarList();
     mPowerStarList->initWithoutIter();
     mPowerStarList->kill();
 
-    mBackButton = new BackButton("戻る", 0);
+    mBackButton = new (JKRHeapToken::Dummy) BackButton("戻る", 0);
     mBackButton->initWithoutIter();
     mBackButton->kill();
 
-    mMapSelectButton = new GalaxyMapSelectButton();
+    mMapSelectButton = new (JKRHeapToken::Dummy) GalaxyMapSelectButton();
     mMapSelectButton->initWithoutIter();
     mMapSelectButton->kill();
 
-    mMapBackground = new GalaxyMapBackground();
+    mMapBackground = new (JKRHeapToken::Dummy) GalaxyMapBackground();
 
-    mWipe = new WipeFade("フェードワイプ", Color8(0, 0, 0, 255));
+    mWipe = new (JKRHeapToken::Dummy) WipeFade("フェードワイプ", Color8(0, 0, 0, 255));
     mWipe->initWithoutIter();
 
     {
         MR::CurrentHeapRestorer heapRestorer(MR::getSceneHeapGDDR3());
 
-        _38 = new JUTTexture(getFbWidth() / 2, MR::getScreenHeight() / 2, GX_TF_RGB565);
+        _38 = new (JKRHeapToken::Dummy) JUTTexture(getFbWidth() / 2, MR::getScreenHeight() / 2, GX_TF_RGB565);
     }
 
-    if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(this, GalaxyMapController::capture), "GalaxyMapController::capture")) {
+    if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(this, &GalaxyMapController::capture), "GalaxyMapController::capture")) {
         MR::waitForEndFunctionAsyncExecute("GalaxyMapController::capture");
     }
 

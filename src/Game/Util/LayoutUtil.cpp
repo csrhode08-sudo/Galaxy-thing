@@ -23,6 +23,7 @@
 #include <nw4r/lyt/picture.h>
 #include <nw4r/lyt/textBox.h>
 
+#ifndef TARGET_PC
 template nw4r::lyt::TextBox* nw4r::ut::DynamicCast< nw4r::lyt::TextBox*, nw4r::lyt::Pane >(nw4r::lyt::Pane*);
 
 template const nw4r::lyt::Pane* nw4r::ut::LinkList< nw4r::lyt::Pane, 4 >::ConstIterator::operator->() const;
@@ -32,6 +33,7 @@ template void JGeometry::TBox2< f32 >::set(const TVec2f&, const TVec2f&);
 template nw4r::lyt::PaneList::Iterator nw4r::ut::LinkList< nw4r::lyt::Pane, 4 >::Iterator::operator++(int);
 
 extern "C" int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
+#endif
 
 void LayoutUtil_FORCE_MATCH_SDATA2() {
     (void)255.0f;
@@ -398,13 +400,13 @@ void MR::setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pActor, co
 nw4r::lyt::TexMap* MR::createLytTexMap(const char* pArcName, const char* pTextureName) {
     JUTTexture texture(loadTexFromArc(pArcName, pTextureName), 0);
 
-    return new nw4r::lyt::TexMap(texture.getTexObj());
+    return new (JKRHeapToken::Dummy) nw4r::lyt::TexMap(texture.getTexObj());
 }
 
 nw4r::lyt::TexMap* MR::createLytTexMap(ResTIMG* pImage) {
     JUTTexture texture(pImage, 0);
 
-    return new nw4r::lyt::TexMap(texture.getTexObj());
+    return new (JKRHeapToken::Dummy) nw4r::lyt::TexMap(texture.getTexObj());
 }
 
 nw4r::lyt::TexMap* MR::getLytTexMap(LayoutActor* pActor, const char* pPaneName, u8 textureIndex) {
@@ -779,7 +781,7 @@ bool MR::isExecuteDrawLayout(const LayoutActor* pActor) {
 SimpleLayout* MR::createSimpleLayout(const char* pName, const char* pArcName, u32 rootPaneAnimLayerNum) {
     SimpleLayout* simpleLayout;
 
-    simpleLayout = new SimpleLayout(pName, pArcName, rootPaneAnimLayerNum, MR::DrawType_Layout);
+    simpleLayout = new (JKRHeapToken::Dummy) SimpleLayout(pName, pArcName, rootPaneAnimLayerNum, MR::DrawType_Layout);
     simpleLayout->initWithoutIter();
 
     return simpleLayout;
@@ -788,7 +790,7 @@ SimpleLayout* MR::createSimpleLayout(const char* pName, const char* pArcName, u3
 SimpleLayout* MR::createSimpleLayoutTalkParts(const char* pName, const char* pArcName, u32 rootPaneAnimLayerNum) {
     SimpleLayout* simpleLayout;
 
-    simpleLayout = new SimpleLayout(pName, pArcName, rootPaneAnimLayerNum, MR::DrawType_0x44);
+    simpleLayout = new (JKRHeapToken::Dummy) SimpleLayout(pName, pArcName, rootPaneAnimLayerNum, MR::DrawType_0x44);
     simpleLayout->initWithoutIter();
 
     return simpleLayout;
@@ -877,7 +879,7 @@ void MR::clearTextBoxMessageRecursive(LayoutActor* pActor, const char* pPaneName
 IconAButton* MR::createAndSetupIconAButton(LayoutActor* pActor, bool connectToScene, bool connectToPause) {
     IconAButton* iconAButton;
 
-    iconAButton = new IconAButton(connectToScene, connectToPause);
+    iconAButton = new (JKRHeapToken::Dummy) IconAButton(connectToScene, connectToPause);
     iconAButton->initWithoutIter();
     iconAButton->setFollowActorPane(pActor, "AButtonPosition");
 

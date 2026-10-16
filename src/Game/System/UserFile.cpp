@@ -9,9 +9,9 @@
 UserFile::UserFile()
     : mGameDataHolder(nullptr), mConfigDataHolder(nullptr), mIsPlayerMario(true), mIsGameDataCorrupted(false), mIsConfigDataCorrupted(false),
       mUserName(nullptr) {
-    mGameDataHolder = new GameDataHolder(this);
-    mConfigDataHolder = new ConfigDataHolder();
-    mUserName = new wchar_t[USER_NAME_SIZE];
+    mGameDataHolder = new (JKRHeapToken::Dummy) GameDataHolder(this);
+    mConfigDataHolder = new (JKRHeapToken::Dummy) ConfigDataHolder();
+    mUserName = new (JKRHeapToken::Dummy) wchar_t[USER_NAME_SIZE];
 
     MR::zeroMemory(mUserName, USER_NAME_SIZE * sizeof(wchar_t));
 }

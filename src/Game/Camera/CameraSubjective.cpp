@@ -106,5 +106,5 @@ CameraTargetObj* CameraSubjective::calc() {
 }
 
 CamTranslatorBase* CameraSubjective::createTranslator() {
-    return new CamTranslatorDummy(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorDummy(this);
 }

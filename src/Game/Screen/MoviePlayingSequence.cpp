@@ -220,13 +220,13 @@ const char* MoviePlayingSequence::getMovieName(MoviePlayingSequence::MovieType t
 
 namespace {
     inline MovieSubtitles* createSubtitles(const MoviePlayingInfo* pInfo, s32 i) {
-        return new MovieSubtitles(MovieSubtitlesUtil::getSubtitlesMessageId(pInfo->mMovieName, i),
+        return new (JKRHeapToken::Dummy) MovieSubtitles(MovieSubtitlesUtil::getSubtitlesMessageId(pInfo->mMovieName, i),
                                   MovieSubtitlesUtil::getSubtitlesAppearTime(pInfo->mMovieName, i));
     }
 };  // namespace
 
 MoviePlayingSequence::MoviePlayingSequence(const char* pName, s32 movieType) : LayoutActor(pName, true), mInfo(&::sInfoTable[movieType]), mSubtitles() {
-    mPadRumbler = new DemoPadRumbler(getMovieName(MovieType(movieType)));
+    mPadRumbler = new (JKRHeapToken::Dummy) DemoPadRumbler(getMovieName(MovieType(movieType)));
 
     MR::createSceneObj(SceneObj_MoviePlayerSimple);
     MR::connectToSceneLayoutMovement(this);
@@ -455,7 +455,7 @@ MoviePlayingSequenceHolder::MoviePlayingSequenceHolder(const char* pName) : Name
         if (pMovieName == nullptr) {
             *pSequence = nullptr;
         } else {
-            *pSequence = new MoviePlayingSequence(pMovieName, diff);
+            *pSequence = new (JKRHeapToken::Dummy) MoviePlayingSequence(pMovieName, diff);
         }
     }
 }

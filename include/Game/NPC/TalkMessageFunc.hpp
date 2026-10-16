@@ -24,11 +24,11 @@ public:
     }
 
     virtual TalkMessageFuncM* clone() const {
-        return new TalkMessageFuncM(*this);
+        return new (JKRHeapToken::Dummy) TalkMessageFuncM(*this);
     }
 
     virtual TalkMessageFuncM* clone(JKRHeap* pHeap) const {
-        return new (pHeap, 0) TalkMessageFuncM(*this);
+        return new (JKRHeapToken::Dummy, pHeap, 0) TalkMessageFuncM(*this);
     };
 
     T mCaller;

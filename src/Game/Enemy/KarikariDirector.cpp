@@ -26,13 +26,13 @@ KarikariDirector::KarikariDirector(const char* pName)
     : LiveActorGroup(pName, 128), mClingNum(0), mClingJointMtxs(nullptr), mClingPositions(nullptr), mClingingKarikari(nullptr),
       mReleaseKarikari(nullptr), mReleaseVel(0.0f, 0.0f), mLowestReleaseDist(999999.0f), mNoReleaseTime(0) {
     MR::connectToSceneEnemyMovement(this);
-    mClingJointMtxs = new TPos3f[5];
-    mClingPositions = new FixedPosition*[::hKarikariHoldingMax];
-    mClingingKarikari = new Karikari*[::hKarikariHoldingMax];
+    mClingJointMtxs = new (JKRHeapToken::Dummy) TPos3f[5];
+    mClingPositions = new (JKRHeapToken::Dummy) FixedPosition*[::hKarikariHoldingMax];
+    mClingingKarikari = new (JKRHeapToken::Dummy) Karikari*[::hKarikariHoldingMax];
 
     for (s32 idx = 0; idx < ::hKarikariHoldingMax; idx++) {
         mClingingKarikari[idx] = nullptr;
-        mClingPositions[idx] = new FixedPosition(getClingMtx(idx), TVec3f(cling_data[idx].mPos.x, cling_data[idx].mPos.y, cling_data[idx].mPos.z),
+        mClingPositions[idx] = new (JKRHeapToken::Dummy) FixedPosition(getClingMtx(idx), TVec3f(cling_data[idx].mPos.x, cling_data[idx].mPos.y, cling_data[idx].mPos.z),
                                                  TVec3f(cling_data[idx].mRotDegree.x, cling_data[idx].mRotDegree.y, cling_data[idx].mRotDegree.z));
     }
 }

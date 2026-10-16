@@ -5,7 +5,7 @@
 
 SpkMixingBuffer::SpkMixingBuffer(JKRHeap* pHeap) {
     for (int i = 0; i < 4; i++) {
-        mSamples[i] = new (pHeap, 0) s16[40];
+        mSamples[i] = new (JKRHeapToken::Dummy, pHeap, 0) s16[40];
         JASCalc::bzero((void*)mSamples[i], sizeof(s16) * 40);
     }
 }

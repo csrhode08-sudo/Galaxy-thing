@@ -18,7 +18,7 @@ BrosButton::BrosButton(const char* pName) : LayoutActor(pName, true), mIsSelecte
 void BrosButton::init(const JMapInfoIter& rIter) {
     initLayoutManager("BrosButton", 1);
 
-    mPaneCtrl = new ButtonPaneController(this, "BrosButton", "BoxBButton", 0, true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "BrosButton", "BoxBButton", 0, true);
     mPaneCtrl->_22 = false;
 
     MR::connectToSceneLayout(this);

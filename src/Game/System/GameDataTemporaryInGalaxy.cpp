@@ -6,8 +6,8 @@
 #include <cstdio>
 
 GameDataTemporaryInGalaxy::GameDataTemporaryInGalaxy() : mPlayerRestartIdInfo(nullptr), mAlreadyDoneFlag(nullptr) {
-    mPlayerRestartIdInfo = new JMapIdInfo(MR::getInitializeStartIdInfo());
-    mAlreadyDoneFlag = new AlreadyDoneFlagInGalaxy(64);
+    mPlayerRestartIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(MR::getInitializeStartIdInfo());
+    mAlreadyDoneFlag = new (JKRHeapToken::Dummy) AlreadyDoneFlagInGalaxy(64);
 
     resetStageResultParam();
 

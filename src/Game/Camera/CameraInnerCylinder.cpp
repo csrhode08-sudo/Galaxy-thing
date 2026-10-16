@@ -101,5 +101,5 @@ CameraTargetObj* CameraInnerCylinder::calc() {
 }
 
 CamTranslatorBase* CameraInnerCylinder::createTranslator() {
-    return new CamTranslatorInnerCylinder(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorInnerCylinder(this);
 }

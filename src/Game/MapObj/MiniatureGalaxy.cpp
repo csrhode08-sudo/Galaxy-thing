@@ -51,7 +51,7 @@ namespace {
     }
 
     ModelObj* createGalaxyPart(const char* pName, const char* pModelName, MtxPtr pMtx, bool a1) {
-        return new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoShadowedMapObj, -2, -2, a1);
+        return new (JKRHeapToken::Dummy) ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoShadowedMapObj, -2, -2, a1);
     }
 
     inline void setInitialRotation(TVec3f& rRotation, const f32& rAngle) {
@@ -118,10 +118,10 @@ void MiniatureGalaxy::init(const JMapInfoIter& rIter) {
     SphereSelectorFunction::registerTarget(this);
     MiniatureGalaxyFunction::registerMiniatureGalaxyToHolder(this, rIter);
 
-    mOrbit = new AstroDomeOrbit();
+    mOrbit = new (JKRHeapToken::Dummy) AstroDomeOrbit();
     mOrbit->initWithoutIter();
 
-    mNamePlate = new GalaxyNamePlate(mGalaxyName, true);
+    mNamePlate = new (JKRHeapToken::Dummy) GalaxyNamePlate(mGalaxyName, true);
     mNamePlate->initWithoutIter();
 
     MR::registerDemoSimpleCastAll(mNamePlate);
@@ -574,7 +574,7 @@ bool MiniatureGalaxy::isUseKoopaFaceModel() const {
 }
 
 void MiniatureGalaxy::playPointedME() {
-    switch (MR::getRandom(0l, 5l)) {
+    switch (MR::getRandom(0, 5)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY1");
 
@@ -599,7 +599,7 @@ void MiniatureGalaxy::playPointedME() {
 }
 
 void MiniatureGalaxy::playNeedStarME() {
-    switch (MR::getRandom(0l, 5l)) {
+    switch (MR::getRandom(0, 5)) {
     case 0:
         MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N1");
 

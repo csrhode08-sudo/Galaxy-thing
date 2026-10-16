@@ -183,7 +183,7 @@ void StopSceneStateControl::exeStopped() {
 
 SceneNameObjMovementController::SceneNameObjMovementController()
     : NameObj("SceneNameObjMovementController"), _C(false), mStopSceneStateControl(nullptr) {
-    mStopSceneStateControl = new StopSceneStateControl();
+    mStopSceneStateControl = new (JKRHeapToken::Dummy) StopSceneStateControl();
 }
 
 void SceneNameObjMovementController::requestStopSceneFor(MR::MovementControlType param1, const NameObj* pParam2) {

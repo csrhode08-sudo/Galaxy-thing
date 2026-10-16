@@ -59,8 +59,8 @@ MarioMeter::~MarioMeter() {
 }
 
 void MarioMeter::init(const JMapInfoIter& rIter) {
-    mHitPointMeter = new MeterLayout("通常HPメーター", "HitPointMeter");
+    mHitPointMeter = new (JKRHeapToken::Dummy) MeterLayout("通常HPメーター", "HitPointMeter");
     mHitPointMeter->initWithoutIter();
-    mSuddenDeathMeter = new SuddenDeathMeter("サドンデスHPメーター", "SuddenDeathMeter");
+    mSuddenDeathMeter = new (JKRHeapToken::Dummy) SuddenDeathMeter("サドンデスHPメーター", "SuddenDeathMeter");
     mSuddenDeathMeter->initWithoutIter();
 }

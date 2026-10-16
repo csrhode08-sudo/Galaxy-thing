@@ -229,33 +229,33 @@ Mario::Mario(MarioActor* pActor) : MarioModule(pActor) {
 
     _458 = MR::createTriangleFilterDelegator(this, &Mario::isIgnoreTriangle);
 
-    _45C = new Triangle();
-    _460 = new Triangle();
-    mGroundPolygon = new Triangle();
-    _468 = new Triangle();
-    _46C = new Triangle();
+    _45C = new (JKRHeapToken::Dummy) Triangle();
+    _460 = new (JKRHeapToken::Dummy) Triangle();
+    mGroundPolygon = new (JKRHeapToken::Dummy) Triangle();
+    _468 = new (JKRHeapToken::Dummy) Triangle();
+    _46C = new (JKRHeapToken::Dummy) Triangle();
 
-    _4C8 = new Triangle();
-    mFrontWallTriangle = new Triangle();
-    mBackWallTriangle = new Triangle();
-    mSideWallTriangle = new Triangle();
-    _4D8 = new Triangle();
-    _4DC = new Triangle();
+    _4C8 = new (JKRHeapToken::Dummy) Triangle();
+    mFrontWallTriangle = new (JKRHeapToken::Dummy) Triangle();
+    mBackWallTriangle = new (JKRHeapToken::Dummy) Triangle();
+    mSideWallTriangle = new (JKRHeapToken::Dummy) Triangle();
+    _4D8 = new (JKRHeapToken::Dummy) Triangle();
+    _4DC = new (JKRHeapToken::Dummy) Triangle();
 
-    _470 = new Triangle();
-    _474 = new Triangle();
-    mTmpPolygon = new Triangle();
+    _470 = new (JKRHeapToken::Dummy) Triangle();
+    _474 = new (JKRHeapToken::Dummy) Triangle();
+    mTmpPolygon = new (JKRHeapToken::Dummy) Triangle();
 
-    _7E0 = new Triangle();
+    _7E0 = new (JKRHeapToken::Dummy) Triangle();
 
-    _820 = new Triangle();
+    _820 = new (JKRHeapToken::Dummy) Triangle();
 
-    _47C = new Triangle();
-    _480 = new Triangle();
-    _484 = new Triangle();
+    _47C = new (JKRHeapToken::Dummy) Triangle();
+    _480 = new (JKRHeapToken::Dummy) Triangle();
+    _484 = new (JKRHeapToken::Dummy) Triangle();
 
     for (u32 i = 0; i < ARRAY_SIZE(_57C); i++) {
-        _57C[i] = new Triangle();
+        _57C[i] = new (JKRHeapToken::Dummy) Triangle();
     }
 
     _578 = 0;
@@ -266,12 +266,12 @@ Mario::Mario(MarioActor* pActor) : MarioModule(pActor) {
     _7D4.zero();
     _8A4.zero();
 
-    _8C8 = new Triangle();
+    _8C8 = new (JKRHeapToken::Dummy) Triangle();
 
-    _8E8 = new Triangle();
+    _8E8 = new (JKRHeapToken::Dummy) Triangle();
 
-    _8CC[0] = new Triangle();
-    _8CC[1] = new Triangle();
+    _8CC[0] = new (JKRHeapToken::Dummy) Triangle();
+    _8CC[1] = new (JKRHeapToken::Dummy) Triangle();
 
     _564 = -1;
     _568 = 0;
@@ -342,46 +342,46 @@ Mario::Mario(MarioActor* pActor) : MarioModule(pActor) {
 
     _97C = 0;
 
-    mFlow = new MarioFlow(mActor);
-    mWall = new MarioWall(mActor);
-    mDamage = new MarioDamage(mActor);
-    mFaint = new MarioFaint(mActor);
-    mBlown = new MarioBlown(mActor);
-    mHang = new MarioHang(mActor);
-    mSwim = new MarioSwim(mActor);
-    mSlider = new MarioSlider(mActor);
-    mFireDamage = new MarioFireDamage(mActor);
-    mFireRun = new MarioFireRun(mActor);
-    mFireDance = new MarioFireDance(mActor);
-    mAbyssDamage = new MarioAbyssDamage(mActor);
-    mDarkDamage = new MarioDarkDamage(mActor);
-    mStep = new MarioStep(mActor);
-    mBump = new MarioBump(mActor);
-    mParalyze = new MarioParalyze(mActor);
-    mStun = new MarioStun(mActor);
-    mCrush = new MarioCrush(mActor);
-    mFreeze = new MarioFreeze(mActor);
-    mMagic = new MarioMagic(mActor);
-    mFpView = new MarioFpView(mActor);
-    mRecovery = new MarioRecovery(mActor);
-    mFlip = new MarioFlip(mActor);
-    mSideStep = new MarioSideStep(mActor);
-    mFrontStep = new MarioFrontStep(mActor);
-    mStick = new MarioStick(mActor);
-    mRabbit = new MarioRabbit(mActor);
-    mSukekiyo = new MarioSukekiyo(mActor);
-    mBury = new MarioBury(mActor);
-    mWait = new MarioWait(mActor);
-    mClimb = new MarioClimb(mActor);
-    mSkate = new MarioSkate(mActor);
-    mFoo = new MarioFoo(mActor);
-    mWarp = new MarioWarp(mActor);
-    mTeresa = new MarioTeresa(mActor);
-    mTalk = new MarioTalk(mActor);
-    mMove = new MarioMove(mActor);
+    mFlow = new (JKRHeapToken::Dummy) MarioFlow(mActor);
+    mWall = new (JKRHeapToken::Dummy) MarioWall(mActor);
+    mDamage = new (JKRHeapToken::Dummy) MarioDamage(mActor);
+    mFaint = new (JKRHeapToken::Dummy) MarioFaint(mActor);
+    mBlown = new (JKRHeapToken::Dummy) MarioBlown(mActor);
+    mHang = new (JKRHeapToken::Dummy) MarioHang(mActor);
+    mSwim = new (JKRHeapToken::Dummy) MarioSwim(mActor);
+    mSlider = new (JKRHeapToken::Dummy) MarioSlider(mActor);
+    mFireDamage = new (JKRHeapToken::Dummy) MarioFireDamage(mActor);
+    mFireRun = new (JKRHeapToken::Dummy) MarioFireRun(mActor);
+    mFireDance = new (JKRHeapToken::Dummy) MarioFireDance(mActor);
+    mAbyssDamage = new (JKRHeapToken::Dummy) MarioAbyssDamage(mActor);
+    mDarkDamage = new (JKRHeapToken::Dummy) MarioDarkDamage(mActor);
+    mStep = new (JKRHeapToken::Dummy) MarioStep(mActor);
+    mBump = new (JKRHeapToken::Dummy) MarioBump(mActor);
+    mParalyze = new (JKRHeapToken::Dummy) MarioParalyze(mActor);
+    mStun = new (JKRHeapToken::Dummy) MarioStun(mActor);
+    mCrush = new (JKRHeapToken::Dummy) MarioCrush(mActor);
+    mFreeze = new (JKRHeapToken::Dummy) MarioFreeze(mActor);
+    mMagic = new (JKRHeapToken::Dummy) MarioMagic(mActor);
+    mFpView = new (JKRHeapToken::Dummy) MarioFpView(mActor);
+    mRecovery = new (JKRHeapToken::Dummy) MarioRecovery(mActor);
+    mFlip = new (JKRHeapToken::Dummy) MarioFlip(mActor);
+    mSideStep = new (JKRHeapToken::Dummy) MarioSideStep(mActor);
+    mFrontStep = new (JKRHeapToken::Dummy) MarioFrontStep(mActor);
+    mStick = new (JKRHeapToken::Dummy) MarioStick(mActor);
+    mRabbit = new (JKRHeapToken::Dummy) MarioRabbit(mActor);
+    mSukekiyo = new (JKRHeapToken::Dummy) MarioSukekiyo(mActor);
+    mBury = new (JKRHeapToken::Dummy) MarioBury(mActor);
+    mWait = new (JKRHeapToken::Dummy) MarioWait(mActor);
+    mClimb = new (JKRHeapToken::Dummy) MarioClimb(mActor);
+    mSkate = new (JKRHeapToken::Dummy) MarioSkate(mActor);
+    mFoo = new (JKRHeapToken::Dummy) MarioFoo(mActor);
+    mWarp = new (JKRHeapToken::Dummy) MarioWarp(mActor);
+    mTeresa = new (JKRHeapToken::Dummy) MarioTeresa(mActor);
+    mTalk = new (JKRHeapToken::Dummy) MarioTalk(mActor);
+    mMove = new (JKRHeapToken::Dummy) MarioMove(mActor);
 
     initTask();
-    _95C = new FloorCode();
+    _95C = new (JKRHeapToken::Dummy) FloorCode();
     _960 = 0;
     _962 = 0;
     for (int i = 0; i < ARRAY_SIZE(_964); i++) {

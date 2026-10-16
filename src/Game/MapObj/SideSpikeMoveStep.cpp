@@ -35,9 +35,9 @@ void SideSpikeMoveStep::init(const JMapInfoIter& rIter) {
     MR::initAndSetRailClipping(&mRailClipping, this, 100.0f, radius);
     MR::joinToGroupArray(this, rIter, nullptr, 32);
     MR::initStarPointerTarget(this, 300.0f, TVec3f(0.0f, 0.0f, 0.0f));
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
-    mStateBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 }
 
 void SideSpikeMoveStep::exeWait() {

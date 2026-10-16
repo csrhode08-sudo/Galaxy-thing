@@ -156,13 +156,13 @@ void StarPointerLayoutTarget::calcBasePos(TVec2f* pPos) const {
 }
 
 StarPointerLayoutTargetKeeper::StarPointerLayoutTargetKeeper(int maxNumTargets) : mMaxNumTargets(maxNumTargets), mNumTargets(), mTargets() {
-    mTargets = new StarPointerLayoutTarget*[mMaxNumTargets];
+    mTargets = new (JKRHeapToken::Dummy) StarPointerLayoutTarget*[mMaxNumTargets];
     memset(mTargets, 0, mMaxNumTargets * sizeof(StarPointerLayoutTarget*));
 }
 
 void StarPointerLayoutTargetKeeper::addTargetCircle(LayoutActor* pLayoutActor, const char* pLayoutName, f32 radius, const TVec2f& rPosition,
                                                     const char* pPaneName) {
-    StarPointerLayoutTarget* target = new StarPointerLayoutTarget(pLayoutActor, pLayoutName, pPaneName != nullptr ? pPaneName : pLayoutName);
+    StarPointerLayoutTarget* target = new (JKRHeapToken::Dummy) StarPointerLayoutTarget(pLayoutActor, pLayoutName, pPaneName != nullptr ? pPaneName : pLayoutName);
     target->mType = StarPointerLayoutTarget::TargetType_Circle;
     target->mRadius = radius;
     target->mPosition.set(rPosition);

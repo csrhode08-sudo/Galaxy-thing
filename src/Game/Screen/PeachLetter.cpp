@@ -19,7 +19,7 @@ PeachLetter::PeachLetter(const char* pName) : LayoutActor(pName, true), mAButton
 void PeachLetter::init(const JMapInfoIter&) {
     initLayoutManager("PeachLetter", 1);
 
-    mAButtonIcon = new IconAButton(false, false);
+    mAButtonIcon = new (JKRHeapToken::Dummy) IconAButton(false, false);
     mAButtonIcon->initWithoutIter();
 
     mAButtonIcon->setFollowActorPane(this, "AButtonPosition");

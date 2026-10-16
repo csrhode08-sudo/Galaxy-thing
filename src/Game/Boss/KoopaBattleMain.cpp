@@ -56,24 +56,24 @@ void KoopaBattleMain::init() {
     initNerve(GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvWander));
     MR::initActorStateKeeper(this, 16);
 
-    mStateAttackHipDrop = new KoopaStateAttackHipDrop(mHost);
-    mStateAttackShockWave = new KoopaStateAttackShockWave(mHost);
+    mStateAttackHipDrop = new (JKRHeapToken::Dummy) KoopaStateAttackHipDrop(mHost);
+    mStateAttackShockWave = new (JKRHeapToken::Dummy) KoopaStateAttackShockWave(mHost);
 
     MR::initActorState(this, mStateGuard, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvGuard), "Guard");
     MR::initActorState(this, mStateAttackHipDrop, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackHipDrop), "AttackHipDrop");
     MR::initActorState(this, mStateAttackShockWave, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackShockWave), "AttackShockWave");
-    MR::initActorState(this, new KoopaStateAttackFireShort(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackFireShort), "AttackFireShort");
+    MR::initActorState(this, new (JKRHeapToken::Dummy) KoopaStateAttackFireShort(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackFireShort), "AttackFireShort");
     MR::initActorState(this, mStateDamageEscape, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvDamageEscape), "DamageEscape");
-    MR::initActorState(this, new KoopaStateJumpAway(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvJumpAway), "JumpAway");
+    MR::initActorState(this, new (JKRHeapToken::Dummy) KoopaStateJumpAway(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvJumpAway), "JumpAway");
 
     if (KoopaFunction::isKoopaVs2(mHost) || KoopaFunction::isKoopaVs3(mHost)) {
-        mStateAttackSpin = new KoopaStateAttackSpin(mHost);
+        mStateAttackSpin = new (JKRHeapToken::Dummy) KoopaStateAttackSpin(mHost);
         MR::initActorState(this, mStateAttackSpin, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackSpin), "AttackSpin");
 
-        mStateAttackRoll = new KoopaStateAttackRoll(mHost);
+        mStateAttackRoll = new (JKRHeapToken::Dummy) KoopaStateAttackRoll(mHost);
         MR::initActorState(this, mStateAttackRoll, GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackRoll), "AttackRoll");
 
-        MR::initActorState(this, new KoopaStateAttackFireLong(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackFireLong), "AttackFireLong");
+        MR::initActorState(this, new (JKRHeapToken::Dummy) KoopaStateAttackFireLong(mHost), GET_NERVE(KoopaBattleMain, KoopaBattleMainNrvAttackFireLong), "AttackFireLong");
     }
 }
 

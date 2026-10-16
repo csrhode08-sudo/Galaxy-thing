@@ -35,8 +35,8 @@ namespace NrvHomeButtonLayout {
 };  // namespace NrvHomeButtonLayout
 
 HomeButtonMenuContext::HomeButtonMenuContext() : mHomeButtonInfo(), mControllerData() {
-    mHomeButtonInfo = new HBMDataInfo;
-    mControllerData = new HBMControllerData;
+    mHomeButtonInfo = new (JKRHeapToken::Dummy) HBMDataInfo;
+    mControllerData = new (JKRHeapToken::Dummy) HBMControllerData;
 
     initHomeButtonInfo();
     initControllerData();
@@ -77,7 +77,7 @@ HomeButtonLayout::HomeButtonLayout() : LayoutActor("HOMEボタン", false), mMen
 void HomeButtonLayout::init(const JMapInfoIter& rIter) {
     RSO::setupRsoHomeButtonMenu();
 
-    mMenuContext = new HomeButtonMenuContext();
+    mMenuContext = new (JKRHeapToken::Dummy) HomeButtonMenuContext();
 
     RSO::HBMCreate(mMenuContext->mHomeButtonInfo);
     MR::setLayoutDefaultAllocator();

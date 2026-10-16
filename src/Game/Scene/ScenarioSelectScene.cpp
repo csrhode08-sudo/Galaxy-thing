@@ -34,7 +34,7 @@ namespace NrvScenarioSelectScene {
 
 namespace {
     J3DDrawBuffer* createDrawBuffer() {
-        J3DDrawBuffer* buffer = new J3DDrawBuffer(1);
+        J3DDrawBuffer* buffer = new (JKRHeapToken::Dummy) J3DDrawBuffer(1);
         buffer->mSortMode = 5;
         return buffer;
     }
@@ -57,18 +57,18 @@ ScenarioSelectScene::ScenarioSelectScene()
 void ScenarioSelectScene::init() {
     _20 = ::createDrawBuffer();
     _24 = ::createDrawBuffer();
-    mEffectSystem = new EffectSystem("エフェクトシステム", false);
+    mEffectSystem = new (JKRHeapToken::Dummy) EffectSystem("エフェクトシステム", false);
     mEffectSystem->initWithoutIter();
     mEffectSystem->entry(MR::getParticleResourceHolder(), 0x300, 0x20);
-    mCameraContext = new CameraContext();
+    mCameraContext = new (JKRHeapToken::Dummy) CameraContext();
 
     TPos3f view;
     view.setPositionFromLookAt(TVec3f(0.0f, 0.0f, 1000.0f), TVec3f(0.0f, 1.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
     mCameraContext->setViewMtx(view, false, false, TVec3f(0.0f, 0.0f, 0.0f));
 
-    mScenarioLayout = new ScenarioSelectLayout(mEffectSystem, mCameraContext);
+    mScenarioLayout = new (JKRHeapToken::Dummy) ScenarioSelectLayout(mEffectSystem, mCameraContext);
     mScenarioLayout->initWithoutIter();
-    mCinemaFrame = new CinemaFrame(false);
+    mCinemaFrame = new (JKRHeapToken::Dummy) CinemaFrame(false);
     mCinemaFrame->initWithoutIter();
     initNerve(GET_NERVE(ScenarioSelectScene, ScenarioSelectSceneNrvDeactive));
     _14 = 1;

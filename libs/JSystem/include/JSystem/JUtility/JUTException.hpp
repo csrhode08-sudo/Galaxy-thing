@@ -4,16 +4,15 @@
 #include "JSystem/JUtility/JUTConsole.hpp"
 #include "JSystem/JUtility/JUTGamePad.hpp"
 
-typedef struct _GXRenderModeObj GXRenderModeObj;
 typedef struct OSContext OSContext;
 class JUTDirectPrint;
 
 class JUTExternalFB {
 public:
-    JUTExternalFB(_GXRenderModeObj*, GXGamma, void*, u32);
+    JUTExternalFB(GXRenderModeObj*, GXGamma, void*, u32);
 
 private:
-    /* 0x00 */ _GXRenderModeObj* mRenderMode;
+    /* 0x00 */ GXRenderModeObj* mRenderMode;
     /* 0x04 */ u32 mSize;
     /* 0x08 */ u32 field_0x08;
     /* 0x0C */ u16 field_0x0C;

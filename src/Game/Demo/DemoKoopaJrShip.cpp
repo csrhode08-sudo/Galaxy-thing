@@ -150,7 +150,7 @@ void DemoKoopaJrShip::initAnimID(const JMapInfoIter& rIter) {
 }
 
 void DemoKoopaJrShip::createKoopaJrObj(const JMapInfoIter& rIter) {
-    mKoopaJrObj = new KoopaJr("クッパJr");
+    mKoopaJrObj = new (JKRHeapToken::Dummy) KoopaJr("クッパJr");
     mKoopaJrObj->init(rIter);
     mKoopaJrObj->makeActorDead();
 }

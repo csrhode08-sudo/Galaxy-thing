@@ -125,9 +125,9 @@ void MechanicKoopaMini::init(const JMapInfoIter& rIter) {
     MR::initStarPointerTarget(this, 70.0f, TVec3f(0.0f, 35.0f, 0.0f));
     MR::validateClipping(this);
     MR::tryRegisterDemoCast(this, rIter);
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 
     if (MR::isValidSwitchAppear(this)) {
         makeActorDead();

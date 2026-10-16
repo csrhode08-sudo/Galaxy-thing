@@ -35,7 +35,7 @@ namespace NrvOtaRock {
 
 OtaRock::OtaRock(const char* pName)
     : LiveActor(pName), mNoThrowCocoNut(false), mCocoNutArray(nullptr), mFireBallArray(nullptr), mFixedPosition(nullptr),
-      mThrowCocoNutCounter(nullptr), mWaitFrame(0), _A4(), _D4(0.0f, 0.0f, 1.0f), mAnimScaleController(nullptr) {
+      mThrowCocoNutCounter(0), mWaitFrame(0), _A4(), _D4(0.0f, 0.0f, 1.0f), mAnimScaleController(nullptr) {
     _A4.identity();
 }
 
@@ -52,7 +52,7 @@ void OtaRock::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, nullptr, false);
     initSound(8, false);
     MR::addToAttributeGroupSearchTurtle(this);
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     initNerve(GET_NERVE(OtaRock, OtaRockNrvWait));
     appear();
 }
@@ -129,20 +129,20 @@ void OtaRock::initModel() {
     initModelManagerWithAnm("OtaRock", nullptr, false);
 
     if (!mNoThrowCocoNut) {
-        mCocoNutArray = new CocoNutBall[4];
+        mCocoNutArray = new (JKRHeapToken::Dummy) CocoNutBall[4];
         for (int i = 0; i < 4; i++) {
             mCocoNutArray[i].initWithoutIter();
             mCocoNutArray[i]._8C = this;
         }
     }
 
-    mFireBallArray = new FireBall[3];
+    mFireBallArray = new (JKRHeapToken::Dummy) FireBall[3];
     for (int i = 0; i < 3; i++) {
         mFireBallArray[i].initWithoutIter();
         mFireBallArray[i].mHost = this;
     }
 
-    mFixedPosition = new FixedPosition(this, "Mouth", TVec3f(0.0f, 0.0f, 50.0f), TVec3f(0.0f, 0.0f, -90.0f));
+    mFixedPosition = new (JKRHeapToken::Dummy) FixedPosition(this, "Mouth", TVec3f(0.0f, 0.0f, 50.0f), TVec3f(0.0f, 0.0f, -90.0f));
 
     TPos3f mtxTR;
     MR::makeMtxTR(mtxTR.toMtxPtr(), this);

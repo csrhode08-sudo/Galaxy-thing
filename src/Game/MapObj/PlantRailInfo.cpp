@@ -10,21 +10,21 @@ void PlantRailInfo_FORCE_MATCH_SDATA2() {
 }
 
 PlantRailInfo::PlantRailInfo(const JMapInfoIter& rIter, f32 speed) : mRailSpeed(speed), mNumPlantPoints(), mPlantPoints(), mRailRider() {
-    mRailRider = new RailRider(rIter);
+    mRailRider = new (JKRHeapToken::Dummy) RailRider(rIter);
     mRailRider->setSpeed(mRailSpeed);
 
     mNumPlantPoints = static_cast< s32 >(mRailRider->getTotalLength() / mRailSpeed) + 2;
 
-    mPlantPoints = new PlantPoint*[mNumPlantPoints];
+    mPlantPoints = new (JKRHeapToken::Dummy) PlantPoint*[mNumPlantPoints];
 
     for (s32 idx = 0; idx < mNumPlantPoints - 1; idx++) {
-        mPlantPoints[idx] = new PlantPoint(mRailRider->mCurPos, mRailRider->mCurDirection, 1.0f);
+        mPlantPoints[idx] = new (JKRHeapToken::Dummy) PlantPoint(mRailRider->mCurPos, mRailRider->mCurDirection, 1.0f);
         mRailRider->move();
     }
 
     mRailRider->setCoord(mRailRider->getTotalLength());
 
-    PlantPoint* point = new PlantPoint(mRailRider->mCurPos, getPlantPoint(mNumPlantPoints - 2)->mUp, 1.0f);
+    PlantPoint* point = new (JKRHeapToken::Dummy) PlantPoint(mRailRider->mCurPos, getPlantPoint(mNumPlantPoints - 2)->mUp, 1.0f);
     s32 index = mNumPlantPoints - 1;
     mPlantPoints[index] = point;
 

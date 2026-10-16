@@ -76,7 +76,7 @@ public:
 
     void initLayout() {
         initLayoutManager("Telescope", 1);
-        mLayout = new SimpleLayout("移動用砲台照準", "Sight", 1, -1);
+        mLayout = new (JKRHeapToken::Dummy) SimpleLayout("移動用砲台照準", "Sight", 1, -1);
         mLayout->kill();
     }
 

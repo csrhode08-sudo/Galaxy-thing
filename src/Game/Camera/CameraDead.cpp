@@ -70,5 +70,5 @@ CameraTargetObj* CameraDead::calc() {
 }
 
 CamTranslatorBase* CameraDead::createTranslator() {
-    return new CamTranslatorDead(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorDead(this);
 }

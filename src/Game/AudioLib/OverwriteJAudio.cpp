@@ -46,7 +46,7 @@ JASChannel* JASBank::noteOn(JASBank const* pBank, int progNo, u8 pitch, u8 veloc
         return nullptr;
     }
 
-    JASChannel* channel = new JASChannel(pCallback, pChannelMgr);
+    JASChannel* channel = new (JKRHeapToken::Dummy) JASChannel(pCallback, pChannelMgr);
     if (!channel) {
         return nullptr;
     }
@@ -134,7 +134,7 @@ void JASWaveArc::setFileName(const char* pName) {
     char* currentDir = JASWaveArcLoader::getCurrentDir();
     size_t length = strlen(currentDir);
     length = length + strlen(pName);
-    char* path = new (JASKernel::getSystemHeap(), -4) char[length + 1];
+    char* path = new (JKRHeapToken::Dummy, JASKernel::getSystemHeap(), -4) char[length + 1];
     strcpy(path, currentDir);
     strcat(path, pName);
     path[length] = '\0';

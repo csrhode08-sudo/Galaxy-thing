@@ -40,7 +40,7 @@ namespace MR {
     }
 
     ActorCameraInfo* createActorCameraInfo(const JMapInfoIter& rIter) {
-        return new ActorCameraInfo(rIter);
+        return new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     }
 
     bool createActorCameraInfoIfExist(const JMapInfoIter& rIter, ActorCameraInfo** ppInfo) {

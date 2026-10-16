@@ -337,7 +337,7 @@ MarioSwim::MarioSwim(MarioActor* pActor) : MarioState(pActor, MarioStatus_Swim),
     _1B2 = false;
     mWaterDistanceTarget = 0.0f;
     _1B8 = 0.0f;
-    mMarineSnow = new MarineSnow();
+    mMarineSnow = new (JKRHeapToken::Dummy) MarineSnow();
 }
 
 void MarioSwim::init() {

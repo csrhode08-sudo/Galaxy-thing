@@ -54,6 +54,6 @@ public:
 namespace MR {
     template < class T >
     static inline TriangleFilterDelegator< T >* createTriangleFilterDelegator(T* parent, bool (T::*filter)(const Triangle*)) {
-        return new TriangleFilterDelegator< T >(parent, filter);
+        return new (JKRHeapToken::Dummy) TriangleFilterDelegator< T >(parent, filter);
     }
 };  // namespace MR

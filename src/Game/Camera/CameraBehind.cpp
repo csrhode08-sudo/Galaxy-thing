@@ -28,7 +28,7 @@ CameraTargetObj* CameraBehind::calc() {
 }
 
 CamTranslatorBase* CameraBehind::createTranslator() {
-    return new CamTranslatorBehind(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorBehind(this);
 }
 
 void CameraBehind::calcPosAndUp(f32 accel) {

@@ -124,13 +124,13 @@ void StarPieceGroup::init(const JMapInfoIter& rIter) {
     }
 
     MR::useStageSwitchWriteDead(this, rIter);
-    mPieces = new StarPiece*[mNumPieces];
-    mRailCoords = new f32[mNumPieces];
+    mPieces = new (JKRHeapToken::Dummy) StarPiece*[mNumPieces];
+    mRailCoords = new (JKRHeapToken::Dummy) f32[mNumPieces];
 
     MR::declareStarPiece(this, mNumPieces);
 
     for (u32 i = 0; i < mNumPieces; i++) {
-        mPieces[i] = new StarPiece("グループスターピース");
+        mPieces[i] = new (JKRHeapToken::Dummy) StarPiece("グループスターピース");
         if (isFlow) {
             mPieces[i]->initAndSetRailMoveFromGroup(rIter);
         } else {

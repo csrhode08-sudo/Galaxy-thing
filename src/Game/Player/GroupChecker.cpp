@@ -2,7 +2,7 @@
 #include "Game/Util/HashUtil.hpp"
 
 GroupChecker::GroupChecker(const char* pName, u32 a2) : NameObj(pName) {
-    mHashTable = new HashSortTable(a2);
+    mHashTable = new (JKRHeapToken::Dummy) HashSortTable(a2);
 }
 
 void GroupChecker::initAfterPlacement() {
@@ -30,7 +30,7 @@ GroupCheckManager::~GroupCheckManager() {
 }
 
 GroupCheckManager::GroupCheckManager(const char* pName) : NameObj(pName) {
-    mGroups[0] = new GroupChecker("カメサーチ対象物グループ", 0x20);
-    mGroups[1] = new GroupChecker("スピニングボックス反射グループ", 0x8);
+    mGroups[0] = new (JKRHeapToken::Dummy) GroupChecker("カメサーチ対象物グループ", 0x20);
+    mGroups[1] = new (JKRHeapToken::Dummy) GroupChecker("スピニングボックス反射グループ", 0x8);
     _14 = 2;
 }

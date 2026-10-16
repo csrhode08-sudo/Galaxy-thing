@@ -16,7 +16,7 @@ namespace {
 
     template < typename T >
     Scene* createScene() {
-        return new T();
+        return new (JKRHeapToken::Dummy) T();
     }
 
     const Name2CreateFunc cCreateTable[] = {
@@ -28,7 +28,7 @@ namespace {
 
 namespace MR {
     Scene* createScene(const char* pName) {
-        const Name2CreateFunc* pIter = std::find(::cCreateTable, ::cCreateTable + ARRAY_SIZE(::cCreateTable), pName);
+        const Name2CreateFunc* pIter = msl::find(::cCreateTable, ::cCreateTable + ARRAY_SIZE(::cCreateTable), pName);
 
         if (pIter == &::cCreateTable[ARRAY_SIZE(::cCreateTable)]) {
             return nullptr;

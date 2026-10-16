@@ -118,7 +118,7 @@ void Kinopio::init(const JMapInfoIter& rIter) {
     NPCActorItem item("Kinopio");
     MR::getNPCItemData(&item, mGoodsIndex);
     equipment(item, false);
-    mScaleController = new AnimScaleController(&::sParam);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(&::sParam);
     mDelegator = MR::createJointDelegatorWithNullChildFunc< Kinopio >(this, &Kinopio::calcJointScale, "body");
 
     MR::useStageSwitchReadA(this, rIter);
@@ -195,7 +195,7 @@ void Kinopio::init(const JMapInfoIter& rIter) {
         MR::validateHitSensor(this, "Pickel");
         break;
     case 4:
-        _17C = new MapObjConnector(this);
+        _17C = new (JKRHeapToken::Dummy) MapObjConnector(this);
         MR::invalidateClipping(this);
         mParam._0 = false;
         mParam._1 = false;
@@ -207,7 +207,7 @@ void Kinopio::init(const JMapInfoIter& rIter) {
     }
 
     if (mIsSpawnPowerStarMode) {
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(Kinopio, KinopioNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(Kinopio, KinopioNrvTakeOutStar));
         MR::declarePowerStar(this);
         setNerve(GET_NERVE(Kinopio, KinopioNrvStarWait));
     }

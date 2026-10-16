@@ -30,7 +30,7 @@ CameraViewInterpolator::CameraViewInterpolator()
     : mInterpolateTimer(), mInterpolateTime(), mIsAntiOscillation(true), mIsForceCameraChange(true), mIsInterpolationOff(),
       mTargetPosition(0.0f, 0.0f, 0.0f), mRate(0.7f), mIsCollisionOff(), mIsRepulsionOff(), mTargetFovy(45.0f), mFovy(45.0f),
       mIsInterpolatingNearlyEnd(true), mIsInterpolating(), mIsCorrectErpPositionOn(true), mCalcState(), mTargetObj(),
-      mBinder(new Binder(nullptr, &mPosition, &mGravity, 100.0f, 0.0f, 64)), mPosition(0.0f, 0.0f, 0.0f), mGravity(0.0f, -1.0f, 0.0f),
+      mBinder(new (JKRHeapToken::Dummy) Binder(nullptr, &mPosition, &mGravity, 100.0f, 0.0f, 64)), mPosition(0.0f, 0.0f, 0.0f), mGravity(0.0f, -1.0f, 0.0f),
       mIsCollided(true), mLErpOffset(0.0f, 0.0f, 0.0f) {
     mTargetMtx.identity();
     mMtx.identity();

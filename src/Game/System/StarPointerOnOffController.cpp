@@ -23,7 +23,7 @@ namespace {
 
 StarPointerOnOffController::StarPointerOnOffController() : NerveExecutor("スターポインタON/OFF制御"), _8(false), mMode(-1) {
     for (s32 idx = 0; idx < 16; idx++) {
-        mRequests[idx] = new RequestInfo();
+        mRequests[idx] = new (JKRHeapToken::Dummy) RequestInfo();
     }
 
     for (RequestInfo** request = mRequests.begin(); request < mRequests.end(); request++) {

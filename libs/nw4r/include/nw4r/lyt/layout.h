@@ -110,7 +110,7 @@ namespace nw4r {
         template < typename T >
         inline T* Layout::NewObj() {
             if (void* pMem = Layout::AllocMemory(sizeof(T))) {
-                return new (pMem) T();
+                return new (JKRHeapToken::Dummy, pMem) T();
             }
 
             return 0;
@@ -119,7 +119,7 @@ namespace nw4r {
         template < typename T, typename Param1 >
         inline T* Layout::NewObj(Param1 param1) {
             if (void* pMem = Layout::AllocMemory(sizeof(T))) {
-                return new (pMem) T(param1);
+                return new (JKRHeapToken::Dummy, pMem) T(param1);
             }
             return 0;
         }
@@ -127,7 +127,7 @@ namespace nw4r {
         template < typename T, typename Param1, typename Param2 >
         inline T* Layout::NewObj(Param1 param1, Param2 param2) {
             if (void* pMem = Layout::AllocMemory(sizeof(T))) {
-                return new (pMem) T(param1, param2);
+                return new (JKRHeapToken::Dummy, pMem) T(param1, param2);
             }
             return 0;
         }
@@ -138,7 +138,7 @@ namespace nw4r {
             T* const objAry = static_cast< T* >(pMem);
 
             for (u32 i = 0; i < num; ++i) {
-                new (&objAry[i]) T();
+                new (JKRHeapToken::Dummy, &objAry[i]) T();
             }
 
             return objAry;

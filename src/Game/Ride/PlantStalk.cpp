@@ -60,12 +60,12 @@ void PlantStalk::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_PlantStalk);
 
     initRailRider(rIter);
-    mRailInfo = new PlantRailInfo(rIter, 30.0f);
+    mRailInfo = new (JKRHeapToken::Dummy) PlantRailInfo(rIter, 30.0f);
 
     mPosition.set(MR::getRailPos(this));
     mNumPlantPoints = mRailInfo->mNumPlantPoints;
 
-    mPlantPoints = new PlantPoint*[mNumPlantPoints];
+    mPlantPoints = new (JKRHeapToken::Dummy) PlantPoint*[mNumPlantPoints];
 
     MR::moveCoordToStartPos(this);
 
@@ -73,7 +73,7 @@ void PlantStalk::init(const JMapInfoIter& rIter) {
 
     for (s32 idx = 0; idx < mNumPlantPoints; idx++) {
         s32 index = (mNumPlantPoints - 1) - idx;
-        mPlantPoints[idx] = new PlantPoint(mRailInfo->mPlantPoints[index]->mPosition, mRailInfo->mPlantPoints[index]->mUp,
+        mPlantPoints[idx] = new (JKRHeapToken::Dummy) PlantPoint(mRailInfo->mPlantPoints[index]->mPosition, mRailInfo->mPlantPoints[index]->mUp,
                                            MR::getEaseOutValue(idx * ratio, ::sWidthRateMin, 1.0f, 1.0f));
     }
 
@@ -242,7 +242,7 @@ void PlantStalk::drawGrowUp() const {
 
 PlantStalkDrawInit::PlantStalkDrawInit(const char* pName) : NameObj(pName) {
     mTexture = nullptr;
-    mTexture = new JUTTexture(MR::loadTexFromArc("Plant.arc", "PlantStalk.bti"), 0);
+    mTexture = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("Plant.arc", "PlantStalk.bti"), 0);
 
     MR::registerPreDrawFunction(MR::Functor(this, &PlantStalkDrawInit::initDraw), MR::DrawType_PlantStalk);
 }

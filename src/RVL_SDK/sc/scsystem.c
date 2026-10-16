@@ -1,5 +1,5 @@
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 #include "revolution/sc.h"
 
 #if (VERSION == RMGJ01 || VERSION == RMGE01 || VERSION == RMGP01 || VERSION == RMGP01)

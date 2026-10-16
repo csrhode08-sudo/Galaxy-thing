@@ -7,16 +7,16 @@ SpinDriverShootPath::SpinDriverShootPath() : mRailRider(), mPath(), mStartPositi
 }
 
 void SpinDriverShootPath::init(const JMapInfoIter& rIter) {
-    mRailRider = new RailRider(rIter);
+    mRailRider = new (JKRHeapToken::Dummy) RailRider(rIter);
     mUsesParabolic = false;
 }
 
 void SpinDriverShootPath::initUsingParabolic(const JMapInfoIter& rIter, const TVec3f& rStartingPosition) {
-    mRailRider = new RailRider(rIter);
+    mRailRider = new (JKRHeapToken::Dummy) RailRider(rIter);
     mUsesParabolic = mRailRider->getPointNum() <= 2;
 
     if (mUsesParabolic) {
-        mPath = new ParabolicPath();
+        mPath = new (JKRHeapToken::Dummy) ParabolicPath();
     }
 
     setStartPosition(rStartingPosition);

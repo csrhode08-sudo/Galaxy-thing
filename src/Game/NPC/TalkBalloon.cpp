@@ -49,7 +49,7 @@ void TalkBalloon::create(const char* pLayoutName, bool arg2, bool isTalkLayout) 
             MR::createAndAddPaneCtrl(this, "Balloon", 1);
         }
 
-        mTextFormer = new TalkTextFormer(this, "Text00");
+        mTextFormer = new (JKRHeapToken::Dummy) TalkTextFormer(this, "Text00");
         MR::hideScreen(this);
     }
 }
@@ -75,11 +75,11 @@ void TalkBalloon::close() {
     MR::startAnim(this, "End", 0);
 }
 
-inline f32 fmin(f32 a, f32 b) {
+static inline f32 balloonFmin(f32 a, f32 b) {
     return b >= a ? a : b;
 }
 
-inline f32 fmax(f32 a, f32 b) {
+static inline f32 balloonFmax(f32 a, f32 b) {
     return b >= a ? b : a;
 }
 
@@ -102,10 +102,10 @@ void TalkBalloon::updateBalloon() {
         if (v2.x * v3.y - v2.y * v3.x > 0.0f) {
             f32 halfMax = paneAnimFrameMax;
             halfMax *= 0.5f;
-            paneAnimFrameMax = fmin(paneAnimFrameMax, halfMax + cosine);
+            paneAnimFrameMax = balloonFmin(paneAnimFrameMax, halfMax + cosine);
         } else {
             f32 half = 0.5f;
-            paneAnimFrameMax = fmax(0.0f, paneAnimFrameMax * half - cosine);
+            paneAnimFrameMax = balloonFmax(0.0f, paneAnimFrameMax * half - cosine);
         }
 
         if (!_29) {
@@ -410,29 +410,29 @@ void TalkBalloonIcon::open(TalkMessageCtrl* pCtrl) {
 }
 
 TalkBalloonHolder::TalkBalloonHolder() : _14() {
-    mBalloonShortArray = new TalkBalloonShort*[4];
+    mBalloonShortArray = new (JKRHeapToken::Dummy) TalkBalloonShort*[4];
 
     for (u32 i = 0; i < 4; i++) {
-        TalkBalloonShort* temp = new TalkBalloonShort("会話吹き出し[簡易会話]");
+        TalkBalloonShort* temp = new (JKRHeapToken::Dummy) TalkBalloonShort("会話吹き出し[簡易会話]");
         mBalloonShortArray[i] = temp;
         mBalloonShortArray[i]->initWithoutIter();
         mBalloonShortArray[i]->kill();
     }
 
-    mBalloonEvent = new TalkBalloonEvent("会話吹き出し[イベント]");
+    mBalloonEvent = new (JKRHeapToken::Dummy) TalkBalloonEvent("会話吹き出し[イベント]");
     mBalloonEvent->initWithoutIter();
     mBalloonEvent->kill();
-    mBalloonInfo = new TalkBalloonInfo("会話吹き出し[インフォメーション]");
+    mBalloonInfo = new (JKRHeapToken::Dummy) TalkBalloonInfo("会話吹き出し[インフォメーション]");
     mBalloonInfo->initWithoutIter();
     mBalloonInfo->kill();
-    mBalloonSign = new TalkBalloonSign("会話吹き出し[看板]");
+    mBalloonSign = new (JKRHeapToken::Dummy) TalkBalloonSign("会話吹き出し[看板]");
     mBalloonSign->initWithoutIter();
     mBalloonSign->kill();
-    mBalloonIcon = new TalkBalloonIcon("会話吹き出し[アイコン]");
+    mBalloonIcon = new (JKRHeapToken::Dummy) TalkBalloonIcon("会話吹き出し[アイコン]");
     mBalloonIcon->initWithoutIter();
     mBalloonIcon->kill();
 
-    mAButton = new IconAButton(true, false);
+    mAButton = new (JKRHeapToken::Dummy) IconAButton(true, false);
     mAButton->initWithoutIter();
 
     mBalloonEvent->mAButton = mAButton;

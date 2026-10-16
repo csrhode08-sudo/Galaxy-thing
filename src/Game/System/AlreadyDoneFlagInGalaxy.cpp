@@ -65,7 +65,7 @@ u32 AlreadyDoneFlagInGalaxy::setupFlag(const char* pName, const JMapInfoIter& rI
     AlreadyDoneInfo info;
     info.init(pName, zoneID, linkID);
 
-    AlreadyDoneInfo* it = std::find(mDoneInfos.begin(), mDoneInfos.end(), info);
+    AlreadyDoneInfo* it = msl::find(mDoneInfos.begin(), mDoneInfos.end(), info);
 
     if (it != mDoneInfos.end()) {
         result = it - mDoneInfos.begin();

@@ -11,10 +11,10 @@ KoopaSequencer::KoopaSequencer(const char* pName, s32 vs)
 void KoopaSequencer::init(Koopa* pKoopa, const JMapInfoIter& rIter) {
     mKoopa = pKoopa;
 
-    mPowerUp = new KoopaDemoPowerUp(mKoopa);
+    mPowerUp = new (JKRHeapToken::Dummy) KoopaDemoPowerUp(mKoopa);
     mPowerUp->init();
 
-    mJumpToPlanet = new KoopaDemoJumpToPlanet(mKoopa);
+    mJumpToPlanet = new (JKRHeapToken::Dummy) KoopaDemoJumpToPlanet(mKoopa);
     mJumpToPlanet->init();
 }
 

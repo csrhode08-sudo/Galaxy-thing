@@ -38,9 +38,9 @@ void StarPointerGuidance::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "PointerFrame1", 1);
     MR::createAndAddPaneCtrl(this, "PointerFrame2", 1);
 
-    mSpineFrame1P = new Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
-    mSpineGuidance = new Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
-    mSpineFrame2P = new Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
+    mSpineFrame1P = new (JKRHeapToken::Dummy) Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
+    mSpineGuidance = new (JKRHeapToken::Dummy) Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
+    mSpineFrame2P = new (JKRHeapToken::Dummy) Spine(this, GET_NERVE(StarPointerGuidance, HostTypeNrvEndWait));
 
     appear();
     MR::hidePaneRecursive(this, "NPointerGuide");

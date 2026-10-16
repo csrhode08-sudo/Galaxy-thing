@@ -34,7 +34,7 @@ void OtaKingLongFoot::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::initLightCtrl(this);
     initSensor();
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     initNerve(GET_NERVE(OtaKingLongFoot, OtaKingLongFootNrvWait));
     PartsModel::init(rIter);
 }

@@ -79,10 +79,10 @@ TalkDirector::~TalkDirector() {
 
 void TalkDirector::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_TalkDirector, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);
-    mBalloonHolder = new TalkBalloonHolder();
-    mStateHolder = new TalkStateHolder();
+    mBalloonHolder = new (JKRHeapToken::Dummy) TalkBalloonHolder();
+    mStateHolder = new (JKRHeapToken::Dummy) TalkStateHolder();
     mMsgControls.init(128);
-    mPeekZ = new TalkPeekZ();
+    mPeekZ = new (JKRHeapToken::Dummy) TalkPeekZ();
     initNerve(GET_NERVE(TalkDirector, TalkDirectorNrvWait));
     initBranchResult();
     appear();

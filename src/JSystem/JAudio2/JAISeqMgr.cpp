@@ -117,7 +117,7 @@ void JAISeqMgr::mixOut() {
 }
 
 JAISeq* JAISeqMgr::beginStartSeq_() {
-    JAISeq* seq = new JAISeq(this, soundStrategyMgr);
+    JAISeq* seq = new (JKRHeapToken::Dummy) JAISeq(this, soundStrategyMgr);
     return seq;
 }
 

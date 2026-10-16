@@ -11,7 +11,7 @@
 #include <cstring>
 
 namespace {
-    struct IsManagerName : std::binary_function< AreaObjMgr*, const char*, bool > {
+    struct IsManagerName : msl::binary_function< AreaObjMgr*, const char*, bool > {
         bool operator()(const AreaObjMgr* pManager, const char* pName) const {
             const char* pMatch = strstr(pName, pManager->mName);
             return pMatch != nullptr && pMatch == pName;
@@ -20,7 +20,7 @@ namespace {
 
     template < typename T >
     AreaObjMgr* createManager(s32 numMax, const char* pName) {
-        return new T(numMax, pName);
+        return new (JKRHeapToken::Dummy) T(numMax, pName);
     }
 
     const Name2CreateManagerFunc cCreateTable[] = {
@@ -378,7 +378,7 @@ void AreaObjContainer::init(const JMapInfoIter& rIter) {
 }
 
 AreaObjMgr* AreaObjContainer::getManager(const char* pName) const {
-    return *std::find_if(mManagerArray, mManagerArray + mNumManagers, std::binder2nd< IsManagerName, const char* >(IsManagerName(), pName));
+    return *msl::find_if(mManagerArray, mManagerArray + mNumManagers, msl::binder2nd< IsManagerName, const char* >(IsManagerName(), pName));
 }
 
 AreaObj* AreaObjContainer::getAreaObj(const char* pName, const TVec3f& rVec) const {

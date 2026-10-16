@@ -25,11 +25,11 @@ PoltaActionSequencer::PoltaActionSequencer(Polta* pPolta, const JMapInfoIter& rI
     : NerveExecutor("ポルタアクション管理"), mPoltaPtr(pPolta), mActionDemo(nullptr), mCurrentAction(nullptr), mActionWaitStart(nullptr),
       mActionPoltaBattleLv1(nullptr), mActionPoltaBattleLv2(nullptr) {
     initNerve(GET_NERVE(PoltaActionSequencer, PoltaActionSequencerNrvWaitStart));
-    mActionDemo = new PoltaDemo(pPolta);
+    mActionDemo = new (JKRHeapToken::Dummy) PoltaDemo(pPolta);
     mActionDemo->init();
-    mActionWaitStart = new PoltaWaitStart(pPolta);
-    mActionPoltaBattleLv1 = new PoltaBattleLv1(pPolta);
-    mActionPoltaBattleLv2 = new PoltaBattleLv2(pPolta);
+    mActionWaitStart = new (JKRHeapToken::Dummy) PoltaWaitStart(pPolta);
+    mActionPoltaBattleLv1 = new (JKRHeapToken::Dummy) PoltaBattleLv1(pPolta);
+    mActionPoltaBattleLv2 = new (JKRHeapToken::Dummy) PoltaBattleLv2(pPolta);
     MR::declareStarPiece(mPoltaPtr, 24);
 }
 

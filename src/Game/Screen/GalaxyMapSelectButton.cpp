@@ -22,7 +22,7 @@ void GalaxyMapSelectButton::init(const JMapInfoIter& rIter) {
     initLayoutManager("MapButton", 1);
     MR::createAndAddPaneCtrl(this, "MapList", 1);
 
-    mPaneCtrl = new ButtonPaneController(this, "MapList", "BoxLButton", 0, true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "MapList", "BoxLButton", 0, true);
     mPaneCtrl->_22 = false;
 
     initNerve(GET_NERVE_ANON(GalaxyMapSelectButtonHide));

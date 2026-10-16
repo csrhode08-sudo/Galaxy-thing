@@ -34,7 +34,7 @@ namespace {
 
 MoviePlayerSimple::MoviePlayerSimple()
     : LayoutActor("ムービープレイヤー", true), JKRDisposer(), mMovie(nullptr), mPlayerWrapper(nullptr), _44(false), _45(false) {
-    mMovie = new Movie();
+    mMovie = new (JKRHeapToken::Dummy) Movie();
     mMovie->mMovieName = "";
     mMovie->mBuffer = nullptr;
     mMovie->mCurrentFrame = -1;
@@ -55,7 +55,7 @@ MoviePlayerSimple::~MoviePlayerSimple() {
 void MoviePlayerSimple::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMovie(this);
 
-    mPlayerWrapper = new THPSimplePlayerWrapper("THPシンプルプレイヤーのラッパ");
+    mPlayerWrapper = new (JKRHeapToken::Dummy) THPSimplePlayerWrapper("THPシンプルプレイヤーのラッパ");
     mPlayerWrapper->init(0);
 
     mHeap = JKRExpHeap::create(calcNeedMemoryForMovieWorks(), MR::getCurrentHeap(), true);
@@ -173,7 +173,7 @@ void MoviePlayerSimple::exeOpen() {
         mMovie->_20 = 0;
         mMovie->_19 = false;
         setFrameRateDefault();
-        mMovie->mBuffer = new (mHeap, 32) u8[mPlayerWrapper->calcNeedMemory()];
+        mMovie->mBuffer = new (JKRHeapToken::Dummy, mHeap, 32) u8[mPlayerWrapper->calcNeedMemory()];
         mPlayerWrapper->setBuffer(mMovie->mBuffer);
         mPlayerWrapper->preLoad(_44 != false);
         setNerve(GET_NERVE_ANON(MoviePlayerSimplePreload));

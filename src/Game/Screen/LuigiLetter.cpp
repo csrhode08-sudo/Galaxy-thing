@@ -32,7 +32,7 @@ void LuigiLetter::init(const JMapInfoIter& rIter) {
 
     MR::replacePaneTexture(this, "PicDummy", mTexture, 0);
 
-    mAButtonIcon = new IconAButton(false, false);
+    mAButtonIcon = new (JKRHeapToken::Dummy) IconAButton(false, false);
     mAButtonIcon->initWithoutIter();
     mAButtonIcon->setFollowActorPane(this, "AButtonPosition");
 
@@ -114,10 +114,10 @@ void LuigiLetter::makeArchiveListCommon(NameObjArchiveListCollector* pCollector,
 
 namespace MR {
     LuigiLetter* createLuigiLetterForTalk() {
-        return new LuigiLetter(true, MR::getLuigiLetterGalaxyNameForNPC());
+        return new (JKRHeapToken::Dummy) LuigiLetter(true, MR::getLuigiLetterGalaxyNameForNPC());
     }
 
     LuigiLetter* createLuigiLetterForMenu() {
-        return new LuigiLetter(false, MR::getLuigiLetterGalaxyName());
+        return new (JKRHeapToken::Dummy) LuigiLetter(false, MR::getLuigiLetterGalaxyName());
     }
 };  // namespace MR

@@ -310,15 +310,15 @@ void CocoSambo::init(const JMapInfoIter& rIter) {
     MR::setEffectHostSRT(this, "Hit", &mHitEffectScale, nullptr, nullptr);
     initSound(4, false);
     MR::initShadowFromCSV(this, "Shadow");
-    mHead = new CocoSamboHead(this);
+    mHead = new (JKRHeapToken::Dummy) CocoSamboHead(this);
     mHead->initWithoutIter();
     MR::initLightCtrl(mHead);
-    mAnimScaleParam = new AnimScaleParam();
+    mAnimScaleParam = new (JKRHeapToken::Dummy) AnimScaleParam();
     mAnimScaleController = SamboFunction::createAnimScaleController(mAnimScaleParam);
-    mPointingActorArray = new LiveActor*[::cPointingActorNum];
+    mPointingActorArray = new (JKRHeapToken::Dummy) LiveActor*[::cPointingActorNum];
 
     for (s32 i = 0; i < ::cPointingActorNum; i++) {
-        mPointingActorArray[i] = new LiveActor("ポインティング用アクター");
+        mPointingActorArray[i] = new (JKRHeapToken::Dummy) LiveActor("ポインティング用アクター");
         mPointingActorArray[i]->initWithoutIter();
         MR::invalidateClipping(mPointingActorArray[i]);
         MR::initStarPointerTargetAtMtx(mPointingActorArray[i], 80.0f * mScale.x, MR::getJointMtx(this, ::cPointingJointName[i]),

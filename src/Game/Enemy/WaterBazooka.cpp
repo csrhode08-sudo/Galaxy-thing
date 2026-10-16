@@ -878,13 +878,13 @@ bool WaterBazooka::isElectricLeak() const {
 }
 
 void WaterBazooka::initShooter() {
-    mShooter = new MogucchiShooter(this, "ウォーターバズーカ乗組員モグッチ");
+    mShooter = new (JKRHeapToken::Dummy) MogucchiShooter(this, "ウォーターバズーカ乗組員モグッチ");
     mShooter->initFixedPosition("Cockpit");
     mShooter->initWithoutIter();
 }
 
 void WaterBazooka::initBazookaCapsule() {
-    mCapsule = new WaterBazookaCapsule(this, "ウォーターバズーカのカプセル");
+    mCapsule = new (JKRHeapToken::Dummy) WaterBazookaCapsule(this, "ウォーターバズーカのカプセル");
     mCapsule->initFixedPosition("Top");
     mCapsule->initWithoutIter();
 }
@@ -902,17 +902,17 @@ void WaterBazooka::initBreakModel() {
 }
 
 void WaterBazooka::initCameraTarget() {
-    mDemoActor = new CameraTargetDemoActor(MR::getJointMtx(this, "Cockpit"), "バズーカカメラターゲット");
+    mDemoActor = new (JKRHeapToken::Dummy) CameraTargetDemoActor(MR::getJointMtx(this, "Cockpit"), "バズーカカメラターゲット");
     mDemoActor->initWithoutIter();
     setCameraTargetMtx();
 }
 
 void WaterBazooka::initBullet(const JMapInfoIter& rIter) {
     if (mIsElectric) {
-        mBullets = new ElectricPressureBullet*[5];
+        mBullets = new (JKRHeapToken::Dummy) ElectricPressureBullet*[5];
 
         for (s32 idx = 0; idx < 5; idx++) {
-            mBullets[idx] = new ElectricPressureBullet("エレクトリックバズーカの弾");
+            mBullets[idx] = new (JKRHeapToken::Dummy) ElectricPressureBullet("エレクトリックバズーカの弾");
             mBullets[idx]->initWithoutIter();
             MR::tryRegisterDemoCast(mBullets[idx], rIter);
         }

@@ -56,5 +56,5 @@ CameraTargetObj* CameraCharmedFix::calc() {
 }
 
 CamTranslatorBase* CameraCharmedFix::createTranslator() {
-    return new CamTranslatorCharmedFix(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorCharmedFix(this);
 }

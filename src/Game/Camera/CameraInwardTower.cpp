@@ -43,7 +43,7 @@ CameraTargetObj* CameraInwardTower::calc() {
 }
 
 CamTranslatorBase* CameraInwardTower::createTranslator() {
-    return new CamTranslatorInwardTower(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorInwardTower(this);
 }
 
 void CameraInwardTower::calcIdealPose() {

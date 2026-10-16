@@ -65,9 +65,9 @@ void SearchBeamer::init(const JMapInfoIter& rIter) {
     initEffectKeeper(1, nullptr, false);
     initSound(4, false);
     MR::initStarPointerTarget(this, 80.0f, TVec3f(0, 0, 0));
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 
     MR::initShadowController(this, 2);
     MR::addShadowVolumeCylinder(this, "body", 80.0f);

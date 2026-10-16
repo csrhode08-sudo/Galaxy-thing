@@ -35,10 +35,10 @@ void CollapsePlane::init(const JMapInfoIter& rIter) {
     initEffectKeeper(1, nullptr, false);
     MR::initStarPointerTarget(this, mScale.x * 200.0f, TVec3f(0.0f, 0.0f, 0.0f));
 
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mScaleController->setParamTight();
 
-    mStateBindStartPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mStateBindStartPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 
     mJointController = MR::createJointDelegatorWithNullChildFunc(this, &CollapsePlane::calcJointPlane, "Plane");
 

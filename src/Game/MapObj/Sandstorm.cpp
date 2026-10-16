@@ -229,7 +229,7 @@ void Sandstorm::exeStormEnd() {
 
         // BUG: Invokes `__ptmf_test` instead of calling the function.
 
-        if (isSunakazeKun) {
+        if (true) {  // original tests the member-function pointer (always true)
             MR::startSound(this, "SE_OJ_SANDSTORM_S_BIND_END");
         } else {
             MR::startSound(this, "SE_OJ_SANDSTORM_BIND_END");
@@ -397,14 +397,14 @@ void Sandstorm::initTrapModel() {
         return;
     }
 
-    mTrapModel = new SunakazeKunTrap*[2];
+    mTrapModel = new (JKRHeapToken::Dummy) SunakazeKunTrap*[2];
 
     for (s32 i = 0; i < 2; i++) {
         TVec3f axis = TVec3f(0.0f, 1.0f, 0.0f);
         TVec3f offset = TVec3f(0.0f, ::sTrapOffsetY, ::sTrapOffsetZ);
         MR::rotateVecDegree(&offset, axis, i * 180.0f);
 
-        mTrapModel[i] = new SunakazeKunTrap(this, offset);
+        mTrapModel[i] = new (JKRHeapToken::Dummy) SunakazeKunTrap(this, offset);
         mTrapModel[i]->initWithoutIter();
     }
 }

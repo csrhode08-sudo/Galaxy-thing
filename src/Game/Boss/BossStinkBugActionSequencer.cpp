@@ -31,13 +31,13 @@ namespace NrvBossStinkBugActionSequencer {
 BossStinkBugActionSequencer::BossStinkBugActionSequencer(BossStinkBug* pStinkBug, const JMapInfoIter& rIter)
     : NerveExecutor("ボスカメムシアクション管理"), mStinkBug(pStinkBug), mCurrentAction(nullptr), mOpeningDemo(nullptr), mActionGround(nullptr),
       mFlyDemo(nullptr), mActionFlyLow(nullptr), mAngryDemo(nullptr), mActionFlyHigh(nullptr), mFinishDemo(nullptr) {
-    mOpeningDemo = new BossStinkBugOpeningDemo(pStinkBug, rIter);
-    mActionGround = new BossStinkBugActionGround(pStinkBug);
-    mFlyDemo = new BossStinkBugFlyDemo(pStinkBug, rIter);
-    mActionFlyLow = new BossStinkBugActionFlyLow(pStinkBug);
-    mAngryDemo = new BossStinkBugAngryDemo(pStinkBug, rIter);
-    mActionFlyHigh = new BossStinkBugActionFlyHigh(pStinkBug);
-    mFinishDemo = new BossStinkBugFinishDemo(pStinkBug, rIter);
+    mOpeningDemo = new (JKRHeapToken::Dummy) BossStinkBugOpeningDemo(pStinkBug, rIter);
+    mActionGround = new (JKRHeapToken::Dummy) BossStinkBugActionGround(pStinkBug);
+    mFlyDemo = new (JKRHeapToken::Dummy) BossStinkBugFlyDemo(pStinkBug, rIter);
+    mActionFlyLow = new (JKRHeapToken::Dummy) BossStinkBugActionFlyLow(pStinkBug);
+    mAngryDemo = new (JKRHeapToken::Dummy) BossStinkBugAngryDemo(pStinkBug, rIter);
+    mActionFlyHigh = new (JKRHeapToken::Dummy) BossStinkBugActionFlyHigh(pStinkBug);
+    mFinishDemo = new (JKRHeapToken::Dummy) BossStinkBugFinishDemo(pStinkBug, rIter);
     initNerve(GET_NERVE(BossStinkBugActionSequencer, BossStinkBugActionSequencerNrvWaitStart));
     MR::declareStarPiece(mStinkBug, 24);
 }

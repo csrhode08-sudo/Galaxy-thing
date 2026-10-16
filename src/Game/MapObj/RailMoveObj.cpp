@@ -237,7 +237,7 @@ RailDemoMoveObj::RailDemoMoveObj(const char* pName) : RailMoveObj(pName) {
 
 void RailDemoMoveObj::init(const JMapInfoIter& rIter) {
     RailMoveObj::init(rIter);
-    mDemoControl = new DemoCtrlBase(this, mObjectName);
+    mDemoControl = new (JKRHeapToken::Dummy) DemoCtrlBase(this, mObjectName);
     mDemoControl->init(rIter);
     makeActorAppeared();
 }

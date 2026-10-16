@@ -80,7 +80,7 @@ void AstroMapObj::init(const JMapInfoIter& rIter) {  // Pain
 
     if (::moreInlines(_CC)) {
         _C4 = AstroMapObjFunction::createAstroNamePlateParser();
-        _C8 = new GalaxyNamePlate(nullptr, true);
+        _C8 = new (JKRHeapToken::Dummy) GalaxyNamePlate(nullptr, true);
         _C8->initWithoutIter();
     }
 
@@ -254,7 +254,7 @@ AstroSimpleObj::AstroSimpleObj(const char* pName) : SimpleMapObjFarMax(pName) {
 void AstroSimpleObj::init(const JMapInfoIter& rIter) {
     SimpleMapObjFarMax::init(rIter);
     _C4 = AstroMapObjFunction::createAstroNamePlateParser();
-    _C8 = new GalaxyNamePlate(0, 1);
+    _C8 = new (JKRHeapToken::Dummy) GalaxyNamePlate(0, 1);
     _C8->initWithoutIter();
 }
 

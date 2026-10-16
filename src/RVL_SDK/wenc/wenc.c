@@ -1,4 +1,4 @@
-#include <mem.h>
+#include <cstring>
 #include "revolution/wenc.h"
 
 s32 WENCGetEncodeData(WENCInfo* info, u32 flag, const s16* pcmData, s32 samples, u8* adpcmData) {

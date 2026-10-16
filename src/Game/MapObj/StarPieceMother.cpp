@@ -59,11 +59,11 @@ void StarPieceMother::init(const JMapInfoIter& rIter) {
         _94 = arg;
     }
 
-    mStarPieceArray = new StarPiece*[_94];
-    _90 = new f32[_94];
+    mStarPieceArray = new (JKRHeapToken::Dummy) StarPiece*[_94];
+    _90 = new (JKRHeapToken::Dummy) f32[_94];
 
     for (u32 idx = 0; idx < _94; idx++) {
-        mStarPieceArray[idx] = new StarPiece("スターピースマザーピース");
+        mStarPieceArray[idx] = new (JKRHeapToken::Dummy) StarPiece("スターピースマザーピース");
         mStarPieceArray[idx]->initAndSetFloatingFromGroup(rIter);
         mStarPieceArray[idx]->makeActorDead();
 

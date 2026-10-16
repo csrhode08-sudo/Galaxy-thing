@@ -3,7 +3,7 @@
 #include "Game/Camera/CameraSubjective.hpp"
 
 CameraManSubjective::CameraManSubjective(const char* pName) : CameraMan(pName) {
-    mCamera = new CameraSubjective("主観カメラ");
+    mCamera = new (JKRHeapToken::Dummy) CameraSubjective("主観カメラ");
     mCamera->mCameraMan = this;
 }
 

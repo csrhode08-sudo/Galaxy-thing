@@ -67,7 +67,7 @@ CameraTargetObj* CameraFrontAndBack::calc() {
 }
 
 CamTranslatorBase* CameraFrontAndBack::createTranslator() {
-    return new CamTranslatorFrontAndBack(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFrontAndBack(this);
 }
 
 void CameraFrontAndBack::calcBaseQuat(TQuat4f* pQuat, const TVec3f& rAxis) {

@@ -35,7 +35,7 @@ void OtaKingMagma::init(const JMapInfoIter& rIter) {
     PartsModel::init(rIter);
     mSoundObject->setTrans(&mHost->mPosition);
 
-    mBloomModel = new PartsModel(mHost, "オタキングマグマブルーム", "OtaKingMagmaBloom", nullptr, MR::DrawBufferType_BloomModel, true);
+    mBloomModel = new (JKRHeapToken::Dummy) PartsModel(mHost, "オタキングマグマブルーム", "OtaKingMagmaBloom", nullptr, MR::DrawBufferType_BloomModel, true);
     _A4 = MR::initDLMakerProjmapEffectMtxSetter(mBloomModel);
     MR::newDifferedDLBuffer(mBloomModel);
     mBloomModel->mPosition.set(mPosition);

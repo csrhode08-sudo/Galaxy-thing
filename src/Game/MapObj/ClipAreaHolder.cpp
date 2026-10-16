@@ -91,6 +91,6 @@ namespace MR {
     }
 
     void setBinderExceptSensorType(LiveActor* actor, const TVec3f* pParam1, f32 param2) {
-        setBinderCollisionPartsFilter(actor, new ClipAreaCollisionFilter(pParam1, param2));
+        setBinderCollisionPartsFilter(actor, new (JKRHeapToken::Dummy) ClipAreaCollisionFilter(pParam1, param2));
     }
 };  // namespace MR

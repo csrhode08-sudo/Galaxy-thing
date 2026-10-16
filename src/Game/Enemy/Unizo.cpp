@@ -166,20 +166,20 @@ void Unizo::init(const JMapInfoIter& rIter) {
 
     if (mType == TypeSea) {
         initModelManagerWithAnm("Unizo", nullptr, false);
-        mBreakModel = new ModelObj("ウニゾー壊れモデル", "UnizoBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
+        mBreakModel = new (JKRHeapToken::Dummy) ModelObj("ウニゾー壊れモデル", "UnizoBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
         mBreakModel->initWithoutIter();
         mBreakModel->makeActorDead();
     } else if (mType == TypeLand) {
         mRollHeight = ::sRollHeightLand;
         mGravityRate = ::sGravityRateLand;
         initModelManagerWithAnm("UnizoLand", nullptr, false);
-        mBreakModel = new ModelObj("陸ウニゾー壊れモデル", "UnizoLandBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
+        mBreakModel = new (JKRHeapToken::Dummy) ModelObj("陸ウニゾー壊れモデル", "UnizoLandBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
         mBreakModel->initWithoutIter();
         mBreakModel->makeActorDead();
         MR::initFur(this);
     } else if (mType == TypeShoal) {
         initModelManagerWithAnm("UnizoShoal", nullptr, false);
-        mBreakModel = new ModelObj("浅瀬ウニゾー壊れモデル", "UnizoShoalBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
+        mBreakModel = new (JKRHeapToken::Dummy) ModelObj("浅瀬ウニゾー壊れモデル", "UnizoShoalBreak", nullptr, MR::DrawBufferType_Enemy, -2, -2, false);
         mBreakModel->initWithoutIter();
         mBreakModel->makeActorDead();
     }
@@ -205,12 +205,12 @@ void Unizo::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(Unizo, UnizoNrvWait));
     MR::onCalcGravity(this);
     MR::startBtp(this, "Blink");
-    mBlinkFrame = MR::getRandom(100L, 200L);
+    mBlinkFrame = MR::getRandom(100, 200);
     MR::addToAttributeGroupSearchTurtle(this);
     MR::declareStarPiece(this, ::sStarPieceNum);
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimScaleController->setParamTight();
-    mBindStarPointerState = new WalkerStateBindStarPointer(this, mAnimScaleController);
+    mBindStarPointerState = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleController);
     MR::setGroupClipping(this, rIter, 16);
     makeActorAppeared();
     MR::useStageSwitchSleep(this, rIter);

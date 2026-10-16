@@ -17,7 +17,7 @@ namespace NrvExterminationChecker {
 namespace {
     template < typename T >
     LiveActor* createLiveActor(const char* pName) {
-        return new T(pName);
+        return new (JKRHeapToken::Dummy) T(pName);
     }
 
     static const ExterminationEntry sCreateTable[] = {{"ChildKuribo", MR::createNoItemKuriboActor},
@@ -48,7 +48,7 @@ ExterminationChecker::ExterminationChecker(const char* pName) : LiveActor(pName)
 void ExterminationChecker::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     s32 objNum = MR::getChildObjNum(rIter);
-    mGroup = new LiveActorGroup("アクター管理", objNum);
+    mGroup = new (JKRHeapToken::Dummy) LiveActorGroup("アクター管理", objNum);
 
     for (s32 i = 0; i < objNum; i++) {
         const char* objName = nullptr;
@@ -62,7 +62,7 @@ void ExterminationChecker::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchSleep(this, rIter);
 
     if (_A1) {
-        mKeySwitch = new KeySwitch("全滅用キースイッチ");
+        mKeySwitch = new (JKRHeapToken::Dummy) KeySwitch("全滅用キースイッチ");
         mKeySwitch->initKeySwitchByOwner(rIter);
     }
 
@@ -136,14 +136,14 @@ void ExterminationChecker::exeAppearKeySwitch() {
 
 namespace MR {
     NameObj* createExterminationPowerStar(const char* pName) {
-        ExterminationChecker* checker = new ExterminationChecker(pName);
+        ExterminationChecker* checker = new (JKRHeapToken::Dummy) ExterminationChecker(pName);
         checker->_A0 = 1;
         checker->_A1 = 0;
         return checker;
     }
 
     NameObj* createExterminationKeySwitch(const char* pName) {
-        ExterminationChecker* checker = new ExterminationChecker(pName);
+        ExterminationChecker* checker = new (JKRHeapToken::Dummy) ExterminationChecker(pName);
         checker->_A0 = 0;
         checker->_A1 = 1;
         return checker;

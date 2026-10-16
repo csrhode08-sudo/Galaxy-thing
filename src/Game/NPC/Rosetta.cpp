@@ -76,25 +76,25 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     MR::tryRegisterDemoCast(this, "エピローグデモ", rIter);
     AstroDemoFunction::tryRegisterSimpleCastIfAstroGalaxy(this);
 
-    mTurnJointCtrl = new TurnJointCtrl(this);
+    mTurnJointCtrl = new (JKRHeapToken::Dummy) TurnJointCtrl(this);
     mTurnJointCtrl->init(40.0f, 0.0f, 5.0f);
     mTurnJointCtrl->addFace("Head", 0.6f, TurnJointCtrl::Z, TurnJointCtrl::Y, TurnJointCtrl::X);
     mTurnJointCtrl->addWaist("Spine2", 0.4f, TurnJointCtrl::Z, TurnJointCtrl::X, TurnJointCtrl::Y);
     makeActorAppeared();
 
     if (MR::isDemoCast(this, "チコガイドデモ")) {
-        mDemoExecutor = new RosettaDemoHeavensDoor1(this, rIter);
+        mDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoHeavensDoor1(this, rIter);
     } else if (MR::isDemoCast(this, "赤いスター")) {
-        mDemoExecutor = new RosettaDemoHeavensDoor2(this, rIter);
+        mDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoHeavensDoor2(this, rIter);
     } else if (MR::isDemoCast(this, "ロゼッタ状況説明デモ")) {
-        mDemoExecutor = new RosettaDemoAstroDomeExplain(this, rIter);
+        mDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoAstroDomeExplain(this, rIter);
     } else if (MR::isDemoCast(this, "エピローグデモ")) {
-        mDemoExecutor = new RosettaDemoEpilogue(this, rIter);
+        mDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoEpilogue(this, rIter);
     } else if (MR::isDemoCast(this, "ロゼッタ最終決戦デモ")) {
-        mDemoExecutor = new RosettaDemoAstroDomeFinalBattle(this, rIter);
+        mDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoAstroDomeFinalBattle(this, rIter);
     }
 
-    mTalkDemoExecutor = new RosettaDemoAstroDomeTalk(this, rIter);
+    mTalkDemoExecutor = new (JKRHeapToken::Dummy) RosettaDemoAstroDomeTalk(this, rIter);
     MR::startBckNoInterpole(this, "WaitA");
     MR::calcAnimDirect(this);
 
@@ -147,7 +147,7 @@ void Rosetta::control() {
     mTurnJointCtrl->update();
 
     if (mMsgCtrl != nullptr && MR::isTalkStart(mMsgCtrl)) {
-        switch (MR::getRandom(0l, 3l)) {
+        switch (MR::getRandom(0, 3)) {
         case 0:
             mParam._1C = "TalkA";
             break;
@@ -161,7 +161,7 @@ void Rosetta::control() {
     }
 
     if (MR::isIntervalStep(this, ::sWaitActionInterval)) {
-        switch (MR::getRandom(0l, 2l)) {
+        switch (MR::getRandom(0, 2)) {
         case 0:
             mParam._14 = "WaitA";
             break;

@@ -3,9 +3,9 @@
 
 BinaryDataChunkHolder::BinaryDataChunkHolder(u32 bufferSize, int maxChunks)
     : mChunks(nullptr), mMaxChunks(0), mNumChunks(0), mData(nullptr), mBufferSize(bufferSize) {
-    mData = new u8[mBufferSize];
+    mData = new (JKRHeapToken::Dummy) u8[mBufferSize];
     MR::zeroMemory(mData, mBufferSize);
-    mChunks = new BinaryDataChunkBase*[maxChunks];
+    mChunks = new (JKRHeapToken::Dummy) BinaryDataChunkBase*[maxChunks];
     mMaxChunks = maxChunks;
 }
 

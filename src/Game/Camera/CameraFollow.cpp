@@ -88,7 +88,7 @@ void CameraFollow::setParam(f32 maxDist, f32 minDist, f32 pitchMin, f32 pitchRan
 }
 
 CamTranslatorBase* CameraFollow::createTranslator() {
-    return new CamTranslatorFollow(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorFollow(this);
 }
 
 bool CameraFollow::isEnableToRoundLeft() const {

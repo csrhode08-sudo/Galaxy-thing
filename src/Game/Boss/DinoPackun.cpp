@@ -141,15 +141,15 @@ void DinoPackun::init(const JMapInfoIter& rIter) {
 }
 
 void DinoPackun::initTail() {
-    mTail = new DinoPackunTail(9);
-    DinoPackunTailRoot* root = new DinoPackunTailRoot("尻尾ルート", this);
+    mTail = new (JKRHeapToken::Dummy) DinoPackunTail(9);
+    DinoPackunTailRoot* root = new (JKRHeapToken::Dummy) DinoPackunTailRoot("尻尾ルート", this);
     root->createJointController(this, "TailRoot");
     root->initWithoutIter();
     root->mKeepBendPower = ::sKeepBendPower[0];
     mTail->addTailNode(root);
 
     for (u32 i = 0; i < 7; i++) {
-        DinoPackunTailPart* p = new DinoPackunTailPart("尻尾ジョイント", this);
+        DinoPackunTailPart* p = new (JKRHeapToken::Dummy) DinoPackunTailPart("尻尾ジョイント", this);
         MR::copyJointPos(this, ::sJointName[i], &p->mPosition);
         p->createJointController(this, ::sJointName[i]);
         f32 keepBendPower = ::sKeepBendPower[i];
@@ -165,7 +165,7 @@ void DinoPackun::initTail() {
         mTail->addTailNode(p);
     }
 
-    mBall = new DinoPackunBall("尻尾先端球", this);
+    mBall = new (JKRHeapToken::Dummy) DinoPackunBall("尻尾先端球", this);
     MR::copyJointPos(this, "TailBall", &mBall->mPosition);
     mBall->mLinkLength = 120.0f;
     mBall->setWeakSensor(getSensor("head"));
@@ -175,7 +175,7 @@ void DinoPackun::initTail() {
 }
 
 void DinoPackun::initFootPrint() {
-    mFootPrint = new FootPrint("足跡", 32);
+    mFootPrint = new (JKRHeapToken::Dummy) FootPrint("足跡", 32);
     mFootPrint->setTexture(MR::getTexFromArc("DinoPackunFootprint.bti", this));
     mFootPrint->_2C = 0.0f;
     mFootPrint->_30 = 100.0f;
@@ -184,12 +184,12 @@ void DinoPackun::initFootPrint() {
 }
 
 void DinoPackun::initDemoPosition(const JMapInfoIter& rIter) {
-    mDemoPos = new DinoPackunDemoPosition("デモ位置管理");
+    mDemoPos = new (JKRHeapToken::Dummy) DinoPackunDemoPosition("デモ位置管理");
     mDemoPos->init(rIter);
 }
 
 void DinoPackun::initEggShell() {
-    mShell = new DinoPackunEggShell("卵の殻", getSensor("head"), MR::getJointMtx(this, "EggShell"));
+    mShell = new (JKRHeapToken::Dummy) DinoPackunEggShell("卵の殻", getSensor("head"), MR::getJointMtx(this, "EggShell"));
     mShell->initWithoutIter();
 
     if (mSequence->getVsCount() == 1) {
@@ -224,7 +224,7 @@ void DinoPackun::initBall() {
 }
 
 void DinoPackun::initCamera(const JMapInfoIter& rIter) {
-    mCameraInfo = new ActorCameraInfo(rIter);
+    mCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     MR::initAnimCamera(this, mCameraInfo, "OpeningDemo");
     MR::initAnimCamera(this, mCameraInfo, "CryDemo");
     MR::initAnimCamera(this, mCameraInfo, "AngryDemo");
@@ -236,11 +236,11 @@ void DinoPackun::initCamera(const JMapInfoIter& rIter) {
         MR::declareCameraRegisterVec(this, _F4, &mCameraVec);
     }
 
-    mCamTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCamTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
 }
 
 void DinoPackun::initScaleJointController() {
-    _B8 = new AnimScaleController(&::sParam);
+    _B8 = new (JKRHeapToken::Dummy) AnimScaleController(&::sParam);
     _B4 = MR::createJointDelegatorWithNullChildFunc(this, &DinoPackun::hitScaleJoint, "Spine1");
 }
 
@@ -563,14 +563,14 @@ DinoPackun::~DinoPackun() {
 
 namespace MR {
     NameObj* createDinoPackunVs1(const char* pName) {
-        DinoPackun* p = new DinoPackun(pName);
-        p->mSequence = new DinoPackunVs1(p);
+        DinoPackun* p = new (JKRHeapToken::Dummy) DinoPackun(pName);
+        p->mSequence = new (JKRHeapToken::Dummy) DinoPackunVs1(p);
         return p;
     }
 
     NameObj* createDinoPackunVs2(const char* pName) {
-        DinoPackun* p = new DinoPackun(pName);
-        p->mSequence = new DinoPackunVs2(p);
+        DinoPackun* p = new (JKRHeapToken::Dummy) DinoPackun(pName);
+        p->mSequence = new (JKRHeapToken::Dummy) DinoPackunVs2(p);
         return p;
     }
 };  // namespace MR

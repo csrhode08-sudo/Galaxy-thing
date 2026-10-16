@@ -39,7 +39,7 @@ void TalkNodeCtrl::createFlowNodeDirect(TalkMessageCtrl* pMsgCtrl, const JMapInf
     _38 = node;
     mCurrentNode = node;
     mFlowNode = node;
-    _0 = new char[strlen(pName) + 1];
+    _0 = new (JKRHeapToken::Dummy) char[strlen(pName) + 1];
     MR::copyString(_0, pName, strlen(pName) + 1);
 
     if (mCurrentNode == nullptr) {
@@ -60,9 +60,9 @@ void TalkNodeCtrl::createFlowNodeDirect(TalkMessageCtrl* pMsgCtrl, const JMapInf
     helper.mIndex = 0;
 
     if (!MR::isValidInfo(rIter)) {
-        *pCameraInf = new ActorCameraInfo(0, 0);
+        *pCameraInf = new (JKRHeapToken::Dummy) ActorCameraInfo(0, 0);
     } else {
-        *pCameraInf = new ActorCameraInfo(rIter);
+        *pCameraInf = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
         initNodeRecursive(pMsgCtrl, rIter, *pCameraInf, &helper);
     }
 

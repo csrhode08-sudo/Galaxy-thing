@@ -68,7 +68,7 @@ KirairaChain::KirairaChain(const LiveActor* pHost)
 }
 
 void KirairaChain::initPoints() {
-    mPoints = new SwingRopePoint*[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) SwingRopePoint*[mPointCount];
 
     for (s32 i = 0; i < mPointCount; i++) {
         f32 t = static_cast< f32 >(i) / (mPointCount - 1);
@@ -80,7 +80,7 @@ void KirairaChain::initPoints() {
             point = mPosition * (1.0f - t) + mHost->mPosition * t;
         }
 
-        mPoints[i] = new SwingRopePoint(point);
+        mPoints[i] = new (JKRHeapToken::Dummy) SwingRopePoint(point);
     }
 }
 
@@ -191,11 +191,11 @@ void KirairaChain::updatePoints() {
 
 void KirairaChain::control() {
     if (mAccelTimer <= 0) {
-        mAccelPointIdx = MR::getRandom(0L, mPointCount - 1);
+        mAccelPointIdx = MR::getRandom(0, mPointCount - 1);
         if (MR::isExistRail(mHost)) {
-            mAccelTimer = MR::getRandom(3L, 10L);
+            mAccelTimer = MR::getRandom(3, 10);
         } else {
-            mAccelTimer = MR::getRandom(5L, 10L);
+            mAccelTimer = MR::getRandom(5, 10);
         }
 
         mAccel.set< f32 >(MR::getRandom(-0.3f, 0.3f), MR::getRandom(-0.3f, 0.3f), MR::getRandom(-0.3f, 0.3f));
@@ -210,7 +210,7 @@ void KirairaChain::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_MapObj, -1, -1, MR::DrawType_KirairaChain);
     initPoints();
 
-    mModelDrawer = new SimpleJ3DModelDrawer(this, "キライラの鎖描画", "KirairaChain", -1);
+    mModelDrawer = new (JKRHeapToken::Dummy) SimpleJ3DModelDrawer(this, "キライラの鎖描画", "KirairaChain", -1);
     mModelDrawer->initWithoutIter();
 
     mFixPointTop = MR::createModelObjEnemy("キライラの固定点[Top]", "KirairaFixPointTop", mFixPointTopMtx.toMtxPtr());

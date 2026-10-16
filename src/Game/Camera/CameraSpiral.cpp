@@ -83,5 +83,5 @@ CameraTargetObj* CameraSpiral::calc() {
 #pragma pop
 
 CamTranslatorBase* CameraSpiral::createTranslator() {
-    return new CamTranslatorSpiral(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorSpiral(this);
 }

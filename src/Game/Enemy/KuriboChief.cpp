@@ -132,10 +132,10 @@ void KuriboChief::init(const JMapInfoIter& rIter) {
     MR::connectToSceneEnemy(this);
     MR::initLightCtrl(this);
     MR::onCalcGravity(this);
-    mItemGenerator = new ItemGenerator();
+    mItemGenerator = new (JKRHeapToken::Dummy) ItemGenerator();
     initEffectKeeper(1, nullptr, false);
     MR::initShadowFromCSV(this, "Shadow");
-    mScaleController = new AnimScaleController(&::sParam.mScaleParam);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(&::sParam.mScaleParam);
     MR::initStarPointerTargetAtJoint(this, "Body", 350.0f, TVec3f(350.0f, 0.0f, 0.0f));
     initSensor();
     initBinder(::sBinderSize, ::sBinderYOffset, 0);
@@ -177,16 +177,16 @@ void KuriboChief::initSensor() {
 }
 
 void KuriboChief::initState() {
-    mStateFindPlayer = new WalkerStateFindPlayer(this, &_BC, &::sParam.mStateParam1, &::sParam.mFindPlayerParam);
-    mStateWander = new WalkerStateWander(this, &_BC, &::sParam.mStateParam1, &::sParam.mWanderParam);
-    mStateChase = new WalkerStateChase(this, &_BC, &::sParam.mStateParam1, &::sParam.mChaseParam);
-    mStateStagger = new WalkerStateStagger(this, &_BC, &::sParam.mStateParam2, &::sParam.mStaggerParam);
-    mStateBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mStateFindPlayer = new (JKRHeapToken::Dummy) WalkerStateFindPlayer(this, &_BC, &::sParam.mStateParam1, &::sParam.mFindPlayerParam);
+    mStateWander = new (JKRHeapToken::Dummy) WalkerStateWander(this, &_BC, &::sParam.mStateParam1, &::sParam.mWanderParam);
+    mStateChase = new (JKRHeapToken::Dummy) WalkerStateChase(this, &_BC, &::sParam.mStateParam1, &::sParam.mChaseParam);
+    mStateStagger = new (JKRHeapToken::Dummy) WalkerStateStagger(this, &_BC, &::sParam.mStateParam2, &::sParam.mStaggerParam);
+    mStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
 }
 
 void KuriboChief::initKeySwitch(const JMapInfoIter& rIter) {
     if (MR::useStageSwitchWriteA(this, rIter)) {
-        mKeySwitch = new KeySwitch("鍵スイッチ");
+        mKeySwitch = new (JKRHeapToken::Dummy) KeySwitch("鍵スイッチ");
         mKeySwitch->initKeySwitchByOwner(rIter);
     }
 }

@@ -3,7 +3,7 @@
 #include "revolution/gx/GXRegs.h"
 #include "revolution/os.h"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 static GXFifoObj DisplayListFifo;
 static GXFifoObj OldCPUFifo;

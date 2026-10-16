@@ -95,7 +95,7 @@ void CrystalCage::init(const JMapInfoIter& rIter) {
     MR::setBvaFrameAndStop(this, 0.0f);
 
     if (_C4 > 1) {
-        mRumbleCalc = new RumbleCalculatorCosMultLinear(4.0f, HALF_PI, 50.0f, 0x14);
+        mRumbleCalc = new (JKRHeapToken::Dummy) RumbleCalculatorCosMultLinear(4.0f, HALF_PI, 50.0f, 0x14);
     }
 
     MR::joinToGroupArray(this, rIter, nullptr, 0x20);

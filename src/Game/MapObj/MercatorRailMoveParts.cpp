@@ -111,10 +111,10 @@ void MercatorRailMoveParts::init(const JMapInfoIter& rIter) {
     what = mPosition;
     mRailMover = MR::createMapPartsRailMoverForMercator(this, rIter, true);
     mRailMover->start();
-    mRailRotator = new MapPartsRailRotator(this);
+    mRailRotator = new (JKRHeapToken::Dummy) MapPartsRailRotator(this);
     mRailRotator->initWithRotateMtx(rIter, mRotateMtx.toMtxPtr());
     mRailRotator->start();
-    mAppearController = new MapPartsAppearController(this);
+    mAppearController = new (JKRHeapToken::Dummy) MapPartsAppearController(this);
     mAppearController->init(rIter);
     mAppearController->start();
 

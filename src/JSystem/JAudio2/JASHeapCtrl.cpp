@@ -216,7 +216,7 @@ JKRSolidHeap* JASDram;
 void JASGenericMemPool::newMemPool(u32 size, int n) {
     void* pChunk;
     for (int i = 0; i < n; i++) {
-        pChunk = new (JASDram, 0) u8[size];
+        pChunk = new (JKRHeapToken::Dummy, JASDram, 0) u8[size];
         *(void**)pChunk = _0;
         _0 = pChunk;
     }
@@ -259,7 +259,7 @@ JASMemChunkPool< 1024, JASThreadingModel::ObjectLevelLockable >* JASKernel::sCom
 
 void JASKernel::setupRootHeap(JKRSolidHeap* pHeap, u32 size) {
     sSystemHeap = JKRExpHeap::create(size, pHeap, false);
-    sCommandHeap = new (pHeap, 0) JASMemChunkPool< 1024, JASThreadingModel::ObjectLevelLockable >();
+    sCommandHeap = new (JKRHeapToken::Dummy, pHeap, 0) JASMemChunkPool< 1024, JASThreadingModel::ObjectLevelLockable >();
     JASDram = pHeap;
 }
 

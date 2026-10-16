@@ -40,10 +40,10 @@ void KoopaSequencerVs2::init(Koopa* pKoopa, const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(KoopaSequencerVs2, KoopaSequencerVs2NrvWaitDemoBattleStart));
     KoopaFunction::initKoopaPartsVs2(mKoopa);
 
-    mBattleMain = new KoopaBattleMain("クッパ戦闘（Ｖｓ２）", mKoopa);
+    mBattleMain = new (JKRHeapToken::Dummy) KoopaBattleMain("クッパ戦闘（Ｖｓ２）", mKoopa);
     mBattleMain->init();
 
-    mSubSequenceBattle = new KoopaSubSequenceBattle(mKoopa, this, mBattleMain);
+    mSubSequenceBattle = new (JKRHeapToken::Dummy) KoopaSubSequenceBattle(mKoopa, this, mBattleMain);
     mSubSequenceBattle->init();
 
     MR::initDemoSheetTalkAnim(mKoopa, rIter, "クッパＶｓ２本戦開始", "DemoKoopaVs2Start", nullptr);

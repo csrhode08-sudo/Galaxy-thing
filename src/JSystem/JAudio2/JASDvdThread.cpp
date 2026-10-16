@@ -15,7 +15,7 @@ bool JASDvd::createThread(s32 priority, int msgCount, u32 stackSize) {
         return false;
     }
 
-    sThread = new (JASDram, 0) JASTaskThread(priority, msgCount, stackSize);
+    sThread = new (JKRHeapToken::Dummy, JASDram, 0) JASTaskThread(priority, msgCount, stackSize);
 
     JKRHeap* pCurrentHeap = JKRGetSystemHeap();
 

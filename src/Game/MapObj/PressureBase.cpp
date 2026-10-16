@@ -89,7 +89,7 @@ void PressureBase::init(const JMapInfoIter& rIter) {
         PressureBase* actor = static_cast< PressureBase* >(mGroup->getActor(0));
 
         if (this == actor) {
-            mMessenger = new PressureMessenger(mGroup, "プレッシャー同期メッセンジャー");
+            mMessenger = new (JKRHeapToken::Dummy) PressureMessenger(mGroup, "プレッシャー同期メッセンジャー");
             mMessenger->initWithoutIter();
         }
     }

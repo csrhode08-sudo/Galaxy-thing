@@ -47,8 +47,8 @@ void RunawayRabbitCollect::init(const JMapInfoIter& rIter) {
             mTicoNum++;
         }
     }
-    mRabbit = new RunawayRabbit*[mRabbitNum];
-    mTico = new RunawayTico*[mTicoNum];
+    mRabbit = new (JKRHeapToken::Dummy) RunawayRabbit*[mRabbitNum];
+    mTico = new (JKRHeapToken::Dummy) RunawayTico*[mTicoNum];
 
     mRabbitNum = 0;
     mTicoNum = 0;
@@ -56,11 +56,11 @@ void RunawayRabbitCollect::init(const JMapInfoIter& rIter) {
     for (s32 i = 0; i < MR::getChildObjNum(rIter); i++) {
         MR::getChildObjName(&childObjName, rIter, i);
         if (MR::isEqualString(childObjName, "RunawayRabbit")) {
-            mRabbit[mRabbitNum] = new RunawayRabbit("球面逃げウサギ", this);
+            mRabbit[mRabbitNum] = new (JKRHeapToken::Dummy) RunawayRabbit("球面逃げウサギ", this);
             MR::initChildObj(mRabbit[mRabbitNum], rIter, i);
             mRabbitNum++;
         } else if (MR::isEqualString(childObjName, "RunawayTico")) {
-            mTico[mTicoNum] = new RunawayTico("逃げチコ");
+            mTico[mTicoNum] = new (JKRHeapToken::Dummy) RunawayTico("逃げチコ");
             MR::initChildObj(mTico[mTicoNum], rIter, i);
             mTicoNum++;
         }

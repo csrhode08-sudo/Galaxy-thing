@@ -53,7 +53,7 @@ void DemoCameraKeeper::end() {
 }
 
 void DemoCameraKeeper::initActorCamera(DemoCameraInfo* pInfo, const JMapInfoIter& rIter) {
-    ActorCameraInfo* cameraInfo = new ActorCameraInfo(-1, MR::getPlacedZoneId(rIter));
+    ActorCameraInfo* cameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(-1, MR::getPlacedZoneId(rIter));
     pInfo->_20 = cameraInfo;
     MR::declareEventCamera(cameraInfo, pInfo->_1C);
     if (pInfo->mAnimCameraName == nullptr) {
@@ -121,7 +121,7 @@ DemoCameraKeeper::DemoCameraKeeper(DemoExecutor* pExecutor, const JMapInfoIter& 
     JMapInfo* map = nullptr;
     _4 = DemoFunction::createSheetParser(mExecutor, ::sSheetName, &map);
 
-    _8 = new DemoCameraInfo[_4];
+    _8 = new (JKRHeapToken::Dummy) DemoCameraInfo[_4];
 
     s32 executorNameLen = strlen(mExecutor->mName);
 
@@ -142,7 +142,7 @@ DemoCameraKeeper::DemoCameraKeeper(DemoExecutor* pExecutor, const JMapInfoIter& 
 
         s32 animNameLen = executorNameLen + strlen(curInfo->mPartName) + 3;
 
-        char* aninName = new char[animNameLen];
+        char* aninName = new (JKRHeapToken::Dummy) char[animNameLen];
 
         snprintf(aninName, animNameLen, "%s[%s]", mExecutor->mName, curInfo->mPartName);
 

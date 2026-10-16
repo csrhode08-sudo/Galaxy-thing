@@ -50,7 +50,7 @@ void KameckTurtle::init(const JMapInfoIter& rIter) {
 }
 
 void KameckTurtle::initJetTurtle() {
-    mTurtle = new JetTurtle("カメックビーム用ジェット亀");
+    mTurtle = new (JKRHeapToken::Dummy) JetTurtle("カメックビーム用ジェット亀");
     mTurtle->initWithoutIter();
     mTurtle->becomeSlowType();
 

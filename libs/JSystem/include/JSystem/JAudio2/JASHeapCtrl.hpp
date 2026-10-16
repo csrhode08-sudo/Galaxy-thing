@@ -223,12 +223,12 @@ public:
             return true;
         }
         MemoryChunk* pMVar4 = mChunk;
-        mChunk = new (JASKernel::getSystemHeap(), 0) MemoryChunk(pMVar4);
+        mChunk = new (JKRHeapToken::Dummy, JASKernel::getSystemHeap(), 0) MemoryChunk(pMVar4);
         if (mChunk != nullptr) {
             return true;
         }
 
-        mChunk = new (JKRHeap::getSystemHeap(), 0) MemoryChunk(pMVar4);
+        mChunk = new (JKRHeapToken::Dummy, JKRHeap::getSystemHeap(), 0) MemoryChunk(pMVar4);
         if (mChunk != nullptr) {
             return true;
         }
@@ -292,11 +292,17 @@ namespace JASKernel {
 template < typename T >
 class JASPoolAllocObject {
 public:
-    static void* operator new(u32 size) {
+    static void* operator new(size_t size) {
         return memPool_.alloc(size);
     }
 
-    static void operator delete(void* addr, u32 size) {
+#ifdef TARGET_PC
+    static void* operator new(size_t size, JKRHeapToken) noexcept {
+        return memPool_.alloc(size);
+    }
+#endif
+
+    static void operator delete(void* addr, size_t size) {
         memPool_.free(addr, size);
     }
 
@@ -331,11 +337,17 @@ public:
 template < typename T >
 class JASPoolAllocObject_MultiThreaded {
 public:
-    static void* operator new(u32 size) {
+    static void* operator new(size_t size) {
         return memPool_.alloc(size);
     }
 
-    static void operator delete(void* addr, u32 size) {
+#ifdef TARGET_PC
+    static void* operator new(size_t size, JKRHeapToken) noexcept {
+        return memPool_.alloc(size);
+    }
+#endif
+
+    static void operator delete(void* addr, size_t size) {
         memPool_.free(addr, size);
     }
 

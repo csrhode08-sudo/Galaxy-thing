@@ -121,7 +121,7 @@ MessageData::MessageData(const char* pArchiveName)
     u8* msgData = (u8*)pArchive->getResource("Message.bmg");
     u8* mapData = (u8*)pArchive->getResource(QUESTIONMARK_MAGIC, "MessageId.tbl");
 
-    mIDTable = new JMapInfo();
+    mIDTable = new (JKRHeapToken::Dummy) JMapInfo();
     mIDTable->attach(mapData);
 
     mInfoBlock = (MessageInfoBlock*)::getBlock('INF1', msgData);
@@ -156,11 +156,11 @@ s32 MessageData::findMessageIndex(const char* pMessage) const {
 }
 
 void MessageHolder::initSystemData() {
-    mSystemMessageData = new MessageData(SYSTEMMESSAGE_ARC);
+    mSystemMessageData = new (JKRHeapToken::Dummy) MessageData(SYSTEMMESSAGE_ARC);
 }
 
 void MessageHolder::initGameData() {
     MR::mountArchive(MESSAGE_ARC, nullptr);
 
-    mGameMessageData = new MessageData(MESSAGE_ARC);
+    mGameMessageData = new (JKRHeapToken::Dummy) MessageData(MESSAGE_ARC);
 }

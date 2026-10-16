@@ -22,7 +22,7 @@ u32 AudMeNameConverter::getMeID(const char* pName) const {
 void AudMeNameConverter::init() {
     AudMeMgr* meMgr = AudWrap::getRhythmMeSystem()->mMeMgr;
     mNumEntries = meMgr->mParams.mNumEntries;
-    mEntries = new AudMeNameData[mNumEntries];
+    mEntries = new (JKRHeapToken::Dummy) AudMeNameData[mNumEntries];
 
     for (s32 i = 0; i < mNumEntries; i++) {
         mEntries[i].mName = meMgr->mParams.mNames[i];

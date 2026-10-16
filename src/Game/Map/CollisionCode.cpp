@@ -12,9 +12,9 @@ CollisionCode::CollisionCode() : mFloorTable(), mWallTable(), mSoundTable(), mCa
 CodeTable::CodeTable(u32 numMax) {
     mCodeNumMax = numMax;
     mCodeNum = 0;
-    mHashTable = new u32[numMax];
-    mCodeTable = new u32[numMax];
-    mNameTable = new const char*[numMax];
+    mHashTable = new (JKRHeapToken::Dummy) u32[numMax];
+    mCodeTable = new (JKRHeapToken::Dummy) u32[numMax];
+    mNameTable = new (JKRHeapToken::Dummy) const char*[numMax];
 }
 
 void CodeTable::add(const char* pName, u32 code) {
@@ -25,7 +25,7 @@ void CodeTable::add(const char* pName, u32 code) {
 }
 
 void CollisionCode::createFloorTable() {
-    mFloorTable = new CodeTable(CollisionFloorCode_End);
+    mFloorTable = new (JKRHeapToken::Dummy) CodeTable(CollisionFloorCode_End);
     mFloorTable->add("Normal", CollisionFloorCode_Normal);
     mFloorTable->add("Death", CollisionFloorCode_Death);
     mFloorTable->add("Slip", CollisionFloorCode_Slip);
@@ -64,7 +64,7 @@ void CollisionCode::createFloorTable() {
 }
 
 void CollisionCode::createWallTable() {
-    mWallTable = new CodeTable(CollisionWallCode_End);
+    mWallTable = new (JKRHeapToken::Dummy) CodeTable(CollisionWallCode_End);
     mWallTable->add("Normal", CollisionWallCode_Normal);
     mWallTable->add("NotWallJump", CollisionWallCode_NotWallJump);
     mWallTable->add("NotWallSlip", CollisionWallCode_NotWallSlip);
@@ -77,7 +77,7 @@ void CollisionCode::createWallTable() {
 }
 
 void CollisionCode::createSoundTable() {
-    mSoundTable = new CodeTable(CollisionSoundCode_End);
+    mSoundTable = new (JKRHeapToken::Dummy) CodeTable(CollisionSoundCode_End);
     mSoundTable->add("null", CollisionSoundCode_Null);
     mSoundTable->add("Soil", CollisionSoundCode_Soil);
     mSoundTable->add("Lawn", CollisionSoundCode_Lawn);
@@ -97,7 +97,7 @@ void CollisionCode::createSoundTable() {
 }
 
 void CollisionCode::createCameraTable() {
-    mCameraTable = new CodeTable(CollisionCameraCode_End);
+    mCameraTable = new (JKRHeapToken::Dummy) CodeTable(CollisionCameraCode_End);
     mCameraTable->add("NoThrough", CollisionCameraCode_NoThrough);
     mCameraTable->add("Through", CollisionCameraCode_Through);
 }

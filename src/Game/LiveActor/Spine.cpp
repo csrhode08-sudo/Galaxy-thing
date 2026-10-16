@@ -44,5 +44,5 @@ void Spine::changeNerve() {
 }
 
 void Spine::initStateKeeper(int capacity) {
-    mStateKeeper = new ActorStateKeeper(capacity);
+    mStateKeeper = new (JKRHeapToken::Dummy) ActorStateKeeper(capacity);
 }

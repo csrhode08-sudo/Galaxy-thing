@@ -1,0 +1,121 @@
+// Super Mario Galaxy PC: program entry point.
+#include "pc/frame.h"
+#include "pc/input.h"
+#include "pc/platform.h"
+
+#include <revolution/os.h>
+
+#include <aurora/aurora.h>
+#include <aurora/dvd.h>
+#include <aurora/main.h>
+
+#include <SDL3/SDL.h>
+
+#include <cctype>
+#include <cstdio>
+#include <cstring>
+#include <filesystem>
+#include <string>
+#include <vector>
+
+void smg_main(void);  // GameSystem.cpp
+void pc_initMEM2(u32 size);
+
+namespace {
+
+void logCallback(AuroraLogLevel level, const char* module, const char* message, unsigned int len) {
+    static const char* const kLevels[] = {"DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+    if (level == LOG_DEBUG) {
+        return;
+    }
+    std::fprintf(stderr, "[%s %s] %.*s\n", kLevels[level], module, (int)len, message);
+    if (level == LOG_FATAL) {
+        std::fflush(stderr);
+        std::abort();
+    }
+}
+
+bool hasDiscExtension(const std::filesystem::path& p) {
+    std::string e = p.extension().string();
+    for (char& c : e) c = (char)std::tolower((unsigned char)c);
+    return e == ".wbfs" || e == ".iso" || e == ".rvz" || e == ".wia" || e == ".ciso" || e == ".gcz" || e == ".nfs";
+}
+
+// Finds the Korean Super Mario Galaxy disc (RMGK01) next to the executable or in the working directory.
+std::string findDisc(const char* exeDir) {
+    std::vector<std::filesystem::path> dirs = {std::filesystem::current_path()};
+    if (exeDir) dirs.emplace_back(exeDir);
+    std::string fallback;
+    for (const auto& d : dirs) {
+        std::error_code ec;
+        for (const auto& entry : std::filesystem::directory_iterator(d, ec)) {
+            if (!entry.is_regular_file() || !hasDiscExtension(entry.path())) continue;
+            std::string name = entry.path().filename().string();
+            if (name.find("RMGK01") != std::string::npos || name.find("Korea") != std::string::npos) {
+                return entry.path().string();
+            }
+            if (fallback.empty()) fallback = entry.path().string();
+        }
+    }
+    return fallback;
+}
+
+}  // namespace
+
+int main(int argc, char* argv[]) {
+    std::string discPath;
+    for (int i = 1; i < argc; i++) {
+        if ((std::strcmp(argv[i], "--disc") == 0 || std::strcmp(argv[i], "-d") == 0) && i + 1 < argc) {
+            discPath = argv[++i];
+        } else if (argv[i][0] != '-') {
+            discPath = argv[i];
+        }
+    }
+
+    const char* base = SDL_GetBasePath();
+    if (discPath.empty()) {
+        discPath = findDisc(base);
+    }
+
+    char* prefPath = SDL_GetPrefPath("GalaxyPC", "SuperMarioGalaxy");
+    std::string userDir = prefPath ? prefPath : ".";
+    if (prefPath) SDL_free(prefPath);
+
+    AuroraConfig config{};
+    config.appName = "Super Mario Galaxy";
+    config.userPath = userDir.c_str();
+    config.cachePath = userDir.c_str();
+    config.desiredBackend = BACKEND_AUTO;
+    config.vsync = true;
+    config.windowPosX = -1;
+    config.windowPosY = -1;
+    config.windowWidth = 1280;
+    config.windowHeight = 960;
+    config.logCallback = &logCallback;
+    config.logLevel = LOG_INFO;
+    config.allowCpuAdapter = true;
+    // The Wii has 24 MB MEM1 + 64 MB MEM2; 64-bit pointers make structures bigger, so give headroom.
+    config.mem1Size = 96 * 1024 * 1024;
+    config.mem2Size = 32 * 1024 * 1024;  // emulated ARAM
+    AuroraInfo info = aurora_initialize(argc, argv, &config);
+    (void)info;
+
+    if (discPath.empty() || !aurora_dvd_open(discPath.c_str())) {
+        std::string msg = discPath.empty()
+                              ? "Couldn't find the game disc.\n\nPut your Super Mario Galaxy disc image (the Korean version, RMGK01, as "
+                                ".wbfs/.iso/.rvz) next to SuperMarioGalaxy.exe, or pass its path on the command line."
+                              : "Couldn't open the disc image:\n" + discPath;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Super Mario Galaxy", msg.c_str(), nullptr);
+        aurora_shutdown();
+        return 1;
+    }
+    pc_log("[main] Disc: %s\n", discPath.c_str());
+
+    pc::input::init(userDir);
+
+    OSInit();
+    pc_initMEM2(160 * 1024 * 1024);
+
+    smg_main();  // never returns
+    return 0;
+}

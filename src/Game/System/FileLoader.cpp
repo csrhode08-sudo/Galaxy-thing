@@ -9,12 +9,12 @@ FileLoader::FileLoader() {
     mRequestedFileCount = 0;
     mFileHolder = nullptr;
     mArchiveHolder = nullptr;
-    mLoaderThread = new FileLoaderThread(13, 320, MR::getStationedHeapNapa());
+    mLoaderThread = new (JKRHeapToken::Dummy) FileLoaderThread(13, 320, MR::getStationedHeapNapa());
     OSResumeThread(mLoaderThread->mThread);
     OSInitMutex(&mMutex);
-    mRequestFileInfos = new RequestFileInfo[0x140];
-    mFileHolder = new FileHolder();
-    mArchiveHolder = new ArchiveHolder();
+    mRequestFileInfos = new (JKRHeapToken::Dummy) RequestFileInfo[0x140];
+    mFileHolder = new (JKRHeapToken::Dummy) FileHolder();
+    mArchiveHolder = new (JKRHeapToken::Dummy) ArchiveHolder();
     mRequestedFileCount = 0;
 }
 

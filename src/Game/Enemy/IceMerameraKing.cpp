@@ -115,31 +115,31 @@ void IceMerameraKing::init(const JMapInfoIter& rIter) {
     MR::setShadowDropLength(this, nullptr, 1500.0f);
     MR::declarePowerStar(this);
     MR::declareStarPiece(this, 24);
-    mFixedPos = new FixedPosition(this, "Top", TVec3f(0, 0, 0), TVec3f(0.0f, 0.0f, 0.0f));
+    mFixedPos = new (JKRHeapToken::Dummy) FixedPosition(this, "Top", TVec3f(0, 0, 0), TVec3f(0.0f, 0.0f, 0.0f));
     MR::tryRegisterDemoCast(this, rIter);
     mIce.init(6);
     for (s32 i = 0; i < 6; i++) {
-        ThrowingIce* newIce = new ThrowingIce("投擲用の氷");
+        ThrowingIce* newIce = new (JKRHeapToken::Dummy) ThrowingIce("投擲用の氷");
         newIce->initWithoutIter();
         mIce.push_back(newIce);
         MR::tryRegisterDemoCast(newIce, rIter);
     }
 
     MR::initLightCtrl(this);
-    _A8 = new IceMerameraKingShockWave();
+    _A8 = new (JKRHeapToken::Dummy) IceMerameraKingShockWave();
     _A8->initWithoutIter();
     _A8->mRotation.set(mRotation);
     _A8->makeActorDead();
-    _AC = new ModelObj("壊れモデル", "IceMerameraKingBreak", nullptr, -2, -2, -2, false);
+    _AC = new (JKRHeapToken::Dummy) ModelObj("壊れモデル", "IceMerameraKingBreak", nullptr, -2, -2, -2, false);
     _AC->initWithoutIter();
     _AC->mScale.set(mScale);
     _AC->makeActorDead();
     s32 childNum = MR::getChildObjNum(rIter);
     _F0 = childNum;
-    mModelArray = new Meramera*[childNum];
+    mModelArray = new (JKRHeapToken::Dummy) Meramera*[childNum];
 
     for (s32 i = 0; i < _F0; i++) {
-        mModelArray[i] = new Meramera("メラメラ");
+        mModelArray[i] = new (JKRHeapToken::Dummy) Meramera("メラメラ");
         MR::initChildObj(mModelArray[i], rIter, i);
         mModelArray[i]->makeActorDead();
         MR::tryRegisterDemoCast(mModelArray[i], rIter);
@@ -147,11 +147,11 @@ void IceMerameraKing::init(const JMapInfoIter& rIter) {
 
     MR::tryRegisterDemoCast(_AC, rIter);
     MR::registerDemoActionNerve(this, GET_NERVE(IceMerameraKing, HostTypeNrvBeginDemo), nullptr);
-    mSpinParticle = new MerameraParticleCallBack();
+    mSpinParticle = new (JKRHeapToken::Dummy) MerameraParticleCallBack();
     mJointController = MR::createJointDelegatorWithNullChildFunc(this, &IceMerameraKing::calcJoint, "JointRoot");
     makeActorAppeared();
     MR::emitEffect(this, "BodyIce");
-    mCameraTarget = new CameraTargetDemoActor(getBaseMtx(), "アクター注目");
+    mCameraTarget = new (JKRHeapToken::Dummy) CameraTargetDemoActor(getBaseMtx(), "アクター注目");
     mCameraTarget->initWithoutIter();
     mCameraTarget->mPosition.set(_C8);
     mCameraTarget->mRotation.set(_D4);

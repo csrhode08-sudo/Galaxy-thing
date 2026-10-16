@@ -23,7 +23,7 @@ namespace {
 };  // namespace
 
 CoinHolder::CoinHolder(const char* pName) : DeriveActorGroup< Coin >(pName, ::sCoinNumMax), mHostInfoArr(), mHostInfoCount() {
-    mHostInfoArr = new CoinHostInfo[::sCoinNumMax];
+    mHostInfoArr = new (JKRHeapToken::Dummy) CoinHostInfo[::sCoinNumMax];
 }
 
 bool CoinHolder::hopCoin(const NameObj* pObj, const TVec3f& rPosition, const TVec3f& rDirection) {
@@ -135,7 +135,7 @@ void CoinHolder::init(const JMapInfoIter& rIter) {
     Coin* pCoin;
 
     for (int i = 0; i < ::sCreateCoinNum; i++) {
-        pCoin = new Coin("コイン(共用)");
+        pCoin = new (JKRHeapToken::Dummy) Coin("コイン(共用)");
         pCoin->initWithoutIter();
         registerActor(pCoin);
     }

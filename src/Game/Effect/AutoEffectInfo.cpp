@@ -2,7 +2,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-extern "C" u32 strtoul(const char*, char**, int);
+#include <cstdlib>
 
 namespace {
     u32 str2Color(const char* pStr) NO_INLINE {

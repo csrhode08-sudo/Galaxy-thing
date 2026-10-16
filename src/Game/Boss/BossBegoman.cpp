@@ -137,7 +137,7 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
     MR::calcGravity(this);
 
     mInitPos.sub(mGravity * 10.0f);
-    mHead = new BossBegomanHead(this, mHeadMtx);
+    mHead = new (JKRHeapToken::Dummy) BossBegomanHead(this, mHeadMtx);
     mHead->initWithoutIter();
 
     MR::startBrk(mHead, "OffWait");
@@ -158,7 +158,7 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
     MR::declarePowerStar(this);
     MR::declareStarPiece(this, 24);
 
-    mPath = new ParabolicPath();
+    mPath = new (JKRHeapToken::Dummy) ParabolicPath();
 
     s32 arg7 = -1;
     MR::getJMapInfoArg7NoInit(rIter, &arg7);
@@ -170,10 +170,10 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
     }
 
     mBabyFollowerNum = 3;
-    mBabyFollowers = new BegomanBaby*[mBabyFollowerNum];
+    mBabyFollowers = new (JKRHeapToken::Dummy) BegomanBaby*[mBabyFollowerNum];
 
     for (int i = 0; i < mBabyFollowerNum; i++) {
-        BegomanBaby* newBaby = new BegomanBaby("子分ベビー");
+        BegomanBaby* newBaby = new (JKRHeapToken::Dummy) BegomanBaby("子分ベビー");
         mBabyFollowers[i] = newBaby;
         newBaby->mHost = this;
         newBaby->mPosition.set(this->mPosition);
@@ -182,10 +182,10 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
     }
 
     mSpikeFollowerNum = 2;
-    mSpikeFollowers = new BegomanSpike*[mSpikeFollowerNum];
+    mSpikeFollowers = new (JKRHeapToken::Dummy) BegomanSpike*[mSpikeFollowerNum];
 
     for (int i = 0; i < mSpikeFollowerNum; i++) {
-        BegomanSpike* spike = new BegomanSpike("子分トゲ");
+        BegomanSpike* spike = new (JKRHeapToken::Dummy) BegomanSpike("子分トゲ");
         mSpikeFollowers[i] = spike;
         spike->mPosition.set(this->mPosition);
         spike->initWithoutIter();
@@ -208,7 +208,7 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
         MR::tryRegisterDemoCast(mHead, rIter);
     }
 
-    mOpeningDemoInfo = new ActorCameraInfo(rIter);
+    mOpeningDemoInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
     MR::initAnimCamera(this, mOpeningDemoInfo, "OpeningDemo");
 
     makeActorAppeared();

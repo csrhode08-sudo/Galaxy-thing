@@ -14,7 +14,7 @@
 
 EventSequencer::EventSequencer() : NameObj("イベントシーケンサー"), mSequence() {
     MR::connectToSceneMapObjMovement(this);
-    mHashTable = new HashSortTable(16);
+    mHashTable = new (JKRHeapToken::Dummy) HashSortTable(16);
 }
 
 void EventSequencer::init(const JMapInfoIter& rIter) {
@@ -42,7 +42,7 @@ void EventSequencer::movement() {
 
 void EventSequencer::startEvent(const char* pName) {
     EventSequence* sequence;
-    if (mHashTable->search(pName, reinterpret_cast< u32* >(&sequence))) {
+    if (mHashTable->search(pName, reinterpret_cast< uintptr_t* >(&sequence))) {
         mSequence = sequence;
         mSequenceFrame = 0;
         sequence->clearFlag();
@@ -52,11 +52,11 @@ void EventSequencer::startEvent(const char* pName) {
 EventSequence::EventSequence(u32 eventNumMax) : mEventNumMax(eventNumMax) {
     mEventNum = 0;
 
-    mEventFuncs = new EventFunc1[eventNumMax];
-    mEventCheckFuncs = new EventFunc2[eventNumMax];
-    mStartFrameOrModes = new u16[eventNumMax];
-    mStopFrameOrPhases = new u16[eventNumMax];
-    mEventFrames = new u16[eventNumMax];
+    mEventFuncs = new (JKRHeapToken::Dummy) EventFunc1[eventNumMax];
+    mEventCheckFuncs = new (JKRHeapToken::Dummy) EventFunc2[eventNumMax];
+    mStartFrameOrModes = new (JKRHeapToken::Dummy) u16[eventNumMax];
+    mStopFrameOrPhases = new (JKRHeapToken::Dummy) u16[eventNumMax];
+    mEventFrames = new (JKRHeapToken::Dummy) u16[eventNumMax];
 
     clearFlag();
 }

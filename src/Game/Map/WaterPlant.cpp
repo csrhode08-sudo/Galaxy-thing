@@ -165,7 +165,7 @@ void WaterPlant::draw() const {
 }
 
 void WaterPlant::initPlant() {
-    mPlantDataArray = new WaterPlant::PlantData[mPlantNum];
+    mPlantDataArray = new (JKRHeapToken::Dummy) WaterPlant::PlantData[mPlantNum];
     MR::setClippingTypeSphere(this, mAreaRadius);
 }
 
@@ -270,14 +270,14 @@ WaterPlantDrawInit::WaterPlantDrawInit()
     : NameObj("水草の描画初期化"), mAngleOffset(), mSwingPosTable(), mPlantATex(), mPlantBTex(), mPlantCTex(), mPlantDTex() {
     MR::connectToScene(this, MR::MovementType_MapObj, -1, -1, -1);
 
-    mPlantATex = new JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantA.bti"), nullptr);
-    mPlantBTex = new JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantB.bti"), nullptr);
-    mPlantCTex = new JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantC.bti"), nullptr);
-    mPlantDTex = new JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantD.bti"), nullptr);
+    mPlantATex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantA.bti"), 0);
+    mPlantBTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantB.bti"), 0);
+    mPlantCTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantC.bti"), 0);
+    mPlantDTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterPlant.arc", "WaterPlantD.bti"), 0);
 
     MR::registerPreDrawFunction(MR::Functor(this, &WaterPlantDrawInit::initDraw), MR::DrawType_WaterPlant);
 
-    mSwingPosTable = new f32[::sSwingPosTableSize];
+    mSwingPosTable = new (JKRHeapToken::Dummy) f32[::sSwingPosTableSize];
     updateSwingPos();
 }
 
@@ -348,7 +348,7 @@ void WaterPlantDrawInit::initDraw() const {
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
-    GXSetArray(GX_VA_TEX0, &::gxArray, sizeof(TVec2f));
+    GXSETARRAY(GX_VA_TEX0, &::gxArray, sizeof(::gxArray), sizeof(TVec2f), true);
     GXLoadPosMtxImm(MR::getCameraViewMtx(), 0);
     GXSetCurrentMtx(0);
     GXSetNumChans(1);

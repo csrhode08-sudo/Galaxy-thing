@@ -25,7 +25,7 @@ DinoPackunTail::DinoPackunTail(u32 nodeCount) {
     _14 = 0.0f;
     _18 = 0.0f;
     _1C = 1;
-    mNodes = new DinoPackunTailNode*[nodeCount];
+    mNodes = new (JKRHeapToken::Dummy) DinoPackunTailNode*[nodeCount];
     mMaxNodes = nodeCount;
 }
 

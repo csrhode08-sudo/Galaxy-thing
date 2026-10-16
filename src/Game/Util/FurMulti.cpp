@@ -42,9 +42,9 @@ FurMulti::FurMulti(LiveActor* pActor, u32 count) {
     mActor = pActor;
     mModel = MR::getJ3DModel(pActor);
     mCount = count;
-    mShapeIndices = new u8[count];
-    mDrawOrders = new u8[count];
-    mFurCtrls = new FurCtrl*[count];
+    mShapeIndices = new (JKRHeapToken::Dummy) u8[count];
+    mDrawOrders = new (JKRHeapToken::Dummy) u8[count];
+    mFurCtrls = new (JKRHeapToken::Dummy) FurCtrl*[count];
 
     for (u32 i = 0; i < count; i++) {
         mDrawOrders[i] = 255;
@@ -58,7 +58,7 @@ void FurMulti::setLayerDirect(u32 layer, u32 drawOrder, u32 shape, u32 numLayers
                               ResTIMG* pIndirect, ResTIMG* pDensity) {
     mShapeIndices[layer] = shape;
     mDrawOrders[layer] = drawOrder;
-    mFurCtrls[layer] = new FurCtrl(mActor, pParam, false, 1);
+    mFurCtrls[layer] = new (JKRHeapToken::Dummy) FurCtrl(mActor, pParam, false, 1);
     J3DModelData* pModelData = mModel->getModelData();
     FurMulti* pClone = MR::getFurDrawManager()->getFurBank()->check(pModelData, layer);
 
@@ -92,7 +92,7 @@ void FurMulti::setLayerDirect(u32 layer, u32 drawOrder, u32 shape, u32 numLayers
         pDensity->mImageNum = 1;
         pDensity->mLodBias = 0;
         pDensity->mImageDataOffset = sizeof(ResTIMG);
-        JUTTexture* pTexture = new JUTTexture(pDensity, 0);
+        JUTTexture* pTexture = new (JKRHeapToken::Dummy) JUTTexture(pDensity, 0);
         FurDrawer* pDrawer = mFurCtrls[layer]->mDrawer;
         pDrawer->mFurTexture = pTexture;
         pDrawer->mUseDensityMap = 1;
@@ -155,10 +155,10 @@ namespace MR {
             return nullptr;
         }
 
-        pMulti = new FurMulti(pActor, count);
+        pMulti = new (JKRHeapToken::Dummy) FurMulti(pActor, count);
         DynamicFurParam dynamicParam;
-        dynamicParam.mFogCtrl = new FogCtrl(pModelData, true);
-        dynamicParam.mLightParam = new FurLightParam;
+        dynamicParam.mFogCtrl = new (JKRHeapToken::Dummy) FogCtrl(pModelData, true);
+        dynamicParam.mLightParam = new (JKRHeapToken::Dummy) FurLightParam;
         dynamicParam.mLightParam->mLightType = lightType;
         u32 layer = 0;
 
@@ -200,7 +200,7 @@ namespace MR {
                     pDensity = static_cast< ResTIMG* >(getResourceHolder(pActor)->mFileInfoTable->getRes(name));
                 }
 
-                FurParam* pParam = new FurParam;
+                FurParam* pParam = new (JKRHeapToken::Dummy) FurParam;
                 *pParam = ::sFurParam;
                 strcpy(name, pModelData->getMaterialName()->getName(i));
                 strcat(name, ".fur.txt");

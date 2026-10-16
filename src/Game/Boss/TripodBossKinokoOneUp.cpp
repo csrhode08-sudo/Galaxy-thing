@@ -22,7 +22,7 @@ void TripodBossKinokoOneUp::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0NoInit(rIter, &mJointID);
     initNerve(GET_NERVE(TripodBossKinokoOneUp, TripodBossKinokoOneUpNrvActive));
 
-    mOneUp = new BenefitItemOneUp("1UPキノコ");
+    mOneUp = new (JKRHeapToken::Dummy) BenefitItemOneUp("1UPキノコ");
     mOneUp->setFollowMtx(_BC);
     mOneUp->initWithoutIter();
     MR::invalidateClipping(mOneUp);

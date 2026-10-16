@@ -52,7 +52,7 @@ void GCaptureTarget::init(const JMapInfoIter& rIter) {
         MR::addHitSensorMapObj(this, "body", 8, 0.0f, TVec3f(0.0f, 0.0f, 0.0f));
         MR::invalidateHitSensor(this, "body");
         initRailRider(rIter);
-        mRailMover = new MapPartsRailMover(this);
+        mRailMover = new (JKRHeapToken::Dummy) MapPartsRailMover(this);
         mRailMover->init(rIter);
     }
 

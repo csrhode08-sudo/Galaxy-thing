@@ -113,13 +113,13 @@ void Takobo::init(const JMapInfoIter& rIter) {
     MR::onCalcShadow(this, nullptr);
     initNerve(GET_NERVE(Takobo, HostTypeNrvWait));
 
-    mSpinController = new SpinHitController(this, 22, 21, 3, 1.5f, 20.0f, 35.0f, 3, false);
+    mSpinController = new (JKRHeapToken::Dummy) SpinHitController(this, 22, 21, 3, 1.5f, 20.0f, 35.0f, 3, false);
     MR::initStarPointerTarget(this, 110.0f, TVec3f(0.0f, 80.0f, 0.0f));
-    mScaleController = new AnimScaleController(nullptr);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     MR::initLightCtrl(this);
     appear();
     getSensor("attack")->invalidate();
-    mBox = new SpinningBox("スピニングボックス");
+    mBox = new (JKRHeapToken::Dummy) SpinningBox("スピニングボックス");
     mBox->mIsIceBox = true;
     mBox->initWithoutIter();
 }

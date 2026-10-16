@@ -38,7 +38,7 @@ void SeaBottomTriplePropeller::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
 
-    mAudSeKeeper = new AudSeKeeper(this, 3);
+    mAudSeKeeper = new (JKRHeapToken::Dummy) AudSeKeeper(this, 3);
 
     MR::addJointToSeKeeper(mAudSeKeeper, "Propeller1", nullptr);
     MR::addJointToSeKeeper(mAudSeKeeper, "Propeller2", nullptr);

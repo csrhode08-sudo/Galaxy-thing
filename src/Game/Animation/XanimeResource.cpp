@@ -64,7 +64,7 @@ XanimeResourceTable::XanimeResourceTable(ResourceHolder* pResourceHolder, Xanime
     _1C._8 = 1;
     _1C.mBckTableVariant = 1;
     _1C._1D = 0;
-    mSimpleGroupInfos = new XanimeGroupInfo[0];
+    mSimpleGroupInfos = new (JKRHeapToken::Dummy) XanimeGroupInfo[0];
     mAmountOfSimpleGroupInfos = 0;
 }
 
@@ -328,7 +328,7 @@ u32 XanimeResourceTable::getIndex(XanimeDirectory* pDir, const char* pTarget) co
 
 u32 XanimeResourceTable::getIndexFromHash(u32 hash) const {
     if (mSortTable != nullptr) {
-        u32 index;
+        uintptr_t index;
         if (mSortTable->search(hash, &index)) {
             return index;
         }
@@ -344,7 +344,7 @@ u32 XanimeResourceTable::getGroupIndex(const char* pTarget) const {
     case 0:
         return -1;
     case 1:
-        u32 position;
+        uintptr_t position;
         if (mSortTable->search(hash, &position)) {
             return position;
         }
@@ -394,7 +394,7 @@ u32 XanimeResourceTable::getSimpleIndex(const char* pTarget) const {
 }
 
 void XanimeResourceTable::createSortTable() {
-    mSortTable = new HashSortTable(mAmountOfGroupInfos);
+    mSortTable = new (JKRHeapToken::Dummy) HashSortTable(mAmountOfGroupInfos);
     for (int i = 0; i < mAmountOfGroupInfos; i++) {
         mSortTable->add(mGroupInfos[i].mHash, i);
     }

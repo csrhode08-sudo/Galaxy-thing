@@ -34,7 +34,7 @@ void JASDSPChannel::drop() {
 }
 
 void JASDSPChannel::initAll() {
-    sDspChannels = new (JASDram, 0x20) JASDSPChannel[MAX_DSP_CHANNELS];
+    sDspChannels = new (JKRHeapToken::Dummy, JASDram, 0x20) JASDSPChannel[MAX_DSP_CHANNELS];
     for (int i = 0; i < MAX_DSP_CHANNELS; i++) {
         sDspChannels[i].mChannel = JASDsp::getDSPHandle(i);
     }

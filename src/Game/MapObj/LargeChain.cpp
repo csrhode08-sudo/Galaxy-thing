@@ -96,13 +96,13 @@ void LargeChain::exeBreak() {
 
 namespace {
     inline LargeChainParts* createChainArray(u32 count) {
-        return new LargeChainParts[count];
+        return new (JKRHeapToken::Dummy) LargeChainParts[count];
     }
 };  // namespace
 
 void LargeChain::createChainParts() {
-    _8C = new LargeChainParts("固定鎖 下");
-    _90 = new LargeChainParts("固定鎖 上");
+    _8C = new (JKRHeapToken::Dummy) LargeChainParts("固定鎖 下");
+    _90 = new (JKRHeapToken::Dummy) LargeChainParts("固定鎖 上");
     mChainArray = ::createChainArray(mChainCount);
 
     for (u32 i = 0; i < mChainCount; i++) {

@@ -252,7 +252,7 @@ bool SpkSoundHolder::startSound(s32 padChannel, s32 waveID, SpkSoundHandle* pHan
         }
     }
 
-    SpkSound* sound = new SpkSound();
+    SpkSound* sound = new (JKRHeapToken::Dummy) SpkSound();
     if (sound == nullptr) {
         return false;
     }

@@ -13,7 +13,7 @@ namespace {
 };  // namespace
 
 ViewGroupCtrl::ViewGroupCtrl() : mViewCubeMgr(), mMaxViewGroupId(), mViewGroupData(), mViewCtrlCount(), mLodCtrls() {
-    mLodCtrls = new LodCtrl*[::sAllLodCtrlNumMax];
+    mLodCtrls = new (JKRHeapToken::Dummy) LodCtrl*[::sAllLodCtrlNumMax];
 
     for (u32 i = 0; i < ::sAllLodCtrlNumMax; i++) {
         mLodCtrls[i] = nullptr;
@@ -97,7 +97,7 @@ void ViewGroupCtrl::startInitViewGroupTable() {
         }
     }
 
-    mViewGroupData = new ViewGroupCtrlDataEntry[mMaxViewGroupId + 1];
+    mViewGroupData = new (JKRHeapToken::Dummy) ViewGroupCtrlDataEntry[mMaxViewGroupId + 1];
     for (s32 i = 0; i < mMaxViewGroupId + 1; i++) {
         ViewGroupCtrlDataEntry* entry = &mViewGroupData[i];
         entry->_0 = false;

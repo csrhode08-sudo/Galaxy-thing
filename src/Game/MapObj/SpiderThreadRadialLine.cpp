@@ -4,7 +4,7 @@
 #include "Game/Util.hpp"
 
 SpiderThreadRadialLine::SpiderThreadRadialLine(int bufferSize) : mBufferSize(bufferSize), mNumPoints(), mPoints() {
-    mPoints = new SpiderThreadMainPoint*[mBufferSize];
+    mPoints = new (JKRHeapToken::Dummy) SpiderThreadMainPoint*[mBufferSize];
     for (s32 idx = 0; idx < mBufferSize; idx++) {
         mPoints[idx] = nullptr;
     }

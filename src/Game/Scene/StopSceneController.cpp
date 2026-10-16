@@ -8,10 +8,10 @@ StopSceneDelayRequest::StopSceneDelayRequest() : NameObj("シーン硬直遅延�
 }
 
 StopSceneController::StopSceneController() : NameObj("StopSceneController"), mDelayRequestArray(), mFrame() {
-    mDelayRequestArray = new NameObjGroup("シーン硬直遅延発行者の管理", 16);
+    mDelayRequestArray = new (JKRHeapToken::Dummy) NameObjGroup("シーン硬直遅延発行者の管理", 16);
 
     for (s32 i = 0; i < 16; i++) {
-        StopSceneDelayRequest* delayRequest = new StopSceneDelayRequest();
+        StopSceneDelayRequest* delayRequest = new (JKRHeapToken::Dummy) StopSceneDelayRequest();
         delayRequest->initWithoutIter();
         mDelayRequestArray->registerObj(delayRequest);
     }

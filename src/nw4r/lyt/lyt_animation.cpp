@@ -258,7 +258,7 @@ namespace nw4r {
                 memset(mAnimLinkAry, 0, animNum * sizeof(AnimationLink));
 
                 for (u16 i = 0; i < animNum; i++) {
-                    new (&mAnimLinkAry[i]) AnimationLink();
+                    new (JKRHeapToken::Dummy, &mAnimLinkAry[i]) AnimationLink();
                 }
             }
         }

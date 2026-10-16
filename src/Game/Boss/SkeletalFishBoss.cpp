@@ -113,7 +113,7 @@ SkeletalFishBoss::SkeletalFishBoss(const char* pName) : LiveActor(pName) {
     mScarFlash = nullptr;
     mBreakModel = nullptr;
     _D4 = nullptr;
-    mRailControl = new SkeletalFishRailControl();
+    mRailControl = new (JKRHeapToken::Dummy) SkeletalFishRailControl();
     mBossDirector = nullptr;
     _110 = 0;
     _114 = 3;
@@ -160,7 +160,7 @@ void SkeletalFishBoss::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE_ANON(SkeletalFishBossNrvSwim));
     MR::invalidateClipping(this);
     MR::setClippingTypeSphere(this, 1000.0f);
-    mBossDirector = new SkeletalFishBossBattleDirector(this);
+    mBossDirector = new (JKRHeapToken::Dummy) SkeletalFishBossBattleDirector(this);
     MR::joinToGroupArray(this, rIter, nullptr, 32);
     MR::connectToSceneCollisionEnemy(this);
 
@@ -661,11 +661,11 @@ void SkeletalFishBoss::calcAndSetBaseMtx() {
 }
 
 void SkeletalFishBoss::initLevelStatus() {
-    mBossInfo = new SkeletalFishBossInfo(this, _1A0, _1A4, "ボス戦パラメータ");
+    mBossInfo = new (JKRHeapToken::Dummy) SkeletalFishBossInfo(this, _1A0, _1A4, "ボス戦パラメータ");
 }
 
 void SkeletalFishBoss::initJoint() {
-    mJointIndicies = new s32[MR::getJointNum(this)];
+    mJointIndicies = new (JKRHeapToken::Dummy) s32[MR::getJointNum(this)];
 
     for (u32 i = 0; i < MR::getJointNum(this); i++) {
         mJointIndicies[i] = -1;
@@ -680,7 +680,7 @@ void SkeletalFishBoss::initJoint() {
 }
 
 void SkeletalFishBoss::initCollision() {
-    mPartsArray = new CollisionParts*[0xE];
+    mPartsArray = new (JKRHeapToken::Dummy) CollisionParts*[0xE];
 
     for (u32 i = 0; i < 0xE; i++) {
         mPartsArray[i] = MR::createCollisionPartsFromLiveActor(this, ::sColInfo[i].mColliderName, mBossHead->getSensor("body"),
@@ -690,18 +690,18 @@ void SkeletalFishBoss::initCollision() {
 }
 
 void SkeletalFishBoss::initHead() {
-    mBossHead = new SkeletalFishBossHead(this);
+    mBossHead = new (JKRHeapToken::Dummy) SkeletalFishBossHead(this);
     mBossHead->initWithoutIter();
     _D4 = nullptr;
 }
 
 void SkeletalFishBoss::initScarFlash() {
-    mScarFlash = new SkeletalFishBossScarFlash(this);
+    mScarFlash = new (JKRHeapToken::Dummy) SkeletalFishBossScarFlash(this);
     mScarFlash->initWithoutIter();
 }
 
 void SkeletalFishBoss::initBreakModel() {
-    mBreakModel = new ModelObj("壊れモデル", "SkeletalFishBossBreak", _150.mMtx, MR::DrawBufferType_Enemy, -2, -2, false);
+    mBreakModel = new (JKRHeapToken::Dummy) ModelObj("壊れモデル", "SkeletalFishBossBreak", _150.mMtx, MR::DrawBufferType_Enemy, -2, -2, false);
     mBreakModel->initWithoutIter();
     MR::initLightCtrl(mBreakModel);
     mBreakModel->makeActorDead();
@@ -717,7 +717,7 @@ void SkeletalFishBoss::initSwitch(const JMapInfoIter& rIter) {
 }
 
 void SkeletalFishBoss::createGuards() {
-    mGuardHolder = new SkeletalFishGuardHolder(this, _1A4, "スカルシャークガード管理");
+    mGuardHolder = new (JKRHeapToken::Dummy) SkeletalFishGuardHolder(this, _1A4, "スカルシャークガード管理");
 }
 
 void SkeletalFishBoss::initShadow() {
@@ -745,7 +745,7 @@ void SkeletalFishBoss::initCamera() {
     fileName = "SkeletalFishBossDown.canm";
     MR::declareEventCameraAnim(&cameraInfo, "スカルシャーク死亡", MR::getResourceHolder(this)->mFileInfoTable->getRes(fileName));
     MR::declareEventCameraProgrammable("デモ終了後カメラ");
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     mCameraTargetMtx->mMatrix.setInline(_150);
 }
 
@@ -1149,11 +1149,11 @@ void SkeletalFishBossHead::createSubModel() {
     const char* coneMdls[2] = {"LightConeLeft", "LightConeRight"};
 
     for (s32 i = 0; i < 2; i++) {
-        mLightModels[i] = new ModelObj("眼光", "SkeletalFishBossLight", MR::getJointMtx(this, coneMdls[i]), MR::DrawBufferType_Enemy, -1, -1, false);
+        mLightModels[i] = new (JKRHeapToken::Dummy) ModelObj("眼光", "SkeletalFishBossLight", MR::getJointMtx(this, coneMdls[i]), MR::DrawBufferType_Enemy, -1, -1, false);
         mLightModels[i]->initWithoutIter();
         MR::invalidateClipping(mLightModels[i]);
 
-        mBloomModels[i] = new ModelObj("眼光ブルーム", "SkeletalFishBossLightBloom", MR::getJointMtx(this, coneMdls[i]),
+        mBloomModels[i] = new (JKRHeapToken::Dummy) ModelObj("眼光ブルーム", "SkeletalFishBossLightBloom", MR::getJointMtx(this, coneMdls[i]),
                                        MR::DrawBufferType_BloomModel, -1, -1, false);
         mBloomModels[i]->initWithoutIter();
         MR::invalidateClipping(mBloomModels[i]);

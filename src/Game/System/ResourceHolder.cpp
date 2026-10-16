@@ -66,12 +66,12 @@ bool ResourceHolder::isExistMaterialAnm() const {
 
 void ResourceHolder::newMaterialAnmBuffer(J3DModelData* pModelData) {
     MR::CurrentHeapRestorer heap(mHeap);
-    mMaterialBuf = new MaterialAnmBuffer(this, pModelData, true);
+    mMaterialBuf = new (JKRHeapToken::Dummy) MaterialAnmBuffer(this, pModelData, true);
 }
 
 void ResourceHolder::newBckCtrl() {
     MR::CurrentHeapRestorer heap(mHeap);
-    mBckCtrl = new BckCtrl(this, mArchive->mLoaderName);
+    mBckCtrl = new (JKRHeapToken::Dummy) BckCtrl(this, mArchive->mLoaderName);
 }
 
 Mtx44& ResourceHolder::getInitEffectMtx(int materialIndex, int mtxIndex) const {
@@ -93,7 +93,7 @@ void ResourceHolder::initializeArc(JKRArchive& rArchive) {
     fileInfoSize -= initEachResTable(&mBanmtResTable, &rArchive, ::sBanmtExt);
 
     if (fileInfoSize > 0) {
-        mFileInfoTable = new (mHeap, 0) ResTable();
+        mFileInfoTable = new (JKRHeapToken::Dummy, mHeap, 0) ResTable();
         mFileInfoTable->newFileInfoTable(fileInfoSize);
     }
 
@@ -115,7 +115,7 @@ u32 ResourceHolder::initEachResTable(ResTable** pResTable, JKRArchive* pArchive,
     }
 
     if (numResources != 0) {
-        *pResTable = new (mHeap, 0) ResTable();
+        *pResTable = new (JKRHeapToken::Dummy, mHeap, 0) ResTable();
         (*pResTable)->newFileInfoTable(numResources);
     }
 
@@ -240,7 +240,7 @@ ResFileInfo* ResourceHolder::createAndRegisterObject(const char* pName, void* pD
 
 void ResourceHolder::backupInitMaterialData(const J3DModelData* pModelData) {
     u16 numMaterials = pModelData->getMaterialNum();
-    mBackupMaterialData = new Mtx44[numMaterials * 8];
+    mBackupMaterialData = new (JKRHeapToken::Dummy) Mtx44[numMaterials * 8];
 
     for (u16 matIdx = 0; matIdx < numMaterials; matIdx++) {
         J3DMaterial* material = pModelData->getMaterialNodePointer(matIdx);

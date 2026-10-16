@@ -91,9 +91,9 @@ bool BigBubbleMoveLimitter::limitVelocity(TVec3f* pPos, const TVec3f& rVel, f32 
 }
 
 NameObj* MR::createBigBubbleMoveLimitterCylinder(const char* pName) {
-    return new BigBubbleMoveLimitter(pName, BigBubbleMoveLimitter::LimitterType_Cylinder);
+    return new (JKRHeapToken::Dummy) BigBubbleMoveLimitter(pName, BigBubbleMoveLimitter::LimitterType_Cylinder);
 }
 
 NameObj* MR::createBigBubbleMoveLimitterPlane(const char* pName) {
-    return new BigBubbleMoveLimitter(pName, BigBubbleMoveLimitter::LimitterType_Plane);
+    return new (JKRHeapToken::Dummy) BigBubbleMoveLimitter(pName, BigBubbleMoveLimitter::LimitterType_Plane);
 }

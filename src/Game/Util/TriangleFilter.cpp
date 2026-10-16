@@ -3,7 +3,7 @@
 
 namespace MR {
     TriangleFilterFunc* createTriangleFilterFunc(TriangleFunc func) {
-        return new TriangleFilterFunc(func);
+        return new (JKRHeapToken::Dummy) TriangleFilterFunc(func);
     }
 };  // namespace MR
 

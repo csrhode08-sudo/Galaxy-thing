@@ -54,7 +54,7 @@ void BallBeamer::init(const JMapInfoIter& rIter) {
         MR::listenStageSwitchOnB(this, MR::Functor(this, &BallBeamer::syncSwitchOnB));
     }
 
-    mBeams = new RingBeam*[12];
+    mBeams = new (JKRHeapToken::Dummy) RingBeam*[12];
     for (int i = 0; i < 12; i++) {
         mBeams[i] = nullptr;
     }
@@ -66,9 +66,9 @@ void BallBeamer::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg2NoInit(rIter, &arg2);
     for (int i = 0; i < 12; i++) {
         if (arg2 == 0) {
-            mBeams[i] = new RingBeam("リングビーム", this, true, true);
+            mBeams[i] = new (JKRHeapToken::Dummy) RingBeam("リングビーム", this, true, true);
         } else {
-            mBeams[i] = new RingBeam("リングビーム", this, true, false);
+            mBeams[i] = new (JKRHeapToken::Dummy) RingBeam("リングビーム", this, true, false);
         }
         mBeams[i]->init(rIter);
         mBeams[i]->setSpeed(arg0);

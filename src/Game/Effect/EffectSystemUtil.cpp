@@ -295,7 +295,7 @@ namespace MR {
             JMapInfoIter iter = pInfo->findElement("UniqueName", pUniqueName, 0);
             const char* pName = "";
             iter.getValue("GroupName", &pName);
-            AutoEffectInfo* pEffectInfo = new AutoEffectInfo();
+            AutoEffectInfo* pEffectInfo = new (JKRHeapToken::Dummy) AutoEffectInfo();
             pEffectInfo->init(iter);
             return pEffectInfo;
         }

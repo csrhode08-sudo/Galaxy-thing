@@ -108,7 +108,7 @@ static f32 BASE_ROTATION = 0.0f;
 
 MarioActor::MarioActor(const char* pName) : LiveActor(pName), _1B0(0xFFFFFFFF) {
     initMember();
-    mMario = new Mario(this);
+    mMario = new (JKRHeapToken::Dummy) Mario(this);
     _930 = 0;
     _468 = 0;
     mMaxHealth = 3;
@@ -339,20 +339,20 @@ void MarioActor::init2(const TVec3f& rA, const TVec3f& rB, s32 initialAnimation)
     _A18 = mRotation;
     initDrawAndModel();
 
-    _C28 = new Mtx[MR::getJointNum(this)];
+    _C28 = new (JKRHeapToken::Dummy) Mtx[MR::getJointNum(this)];
 
     MR::connectToScene(this, MR::MovementType_Player, MR::CalcAnimType_Player, MR::DrawBufferType_Player, MR::DrawType_Player);
     MR::initLightCtrlForPlayer(this);
-    mMarioAnim = new MarioAnimator(this);
-    mMarioEffect = new MarioEffect(this);
-    _214 = new CollisionShadow(100.0f, 40.0f);
-    mConst = new MarioConst();
+    mMarioAnim = new (JKRHeapToken::Dummy) MarioAnimator(this);
+    mMarioEffect = new (JKRHeapToken::Dummy) MarioEffect(this);
+    _214 = new (JKRHeapToken::Dummy) CollisionShadow(100.0f, 40.0f);
+    mConst = new (JKRHeapToken::Dummy) MarioConst();
     if (gIsLuigi) {
         mConst->changeTable(1);
     }
 
     mMario->initAfterConst();
-    mGravityInfo = new GravityInfo();
+    mGravityInfo = new (JKRHeapToken::Dummy) GravityInfo();
     mGravityRatio = 1.0f;
     initNerve(GET_NERVE(MarioActor, MarioActorNrvWait));
     _FB4 = 0;
@@ -399,14 +399,14 @@ void MarioActor::init2(const TVec3f& rA, const TVec3f& rB, s32 initialAnimation)
     _354.zero();
     setupSensors();
     MR::getMarioHolder()->setMarioActor(this);
-    _1BC = new MarioMessenger(getSensor("dummy"));
+    _1BC = new (JKRHeapToken::Dummy) MarioMessenger(getSensor("dummy"));
     _300 = mMario->mHeadVec;
     mUpVec = _300;
     _330 = 0;
     _332 = 0;
     MR::setGameCameraTargetToPlayer();
     _A0C = 0;
-    _B48 = new FootPrint("足跡", 0x100, -1);
+    _B48 = new (JKRHeapToken::Dummy) FootPrint("足跡", 0x100, -1);
     _B48->setTexture(MR::getTexFromArc("Footprint.bti", this));
     switch (initialAnimation) {
     case 1:
@@ -426,8 +426,8 @@ void MarioActor::init2(const TVec3f& rA, const TVec3f& rB, s32 initialAnimation)
     _978.zero();
     _27C.zero();
     _288.zero();
-    _498 = new FixedPosition(this, "HandR", TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
-    _49C = new FixedPosition(this, "HandR", TVec3f(1.8f, 52.51f, 39.58f), TVec3f(76.33f, 15.69f, 88.99f));
+    _498 = new (JKRHeapToken::Dummy) FixedPosition(this, "HandR", TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    _49C = new (JKRHeapToken::Dummy) FixedPosition(this, "HandR", TVec3f(1.8f, 52.51f, 39.58f), TVec3f(76.33f, 15.69f, 88.99f));
     _494 = 0;
     _4B0 = 35.0f;
     _4B4 = 60.0f;
@@ -443,12 +443,12 @@ void MarioActor::init2(const TVec3f& rA, const TVec3f& rB, s32 initialAnimation)
     _1D1 = 0;
     _A24 = 0;
     _A25 = 0;
-    _1D8 = new (0x20) FBO[MR::getFrameBufferWidth()];
-    _1DC = new (0x20) FBO[MR::getFrameBufferWidth()];
+    _1D8 = new (JKRHeapToken::Dummy, 0x20) FBO[MR::getFrameBufferWidth()];
+    _1DC = new (JKRHeapToken::Dummy, 0x20) FBO[MR::getFrameBufferWidth()];
     _1E4 = 0.0f;
     _1E8 = 0;
     _1EC = 0.0f;
-    _F3CVec = new TVec3f[30];
+    _F3CVec = new (JKRHeapToken::Dummy) TVec3f[30];
     _F40 = 0;
     _F42 = 1;
     for (int i = 0; i < 30; i++) {

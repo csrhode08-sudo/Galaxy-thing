@@ -115,7 +115,7 @@ void BenefitItemObj::init(const JMapInfoIter& rIter) {
 
     initSound(4, false);
 
-    mFlashCtrl = new FlashingCtrl(this, true);
+    mFlashCtrl = new (JKRHeapToken::Dummy) FlashingCtrl(this, true);
 
     MR::offBind(this);
 

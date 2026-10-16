@@ -63,21 +63,21 @@ void TombSpiderParts::init() {
 
 namespace {
     TombSpiderGland* createGland(TombSpider* pParent, const char* pName, const TVec3f& rPos, const TVec3f& a1, const char* pJointName) {
-        TombSpiderGland* gland = new TombSpiderGland(pParent, pName, rPos, a1, pJointName);
+        TombSpiderGland* gland = new (JKRHeapToken::Dummy) TombSpiderGland(pParent, pName, rPos, a1, pJointName);
         gland->initWithoutIter();
         MR::registerDemoSimpleCastAll(gland);
         return gland;
     }
 
     TombSpiderVitalSpot* createVitalSpot(TombSpider* pParent, const char* pName, const TVec3f& rPos, const TVec3f& a1, const char* pJointName) {
-        TombSpiderVitalSpot* vitalSpot = new TombSpiderVitalSpot(pParent, pName, rPos, a1, pJointName);
+        TombSpiderVitalSpot* vitalSpot = new (JKRHeapToken::Dummy) TombSpiderVitalSpot(pParent, pName, rPos, a1, pJointName);
         vitalSpot->initWithoutIter();
         MR::registerDemoSimpleCastAll(vitalSpot);
         return vitalSpot;
     }
 
     TombSpiderThreadAttacher* createThreadAttacherFoot(TombSpider* pParent, const char* pName) {
-        TombSpiderThreadAttacher* threadAttacherFoot = new TombSpiderThreadAttacher(pParent, pName, ::sAttachFootRadius, ::sAttachFootOffset);
+        TombSpiderThreadAttacher* threadAttacherFoot = new (JKRHeapToken::Dummy) TombSpiderThreadAttacher(pParent, pName, ::sAttachFootRadius, ::sAttachFootOffset);
         threadAttacherFoot->initWithoutIter();
         return threadAttacherFoot;
     }
@@ -93,7 +93,7 @@ void TombSpiderParts::initParts() {
     mVitalSpotL = ::createVitalSpot(mParent, "急所[左]", TVec3f(130.0f, -280.0f, -200.0f), TVec3f(10.0f, 167.0f, 0.0f), "Body1");
     mVitalSpotR = ::createVitalSpot(mParent, "急所[右]", TVec3f(130.0f, 280.0f, -200.0f), TVec3f(-10.0f, 167.0f, 0.0f), "Body1");
 
-    mThreadAttacherWing = new TombSpiderThreadAttacher(mParent, "WingL", ::sAttachBodyBackRadius, ::sAttachBodyBackOffset);
+    mThreadAttacherWing = new (JKRHeapToken::Dummy) TombSpiderThreadAttacher(mParent, "WingL", ::sAttachBodyBackRadius, ::sAttachBodyBackOffset);
     mThreadAttacherWing->initWithoutIter();
 
     mThreadAttacherFrontL = ::createThreadAttacherFoot(mParent, "FrontHandL3");
@@ -111,5 +111,5 @@ void TombSpiderParts::initParts() {
     mMtxGlandRearL = MR::getJointMtx(mParent, "RearL");
     mMtxGlandRearR = MR::getJointMtx(mParent, "RearR");
 
-    mAcid = new TombSpiderAcid(mParent);
+    mAcid = new (JKRHeapToken::Dummy) TombSpiderAcid(mParent);
 }

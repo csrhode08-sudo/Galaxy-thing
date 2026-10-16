@@ -29,7 +29,7 @@ void CSSoundNameConverter::init() {
 
 void CSSoundNameConverter::initDataTable(const SpkTable* pTable) {
     mNumSounds = pTable->mResourceCount;
-    mSoundHashes = new CSSoundNameHashData[mNumSounds];
+    mSoundHashes = new (JKRHeapToken::Dummy) CSSoundNameHashData[mNumSounds];
     for (int idx = 0; idx < mNumSounds; idx++) {
         mSoundHashes[idx].mName = nullptr;
         mSoundHashes[idx].mSoundID = 0;

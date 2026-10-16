@@ -13,7 +13,7 @@
 
 #define JGADGET_LINK_LIST(type, node) JGadget::TLinkList< type, -offsetof(type, node) >
 
-namespace std {
+namespace msl {
 
     struct input_iterator_tag {};
     struct forward_iterator_tag : public input_iterator_tag {};
@@ -32,15 +32,15 @@ namespace std {
         }
     };
 
-}  // namespace std
+}  // namespace msl
 
 namespace JGadget {
 
     template < typename Category, typename T, typename Distance = s32, typename Pointer = T*, typename Reference = T& >
-    class TIterator : std::iterator< Category, T, Distance, Pointer, Reference > {
+    class TIterator : msl::iterator< Category, T, Distance, Pointer, Reference > {
     public:
         const TIterator& operator=(const TIterator& rOther) NO_INLINE {
-            std::iterator< Category, T, Distance, Pointer, Reference >::operator=(rOther);
+            msl::iterator< Category, T, Distance, Pointer, Reference >::operator=(rOther);
             return *this;
         }
     };
@@ -167,7 +167,7 @@ namespace JGadget {
     template < typename T, int NODE_OFFSET >
     class TLinkList : public TNodeLinkList {
     public:
-        struct iterator : public TIterator< std::bidirectional_iterator_tag, T >, public TNodeLinkList::iterator {
+        struct iterator : public TIterator< msl::bidirectional_iterator_tag, T >, public TNodeLinkList::iterator {
             iterator() {};
 
             iterator(TLinkListNode* iter) : TNodeLinkList::iterator(iter) {};
@@ -175,7 +175,7 @@ namespace JGadget {
             explicit iterator(TNodeLinkList::iterator iter) : TNodeLinkList::iterator(iter) {};
 
             const iterator& operator=(const iterator& rOther) {
-                TIterator< std::bidirectional_iterator_tag, T >::operator=(rOther);
+                TIterator< msl::bidirectional_iterator_tag, T >::operator=(rOther);
                 curr = rOther.curr;
                 return *this;
             }

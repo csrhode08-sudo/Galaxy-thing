@@ -70,7 +70,7 @@ void BossStinkBugActionBase_FORCE_MATCH_STRINGS() {
 BossStinkBugActionBase::BossStinkBugActionBase(const char* pName, BossStinkBug* pStinkBug)
     : ActorStateBase< BossStinkBug >(pName, pStinkBug), mSpringValue(), _14(0.0f, 0.0f, 0.0f), _20(0.0f, 0.0f, 1.0f), _38(15.0f), _3C(), _40(), _44(),
       mThrowBombTimer(), _50(true), _54(), _58(), _5C(), _60(), _61() {
-    mSpringValue = new SpringValue(_3C, _3C, 0.02f, 0.95f, 0.0f);
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue(_3C, _3C, 0.02f, 0.95f, 0.0f);
 }
 
 bool BossStinkBugActionBase::updateGroundWalk(f32 f1) {

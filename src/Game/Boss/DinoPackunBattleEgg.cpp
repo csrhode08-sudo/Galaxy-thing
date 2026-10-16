@@ -29,7 +29,7 @@ DinoPackunBattleEgg::DinoPackunBattleEgg(DinoPackun* pParent) : DinoPackunAction
 
 void DinoPackunBattleEgg::init() {
     initNerve(GET_NERVE(DinoPackunBattleEgg, DinoPackunBattleEggNrvTurn));
-    mStateDamage = new DinoPackunStateDamage(getHost());
+    mStateDamage = new (JKRHeapToken::Dummy) DinoPackunStateDamage(getHost());
     mStateDamage->setDamageEgg();
 }
 

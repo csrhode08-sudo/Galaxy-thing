@@ -55,7 +55,7 @@ TicoEat::TicoEat(const char* pName) : Tico(pName) {
 }
 
 void TicoEat::init(const JMapInfoIter& rIter) {
-    mScaleController = new AnimScaleController(&::sParam);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(&::sParam);
     mReactionNerve = GET_NERVE(TicoEat, TicoEatNrvReaction);
     _178 = MR::getJointMtx(this, "Center");
     mParam.setMoveAction("Wait", "Wait");

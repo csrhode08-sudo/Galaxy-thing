@@ -274,9 +274,9 @@ void FishGroup::init(const JMapInfoIter& rIter) {
         fishType = 5;
     }
 
-    mFish = new Fish*[mFishNum];
+    mFish = new (JKRHeapToken::Dummy) Fish*[mFishNum];
     for (int i = 0; i < mFishNum; i++) {
-        mFish[i] = new Fish("魚", this, fishType, canEscape);
+        mFish[i] = new (JKRHeapToken::Dummy) Fish("魚", this, fishType, canEscape);
         mFish[i]->initWithoutIter();
     }
 

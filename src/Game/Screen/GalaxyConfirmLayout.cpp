@@ -19,8 +19,8 @@ void GalaxyConfirmLayout::init(const JMapInfoIter& rIter) {
     initLayoutManager("GalaxySelect", 1);
     MR::connectToSceneLayout(this);
 
-    mPaneCtrl = new ButtonPaneController(this, "StartButton", "BoxStartButton", 0, true);
-    mBackButton = new BackButton("戻るボタン", true);
+    mPaneCtrl = new (JKRHeapToken::Dummy) ButtonPaneController(this, "StartButton", "BoxStartButton", 0, true);
+    mBackButton = new (JKRHeapToken::Dummy) BackButton("戻るボタン", true);
     mBackButton->initWithoutIter();
 
     initNerve(GET_NERVE(GalaxyConfirmLayout, GalaxyConfirmLayoutNrvSelecting));

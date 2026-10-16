@@ -36,7 +36,7 @@ GameSystemObjHolder::GameSystemObjHolder()
 
 void GameSystemObjHolder::initAfterStationedResourceLoaded() {
     SingletonHolder< NameObjRegister >::get()->setCurrentHolder(mObjHolder);
-    mParticleResHolder = new ParticleResourceHolder("/ParticleData/Effect.arc");
+    mParticleResHolder = new (JKRHeapToken::Dummy) ParticleResourceHolder("/ParticleData/Effect.arc");
     mMessageHolder->initGameData();
     MR::createStarPointerLayout();
 }
@@ -58,7 +58,7 @@ void GameSystemObjHolder::initMessageResource() {
 
     MR::createAndAddLayoutHolderRawData("/Memory/ErrorMessageWindow.arc");
 
-    mMessageHolder = new MessageHolder();
+    mMessageHolder = new (JKRHeapToken::Dummy) MessageHolder();
     mMessageHolder->initSystemData();
 }
 
@@ -123,26 +123,26 @@ void GameSystemObjHolder::initNAND() {
 }
 
 void GameSystemObjHolder::initAudio() {
-    mAudioSystem = new AudSystemWrapper(SingletonHolder< HeapMemoryWatcher >::get()->getAudSystemHeap(), MR::getStationedHeapNapa());
+    mAudioSystem = new (JKRHeapToken::Dummy) AudSystemWrapper(SingletonHolder< HeapMemoryWatcher >::get()->getAudSystemHeap(), MR::getStationedHeapNapa());
     mAudioSystem->requestResourceForInitialize();
 }
 
 void GameSystemObjHolder::initRenderMode() {
-    mRenderModeObj = new GXRenderModeObj();
+    mRenderModeObj = new (JKRHeapToken::Dummy) GXRenderModeObj();
     *mRenderModeObj = *MR::getSuitableRenderMode();
 
     JUTVideo::createManager(mRenderModeObj);
 }
 
 void GameSystemObjHolder::initNameObj() {
-    mObjHolder = new NameObjHolder(256);
+    mObjHolder = new (JKRHeapToken::Dummy) NameObjHolder(256);
 
     SingletonHolder< NameObjRegister >::init();
     SingletonHolder< NameObjRegister >::get()->setCurrentHolder(mObjHolder);
 }
 
 void GameSystemObjHolder::initFunctionAsyncExecutor() {
-    mFunctionAsyncExecutor = new FunctionAsyncExecutor();
+    mFunctionAsyncExecutor = new (JKRHeapToken::Dummy) FunctionAsyncExecutor();
 }
 
 void GameSystemObjHolder::initResourceHolderManager() {
@@ -155,11 +155,11 @@ void GameSystemObjHolder::initGameController() {
 }
 
 void GameSystemObjHolder::initWPad() {
-    mWPadHolder = new WPadHolder();
+    mWPadHolder = new (JKRHeapToken::Dummy) WPadHolder();
 }
 
 void GameSystemObjHolder::initStarPointerDirector() {
-    mStarPointerDirector = new StarPointerDirector();
+    mStarPointerDirector = new (JKRHeapToken::Dummy) StarPointerDirector();
 }
 
 void GameSystemObjHolder::initDisplay() {
@@ -167,15 +167,15 @@ void GameSystemObjHolder::initDisplay() {
     s32 size = MR::getRequiredExternalFrameBufferSize();
     JKRHeap* pStationedHeap = MR::getStationedHeapGDDR3();
 
-    _C = new (pStationedHeap, 32) u8[size];
-    _10 = new (pStationedHeap, 32) u8[size];
-    _14 = new (pStationedHeap, 32) u8[size];
+    _C = new (JKRHeapToken::Dummy, pStationedHeap, 32) u8[size];
+    _10 = new (JKRHeapToken::Dummy, pStationedHeap, 32) u8[size];
+    _14 = new (JKRHeapToken::Dummy, pStationedHeap, 32) u8[size];
 
     pManager = MainLoopFramework::createManager(nullptr, _C, _10, _14, true);
     pManager->setClearColor(Color8(30, 30, 200, 0));
 
-    mCaptureScreenDirector = new CaptureScreenDirector();
-    mScreenPreserver = new ScreenPreserver();
+    mCaptureScreenDirector = new (JKRHeapToken::Dummy) CaptureScreenDirector();
+    mScreenPreserver = new (JKRHeapToken::Dummy) ScreenPreserver();
 
     VISetTrapFilter(VI_TRUE);
     VISetTrapFilter(VI_FALSE);

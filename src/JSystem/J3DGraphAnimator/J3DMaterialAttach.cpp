@@ -147,7 +147,7 @@ int J3DMaterialTable::createTexMtxForAnimator(J3DAnmTextureSRTKey* pTexSRTKey) {
                 rv = 1;
             } else {
                 if (texMtx != 0xff && material->getTexMtx(texMtx) == NULL) {
-                    J3DTexMtx* mtx = new J3DTexMtx();
+                    J3DTexMtx* mtx = new (JKRHeapToken::Dummy) J3DTexMtx();
                     rv = 4;
                     material->setTexMtx(texMtx, mtx);
                 }

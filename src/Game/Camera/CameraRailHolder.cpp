@@ -4,7 +4,7 @@
 #include "Game/Util/SceneUtil.hpp"
 
 CameraRailHolder::CameraRailHolder(const char* pName) : NameObj(pName), mRails() {
-    mRails = new ZoneRail[MR::getZoneNum()];
+    mRails = new (JKRHeapToken::Dummy) ZoneRail[MR::getZoneNum()];
 
     for (s32 zoneId = 0; zoneId < MR::getZoneNum(); zoneId++) {
         for (s32 railId = 0; railId < MR::getPlacedRailNum(zoneId); railId++) {
@@ -24,7 +24,7 @@ CameraRailHolder::CameraRailHolder(const char* pName) : NameObj(pName), mRails()
             continue;
         }
 
-        mRails[zoneId].mRails = new RailSet[mRails[zoneId].mNumRails];
+        mRails[zoneId].mRails = new (JKRHeapToken::Dummy) RailSet[mRails[zoneId].mNumRails];
         s32 railNum = 0;
         for (s32 railId = 0; railId < MR::getPlacedRailNum(zoneId); railId++) {
             JMapInfoIter iter;
@@ -38,7 +38,7 @@ CameraRailHolder::CameraRailHolder(const char* pName) : NameObj(pName), mRails()
                 mRails[zoneId].mRails[railNum].mRailId = arg;
                 s32 linkId;
                 iter.getValue("l_id", &linkId);
-                mRails[zoneId].mRails[railNum].mRailRider = new RailRider(linkId, zoneId);
+                mRails[zoneId].mRails[railNum].mRailRider = new (JKRHeapToken::Dummy) RailRider(linkId, zoneId);
                 railNum++;
             }
         }

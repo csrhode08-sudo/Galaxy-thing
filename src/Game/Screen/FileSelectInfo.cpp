@@ -32,10 +32,10 @@ namespace FileSelectInfoSub {
 };  // namespace FileSelectInfoSub
 
 FileSelectInfo::FileSelectInfo(s32 nameBufferSize, const char* pName)
-    : LayoutActor(pName, 1), mNumber(), mStarNum(), mStarPieceNum(), mNameBufferSize(nameBufferSize), mName(new wchar_t[nameBufferSize]),
+    : LayoutActor(pName, 1), mNumber(), mStarNum(), mStarPieceNum(), mNameBufferSize(nameBufferSize), mName(new (JKRHeapToken::Dummy) wchar_t[nameBufferSize]),
       mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(), mIsViewCompleteEnding() {
-    mSlideState = new FileSelectInfoSub::SlideState(this);
-    mCharaState = new FileSelectInfoSub::CharaState(this);
+    mSlideState = new (JKRHeapToken::Dummy) FileSelectInfoSub::SlideState(this);
+    mCharaState = new (JKRHeapToken::Dummy) FileSelectInfoSub::CharaState(this);
 
     MR::zeroMemory(mName, nameBufferSize * sizeof(wchar_t));
 }

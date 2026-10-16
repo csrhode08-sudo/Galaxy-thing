@@ -283,31 +283,31 @@ bool TalkStateCompose::prep(const TalkMessageCtrl* pArg1) {
 }
 
 TalkStateHolder::TalkStateHolder() {
-    _00 = new TalkSupportPlayerWatcher();
+    _00 = new (JKRHeapToken::Dummy) TalkSupportPlayerWatcher();
 
-    mAButton = new IconAButton(true, false);
+    mAButton = new (JKRHeapToken::Dummy) IconAButton(true, false);
     mAButton->initWithoutIter();
 
-    mBalloonShort = new TalkBalloonShort("会話吹き出し[合成会話]");
+    mBalloonShort = new (JKRHeapToken::Dummy) TalkBalloonShort("会話吹き出し[合成会話]");
     mBalloonShort->initWithoutIter();
     mBalloonShort->initInterval();
     mBalloonShort->kill();
 
-    mTalkShort = new TalkStateShort();
+    mTalkShort = new (JKRHeapToken::Dummy) TalkStateShort();
 
-    mTalkNormal = new TalkStateNormal();
+    mTalkNormal = new (JKRHeapToken::Dummy) TalkStateNormal();
     mTalkNormal->mAButton = mAButton;
     mTalkNormal->_18 = _00;
 
-    mTalkCompose = new TalkStateCompose();
+    mTalkCompose = new (JKRHeapToken::Dummy) TalkStateCompose();
     mTalkCompose->mAButton = mAButton;
     mTalkCompose->_18 = _00;
     mTalkCompose->mSecondBalloon = mBalloonShort;
 
-    mTalkEvent = new TalkStateEvent();
+    mTalkEvent = new (JKRHeapToken::Dummy) TalkStateEvent();
     mTalkEvent->_18 = _00;
 
-    mTalk = new TalkState();
+    mTalk = new (JKRHeapToken::Dummy) TalkState();
 }
 
 void TalkStateHolder::update() {

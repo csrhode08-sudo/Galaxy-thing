@@ -115,6 +115,8 @@ void JPAExtraShape::init() {
     }
 }
 
+#ifndef TARGET_PC
 static void OSf32tou8(f32* f, u8* out) {
     *out = __OSf32tou8(*f);
 }
+#endif

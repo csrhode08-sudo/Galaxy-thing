@@ -53,8 +53,8 @@ namespace {
 };  // namespace
 
 SkeletalFishBaby::SkeletalFishBaby(const char* pName)
-    : LiveActor(pName), mJointIndicies(), mSpeedMax(::sSpeed), mSpeed(::sSpeed), mRailControl(new SkeletalFishRailControl()), mObjArg1(3000.0f),
-      mScaleController(new AnimScaleController(nullptr)) {
+    : LiveActor(pName), mJointIndicies(), mSpeedMax(::sSpeed), mSpeed(::sSpeed), mRailControl(new (JKRHeapToken::Dummy) SkeletalFishRailControl()), mObjArg1(3000.0f),
+      mScaleController(new (JKRHeapToken::Dummy) AnimScaleController(nullptr)) {
     for (s32 i = 0; i < ARRAY_SIZE(mControllers); i++) {
         mControllers[i] = nullptr;
     }
@@ -98,7 +98,7 @@ void SkeletalFishBaby::init(const JMapInfoIter& rIter) {
     MR::onCalcGravity(this);
 
     for (u32 i = 0; i < ARRAY_SIZE(mStarPieceTargets); i++) {
-        mStarPieceTargets[i] = new LiveActor("StarPointerTargetDummy");
+        mStarPieceTargets[i] = new (JKRHeapToken::Dummy) LiveActor("StarPointerTargetDummy");
         mStarPieceTargets[i]->makeActorDead();
 
         TVec3f ptrTarget(::sStarPointerTargetOffset[i]);
@@ -294,7 +294,7 @@ void SkeletalFishBaby::initRail(const JMapInfoIter& rIter) {
 }
 
 void SkeletalFishBaby::initJoint() {
-    mJointIndicies = new s32[MR::getJointNum(this)];
+    mJointIndicies = new (JKRHeapToken::Dummy) s32[MR::getJointNum(this)];
 
     for (u32 i = 0; i < MR::getJointNum(this); i++) {
         mJointIndicies[i] = -1;

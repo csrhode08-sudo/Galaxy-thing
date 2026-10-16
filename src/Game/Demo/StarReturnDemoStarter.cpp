@@ -65,7 +65,7 @@ void StarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
 
-    mStageResultInformer = new StageResultInformer();
+    mStageResultInformer = new (JKRHeapToken::Dummy) StageResultInformer();
     mStageResultInformer->initWithoutIter();
 
     mPowerStar = createSubModel("スターモデル", ::isGrandStar() ? "GrandStar" : "PowerStar", false);
@@ -75,7 +75,7 @@ void StarReturnDemoStarter::init(const JMapInfoIter& rIter) {
         mHair = createSubModel("髪の毛モデル", "MarioHair", true);
     }
 
-    mReturnDemoRailMove = new ReturnDemoRailMove(this, mPowerStar, rIter, ::isGrandStar(), &mTransform);
+    mReturnDemoRailMove = new (JKRHeapToken::Dummy) ReturnDemoRailMove(this, mPowerStar, rIter, ::isGrandStar(), &mTransform);
 
     tryRegisterDemo("グランドスター帰還[２回目以降]", rIter);
     tryRegisterDemo("パワースター帰還", rIter);

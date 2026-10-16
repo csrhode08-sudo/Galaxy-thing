@@ -418,5 +418,5 @@ namespace MR {
 
 NameObjExecuteHolder::NameObjExecuteHolder(int size)
     : NameObj("connectToScene情報保持"), mExecuteArray(), mExecuteArrayMaxSize(size), mExecuteArraySize(), _18(), _19(), _1A(), _1B(), _1C() {
-    mExecuteArray = new NameObjExecuteInfo[mExecuteArrayMaxSize];
+    mExecuteArray = new (JKRHeapToken::Dummy) NameObjExecuteInfo[mExecuteArrayMaxSize];
 }

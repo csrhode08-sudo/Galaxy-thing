@@ -12,7 +12,7 @@ JKRAramHeap::JKRAramHeap(u32 startAddress, u32 size) {
     mTailAddress = mHeadAddress + mSize;
     mGroupId = -1;
 
-    JKRAramBlock* block = new (mHeap, 0) JKRAramBlock(mHeadAddress, 0, mSize, -1, false);
+    JKRAramBlock* block = new (JKRHeapToken::Dummy, mHeap, 0) JKRAramBlock(mHeadAddress, 0, mSize, -1, false);
     sAramList.append(&block->mBlockLink);
 }
 

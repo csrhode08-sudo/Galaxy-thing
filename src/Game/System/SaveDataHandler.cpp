@@ -33,13 +33,13 @@ namespace {
 
 SaveDataHandler::SaveDataHandler(const SysConfigFile* pSysConfigFile, const UserFile* pUserFile)
     : NerveExecutor("SaveDataHandler"), mNANDRequestInfo(), _C(), _10(), _14(), _18(), mBannerCreator() {
-    mNANDRequestInfo = new NANDRequestInfo();
+    mNANDRequestInfo = new (JKRHeapToken::Dummy) NANDRequestInfo();
 
     createCommunicationBuffer();
     resetSaveData(_18);
     initializeAllFileInSaveData(_18, pSysConfigFile, pUserFile);
 
-    mBannerCreator = new SaveDataBannerCreator();
+    mBannerCreator = new (JKRHeapToken::Dummy) SaveDataBannerCreator();
 
     initNerve(GET_NERVE_ANON(SaveDataHandlerWait));
 }
@@ -357,8 +357,8 @@ void SaveDataHandler::copySaveDataEachFile(u8* pFileDst, const u8* pFileSrc) {
 }
 
 void SaveDataHandler::createCommunicationBuffer() {
-    _14 = new (MR::getStationedHeapGDDR3(), 32) u8[0x10000];
-    _18 = new (MR::getStationedHeapGDDR3(), 32) u8[0x10000];
+    _14 = new (JKRHeapToken::Dummy, MR::getStationedHeapGDDR3(), 32) u8[0x10000];
+    _18 = new (JKRHeapToken::Dummy, MR::getStationedHeapGDDR3(), 32) u8[0x10000];
 }
 
 bool SaveDataHandler::tryRemoveFile(const char* pFileName, bool* pIsRemoved) {

@@ -59,11 +59,11 @@ bool MapPartsRailGuideDrawer::isWorking() const {
 }
 
 void MapPartsRailGuideDrawer::show() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fun(&LiveActor::appear));
+    msl::for_each(mGuidePoints.begin(), mGuidePoints.end(), msl::mem_fun(&LiveActor::appear));
 }
 
 void MapPartsRailGuideDrawer::hide() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fun(&LiveActor::kill));
+    msl::for_each(mGuidePoints.begin(), mGuidePoints.end(), msl::mem_fun(&LiveActor::kill));
 }
 
 void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
@@ -74,7 +74,7 @@ void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
     f32 curLen = 0.0f;
 
     while (curLen < railLength) {
-        MapPartsRailGuidePoint* pPoint = new MapPartsRailGuidePoint(mHost, mModelName, curLen, hasShadow);
+        MapPartsRailGuidePoint* pPoint = new (JKRHeapToken::Dummy) MapPartsRailGuidePoint(mHost, mModelName, curLen, hasShadow);
         pPoint->initWithoutIter();
         mGuidePoints.push_back(pPoint);
         curLen += 200.0f;
@@ -84,7 +84,7 @@ void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
         int curPointNum = 0;
 
         while (curPointNum < MR::getRailPointNum(mHost)) {
-            MapPartsRailGuidePoint* pPoint = new MapPartsRailGuidePoint(mHost, mModelName, curPointNum, hasShadow);
+            MapPartsRailGuidePoint* pPoint = new (JKRHeapToken::Dummy) MapPartsRailGuidePoint(mHost, mModelName, curPointNum, hasShadow);
             pPoint->initWithoutIter();
             pPoint->mScale.set(2.0f);
             mGuidePoints.push_back(pPoint);

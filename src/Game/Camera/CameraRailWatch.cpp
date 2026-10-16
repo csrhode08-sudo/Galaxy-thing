@@ -90,5 +90,5 @@ void CameraRailWatch::setParam(s32 zoneID, s32 railID, s32 direction, f32 offset
 }
 
 CamTranslatorBase* CameraRailWatch::createTranslator() {
-    return new CamTranslatorRailWatch(this);
+    return new (JKRHeapToken::Dummy) CamTranslatorRailWatch(this);
 }

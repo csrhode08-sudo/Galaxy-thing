@@ -4,7 +4,7 @@
 
 CameraMan::CameraMan(const char* pName) : NameObj(pName) {
     mDirector = nullptr;
-    mPoseParam = new CameraPoseParam();
+    mPoseParam = new (JKRHeapToken::Dummy) CameraPoseParam();
     mIsActivated = false;
     mRequestLOfsReset = false;
     mMatrix.identity();

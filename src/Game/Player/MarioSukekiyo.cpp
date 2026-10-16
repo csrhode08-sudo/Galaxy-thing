@@ -5,7 +5,7 @@
 #include "Game/Util/MtxUtil.hpp"
 
 MarioSukekiyo::MarioSukekiyo(MarioActor* pActor) : MarioState(pActor, MarioStatus_Sukekiyo) {
-    _44 = new Triangle();
+    _44 = new (JKRHeapToken::Dummy) Triangle();
     _14.zero();
     _20.zero();
     _2C.zero();

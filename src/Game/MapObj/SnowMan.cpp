@@ -40,12 +40,12 @@ void SnowMan::init(const JMapInfoIter& rrIter) {
                                                                 MR::CollisionScaleType_NotUsingScale);
     MR::validateCollisionParts(mHeadCollisionParts);
     MR::validateCollisionParts(mBodyCollisionParts);
-    mAnimScaleParam = new AnimScaleParam();
+    mAnimScaleParam = new (JKRHeapToken::Dummy) AnimScaleParam();
     mAnimScaleParam->_8 = 0.95f;
     mAnimScaleParam->_C = 1.05f;
     mAnimScaleParam->_24 = 0.60f;
     mAnimScaleParam->_28 = 0.8f;
-    mAnimScaleCtrl = new AnimScaleController(mAnimScaleParam);
+    mAnimScaleCtrl = new (JKRHeapToken::Dummy) AnimScaleController(mAnimScaleParam);
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
     MR::useStageSwitchWriteA(this, rrIter);

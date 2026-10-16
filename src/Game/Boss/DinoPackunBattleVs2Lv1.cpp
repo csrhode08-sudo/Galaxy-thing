@@ -91,12 +91,12 @@ void DinoPackunBattleVs2Lv1::setLastBattle() {
 
 void DinoPackunBattleVs2Lv1::init() {
     initNerve(GET_NERVE(DinoPackunBattleVs2Lv1, DinoPackunBattleVs2Lv1NrvAwake));
-    mStateDamage = new DinoPackunStateDamage(getHost());
+    mStateDamage = new (JKRHeapToken::Dummy) DinoPackunStateDamage(getHost());
     mStateDamage->setDamageLast();
     mStateDamage->init();
-    mStateAwake = new DinoPackunStateAwake(getHost());
+    mStateAwake = new (JKRHeapToken::Dummy) DinoPackunStateAwake(getHost());
     mStateAwake->init();
-    mStateFire = new DinoPackunStateFire(getHost());
+    mStateFire = new (JKRHeapToken::Dummy) DinoPackunStateFire(getHost());
     mStateFire->init();
 }
 

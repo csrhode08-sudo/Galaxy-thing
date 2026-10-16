@@ -146,7 +146,7 @@ namespace nw4r {
                 const res::Material* const pResMaterial =
                     detail::ConvertOffsToPtr< res::Material >(rBlockSet.pMaterialList, pMatOffsetTbl[pResContent->materialIdx]);
 
-                mpMaterial = new (pMaterialBuf) Material(pResMaterial, rBlockSet);
+                mpMaterial = new (JKRHeapToken::Dummy, pMaterialBuf) Material(pResMaterial, rBlockSet);
             }
 
             mFrameNum = 0;
@@ -172,7 +172,7 @@ namespace nw4r {
                             const res::Material* const pResMaterial =
                                 detail::ConvertOffsToPtr< res::Material >(rBlockSet.pMaterialList, pMatOffsetTbl[pResFrame->materialIdx]);
 
-                            mFrames[i].pMaterial = new (pMaterialBuf) Material(pResMaterial, rBlockSet);
+                            mFrames[i].pMaterial = new (JKRHeapToken::Dummy, pMaterialBuf) Material(pResMaterial, rBlockSet);
                         }
                     }
                 }

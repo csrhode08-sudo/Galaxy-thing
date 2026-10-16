@@ -147,13 +147,13 @@ void BigBubbleGenerator::exeActive() {
 }
 
 NameObj* MR::createBigBubbleGenerator(const char* pName) {
-    BigBubbleGenerator* generator = new BigBubbleGenerator(pName);
+    BigBubbleGenerator* generator = new (JKRHeapToken::Dummy) BigBubbleGenerator(pName);
     generator->mIsObstruct = false;
     return generator;
 }
 
 NameObj* MR::createBigObstructBubbleGenerator(const char* pName) {
-    BigBubbleGenerator* generator = new BigBubbleGenerator(pName);
+    BigBubbleGenerator* generator = new (JKRHeapToken::Dummy) BigBubbleGenerator(pName);
     generator->mIsObstruct = true;
     return generator;
 }

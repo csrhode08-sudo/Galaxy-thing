@@ -25,7 +25,7 @@ namespace LayoutCoreUtil {
     }
 
     void initTextBoxPane(nw4r::lyt::TextBox* pTextBox, const char* pMessageId, u32 allocSize) {
-        CustomTagProcessor* processor = new CustomTagProcessor(pTextBox);
+        CustomTagProcessor* processor = new (JKRHeapToken::Dummy) CustomTagProcessor(pTextBox);
 
         if (strncmp(pTextBox->mName, "Sha", 3) == 0) {
             processor->mIsShadow = true;

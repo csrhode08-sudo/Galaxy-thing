@@ -8,9 +8,9 @@
 #include <cstring>
 
 ParticleResourceHolder::ParticleResourceHolder(const char* pArchiveName)
-    : mResourceMgr(), mAutoEffectList(new JMapInfo), mParticleNames(new JMapInfo), mNumEffectNums() {
+    : mResourceMgr(), mAutoEffectList(new (JKRHeapToken::Dummy) JMapInfo), mParticleNames(new (JKRHeapToken::Dummy) JMapInfo), mNumEffectNums() {
     JKRMemArchive* pArchive = MR::mountArchive(pArchiveName, nullptr);
-    mResourceMgr = new JPAResourceManager(pArchive->getResource("Particles.jpc"), MR::getCurrentHeap());
+    mResourceMgr = new (JKRHeapToken::Dummy) JPAResourceManager(pArchive->getResource("Particles.jpc"), MR::getCurrentHeap());
     mParticleNames->attach(pArchive->getResource("ParticleNames.bcsv"));
     mAutoEffectList->attach(pArchive->getResource("AutoEffectList.bcsv"));
     countAutoEffectNum();
@@ -78,7 +78,7 @@ void ParticleResourceHolder::countAutoEffectNum() {
             }
 
             if (!found) {
-                EffectNum* pParticle = new EffectNum(pGroupName);
+                EffectNum* pParticle = new (JKRHeapToken::Dummy) EffectNum(pGroupName);
                 const int index = mNumEffectNums++;
                 mEffectNums[index] = pParticle;
             }

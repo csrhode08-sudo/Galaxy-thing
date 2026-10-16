@@ -66,7 +66,7 @@ void LavaFloater::init(const JMapInfoIter& rIter) {
     initNerve(GET_NERVE(LavaFloater, HostTypeFloat));
     MR::onCalcGravity(this);
     const char* as = mObjectName;
-    mFloatingForce = new FloaterFloatingForceTypeNormal(this, as);
+    mFloatingForce = new (JKRHeapToken::Dummy) FloaterFloatingForceTypeNormal(this, as);
     mFloatingForce->init(rIter);
     mFloatingForce->start();
     makeActorAppeared();

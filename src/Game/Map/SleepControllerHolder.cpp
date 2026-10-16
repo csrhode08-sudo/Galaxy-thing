@@ -19,17 +19,17 @@ SleepControllerHolder::SleepControllerHolder() : NameObj("オブジェスリー�
 }
 
 void SleepControllerHolder::movement() {
-    std::for_each(mSleepControl.begin(), mSleepControl.end(), std::mem_func(&SleepController::update));
+    msl::for_each(mSleepControl.begin(), mSleepControl.end(), msl::mem_func(&SleepController::update));
 }
 
 void SleepControllerHolder::add(NameObj* pObj, const JMapInfoIter& rIter, SwitchEventListener* pListener) {
-    SleepController* sleepControl = new SleepController(rIter, pListener);
+    SleepController* sleepControl = new (JKRHeapToken::Dummy) SleepController(rIter, pListener);
 
     mSleepControl.push_back(sleepControl);
 }
 
 void SleepControllerHolder::initSync() {
-    std::for_each(mSleepControl.begin(), mSleepControl.end(), std::mem_func(&SleepController::initSync));
+    msl::for_each(mSleepControl.begin(), mSleepControl.end(), msl::mem_func(&SleepController::initSync));
 }
 
 namespace SleepControlFunc {
@@ -44,7 +44,7 @@ namespace SleepControlFunc {
             return;
         }
 
-        listener = new SwitchEventFunctorListener();
+        listener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
         listener->setOnFunctor(MR::Functor(pObj, &AreaObj::awake));
         listener->setOffFunctor(MR::Functor(pObj, &AreaObj::sleep));
 
@@ -61,7 +61,7 @@ namespace SleepControlFunc {
         if (MR::isExistStageSwitchAppear(rIter)) {
         }
 
-        listener = new SwitchEventFunctorListener();
+        listener = new (JKRHeapToken::Dummy) SwitchEventFunctorListener();
         listener->setOnFunctor(MR::Functor(pActor, &LiveActor::makeActorAppeared));
         listener->setOffFunctor(MR::Functor(pActor, &LiveActor::makeActorDead));
 

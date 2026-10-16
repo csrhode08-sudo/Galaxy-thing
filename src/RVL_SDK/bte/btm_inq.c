@@ -30,7 +30,7 @@
  */
 
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 #include <stddef.h>
 
 #include "macros.h"  // BOOLIFY_TERNARY

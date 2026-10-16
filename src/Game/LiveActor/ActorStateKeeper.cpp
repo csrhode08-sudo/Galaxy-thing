@@ -2,7 +2,7 @@
 #include "Game/LiveActor/Nerve.hpp"
 
 ActorStateKeeper::ActorStateKeeper(int capacity) : mStatesCapacity(capacity), mLength(), mStates(), mCurrentState() {
-    mStates = new State[capacity];
+    mStates = new (JKRHeapToken::Dummy) State[capacity];
 
     for (s32 i = 0; i < mStatesCapacity; i++) {
         State& e = mStates[i];

@@ -52,7 +52,7 @@ void ClippingActorInfo::setTypeToSphere(f32 radius, const TVec3f* pCenter) {
 }
 
 void ClippingActorInfo::setGroupClippingNo(const JMapInfoIter& rIter) {
-    mInfo = new JMapIdInfo(MR::createJMapIdInfoFromClippingGroupId(rIter));
+    mInfo = new (JKRHeapToken::Dummy) JMapIdInfo(MR::createJMapIdInfoFromClippingGroupId(rIter));
 }
 
 ClippingActorInfoList::ClippingActorInfoList(int a1) {
@@ -60,7 +60,7 @@ ClippingActorInfoList::ClippingActorInfoList(int a1) {
     _4 = 0;
     mClippingActorList = 0;
 
-    mClippingActorList = new ClippingActorInfo*[a1];
+    mClippingActorList = new (JKRHeapToken::Dummy) ClippingActorInfo*[a1];
 
     for (s32 i = 0; i < _0; i++) {
         mClippingActorList[i] = 0;

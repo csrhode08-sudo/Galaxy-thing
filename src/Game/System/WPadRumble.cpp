@@ -43,7 +43,7 @@ void RumbleChannel::setPattern(const void* pParam1, const RumblePattern& rParam2
 
 WPadRumble::WPadRumble(WPad* pPad) : mPad(pPad), _8(), _C(1), _B0(), _B4(), _B8(), _BC() {
     if (sInstanceForCallback == nullptr) {
-        sInstanceForCallback = new WPadRumble*[MR::getWPadMaxCount()];
+        sInstanceForCallback = new (JKRHeapToken::Dummy) WPadRumble*[MR::getWPadMaxCount()];
 
         for (u32 i = 0; i < MR::getWPadMaxCount(); i++) {
             sInstanceForCallback[i] = nullptr;

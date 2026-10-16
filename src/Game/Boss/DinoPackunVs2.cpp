@@ -30,14 +30,14 @@ DinoPackunVs2::DinoPackunVs2(DinoPackun* pPackun) : DinoPackunSequencer("ディ�
 
 void DinoPackunVs2::init() {
     initNerve(GET_NERVE(DinoPackunVs2, DinoPackunVs2NrvWaitStart));
-    mTrackFireHolder = new DinoPackunTrackFireHolder(64);
-    mFireHolder = new DinoPackunFireHolder(16);
-    mDemo = new DinoPackunDemo(mParent);
+    mTrackFireHolder = new (JKRHeapToken::Dummy) DinoPackunTrackFireHolder(64);
+    mFireHolder = new (JKRHeapToken::Dummy) DinoPackunFireHolder(16);
+    mDemo = new (JKRHeapToken::Dummy) DinoPackunDemo(mParent);
     mDemo->init();
-    mEgg = new DinoPackunBattleEggVs2(mParent);
+    mEgg = new (JKRHeapToken::Dummy) DinoPackunBattleEggVs2(mParent);
     mEgg->setTrackFire(mTrackFireHolder);
     mEgg->init();
-    mBattleLv1 = new DinoPackunBattleVs2Lv1(mParent);
+    mBattleLv1 = new (JKRHeapToken::Dummy) DinoPackunBattleVs2Lv1(mParent);
     mBattleLv1->setTrackFire(mTrackFireHolder);
     mBattleLv1->setFireBall(mFireHolder);
     mBattleLv1->init();

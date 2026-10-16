@@ -53,7 +53,7 @@ OceanWaveFloater::OceanWaveFloater(const char* pName) : MapObjActor(pName), mSpr
 void OceanWaveFloater::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
 
-    mForce = new WaveFloatingForce(this, ::getParam(mObjectName)->mStepCount, ::getParam(mObjectName)->mAmplitude, true);
+    mForce = new (JKRHeapToken::Dummy) WaveFloatingForce(this, ::getParam(mObjectName)->mStepCount, ::getParam(mObjectName)->mAmplitude, true);
 
     MapObjActorInitInfo info = MapObjActorInitInfo();
     info.setupHioNode("地形オブジェ");
@@ -75,7 +75,7 @@ void OceanWaveFloater::init(const JMapInfoIter& rIter) {
 
     mSoundDelay = MR::getRandom(::sWaveSeStepsMin, ::sWaveSeStepsMax);
 
-    mSpring = new FloaterFloatingForceTypeSpring(this, mObjectName);
+    mSpring = new (JKRHeapToken::Dummy) FloaterFloatingForceTypeSpring(this, mObjectName);
     mSpring->init(rIter);
     mSpring->start();
 

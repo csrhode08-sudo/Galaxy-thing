@@ -109,9 +109,9 @@ void PartsModel::calcViewAndEntry() {
 
 void PartsModel::initFixedPosition(const TVec3f& rLocalTrans, const TVec3f& rLocalRotate, const char* pJointName) {
     if (pJointName != nullptr) {
-        mFixedPosition = new FixedPosition(mHost, pJointName, rLocalTrans, rLocalRotate);
+        mFixedPosition = new (JKRHeapToken::Dummy) FixedPosition(mHost, pJointName, rLocalTrans, rLocalRotate);
     } else {
-        mFixedPosition = new FixedPosition(mHost, rLocalTrans, rLocalRotate);
+        mFixedPosition = new (JKRHeapToken::Dummy) FixedPosition(mHost, rLocalTrans, rLocalRotate);
     }
 
     mMtx = mFixedPosition->mMtx;
@@ -122,12 +122,12 @@ void PartsModel::initFixedPosition(const char* pJointName) {
 }
 
 void PartsModel::initFixedPosition(MtxPtr pMtx, const TVec3f& rLocalTrans, const TVec3f& rLocalRotate) {
-    mFixedPosition = new FixedPosition(pMtx, rLocalTrans, rLocalRotate);
+    mFixedPosition = new (JKRHeapToken::Dummy) FixedPosition(pMtx, rLocalTrans, rLocalRotate);
     mMtx = mFixedPosition->mMtx;
 }
 
 void PartsModel::loadFixedPosition(const char* pJointName) {
-    mFixedPosition = new FixedPosition(mHost, pJointName, nullptr);
+    mFixedPosition = new (JKRHeapToken::Dummy) FixedPosition(mHost, pJointName, nullptr);
     mMtx = mFixedPosition->mMtx;
 }
 

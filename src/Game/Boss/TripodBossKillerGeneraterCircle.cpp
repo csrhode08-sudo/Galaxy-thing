@@ -61,7 +61,7 @@ void TripodBossKillerGeneraterCircle::init(const JMapInfoIter& rIter) {
     _3C = dataPtr->_14;
     _30 = dataPtr->_18;
 
-    mGenerater = new TripodBossKillerGenerater[mAngleNum];
+    mGenerater = new (JKRHeapToken::Dummy) TripodBossKillerGenerater[mAngleNum];
 
     for (s32 i = 0; i < mAngleNum; i++) {
         mGenerater[i].setActiveLebel(dataPtr->mActiveLabel);

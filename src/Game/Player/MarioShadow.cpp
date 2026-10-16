@@ -92,14 +92,14 @@ CollisionShadow::CollisionShadow(f32 radius, f32 length) : NameObj("投影シャ
     initCaptureTex();
     _58 = 128;
     _5A = 3;
-    _60 = new (32) TVec3f[_58 * _5A];
-    _64 = new (32) TVec2f[_58 * _5A];
-    _68 = new u16[_58 * _5A];
-    _5C = new u8[_58];
+    _60 = new (JKRHeapToken::Dummy, 32) TVec3f[_58 * _5A];
+    _64 = new (JKRHeapToken::Dummy, 32) TVec2f[_58 * _5A];
+    _68 = new (JKRHeapToken::Dummy) u16[_58 * _5A];
+    _5C = new (JKRHeapToken::Dummy) u8[_58];
     _6C = 0;
-    _32C = new Triangle[_58];
-    _330 = new Triangle[2];
-    _334 = new Triangle[2];
+    _32C = new (JKRHeapToken::Dummy) Triangle[_58];
+    _330 = new (JKRHeapToken::Dummy) Triangle[2];
+    _334 = new (JKRHeapToken::Dummy) Triangle[2];
     _338 = 0;
     _33A = 0;
     _33C = 0;
@@ -346,7 +346,7 @@ void CollisionShadow::initCaptureTex() {
     _2FE = 160;
     {
         MR::CurrentHeapRestorer restorer(MR::getSceneHeapGDDR3());
-        _300 = new JUTTexture(_2FC, _2FE, GX_TF_I8);
+        _300 = new (JKRHeapToken::Dummy) JUTTexture(_2FC, _2FE, GX_TF_I8);
         MR::zeroMemory(_300->mImage, _2FC * _2FE);
         MR::setMarioShadowTex(_300);
     }
@@ -638,7 +638,7 @@ void CollisionShadow::createDL() {
     u32 size = GDGetGDLObjOffset(&displayList);
     _348 = size;
     size = (size + 31) & ~31;
-    _344 = new (32) u8[size];
+    _344 = new (JKRHeapToken::Dummy, 32) u8[size];
     MR::copyMemory(_344, buffer, size);
     DCStoreRange(_344, size);
 }

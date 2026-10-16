@@ -70,7 +70,7 @@ OceanSpherePlane::OceanSpherePlane(s32 pointCount, const TVec3f* pCenter, const 
     mPoints = nullptr;
     mAxisPointCount = pointCount - 2;
     mGridPointCount = mAxisPointCount * mAxisPointCount;
-    mPoints = new OceanSpherePoint*[mGridPointCount];
+    mPoints = new (JKRHeapToken::Dummy) OceanSpherePoint*[mGridPointCount];
 
     TRot3f rot;
     rot.identity();
@@ -102,7 +102,7 @@ OceanSpherePlane::OceanSpherePlane(s32 pointCount, const TVec3f* pCenter, const 
                 tex = texA * (1.0f - rate) + texC * rate;
             }
 
-            mPoints[index] = new OceanSpherePoint(pCenter, normal, row, col, tex);
+            mPoints[index] = new (JKRHeapToken::Dummy) OceanSpherePoint(pCenter, normal, row, col, tex);
         }
     }
 }
@@ -119,7 +119,7 @@ OceanSpherePlaneEdge::OceanSpherePlaneEdge(s32 pointCount, const TVec3f* pCenter
                                            const TVec2f& rTex2) {
     mPoints = nullptr;
     mPointCount = pointCount - 2;
-    mPoints = new OceanSpherePoint*[mPointCount];
+    mPoints = new (JKRHeapToken::Dummy) OceanSpherePoint*[mPointCount];
     TVec3f axis = rAxis1.cross(rAxis2);
     MR::normalize(&axis);
     TRot3f rot;
@@ -131,7 +131,7 @@ OceanSpherePlaneEdge::OceanSpherePlaneEdge(s32 pointCount, const TVec3f* pCenter
         rot.mult(vec, vec);
         f32 rate = static_cast< f32 >(i + 1) / (pointCount - 1);
         TVec2f tex = rTex1 * (1.0f - rate) + rTex2 * rate;
-        mPoints[i] = new OceanSpherePoint(pCenter, vec, i, i, tex);
+        mPoints[i] = new (JKRHeapToken::Dummy) OceanSpherePoint(pCenter, vec, i, i, tex);
     }
 }
 
@@ -173,8 +173,8 @@ void OceanSphere::init(const JMapInfoIter& rIter) {
     initDisplayList();
     WaterAreaFunction::entryOceanSphere(this);
 
-    mWaterTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "OceanSphere.bti"), 0);
-    mWaterEnvTex = new JUTTexture(MR::loadTexFromArc("WaterWave.arc", "OceanSphereEnvRef.bti"), 0);
+    mWaterTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "OceanSphere.bti"), 0);
+    mWaterEnvTex = new (JKRHeapToken::Dummy) JUTTexture(MR::loadTexFromArc("WaterWave.arc", "OceanSphereEnvRef.bti"), 0);
 
     MR::setClippingTypeSphere(this, mRadius);
     MR::setClippingFarMax(this);
@@ -266,59 +266,59 @@ void OceanSphere::initPoints() {
 
     OceanSpherePoint* pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, ::sPosAxisX, 0.0f, 0.0f, TVec2f(1.0f, 0.0f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, ::sPosAxisX, 0.0f, 0.0f, TVec2f(1.0f, 0.0f));
     mAxisPointPX = pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, -::sPosAxisX, 0.0f, 0.0f, TVec2f(0.0f, 1.0f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, -::sPosAxisX, 0.0f, 0.0f, TVec2f(0.0f, 1.0f));
     mAxisPointNX = pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, ::sPosAxisY, 0.0f, 0.0f, TVec2f(0.5f, 0.5f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, ::sPosAxisY, 0.0f, 0.0f, TVec2f(0.5f, 0.5f));
     mAxisPointPY = pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, -::sPosAxisY, 0.0f, 0.0f, TVec2f(0.5f, 0.5f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, -::sPosAxisY, 0.0f, 0.0f, TVec2f(0.5f, 0.5f));
     mAxisPointNY = pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, ::sPosAxisZ, 0.0f, 0.0f, TVec2f(1.0f, 1.0f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, ::sPosAxisZ, 0.0f, 0.0f, TVec2f(1.0f, 1.0f));
     mAxisPointPZ = pPoint;
 
-    pPoint = new OceanSpherePoint(&mPosition, -::sPosAxisZ, 0.0f, 0.0f, TVec2f(0.0f, 0.0f));
+    pPoint = new (JKRHeapToken::Dummy) OceanSpherePoint(&mPosition, -::sPosAxisZ, 0.0f, 0.0f, TVec2f(0.0f, 0.0f));
     mAxisPointNZ = pPoint;
 
     OceanSpherePlane* pPlane;
 
-    pPlane = new OceanSpherePlane(mPointCount, &mPosition, ::sPosAxisY, -::sPosAxisX, TVec2f(0.0f, 1.0f), TVec2f(0.0f, 0.0f), TVec2f(1.0f, 1.0f));
+    pPlane = new (JKRHeapToken::Dummy) OceanSpherePlane(mPointCount, &mPosition, ::sPosAxisY, -::sPosAxisX, TVec2f(0.0f, 1.0f), TVec2f(0.0f, 0.0f), TVec2f(1.0f, 1.0f));
     mPlaneLeftUpper = pPlane;
 
-    pPlane = new OceanSpherePlane(mPointCount, &mPosition, ::sPosAxisY, ::sPosAxisX, TVec2f(1.0f, 0.0f), TVec2f(1.0f, 1.0f), TVec2f(0.0f, 0.0f));
+    pPlane = new (JKRHeapToken::Dummy) OceanSpherePlane(mPointCount, &mPosition, ::sPosAxisY, ::sPosAxisX, TVec2f(1.0f, 0.0f), TVec2f(1.0f, 1.0f), TVec2f(0.0f, 0.0f));
     mPlaneRightUpper = pPlane;
 
-    pPlane = new OceanSpherePlane(mPointCount, &mPosition, -::sPosAxisY, -::sPosAxisX, TVec2f(0.0f, 1.0f), TVec2f(1.0f, 1.0f), TVec2f(0.0f, 0.0f));
+    pPlane = new (JKRHeapToken::Dummy) OceanSpherePlane(mPointCount, &mPosition, -::sPosAxisY, -::sPosAxisX, TVec2f(0.0f, 1.0f), TVec2f(1.0f, 1.0f), TVec2f(0.0f, 0.0f));
     mPlaneLeftLower = pPlane;
 
-    pPlane = new OceanSpherePlane(mPointCount, &mPosition, -::sPosAxisY, ::sPosAxisX, TVec2f(1.0f, 0.0f), TVec2f(0.0f, 0.0f), TVec2f(1.0f, 1.0f));
+    pPlane = new (JKRHeapToken::Dummy) OceanSpherePlane(mPointCount, &mPosition, -::sPosAxisY, ::sPosAxisX, TVec2f(1.0f, 0.0f), TVec2f(0.0f, 0.0f), TVec2f(1.0f, 1.0f));
     mPlaneRightLower = pPlane;
 
-    mEdge0 = new OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisY, ::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(1.0f, 1.0f));
+    mEdge0 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisY, ::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(1.0f, 1.0f));
 
-    mEdge1 = new OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisY, -::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(0.0f, 0.0f));
+    mEdge1 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisY, -::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(0.0f, 0.0f));
 
-    mEdge2 = new OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisY, ::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(1.0f, 1.0f));
+    mEdge2 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisY, ::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(1.0f, 1.0f));
 
-    mEdge3 = new OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisY, -::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(0.0f, 0.0f));
+    mEdge3 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisY, -::sPosAxisZ, TVec2f(0.5f, 0.5f), TVec2f(0.0f, 0.0f));
 
-    mEdge4 = new OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisZ, -::sPosAxisX, TVec2f(1.0f, 1.0f), TVec2f(0.0f, 1.0f));
+    mEdge4 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisZ, -::sPosAxisX, TVec2f(1.0f, 1.0f), TVec2f(0.0f, 1.0f));
 
-    mEdge5 = new OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisZ, ::sPosAxisX, TVec2f(1.0f, 1.0f), TVec2f(1.0f, 0.0f));
+    mEdge5 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, ::sPosAxisZ, ::sPosAxisX, TVec2f(1.0f, 1.0f), TVec2f(1.0f, 0.0f));
 
-    mEdge6 = new OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisZ, -::sPosAxisX, TVec2f(0.0f, 0.0f), TVec2f(0.0f, 1.0f));
+    mEdge6 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisZ, -::sPosAxisX, TVec2f(0.0f, 0.0f), TVec2f(0.0f, 1.0f));
 
-    mEdge7 = new OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisZ, ::sPosAxisX, TVec2f(0.0f, 0.0f), TVec2f(1.0f, 0.0f));
+    mEdge7 = new (JKRHeapToken::Dummy) OceanSpherePlaneEdge(mPointCount, &mPosition, -::sPosAxisZ, ::sPosAxisX, TVec2f(0.0f, 0.0f), TVec2f(1.0f, 0.0f));
 }
 
 void OceanSphere::initDisplayList() {
     MR::ProhibitSchedulerAndInterrupts prohibit(false);
     u32 sizeFace = ::calcDisplayListSize(mPointCount, 0x1C);
-    mDispListFace = new (0x20) u8[sizeFace];
+    mDispListFace = new (JKRHeapToken::Dummy, 0x20) u8[sizeFace];
     DCInvalidateRange(mDispListFace, sizeFace);
     GDLObj obj;
     GDInitGDLObj(&obj, mDispListFace, sizeFace);
@@ -328,7 +328,7 @@ void OceanSphere::initDisplayList() {
     mDispListFaceLen = obj.ptr - obj.start;
     DCStoreRange(mDispListFace, sizeFace);
     u32 sizeBack = ::calcDisplayListSize(mPointCount, 0x18);
-    mDispListBack = new (0x20) u8[sizeBack];
+    mDispListBack = new (JKRHeapToken::Dummy, 0x20) u8[sizeBack];
     DCInvalidateRange(mDispListBack, sizeBack);
     GDInitGDLObj(&obj, mDispListBack, sizeBack);
     __GDCurrentDL = &obj;

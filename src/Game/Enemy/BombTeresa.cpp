@@ -77,8 +77,8 @@ void BombTeresa::init(const JMapInfoIter& rIter) {
     MR::onShadowFollowHostScale(this, nullptr);
     initTongue();
     initNerve(GET_NERVE(BombTeresa, BombTeresaNrvAppear));
-    mScaleController = new AnimScaleController(nullptr);
-    mBindStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     if (MR::isValidInfo(rIter)) {
         if (MR::useStageSwitchReadAppear(this, rIter)) {
             MR::syncStageSwitchAppear(this);

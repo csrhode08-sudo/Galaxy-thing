@@ -61,7 +61,7 @@ void TrickRabbitSnow::init(const JMapInfoIter& rIter) {
     mFinishQuat.set(mRotateQuat);
     mFinishPos.set(mPosition);
 
-    mSpotMarkLight = new SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
+    mSpotMarkLight = new (JKRHeapToken::Dummy) SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
     mSpotMarkLight->initWithoutIter();
 
     MR::initShadowFromCSV(this, "Shadow");
@@ -103,20 +103,20 @@ void TrickRabbitSnow::initSensor() {
 }
 
 void TrickRabbitSnow::initState() {
-    mStateCaught = new RabbitStateCaught(this, mMsgCtrl);
+    mStateCaught = new (JKRHeapToken::Dummy) RabbitStateCaught(this, mMsgCtrl);
     mStateCaught->unusePowerStarModel();
     mStateCaught->init();
 
-    mStateWaitStart = new RabbitStateWaitStart(this, &mFrontVec, mMsgCtrl);
+    mStateWaitStart = new (JKRHeapToken::Dummy) RabbitStateWaitStart(this, &mFrontVec, mMsgCtrl);
     mStateWaitStart->setTalkActionName("GiveUpTalk");
     mStateWaitStart->_1C = false;
     mStateWaitStart->_1D = false;
     mStateWaitStart->init();
 
-    mStateRunaway = new WalkerStateRunaway(this, &mFrontVec, nullptr);
+    mStateRunaway = new (JKRHeapToken::Dummy) WalkerStateRunaway(this, &mFrontVec, nullptr);
     mStateRunaway->init();
 
-    mStateBlowDamage = new WalkerStateBlowDamage(this, &mFrontVec, nullptr);
+    mStateBlowDamage = new (JKRHeapToken::Dummy) WalkerStateBlowDamage(this, &mFrontVec, nullptr);
     mStateBlowDamage->init();
 }
 

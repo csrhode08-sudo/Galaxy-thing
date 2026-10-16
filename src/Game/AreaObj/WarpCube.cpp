@@ -112,10 +112,10 @@ void WarpCube::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoGroupID(rIter, &groupID);
 
     if (groupID >= 0) {
-        mMapIdInfo = new JMapIdInfo(groupID, rIter);
+        mMapIdInfo = new (JKRHeapToken::Dummy) JMapIdInfo(groupID, rIter);
     }
 
-    mCameraInfo = new ActorCameraInfo(rIter);
+    mCameraInfo = new (JKRHeapToken::Dummy) ActorCameraInfo(rIter);
 
     s32 arg0;
     MR::getJMapInfoArg0WithInit(rIter, &arg0);
@@ -125,7 +125,7 @@ void WarpCube::init(const JMapInfoIter& rIter) {
 
     MR::declareEventCamera(mCameraInfo, eventName);
 
-    mEventName = new char[strlen(&eventName[0]) + 1];
+    mEventName = new (JKRHeapToken::Dummy) char[strlen(&eventName[0]) + 1];
     strcpy(mEventName, &eventName[0]);
 
     MR::connectToScene(this, MR::MovementType_AreaObj, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_WarpPodPath);

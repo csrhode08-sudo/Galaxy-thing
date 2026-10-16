@@ -46,14 +46,14 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
 
-    mStageResultInformer = new StageResultInformer();
+    mStageResultInformer = new (JKRHeapToken::Dummy) StageResultInformer();
     mStageResultInformer->initWithoutIter();
 
     mPowerStar = reinterpret_cast< PowerStar* >(MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform));
     MR::invalidateClipping(mPowerStar);
     mPowerStar->kill();
 
-    mReturnDemoRailMove = new ReturnDemoRailMove(this, mPowerStar, rIter, true, &mPrevTransform);
+    mReturnDemoRailMove = new (JKRHeapToken::Dummy) ReturnDemoRailMove(this, mPowerStar, rIter, true, &mPrevTransform);
     mReturnDemoRailMove->setupPathDrawForGraneStarReturnDemo();
 
     if (MR::tryRegisterDemoCast(this, rIter)) {

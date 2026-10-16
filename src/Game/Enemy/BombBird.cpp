@@ -90,12 +90,12 @@ void BombBird::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     MR::declareCoin(this, 1);
     MR::declareStarPiece(this, 3);
-    mFixedPos = new FixedPosition(this, "BombPos", TVec3f(0, 0, 0), TVec3f(0, 0, 0));
+    mFixedPos = new (JKRHeapToken::Dummy) FixedPosition(this, "BombPos", TVec3f(0, 0, 0), TVec3f(0, 0, 0));
     mFixedPos->mNormalizeScale = false;
-    mSpinHitController = new SpinHitController(this, 25, 20, 4, 1.5f, 30.0f, 40.0f, 3, false);
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 25, 20, 4, 1.5f, 30.0f, 40.0f, 3, false);
 
     for (BombBirdBomb** it = mBombs.begin(); it < mBombs.end(); it++) {
-        *it = new BombBirdBomb("バクダン鳥のボム");
+        *it = new (JKRHeapToken::Dummy) BombBirdBomb("バクダン鳥のボム");
         (*it)->initWithoutIter();
         (*it)->makeActorDead();
     }
@@ -109,8 +109,8 @@ void BombBird::init(const JMapInfoIter& rIter) {
 
     initEffectKeeper(1, nullptr, false);
     MR::initStarPointerTarget(this, getSensor("body")->getRadius(), TVec3f(0.0f, 0.5f * getSensor("body")->getRadius(), 0.0f));
-    mScaleController = new AnimScaleController(nullptr);
-    mStarPointer = new WalkerStateBindStarPointer(this, mScaleController);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mScaleController);
     if (MR::isValidSwitchAppear(this)) {
         makeActorDead();
     } else {

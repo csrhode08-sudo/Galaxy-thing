@@ -52,8 +52,8 @@ THPSimplePlayerWrapper::THPSimplePlayerWrapper(const char* pName)
       _310()
 #endif
 {
-    mSoundBuffer[0] = new (32) s32[0x230];
-    mSoundBuffer[1] = new (32) s32[0x230];
+    mSoundBuffer[0] = new (JKRHeapToken::Dummy, 32) s32[0x230];
+    mSoundBuffer[1] = new (JKRHeapToken::Dummy, 32) s32[0x230];
     MR::zeroMemory(mSoundBuffer[0], 0x8C0);
     MR::zeroMemory(mSoundBuffer[1], 0x8C0);
     DCFlushRange(mSoundBuffer[0], 0x8C0);
@@ -352,7 +352,7 @@ s32 THPSimplePlayerWrapper::decode(s32 audio) {
 }
 
 #if (VERSION == RMGJ01 || VERSION == RMGE01 || VERSION == RMGP01)
-s32 THPSimplePlayerWrapper::drawCurrentFrame(_GXRenderModeObj* rmode, u32 x, u32 y, u32 polyW, u32 polyH) {
+s32 THPSimplePlayerWrapper::drawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y, u32 polyW, u32 polyH) {
     if (mTextureSet.frameNumber < 0) {
         return -1;
     }
@@ -364,7 +364,7 @@ s32 THPSimplePlayerWrapper::drawCurrentFrame(_GXRenderModeObj* rmode, u32 x, u32
     return mTextureSet.frameNumber;
 }
 #else
-s32 THPSimplePlayerWrapper::drawCurrentFrame(_GXRenderModeObj* rmode, u32 x, u32 y, u32 polyW, u32 polyH) {
+s32 THPSimplePlayerWrapper::drawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y, u32 polyW, u32 polyH) {
     if (mTextureSet[_310].frameNumber < 0) {
         return -1;
     }

@@ -97,7 +97,7 @@ void SlingShooter::init(const JMapInfoIter& rIter) {
 
     initNerve(GET_NERVE(SlingShooter, SlingShooterNrvFree));
 
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     mCameraInfo = MR::createActorCameraInfo(rIter);
 
     MR::declareEventCamera(mCameraInfo, "プレーヤー射出者[ウェイト]");  // player launcher [wait]
@@ -139,7 +139,7 @@ void SlingShooter::exeFreeInvalid() {
 void SlingShooter::exeLand() {
     if (MR::isFirstStep(this)) {
         if (!mIsKinopioAttached) {
-            MR::startBckPlayer("SpiderCocoonLand", 1L);
+            MR::startBckPlayer("SpiderCocoonLand", 1);
             MR::startEventCamera(mCameraInfo, "プレーヤー射出者[ウェイト]", CameraTargetArg(mCameraTargetMtx));
         } else {
             MR::startBckWithInterpole(mRider, "CocoonLand", 1);

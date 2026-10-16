@@ -12,7 +12,7 @@ namespace {
         JKRExpHeap* heap;
 
         if (a3) {
-            void* data = new (pHeap, -4) u8[size];
+            void* data = new (JKRHeapToken::Dummy, pHeap, -4) u8[size];
             heap = JKRExpHeap::create(data, size, pHeap, true);
         } else {
             heap = JKRExpHeap::create(size, pHeap, true);
@@ -119,15 +119,15 @@ void HeapMemoryWatcher::destroyGameHeap() {
 void HeapMemoryWatcher::createRootHeap() {
     JKRExpHeap* pHeap;
     void* newHi;
-    u32 arenaHi, arenaLo;
+    uintptr_t arenaHi, arenaLo;
 
     JKRExpHeap::createRoot(1, true);
-    arenaLo = reinterpret_cast< u32 >(OSGetMEM2ArenaLo());
-    arenaHi = reinterpret_cast< u32 >(OSGetMEM2ArenaHi());
+    arenaLo = reinterpret_cast< uintptr_t >(OSGetMEM2ArenaLo());
+    arenaHi = reinterpret_cast< uintptr_t >(OSGetMEM2ArenaHi());
     newHi = reinterpret_cast< void* >(arenaLo + 0xE00000);
     OSSetMEM2ArenaHi(newHi);
     JKRHeap::setAltAramStartAdr(arenaLo);
-    pHeap = JKRExpHeap::create(newHi, arenaHi - reinterpret_cast< u32 >(newHi), JKRHeap::sRootHeap, true);
+    pHeap = JKRExpHeap::create(newHi, (u32)(arenaHi - reinterpret_cast< uintptr_t >(newHi)), JKRHeap::sRootHeap, true);
 
     if (MR::isEqualCurrentHeap(pHeap)) {
         JKRHeap::sRootHeap->becomeCurrentHeap();

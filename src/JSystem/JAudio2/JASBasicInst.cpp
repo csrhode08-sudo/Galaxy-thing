@@ -51,7 +51,7 @@ bool JASBasicInst::getParam(int pitch, int velocity, JASInstParam* pParams) cons
 
 void JASBasicInst::setKeyRegionCount(u32 count, JKRHeap* pHeap) {
     delete[] mKeymap;
-    mKeymap = new (pHeap, 0) TKeymap[count];
+    mKeymap = new (JKRHeapToken::Dummy, pHeap, 0) TKeymap[count];
     mKeymapCount = count;
 }
 
@@ -93,7 +93,7 @@ JASBasicInst::TKeymap::~TKeymap() {
 
 void JASBasicInst::TKeymap::setVeloRegionCount(u32 count, JKRHeap* pHeap) {
     delete[] mVelomap;
-    mVelomap = new (pHeap, 0) TVelomap[count];
+    mVelomap = new (JKRHeapToken::Dummy, pHeap, 0) TVelomap[count];
     mVelomapCount = count;
 }
 

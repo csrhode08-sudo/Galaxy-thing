@@ -42,7 +42,7 @@ namespace MR {
         /// @brief Allocates memory for the array.
         /// @param num The number of elements.
         void init(s32 num) {
-            mArr = new T[num];
+            mArr = new (JKRHeapToken::Dummy) T[num];
             mMaxSize = num;
         }
 

@@ -294,7 +294,7 @@ void KoopaJrShipCannonShell::exeFreeze() {
 namespace CannonShellUtil {
     void registerKoopaJrShipCannonShell(CannonShellHolder* pHolder, int shellNum) {
         for (s32 i = 0; i < shellNum; i++) {
-            KoopaJrShipCannonShell* pShell = new KoopaJrShipCannonShell("砲弾");
+            KoopaJrShipCannonShell* pShell = new (JKRHeapToken::Dummy) KoopaJrShipCannonShell("砲弾");
             pShell->initWithoutIter();
             pShell->makeActorDead();
             pHolder->registerCannonShell(pShell);

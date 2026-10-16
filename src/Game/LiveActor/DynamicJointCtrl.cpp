@@ -146,7 +146,7 @@ bool DynamicJointCtrlNode::updateJointMtxCallBack(TPos3f* pMtx, const JointContr
 }
 
 DynamicJointCtrl::DynamicJointCtrl(LiveActor* pActor, const char* pName, const DynamicJointCtrlParam* pParam)
-    : mActor(pActor), mName(pName), _8(), mCtrlNodes(), mParams(pParam), mControlRate(new JointCtrlRate) {
+    : mActor(pActor), mName(pName), _8(), mCtrlNodes(), mParams(pParam), mControlRate(new (JKRHeapToken::Dummy) JointCtrlRate) {
 }
 
 void DynamicJointCtrl::init() {
@@ -158,7 +158,7 @@ void DynamicJointCtrl::init() {
         _8 = ::calcJointChildNum(joint) + 2;
     }
 
-    mCtrlNodes = new DynamicJointCtrlNode*[_8];
+    mCtrlNodes = new (JKRHeapToken::Dummy) DynamicJointCtrlNode*[_8];
     TVec3f previousPos(0.0f, 0.0f, 0.0f);
     f32 length = 100.0f;
 
@@ -177,7 +177,7 @@ void DynamicJointCtrl::init() {
             previousPos.set(pos);
         }
 
-        mCtrlNodes[i] = new DynamicJointCtrlNode(this, mtx, length);
+        mCtrlNodes[i] = new (JKRHeapToken::Dummy) DynamicJointCtrlNode(this, mtx, length);
         if (i < _8 - 1) {
             const char* name = MR::getJointName(mActor, joint->getJntNo());
             mCtrlNodes[i]->mJointController =
@@ -225,10 +225,10 @@ DynamicJointCtrlKeeper::DynamicJointCtrlKeeper(LiveActor* pActor) : mActor(pActo
     }
 
     _4 = csv->getNumEntries();
-    mControls = new DynamicJointCtrl*[_4];
+    mControls = new (JKRHeapToken::Dummy) DynamicJointCtrl*[_4];
 
     for (s32 i = 0; i < _4; i++) {
-        DynamicJointCtrlParam* param = new DynamicJointCtrlParam;
+        DynamicJointCtrlParam* param = new (JKRHeapToken::Dummy) DynamicJointCtrlParam;
         *param = ::sDefaultParam;
         const char* name = nullptr;
         csv->getValue(i, "JointName", &name);
@@ -237,7 +237,7 @@ DynamicJointCtrlKeeper::DynamicJointCtrlKeeper(LiveActor* pActor) : mActor(pActo
         csv->getValue(i, "AccelRateToBckPos", &param->mAccelRatetoBckPos);
         csv->getValue(i, "BendMaxDegree", &param->mBendMaxDegree);
         csv->getValue(i, "CtrlJointNumMax", &param->mCtrlJointNumMax);
-        mControls[i] = new DynamicJointCtrl(pActor, name, param);
+        mControls[i] = new (JKRHeapToken::Dummy) DynamicJointCtrl(pActor, name, param);
         mControls[i]->init();
     }
 }

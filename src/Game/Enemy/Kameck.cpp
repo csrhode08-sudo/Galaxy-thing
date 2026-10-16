@@ -51,8 +51,8 @@ Kameck::Kameck(const char* pName)
     : LiveActor(pName), mBeam(), mActiveActorList(), mBeamEventListener(), mAnimScaleController(), mStateBindStarPointer(),
       mRotateQuat(0.0f, 0.0f, 0.0f, 1.0f), mFrontVec(0.0f, 0.0f, 1.0f), mBeamType(), mMoveStep(240), mRailCoord(), mRailNextPointCoord(),
       mActiveDistance(::sDefaultActiveDistance) {
-    mActiveActorList = new ActiveActorList(8);
-    mBeamEventListener = new SmallKameckBeamEventListener(this);
+    mActiveActorList = new (JKRHeapToken::Dummy) ActiveActorList(8);
+    mBeamEventListener = new (JKRHeapToken::Dummy) SmallKameckBeamEventListener(this);
 }
 
 void Kameck::init(const JMapInfoIter& rIter) {
@@ -72,10 +72,10 @@ void Kameck::init(const JMapInfoIter& rIter) {
     initEffectKeeper(1, nullptr, false);
     MR::initStarPointerTarget(this, 80.0f, TVec3f(0.0f, 0.0f, 0.0f));
 
-    mAnimScaleController = new AnimScaleController(nullptr);
+    mAnimScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
     mAnimScaleController->setParamTight();
 
-    mStateBindStarPointer = new WalkerStateBindStarPointer(this, mAnimScaleController);
+    mStateBindStarPointer = new (JKRHeapToken::Dummy) WalkerStateBindStarPointer(this, mAnimScaleController);
 
     initSound(4, false);
     MR::addToAttributeGroupSearchTurtle(this);
@@ -726,7 +726,7 @@ namespace MR {
     NameObj* createFireBallBeamKameck(const char* pName) {
         Kameck* pKameck;
 
-        pKameck = new Kameck(pName);
+        pKameck = new (JKRHeapToken::Dummy) Kameck(pName);
         pKameck->setBeamType(KameckBeam::BeamType_FireBall1);
 
         return pKameck;
@@ -735,7 +735,7 @@ namespace MR {
     NameObj* createTurtleBeamKameck(const char* pName) {
         Kameck* pKameck;
 
-        pKameck = new Kameck(pName);
+        pKameck = new (JKRHeapToken::Dummy) Kameck(pName);
         pKameck->setBeamType(KameckBeam::BeamType_Turtle);
 
         return pKameck;

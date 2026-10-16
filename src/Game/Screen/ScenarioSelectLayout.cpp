@@ -110,19 +110,19 @@ void ScenarioSelectLayout::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, "ScenarioSelect", mEffectSystem);
     MR::setEffectHostMtx(this, "ScenarioSelectEffect", mEffectHostMtx);
 
-    mStar = new ScenarioSelectStar*[7];
+    mStar = new (JKRHeapToken::Dummy) ScenarioSelectStar*[7];
 
     for (s32 i = 0; i < 7; i++) {
-        mStar[i] = new ScenarioSelectStar(mEffectSystem);
+        mStar[i] = new (JKRHeapToken::Dummy) ScenarioSelectStar(mEffectSystem);
         mStar[i]->initWithoutIter();
 
         MR::addStarPointerTargetCircle(this, ::cStarPaneName[i], ::cPointingTargetRadius, TVec2f(0.0f, 0.0f), nullptr);
     }
 
-    mScenarioSky = new MultiSceneActor("シナリオ選択の空", "ScenarioSelectSky", false);
+    mScenarioSky = new (JKRHeapToken::Dummy) MultiSceneActor("シナリオ選択の空", "ScenarioSelectSky", false);
     mScenarioSky->initWithoutIter();
 
-    mBackButton = new BackButton("戻るボタン", false);
+    mBackButton = new (JKRHeapToken::Dummy) BackButton("戻るボタン", false);
     mBackButton->initWithoutIter();
 
     #if (VERSION == RMGJ01 || VERSION == RMGE01)

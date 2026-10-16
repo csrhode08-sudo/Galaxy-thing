@@ -10,9 +10,9 @@ SystemWipeHolder::SystemWipeHolder() : WipeHolderBase(4, "システムワイプ�
 }
 
 void SystemWipeHolder::init(const JMapInfoIter& rIter) {
-    addWipeLayout(new WipeFade("フェードワイプ", Color8(0, 0, 0, 255)));
-    addWipeLayout(new WipeRing(false, "円ワイプ"));
-    addWipeLayout(new WipeFade("白フェードワイプ", Color8(255, 255, 255, 255)));
+    addWipeLayout(new (JKRHeapToken::Dummy) WipeFade("フェードワイプ", Color8(0, 0, 0, 255)));
+    addWipeLayout(new (JKRHeapToken::Dummy) WipeRing(false, "円ワイプ"));
+    addWipeLayout(new (JKRHeapToken::Dummy) WipeFade("白フェードワイプ", Color8(255, 255, 255, 255)));
 }
 
 bool SystemWipeHolder::isCurrentAlive() const {
@@ -82,7 +82,7 @@ void SystemWipeHolder::updateWipe(const char* pWipeName) {
 
 namespace MR {
     SystemWipeHolder* createSystemWipeHolder() {
-        SystemWipeHolder* newHolder = new SystemWipeHolder();
+        SystemWipeHolder* newHolder = new (JKRHeapToken::Dummy) SystemWipeHolder();
         newHolder->initWithoutIter();
         return newHolder;
     }

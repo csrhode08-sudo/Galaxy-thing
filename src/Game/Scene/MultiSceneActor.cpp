@@ -11,7 +11,7 @@
 MultiSceneActor::MultiSceneActor(const char* pName, const char* pModelName, bool param3)
     : NameObj(pName), mTranslation(0.0f, 0.0f, 0.0f), mRotation(0.0f, 0.0f, 0.0f), mScale(1.0f, 1.0f, 1.0f), _30(true), mModelManager(nullptr),
       mEffectSystem(nullptr), mEffectKeeper(nullptr), mSpine(nullptr) {
-    mModelManager = new ModelManager();
+    mModelManager = new (JKRHeapToken::Dummy) ModelManager();
     mModelManager->init(pModelName, nullptr, param3);
 }
 
@@ -93,7 +93,7 @@ MultiSceneEffectKeeper* MultiSceneActor::getEffectKeeper() const {
 void MultiSceneActor::initEffect(EffectSystem* pEffectSystem, int param2, const char* pName) {
     mEffectSystem = pEffectSystem;
 
-    mEffectKeeper = new MultiSceneEffectKeeper(mName, mModelManager, param2, pName);
+    mEffectKeeper = new (JKRHeapToken::Dummy) MultiSceneEffectKeeper(mName, mModelManager, param2, pName);
     mEffectKeeper->init(this, pEffectSystem);
 }
 
@@ -106,7 +106,7 @@ bool MultiSceneActor::isNerve(const Nerve* pNerve) const {
 }
 
 void MultiSceneActor::initNerve(const Nerve* pNerve) {
-    mSpine = new Spine(this, pNerve);
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, pNerve);
 }
 
 s32 MultiSceneActor::getNerveStep() const {

@@ -163,7 +163,7 @@ void LuigiNPC::init(const JMapInfoIter& rIter) {
 
     if (isDeclarePowerStarType()) {
         MR::declarePowerStar(this);
-        mTakeOutStar = new TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(LuigiNPC, LuigiNPCNrvTakeOutStar));
+        mTakeOutStar = new (JKRHeapToken::Dummy) TakeOutStar(this, "TakeOutStar", "TakeOutStar", GET_NERVE(LuigiNPC, LuigiNPCNrvTakeOutStar));
     }
 
     bool stat = mType > Type_Normal && mType < Type_Count;

@@ -9,5 +9,5 @@ AnimScaleController* SamboFunction::createAnimScaleController(AnimScaleParam* pP
     pParam->_20 = 0.06f;
     pParam->_24 = 0.4f;
     pParam->_28 = 0.8f;
-    return new AnimScaleController(pParam);
+    return new (JKRHeapToken::Dummy) AnimScaleController(pParam);
 }

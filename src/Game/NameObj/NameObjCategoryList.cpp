@@ -5,7 +5,7 @@ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTab
                                          const char*) {
     NameObjMethod method;
     method = pMethod;
-    mDelegator = new NameObjRealDelegator< NameObjMethod >(method);
+    mDelegator = new (JKRHeapToken::Dummy) NameObjRealDelegator< NameObjMethod >(method);
     mAllocateByCheck = allocateByCheck;
     mBufferAllocated = false;
     initTable(count, pTable);
@@ -15,7 +15,7 @@ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTab
                                          const char*) {
     NameObjMethodConst method;
     method = pMethod;
-    mDelegatorConst = new NameObjRealDelegator< NameObjMethodConst >(method);
+    mDelegatorConst = new (JKRHeapToken::Dummy) NameObjRealDelegator< NameObjMethodConst >(method);
     mAllocateByCheck = allocateByCheck;
     mBufferAllocated = false;
     initTable(count, pTable);
@@ -50,7 +50,7 @@ void NameObjCategoryList::allocateBuffer() {
         for (int i = 0; i < mCategoryInfo.size(); i++) {
             NameObjCategoryList::CategoryInfo* pInfo = &mCategoryInfo[i];
             u32 size = pInfo->mCheck;
-            NameObj** pNameObjArr = new NameObj*[size];
+            NameObj** pNameObjArr = new (JKRHeapToken::Dummy) NameObj*[size];
             MR::Vector< MR::AssignableArray< NameObj* > >* pArray = &mCategoryInfo[i].mNameObjArr;
             pArray->mArray.mArr = pNameObjArr;
             pArray->mArray.mMaxSize = size;
@@ -68,7 +68,7 @@ void NameObjCategoryList::remove(NameObj* pObj, int idx) {
     MR::Vector< MR::AssignableArray< NameObj* > >& rArray = mCategoryInfo[idx].mNameObjArr;
     s32 size = rArray.size();
     NameObj** pBegin = rArray.begin();
-    NameObj** pFound = std::find(pBegin, pBegin + size, pObj);
+    NameObj** pFound = msl::find(pBegin, pBegin + size, pObj);
     rArray[pFound - pBegin] = rArray[rArray.size() - 1];
     rArray.pop_back();
 }
@@ -89,7 +89,7 @@ void NameObjCategoryList::initTable(u32 count, const CategoryListInitialTable* p
     for (const CategoryListInitialTable* pEntry = &pTable[0]; pEntry->mIndex != -1; pEntry++) {
         if (!mAllocateByCheck) {
             u32 size = pEntry->mCount;
-            NameObj** pArray = new NameObj*[size];
+            NameObj** pArray = new (JKRHeapToken::Dummy) NameObj*[size];
             NameObjCategoryList::CategoryInfo* pInfo = &mCategoryInfo[pEntry->mIndex];
             pInfo->mNameObjArr.mArray.mArr = pArray;
             pInfo->mNameObjArr.mArray.mMaxSize = size;

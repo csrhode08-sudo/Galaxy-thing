@@ -71,7 +71,7 @@ void ParticleEmitterHolder::requestMovementOnAllEmitters() {
 }
 
 ParticleEmitter* ParticleEmitterHolder::findAvailableParticleEmitter() {
-    ParticleEmitter* res = std::find_if_array(mEmitters.begin(), mEmitters.end(), std::not1(std::mem_func(&ParticleEmitter::isValid)));
+    ParticleEmitter* res = msl::find_if_array(mEmitters.begin(), mEmitters.end(), msl::not1(msl::mem_func(&ParticleEmitter::isValid)));
     if (res == mEmitters.end()) {
         return nullptr;
     }

@@ -20,7 +20,7 @@ FloaterSpringForce::FloaterSpringForce(f32 param1, f32 param2, f32 param3) : mSp
     _0 = param1;
     _4 = param2;
     _8 = param3;
-    mSpringValue = new SpringValue(param1, 0.0f, param2, param3, 0.0f);
+    mSpringValue = new (JKRHeapToken::Dummy) SpringValue(param1, 0.0f, param2, param3, 0.0f);
 }
 
 void FloaterSpringForce::addSpringVelocity(f32 vel) {
@@ -52,7 +52,7 @@ void FloaterFloatingForceTypeSpring::init(const JMapInfoIter& rIter) {
     MR::getMapPartsArgRotateAxis(&rotateAxis, rIter);
     _48 = rotateAxis * 0.1f;
 
-    mSpringForce = new FloaterSpringForce(-mMoveConditionType, rotateSpeed, rotateAngle);
+    mSpringForce = new (JKRHeapToken::Dummy) FloaterSpringForce(-mMoveConditionType, rotateSpeed, rotateAngle);
 
     initNerve(GET_NERVE(FloaterFloatingForceTypeSpring, HostTypeWait));
     MR::useStageSwitchReadA(mHost, rIter);

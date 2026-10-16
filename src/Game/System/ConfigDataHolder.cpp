@@ -105,10 +105,10 @@ s32 ConfigDataHolder::makeFileBinary(u8* pBuffer, u32 size) {
 }
 
 ConfigDataHolder::ConfigDataHolder() : mChunkHolder(), mCreateChunk(), mMii(), mMisc() {
-    mChunkHolder = new BinaryDataChunkHolder(64, 3);
-    mCreateChunk = new ConfigDataCreateChunk();
-    mMii = new ConfigDataMii();
-    mMisc = new ConfigDataMisc();
+    mChunkHolder = new (JKRHeapToken::Dummy) BinaryDataChunkHolder(64, 3);
+    mCreateChunk = new (JKRHeapToken::Dummy) ConfigDataCreateChunk();
+    mMii = new (JKRHeapToken::Dummy) ConfigDataMii();
+    mMisc = new (JKRHeapToken::Dummy) ConfigDataMisc();
 
     mChunkHolder->addChunk(mCreateChunk);
     mChunkHolder->addChunk(mMii);

@@ -103,7 +103,7 @@ void AstroDomeBlueStar::init(const JMapInfoIter& rIter) {
 
     MR::connectToScene(this, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_NoShadowedMapObj, MR::DrawType_GCapture);
 
-    mCaptureActor = new CaptureActor();
+    mCaptureActor = new (JKRHeapToken::Dummy) CaptureActor();
     mCaptureActor->initWithoutIter();
 
     initHitSensor(1);
@@ -117,7 +117,7 @@ void AstroDomeBlueStar::init(const JMapInfoIter& rIter) {
     initSound(6, false);
     MR::initStarPointerTarget(this, 200.0f);
 
-    mCaptureRibbon = new GCaptureRibbon("Gキャプチャーリボン");
+    mCaptureRibbon = new (JKRHeapToken::Dummy) GCaptureRibbon("Gキャプチャーリボン");
     mCaptureRibbon->initWithoutIter();
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
@@ -373,7 +373,7 @@ void AstroDomeBlueStar::exeBindTraction() {
         MR::emitEffect(mCaptureActor, "LightGrow");
         MR::emitEffect(mCaptureActor, "LightSplash");
 
-        MR::startBckPlayer("SpaceStruggle", 20L);
+        MR::startBckPlayer("SpaceStruggle", 20);
 
         mBindStartMtx.set(mHostMtx);
 
@@ -414,7 +414,7 @@ void AstroDomeBlueStar::exeBindHold() {
 
         MR::deleteEffect(mCaptureActor, "LightSplash");
 
-        MR::startBckPlayer("SpaceWait", 20L);
+        MR::startBckPlayer("SpaceWait", 20);
 
         mCaptureActor->setPosAll(mPosition);
 

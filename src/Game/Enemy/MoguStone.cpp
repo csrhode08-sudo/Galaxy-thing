@@ -188,7 +188,7 @@ void MoguStone::calcAndSetBaseMtx() {
 }
 
 ThrowingIce::ThrowingIce(const char* pName) : MoguStone(pName, "IceManIce"), mPath() {
-    mPath = new ParabolicPath();
+    mPath = new (JKRHeapToken::Dummy) ParabolicPath();
     mScale.x = 1.3f;
     mScale.y = 1.3f;
     mScale.z = 1.3f;

@@ -1,6 +1,6 @@
 #include "revolution/ax.h"
 #include "revolution/os.h"
-#include <mem.h>
+#include <cstring>
 
 static u8 __clearAuxA[3];
 

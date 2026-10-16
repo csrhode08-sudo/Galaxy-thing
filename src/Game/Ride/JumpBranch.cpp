@@ -65,7 +65,7 @@ void JumpBranch::init(const JMapInfoIter& rIter) {
     MR::setShadowDropLength(this, nullptr, 1500.0f);
     MR::onCalcShadowOneTime(this, nullptr);
 
-    mSwingPoint = new SwingRopePoint(mPosition);
+    mSwingPoint = new (JKRHeapToken::Dummy) SwingRopePoint(mPosition);
 
     initNerve(GET_NERVE(JumpBranch, JumpBranchNrvWait));
     makeActorAppeared();

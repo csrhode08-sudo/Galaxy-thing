@@ -24,7 +24,7 @@ void TripodBossCoin::init(const JMapInfoIter& rIter) {
     mCoin = static_cast< Coin* >(MR::createCoin(this, "コイン(三脚ボス用)"));
     mCoin->initWithoutIter();
 
-    mSpine = new Spine(this, GET_NERVE(TripodBossCoin, TripodBossCoinNrvNonActive));
+    mSpine = new (JKRHeapToken::Dummy) Spine(this, GET_NERVE(TripodBossCoin, TripodBossCoinNrvNonActive));
 
     MR::addTripodBossPartsMovement(this);
 }

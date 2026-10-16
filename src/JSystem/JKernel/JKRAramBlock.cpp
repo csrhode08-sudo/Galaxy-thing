@@ -27,7 +27,7 @@ JKRAramBlock* JKRAramBlock::allocHead(u32 size, u8 groupId, JKRAramHeap* aramHea
     u32 nextAddress = mAddress + mSize;
     u32 nextFreeSize = mFreeSize - size;
 
-    JKRAramBlock* block = new (aramHeap->getMgrHeap(), 0) JKRAramBlock(nextAddress, size, nextFreeSize, groupId, false);
+    JKRAramBlock* block = new (JKRHeapToken::Dummy, aramHeap->getMgrHeap(), 0) JKRAramBlock(nextAddress, size, nextFreeSize, groupId, false);
 
     mFreeSize = 0;
     mBlockLink.getSupervisor()->insert(mBlockLink.getNext(), &block->mBlockLink);
@@ -37,7 +37,7 @@ JKRAramBlock* JKRAramBlock::allocHead(u32 size, u8 groupId, JKRAramHeap* aramHea
 JKRAramBlock* JKRAramBlock::allocTail(u32 size, u8 groupId, JKRAramHeap* aramHeap) {
     u32 tailAddress = mAddress + mSize + mFreeSize - size;
 
-    JKRAramBlock* block = new (aramHeap->getMgrHeap(), 0) JKRAramBlock(tailAddress, size, 0, groupId, true);
+    JKRAramBlock* block = new (JKRHeapToken::Dummy, aramHeap->getMgrHeap(), 0) JKRAramBlock(tailAddress, size, 0, groupId, true);
 
     mFreeSize -= size;
     mBlockLink.getSupervisor()->insert(mBlockLink.getNext(), &block->mBlockLink);

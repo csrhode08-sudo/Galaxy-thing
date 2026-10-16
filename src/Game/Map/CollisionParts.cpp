@@ -28,7 +28,7 @@ void CollisionParts_FORCE_MATCH_GET_SCALE(const TPos3f& rMatrix, TVec3f& rScale)
 
 CollisionParts::CollisionParts()
     : _0(), mHitSensor(), _CC(), _CD(true), _CE(), _CF(), _D0(), _D4(), _D8(-1.0f), _DC(1.0f), mKeeperIndex(-1), mZone() {
-    mServer = new KCollisionServer();
+    mServer = new (JKRHeapToken::Dummy) KCollisionServer();
 
     mPrevBaseMatrix.identity();
     mBaseMatrix.identity();

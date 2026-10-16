@@ -50,7 +50,7 @@ void SysConfigChunk::initializeData() {
 }
 
 void SysConfigChunk::initHeaderSerializer() {
-    mHeaderSerializer = new BinaryDataContentHeaderSerializer(new u8[32], 32);
+    mHeaderSerializer = new (JKRHeapToken::Dummy) BinaryDataContentHeaderSerializer(new (JKRHeapToken::Dummy) u8[32], 32);
 
     mHeaderSerializer->addAttribute("mTimeAnnounced", sizeof(mTimeAnnounced));
     mHeaderSerializer->addAttribute("mTimeSent", sizeof(mTimeSent));
@@ -59,8 +59,8 @@ void SysConfigChunk::initHeaderSerializer() {
 }
 
 SysConfigFile::SysConfigFile() : mChunk(nullptr), mChunkHolder(nullptr) {
-    mChunkHolder = new BinaryDataChunkHolder(0x3000, 8);
-    mChunk = new SysConfigChunk();
+    mChunkHolder = new (JKRHeapToken::Dummy) BinaryDataChunkHolder(0x3000, 8);
+    mChunk = new (JKRHeapToken::Dummy) SysConfigChunk();
 
     mChunkHolder->addChunk(mChunk);
 }

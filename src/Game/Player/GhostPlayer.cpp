@@ -134,7 +134,7 @@ void GhostPlayer::init(const JMapInfoIter& rIter) {
     char gstPath[256];
     char arcPath[256];
 
-    mRaceManagerLayout = new RaceManagerLayout("レース管理用レイアウト");
+    mRaceManagerLayout = new (JKRHeapToken::Dummy) RaceManagerLayout("レース管理用レイアウト");
     mRaceManagerLayout->init(rIter);
 
     mCurrentPacket = nullptr;
@@ -189,7 +189,7 @@ void GhostPlayer::init(const JMapInfoIter& rIter) {
         MR::initMultiActorCamera(this, rIter, &mCameraInfo, "レース開始3");
         MR::initMultiActorCamera(this, rIter, &mCameraInfo, "レース終了");
     }
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
     initNerve(GET_NERVE(GhostPlayer, HostTypeNrvWait));
     MR::needStageSwitchReadAppear(this, rIter);
     MR::syncStageSwitchAppear(this);
@@ -198,9 +198,9 @@ void GhostPlayer::init(const JMapInfoIter& rIter) {
     _112 = true;
     MR::getRotatedAxisZ(&mInitialDirection, mRotation);
     PSMTXCopy(getBaseMtx(), mTargetRotationMtx);
-    mJetTurtleShadow = new JetTurtleShadow("カメシャドウモデル");
+    mJetTurtleShadow = new (JKRHeapToken::Dummy) JetTurtleShadow("カメシャドウモデル");
     mJetTurtleShadow->initWithoutIter();
-    mHandRPos = new FixedPosition(this, "HandR", TVec3f(15.59f, 42.5f, 42.93f), TVec3f(-17.05f, -0.7f, 113.55f));
+    mHandRPos = new (JKRHeapToken::Dummy) FixedPosition(this, "HandR", TVec3f(15.59f, 42.5f, 42.93f), TVec3f(-17.05f, -0.7f, 113.55f));
     MR::declareStarPiece(this, 50);
     MR::declareCoin(this, 50);
     mAppearStarPieceCooldown = 0;
@@ -506,12 +506,12 @@ void GhostPlayer::initAnimation() {
     mAnimTrackWeights[2] = 0.0f;
     mAnimTrackWeights[3] = 1.0f;
 
-    mXanimePlayer = new XanimePlayer(MR::getJ3DModel(this), pResource);
+    mXanimePlayer = new (JKRHeapToken::Dummy) XanimePlayer(MR::getJ3DModel(this), pResource);
     mXanimePlayer->duplicateSimpleGroup();
     mModelManager->mXanimePlayer = mXanimePlayer;
     mXanimePlayer->setDefaultAnimation("基本");
     mXanimePlayer->getCore()->enableJointTransform(MR::getJ3DModelData(this));
-    mXanimePlayerUpper = new XanimePlayer(MR::getJ3DModel(this), pResource, mXanimePlayer);
+    mXanimePlayerUpper = new (JKRHeapToken::Dummy) XanimePlayer(MR::getJ3DModel(this), pResource, mXanimePlayer);
     mXanimePlayerUpper->changeAnimation("基本");
 }
 

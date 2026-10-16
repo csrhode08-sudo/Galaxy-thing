@@ -10,7 +10,7 @@
 #include <revolution/types.h>
 #include <cstdlib>
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 
 JKRDvdArchive::JKRDvdArchive(s32 entryNum, EMountDirection mountDir) : JKRArchive(entryNum, MOUNT_MODE_DVD) {
     mMountDir = mountDir;
@@ -64,7 +64,7 @@ bool JKRDvdArchive::open(s32 entryNum) {
     mFiles = nullptr;
     mStringTable = nullptr;
 
-    mFile = new (JKRHeap::getSystemHeap(), 0) JKRDvdFile(entryNum);
+    mFile = new (JKRHeapToken::Dummy, JKRHeap::getSystemHeap(), 0) JKRDvdFile(entryNum);
     if (mFile == nullptr) {
         mMountMode = MOUNT_MODE_0;
         return false;
@@ -214,7 +214,7 @@ u32 JKRDvdArchive::getExpandedResSize(const void* pArg) const {
     }
 
     u8 buff[0x40];
-    u8* alignedPointer = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< u32 >(buff), 32)));
+    u8* alignedPointer = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< uintptr_t >(buff), 32)));
 
     JKRDvdRipper::loadToMainRAM(mEntryNum, alignedPointer, EXPAND_SWITCH_UNKNOWN2, 0x20, nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD,
                                 _64 + fileEntry->mDataOffset, nullptr, nullptr);
@@ -249,7 +249,7 @@ u32 JKRDvdArchive::fetchResource_subroutine(s32 entryNum, u32 offset, u32 source
         case 1:
         case 2: {
             u8 headerBuffer[0x40];
-            u8* header = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< u32 >(headerBuffer), 32)));
+            u8* header = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< uintptr_t >(headerBuffer), 32)));
 
             JKRDvdRipper::loadToMainRAM(entryNum, header, EXPAND_SWITCH_UNKNOWN2, 0x20, nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, offset,
                                         nullptr, nullptr);
@@ -315,7 +315,7 @@ u32 JKRDvdArchive::fetchResource_subroutine(s32 entryNum, u32 offset, u32 source
         case 1:
         case 2: {
             u8 headerBuffer[0x40];
-            u8* header = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< u32 >(headerBuffer), 32)));
+            u8* header = reinterpret_cast< u8* >((ALIGN_NEXT(reinterpret_cast< uintptr_t >(headerBuffer), 32)));
 
             JKRDvdRipper::loadToMainRAM(entryNum, header, EXPAND_SWITCH_UNKNOWN2, 0x20, nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, offset,
                                         nullptr, nullptr);

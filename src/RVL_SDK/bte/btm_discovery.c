@@ -6,7 +6,7 @@
 
 #include "revolution/types.h"
 #include <cstring>
-#include <mem.h>
+#include <cstring>
 
 #include <bt_target.h>
 #include <bt_types.h>

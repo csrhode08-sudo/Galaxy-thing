@@ -66,11 +66,11 @@ void GalaxyMapGalaxyPlain::adjustTransInScreen() {
 }
 
 void GalaxyMapGalaxyPlain::init(const JMapInfoIter& rIter) {
-    mNamePlate = new GalaxyNamePlate(nullptr, false);
+    mNamePlate = new (JKRHeapToken::Dummy) GalaxyNamePlate(nullptr, false);
     mNamePlate->initWithoutIter();
     mNamePlate->setShowBalloonNozzle(false);
 
-    mGalaxyName = new (MR::getSceneHeapGDDR3(), 0) wchar_t[GALAXY_NAME_BUFFER_SIZE];
+    mGalaxyName = new (JKRHeapToken::Dummy, MR::getSceneHeapGDDR3(), 0) wchar_t[GALAXY_NAME_BUFFER_SIZE];
 }
 
 void GalaxyMapGalaxyPlain::appear() {

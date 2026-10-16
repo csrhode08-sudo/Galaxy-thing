@@ -82,7 +82,7 @@ void Kiraira::init(const JMapInfoIter& rIter) {
     mSharedGroup = MR::joinToGroupArray(this, rIter, "キライラ軍団", 16);
     MR::addToAttributeGroupSearchTurtle(this);
     if (!mIsRail) {
-        mChain = new KirairaChain(this);
+        mChain = new (JKRHeapToken::Dummy) KirairaChain(this);
         mChain->initWithoutIter();
     }
     MR::calcFrontVec(&mFront, this);

@@ -28,13 +28,13 @@ DinoPackunVs1::DinoPackunVs1(DinoPackun* pPackun) : DinoPackunSequencer("ディ�
 
 void DinoPackunVs1::init() {
     initNerve(GET_NERVE(DinoPackunVs1, DinoPackunVs1NrvWaitStart));
-    mDemo = new DinoPackunDemo(mParent);
+    mDemo = new (JKRHeapToken::Dummy) DinoPackunDemo(mParent);
     mDemo->init();
-    mEgg = new DinoPackunBattleEgg(mParent);
+    mEgg = new (JKRHeapToken::Dummy) DinoPackunBattleEgg(mParent);
     mEgg->init();
-    mBattleLv1 = new DinoPackunBattleVs1Lv1(mParent);
+    mBattleLv1 = new (JKRHeapToken::Dummy) DinoPackunBattleVs1Lv1(mParent);
     mBattleLv1->init();
-    mBattleLv2 = new DinoPackunBattleVs1Lv2(mParent);
+    mBattleLv2 = new (JKRHeapToken::Dummy) DinoPackunBattleVs1Lv2(mParent);
     mBattleLv2->init();
     MR::declareStarPiece(mParent, 24);
 }

@@ -124,11 +124,11 @@ void SpinDriverCamera::init(const JMapInfoIter& rIter, LiveActor* pActor) {
     s32 arg3 = 1;
     MR::getJMapInfoArg3NoInit(rIter, &arg3);
 
-    mCamera = new MultiEventCamera();
-    mCamera->setUp(pActor->mName, new ActorCameraInfo(rIter), arg3);
+    mCamera = new (JKRHeapToken::Dummy) MultiEventCamera();
+    mCamera->setUp(pActor->mName, new (JKRHeapToken::Dummy) ActorCameraInfo(rIter), arg3);
     mCamera->setEndCameraTypeAtLanding();
 
-    mTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mTargetMtx = new (JKRHeapToken::Dummy) CameraTargetMtx("カメラターゲットダミー");
 }
 
 void SpinDriverCamera::initAppearCamera(const JMapInfoIter& rIter, LiveActor* pActor) {

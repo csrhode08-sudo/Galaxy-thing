@@ -2,7 +2,7 @@
 #include "revolution/nand.h"
 #include <cstdio>
 #include <cstdlib>
-#include <mem.h>
+#include <cstring>
 
 static IOSFd s_fd = -255;
 static int s_stage;

@@ -15,15 +15,15 @@ void DisplayListMaker_FORCE_MATCH_INLINE(J3DTexture* pTexture, const ResTIMG& rT
 
 DisplayListMaker::DisplayListMaker(J3DModel* pModel, const ResourceHolder* pResHolder) : mModel(pModel), mFogCtrl(), mResHolder(pResHolder) {
     u16 materialNum = mModel->getModelData()->getMaterialNum();
-    mPrgFlag = new u32[materialNum];
-    mCurFlag = new u32[materialNum];
+    mPrgFlag = new (JKRHeapToken::Dummy) u32[materialNum];
+    mCurFlag = new (JKRHeapToken::Dummy) u32[materialNum];
     MR::zeroMemory(mPrgFlag, materialNum * sizeof(u32));
     MR::zeroMemory(mCurFlag, materialNum * sizeof(u32));
     mMaterialCtrl.init(materialNum * 4);
 }
 
 void DisplayListMaker::update() {
-    std::for_each(mMaterialCtrl.begin(), mMaterialCtrl.end(), std::mem_fun(&MaterialCtrl::update));
+    msl::for_each(mMaterialCtrl.begin(), mMaterialCtrl.end(), msl::mem_fun(&MaterialCtrl::update));
 }
 
 void DisplayListMaker::diff() {
@@ -69,7 +69,7 @@ u32 DisplayListMaker::getDiffFlag(s32 materialNo) const {
 }
 
 FogCtrl* DisplayListMaker::addFogCtrl(bool useAllMaterials) {
-    FogCtrl* fog = new FogCtrl(mModel->mModelData, useAllMaterials);
+    FogCtrl* fog = new (JKRHeapToken::Dummy) FogCtrl(mModel->mModelData, useAllMaterials);
     push(fog);
     mFogCtrl = fog;
     onBothFlagAll(0x10000000);
@@ -77,7 +77,7 @@ FogCtrl* DisplayListMaker::addFogCtrl(bool useAllMaterials) {
 }
 
 MatColorCtrl* DisplayListMaker::addMatColorCtrl(const char* pName, u32 color, const J3DGXColor* pColor) {
-    MatColorCtrl* ctrl = new MatColorCtrl(mModel->mModelData, pName, color, pColor);
+    MatColorCtrl* ctrl = new (JKRHeapToken::Dummy) MatColorCtrl(mModel->mModelData, pName, color, pColor);
     push(ctrl);
     s16 materialNo = MR::getMaterialNo(mModel->mModelData, pName);
     onBothFlag(materialNo, 1);
@@ -85,7 +85,7 @@ MatColorCtrl* DisplayListMaker::addMatColorCtrl(const char* pName, u32 color, co
 }
 
 TexMtxCtrl* DisplayListMaker::addTexMtxCtrl(const char* pName) {
-    TexMtxCtrl* ctrl = new TexMtxCtrl(mModel->mModelData, pName);
+    TexMtxCtrl* ctrl = new (JKRHeapToken::Dummy) TexMtxCtrl(mModel->mModelData, pName);
     push(ctrl);
     s16 materialNo = MR::getMaterialNo(mModel->mModelData, pName);
     onBothFlag(materialNo, 0x200);
@@ -93,13 +93,13 @@ TexMtxCtrl* DisplayListMaker::addTexMtxCtrl(const char* pName) {
 }
 
 ProjmapEffectMtxSetter* DisplayListMaker::addProjmapEffectMtxSetter() {
-    ProjmapEffectMtxSetter* setter = new ProjmapEffectMtxSetter(mModel, mResHolder);
+    ProjmapEffectMtxSetter* setter = new (JKRHeapToken::Dummy) ProjmapEffectMtxSetter(mModel, mResHolder);
     push(setter);
     return setter;
 }
 
 MirrorReflectionMtxSetter* DisplayListMaker::addMirrorReflectionMtxSetter() {
-    MirrorReflectionMtxSetter* setter = new MirrorReflectionMtxSetter(mModel, mResHolder);
+    MirrorReflectionMtxSetter* setter = new (JKRHeapToken::Dummy) MirrorReflectionMtxSetter(mModel, mResHolder);
     push(setter);
     return setter;
 }
@@ -174,13 +174,13 @@ void DisplayListMaker::checkViewProjmapEffectMtx() {
 }
 
 ViewProjmapEffectMtxSetter* DisplayListMaker::addViewProjmapEffectMtxSetter() {
-    ViewProjmapEffectMtxSetter* setter = new ViewProjmapEffectMtxSetter(mModel->getModelData());
+    ViewProjmapEffectMtxSetter* setter = new (JKRHeapToken::Dummy) ViewProjmapEffectMtxSetter(mModel->getModelData());
     push(setter);
     return setter;
 }
 
 MarioShadowProjmapMtxSetter* DisplayListMaker::addMarioShadowProjmapMtxSetter() {
-    MarioShadowProjmapMtxSetter* setter = new MarioShadowProjmapMtxSetter(mModel, mResHolder);
+    MarioShadowProjmapMtxSetter* setter = new (JKRHeapToken::Dummy) MarioShadowProjmapMtxSetter(mModel, mResHolder);
     push(setter);
     return setter;
 }

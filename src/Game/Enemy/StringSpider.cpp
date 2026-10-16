@@ -148,8 +148,8 @@ void StringSpider::init(const JMapInfoIter& rIter) {
         arg = -1;
         MR::getJMapInfoArg1NoInit(rIter, &arg);
         if (arg == 2) {
-            _C0 = new TVec3f();
-            _C4 = new TVec3f();
+            _C0 = new (JKRHeapToken::Dummy) TVec3f();
+            _C4 = new (JKRHeapToken::Dummy) TVec3f();
         }
 
         if (MR::useStageSwitchWriteDead(this, rIter)) {
@@ -180,9 +180,9 @@ void StringSpider::init(const JMapInfoIter& rIter) {
     MR::declareStarPiece(this, 6);
     MR::declareStarPiece(this, 3);
     MR::declareCoin(this, 1);
-    mSpinHitController = new SpinHitController(this, 3, false);
-    mScaleController = new AnimScaleController(nullptr);
-    mStampController = new AnimStampController();
+    mSpinHitController = new (JKRHeapToken::Dummy) SpinHitController(this, 3, false);
+    mScaleController = new (JKRHeapToken::Dummy) AnimScaleController(nullptr);
+    mStampController = new (JKRHeapToken::Dummy) AnimStampController();
     MR::onCalcGravity(this);
 
     s32 arg2 = -1;
@@ -194,9 +194,9 @@ void StringSpider::init(const JMapInfoIter& rIter) {
         MR::initShadowVolumeSphere(this, mScale.y * 80.0f);
     }
 
-    mFixedPos = new FixedPosition((MtxPtr) nullptr, TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    mFixedPos = new (JKRHeapToken::Dummy) FixedPosition((MtxPtr) nullptr, TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
     MR::setGroupClipping(this, rIter, 16);
-    mString = new StringSpiderString("ストリングスパイダーの糸");
+    mString = new (JKRHeapToken::Dummy) StringSpiderString("ストリングスパイダーの糸");
     MR::resetPosition(mString, mPosition);
     mString->makeActorAppeared();
     makeActorAppeared();

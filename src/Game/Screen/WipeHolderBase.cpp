@@ -3,7 +3,7 @@
 #include <cstdio>
 
 WipeHolderBase::WipeHolderBase(u32 num, const char* pName)
-    : NameObj(pName), mCurrentWipeLayout(), mWipeLayoutArray(new WipeLayoutBase*[num]), mWipeLayoutCapacity(num), mWipeLayoutCount() {
+    : NameObj(pName), mCurrentWipeLayout(), mWipeLayoutArray(new (JKRHeapToken::Dummy) WipeLayoutBase*[num]), mWipeLayoutCapacity(num), mWipeLayoutCount() {
 }
 
 void WipeHolderBase::setCurrent(const char* pWipeName) {

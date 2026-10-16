@@ -7,12 +7,12 @@
 #include "JSystem/J3DGraphBase/J3DShapeMtx.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <cstdio>
-#include <mem.h>
+#include <cstring>
 
 J3DError J3DDisplayListObj::newDisplayList(u32 maxSize) {
     mMaxSize = ALIGN_NEXT(maxSize, 0x20);
-    mpDisplayList[0] = new (0x20) char[mMaxSize];
-    mpDisplayList[1] = new (0x20) char[mMaxSize];
+    mpDisplayList[0] = new (JKRHeapToken::Dummy, 0x20) char[mMaxSize];
+    mpDisplayList[1] = new (JKRHeapToken::Dummy, 0x20) char[mMaxSize];
     mSize = 0;
 
     return kJ3DError_Success;
@@ -20,7 +20,7 @@ J3DError J3DDisplayListObj::newDisplayList(u32 maxSize) {
 
 J3DError J3DDisplayListObj::newSingleDisplayList(u32 maxSize) {
     mMaxSize = ALIGN_NEXT(maxSize, 0x20);
-    mpDisplayList[0] = new (0x20) char[mMaxSize];
+    mpDisplayList[0] = new (JKRHeapToken::Dummy, 0x20) char[mMaxSize];
     mpDisplayList[1] = mpDisplayList[0];
     mSize = 0;
 
@@ -29,7 +29,7 @@ J3DError J3DDisplayListObj::newSingleDisplayList(u32 maxSize) {
 
 int J3DDisplayListObj::single_To_Double() {
     if (mpDisplayList[0] == mpDisplayList[1]) {
-        mpDisplayList[1] = new (0x20) char[mMaxSize];
+        mpDisplayList[1] = new (JKRHeapToken::Dummy, 0x20) char[mMaxSize];
 
         memcpy(mpDisplayList[1], mpDisplayList[0], mMaxSize);
         DCStoreRange(mpDisplayList[1], mMaxSize);
@@ -104,7 +104,7 @@ J3DDrawPacket::~J3DDrawPacket() {
 }
 
 J3DError J3DDrawPacket::newDisplayList(u32 size) {
-    mpDisplayListObj = new J3DDisplayListObj();
+    mpDisplayListObj = new (JKRHeapToken::Dummy) J3DDisplayListObj();
 
     if (mpDisplayListObj == NULL)
         return kJ3DError_Alloc;
@@ -117,7 +117,7 @@ J3DError J3DDrawPacket::newDisplayList(u32 size) {
 }
 
 J3DError J3DDrawPacket::newSingleDisplayList(u32 size) {
-    mpDisplayListObj = new J3DDisplayListObj();
+    mpDisplayListObj = new (JKRHeapToken::Dummy) J3DDisplayListObj();
 
     if (mpDisplayListObj == NULL)
         return kJ3DError_Alloc;

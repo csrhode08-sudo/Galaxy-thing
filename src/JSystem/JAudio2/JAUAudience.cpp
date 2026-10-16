@@ -20,25 +20,25 @@ void JAUAudience3DSetting::init() {
 
 // NOTE: Dummies to emit sinit and ctor/dtor pattern
 JAUAudible< 1 >* newAudible_1() {
-    return new JAUAudible< 1 >();
+    return new (JKRHeapToken::Dummy) JAUAudible< 1 >();
 }
 
 JAUAudible< 2 >* newAudible_2() {
-    return new JAUAudible< 2 >();
+    return new (JKRHeapToken::Dummy) JAUAudible< 2 >();
 }
 
 JAUAudible< 4 >* newAudible_4() {
-    return new JAUAudible< 4 >();
+    return new (JKRHeapToken::Dummy) JAUAudible< 4 >();
 }
 
 JAUDopplerAudible< 1 >* newDopplerAudible_1() {
-    return new JAUDopplerAudible< 1 >();
+    return new (JKRHeapToken::Dummy) JAUDopplerAudible< 1 >();
 }
 
 JAUDopplerAudible< 2 >* newDopplerAudible_2() {
-    return new JAUDopplerAudible< 2 >();
+    return new (JKRHeapToken::Dummy) JAUDopplerAudible< 2 >();
 }
 
 JAUDopplerAudible< 4 >* newDopplerAudible_4() {
-    return new JAUDopplerAudible< 4 >();
+    return new (JKRHeapToken::Dummy) JAUDopplerAudible< 4 >();
 }

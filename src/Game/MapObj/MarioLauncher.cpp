@@ -103,9 +103,9 @@ void MarioLauncher::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("MarioLauncher", nullptr, false);
     initNerve(GET_NERVE(MarioLauncher, MarioLauncherNrvWait));
 
-    mShell = new MarioLauncherShell("移動用弾丸");
+    mShell = new (JKRHeapToken::Dummy) MarioLauncherShell("移動用弾丸");
     mShell->init(rIter);
-    mLayout = new MarioLauncherLayout();
+    mLayout = new (JKRHeapToken::Dummy) MarioLauncherLayout();
     mLayout->init(rIter);
 
     MR::connectToSceneMapObjStrongLight(this);

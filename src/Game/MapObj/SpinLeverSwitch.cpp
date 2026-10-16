@@ -16,7 +16,7 @@ namespace NrvSpinLeverSwitch {
 };  // namespace NrvSpinLeverSwitch
 
 SpinLeverSwitch::SpinLeverSwitch(const char* pName) : LiveActor(pName), mConnector() {
-    mConnector = new MapObjConnector(this);
+    mConnector = new (JKRHeapToken::Dummy) MapObjConnector(this);
 }
 
 void SpinLeverSwitch::init(const JMapInfoIter& rIter) {
