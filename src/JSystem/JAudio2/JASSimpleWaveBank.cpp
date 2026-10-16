@@ -41,5 +41,10 @@ int JASSimpleWaveBank::TWaveHandle::getWavePtr() const {
     if (base == nullptr) {
         return 0;
     }
+    #ifdef TARGET_PC
+    // DSP addresses are offsets into the emulated audio memory (see JASKernel::sAramBase).
+    return (int)((uintptr_t)base - JASKernel::sAramBase) + mWaveInfo.mAWStartOffs;
+#else
     return (intptr_t)base + mWaveInfo.mAWStartOffs;
+#endif
 }
