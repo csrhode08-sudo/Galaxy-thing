@@ -29,7 +29,8 @@
 #define ATTRIBUTE_PACKED
 #endif
 #ifndef ATTRIBUTE_WEAK
-#define ATTRIBUTE_WEAK
+// Objects defined in headers (e.g. nerve singletons) rely on weak linkage, as with CodeWarrior.
+#define ATTRIBUTE_WEAK __attribute__((weak))
 #endif
 
 #ifndef TRUE

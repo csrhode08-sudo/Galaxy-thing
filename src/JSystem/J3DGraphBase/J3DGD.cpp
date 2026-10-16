@@ -626,3 +626,13 @@ void J3DFifoLoadTexCached(GXTexMapID id, u32 tmem_even, GXTexCacheSize size_even
         J3DFifoLoadBPCmd(BP_TEX_CACHE_ODD(tmem_odd >> 5, size_odd + 3, size_odd + 3, J3DTexImage2Ids[id]));
     }
 }
+
+// Not present in the decompilation; from Dusklight (CC0).
+void J3DGDSetFogRangeAdj(u8 enable, u16 center, GXFogAdjTable* table) {
+    if (enable) {
+        for (int i = 0; i < 10; i += 2) {
+            J3DGDWriteBPCmd((u32)(i / 2 + 0xE9) << 24 | (u32)table->r[i + 1] << 12 | (u32)table->r[i]);
+        }
+    }
+    J3DGDWriteBPCmd((u32)0xE8 << 24 | (u32)(center + 342) | (u32)enable << 10);
+}

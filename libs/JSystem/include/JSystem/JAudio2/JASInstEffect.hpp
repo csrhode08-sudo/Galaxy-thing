@@ -15,5 +15,5 @@ struct JASInstEffect {
 
     JASInstEffect() {};
 
-    virtual void effect(int, int, JASInstParam*) const;
+    virtual void effect(int, int, JASInstParam*) const = 0;
 };

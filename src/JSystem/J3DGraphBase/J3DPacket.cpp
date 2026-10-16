@@ -85,6 +85,9 @@ int J3DPacket::entry(J3DDrawBuffer* pBuffer) {
     return 1;
 }
 
+void J3DPacket::draw() {
+}
+
 void J3DPacket::addChildPacket(J3DPacket* pPacket) {
     if (mpFirstChild == NULL) {
         mpFirstChild = pPacket;

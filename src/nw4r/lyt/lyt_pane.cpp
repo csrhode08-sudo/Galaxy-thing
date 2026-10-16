@@ -27,6 +27,24 @@ namespace nw4r {
             }
         }  // namespace detail
 
+        Pane::Pane() {
+            Init();
+
+            mBasePosition = HORIZONTALPOSITION_CENTER + VERTICALPOSITION_CENTER * HORIZONTALPOSITION_MAX;
+            memset(mName, 0, sizeof(mName));
+            memset(mUserData, 0, sizeof(mUserData));
+
+            mTranslate = math::VEC3(0.0f, 0.0f, 0.0f);
+            mRotate = math::VEC3(0.0f, 0.0f, 0.0f);
+            mScale = math::VEC2(1.0f, 1.0f);
+            mSize = Size(0.0f, 0.0f);
+
+            mAlpha = 255;
+            mGlbAlpha = mAlpha;
+            mFlag = 0;
+            SetVisible(true);
+        }
+
         Pane::Pane(const res::Pane* pRes) {
             Init();
 

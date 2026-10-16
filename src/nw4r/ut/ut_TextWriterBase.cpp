@@ -239,6 +239,105 @@ namespace nw4r {
             return textWidth;
         }
 
+        // Generic printing for narrow strings (the game supplies its own wchar_t version, with its tag processor,
+        // in CustomTagProcessor.cpp; the decompilation has no generic definition).
+        template <>
+        f32 TextWriterBase< char >::PrintImpl(StreamType str, int length) {
+            f32 xOrigin = GetCursorX();
+            f32 yOrigin = GetCursorY();
+            const bool bUseLimit = (mWidthLimit < nw4r::math::F_MAX);
+            const f32 orgCursorX = xOrigin;
+            const f32 orgCursorY = yOrigin;
+            f32 yCursorAdj = 0.0f;
+            f32 textWidth = 0;
+            bool bCharSpace = false;
+            StreamType prevStreamPos = str;
+            StreamType prevNewLinePos = str;
+
+            textWidth = AdjustCursor(&xOrigin, &yOrigin, str, length);
+            yCursorAdj = orgCursorY - GetCursorY();
+            (void)orgCursorX;
+
+            PrintContext< CharType > context = {this, str, xOrigin, yOrigin, 0};
+            CharStrmReader reader = GetFont()->GetCharStrmReader();
+            reader.Set(str);
+
+            for (CharCode code = reader.Next(); reinterpret_cast< StreamType >(reader.GetCurrentPos()) - str <= length;) {
+                if (code < ' ') {
+                    typename TagProcessor::Operation operation;
+                    context.str = reinterpret_cast< StreamType >(reader.GetCurrentPos());
+                    context.flags = bCharSpace ? 0 : CONTEXT_NO_CHAR_SPACE;
+
+                    operation = mTagProcessor->Process(code, &context);
+
+                    if (operation == TagProcessor::OPERATION_NEXT_LINE) {
+                        if (IsDrawFlagSet(HORIZONTAL_ALIGN_MASK, HORIZONTAL_ALIGN_CENTER)) {
+                            const int remain = length - (context.str - str);
+                            const f32 width = CalcLineWidth(context.str, remain);
+                            SetCursorX(context.xOrigin + (textWidth - width) / 2);
+                        } else if (IsDrawFlagSet(HORIZONTAL_ALIGN_MASK, HORIZONTAL_ALIGN_RIGHT)) {
+                            const int remain = length - (context.str - str);
+                            const f32 width = CalcLineWidth(context.str, remain);
+                            SetCursorX(context.xOrigin + textWidth - width);
+                        } else {
+                            const f32 width = GetCursorX() - context.xOrigin;
+                            textWidth = Max(textWidth, width);
+                            SetCursorX(context.xOrigin);
+                        }
+                        if (bUseLimit) {
+                            prevNewLinePos = reinterpret_cast< StreamType >(reader.GetCurrentPos());
+                        }
+                        bCharSpace = false;
+                    } else if (operation == TagProcessor::OPERATION_NO_CHAR_SPACE) {
+                        bCharSpace = false;
+                    } else if (operation == TagProcessor::OPERATION_CHAR_SPACE) {
+                        bCharSpace = true;
+                    } else if (operation == TagProcessor::OPERATION_END_DRAW) {
+                        break;
+                    }
+                    reader.Set(context.str);
+                } else {
+                    const f32 baseY = GetCursorY();
+
+                    if (bUseLimit && (prevStreamPos != prevNewLinePos)) {
+                        f32 baseX = GetCursorX();
+                        f32 charSpace = bCharSpace ? GetCharSpace() : 0.0f;
+                        f32 charWidth = IsWidthFixed() ? GetFixedWidth() : GetFont()->GetCharWidth(code) * GetScaleH();
+                        if (baseX - xOrigin + charSpace + charWidth > mWidthLimit) {
+                            code = '\n';
+                            reader.Set(prevStreamPos);
+                            continue;
+                        }
+                    }
+
+                    if (bCharSpace) {
+                        MoveCursorX(GetCharSpace());
+                    }
+                    bCharSpace = true;
+
+                    MoveCursorY(-GetFont()->GetBaselinePos() * GetScaleV());
+                    CharWriter::Print(code);
+                    SetCursorY(baseY);
+                }
+
+                if (bUseLimit) {
+                    prevStreamPos = reinterpret_cast< StreamType >(reader.GetCurrentPos());
+                }
+                code = reader.Next();
+            }
+
+            const f32 width = GetCursorX() - context.xOrigin;
+            textWidth = Max(textWidth, width);
+
+            if (IsDrawFlagSet(VERTICAL_ORIGIN_MASK, VERTICAL_ORIGIN_MIDDLE) || IsDrawFlagSet(VERTICAL_ORIGIN_MASK, VERTICAL_ORIGIN_BOTTOM)) {
+                SetCursorY(orgCursorY);
+            } else {
+                MoveCursorY(yCursorAdj);
+            }
+
+            return textWidth;
+        }
+
         template class TextWriterBase< char >;
         template class TextWriterBase< wchar_t >;
     };  // namespace ut

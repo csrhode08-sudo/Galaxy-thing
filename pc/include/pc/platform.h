@@ -4,9 +4,14 @@
 
 #include <cstdio>
 
+#include <string>
+
 namespace pc {
 extern bool IsRunning;
 extern bool IsShuttingDown;
+// Per-user writable directory (settings, saves).
+const std::string& userDir();
+void setUserDir(const std::string& dir);
 }  // namespace pc
 
 #ifdef __cplusplus

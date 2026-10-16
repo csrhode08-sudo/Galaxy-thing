@@ -180,7 +180,9 @@ namespace JGeometry {
             return dot(*this);
         };
 
-        T squared(const TVec2< T >& rOther) const;  //{ return (x - rOther.x) * (x - rOther.x) + (y - rOther.y) * (y - rOther.y); };
+        T squared(const TVec2< T >& rOther) const {
+            return (x - rOther.x) * (x - rOther.x) + (y - rOther.y) * (y - rOther.y);
+        }  //{ return (x - rOther.x) * (x - rOther.x) + (y - rOther.y) * (y - rOther.y); };
 
         T dot(const TVec2< T >& rOther) const {
             return x * rOther.x + y * rOther.y;
@@ -269,7 +271,7 @@ namespace JGeometry {
     };
 
     template <>
-    TVec2< f32 >::TVec2() {
+    inline TVec2< f32 >::TVec2() {
     }
 
     template < typename T >
@@ -832,7 +834,10 @@ namespace JGeometry {
             return sqdist;
         };
 #else
-        f32 squared(const TVec3& rB) const;
+        f32 squared(const TVec3& rB) const {
+            f32 dx = x - rB.x, dy = y - rB.y, dz = z - rB.z;
+            return dx * dx + dy * dy + dz * dz;
+        }
 #endif
 
         bool isZero() const {

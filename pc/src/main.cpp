@@ -80,6 +80,7 @@ int main(int argc, char* argv[]) {
     char* prefPath = SDL_GetPrefPath("GalaxyPC", "SuperMarioGalaxy");
     std::string userDir = prefPath ? prefPath : ".";
     if (prefPath) SDL_free(prefPath);
+    pc::setUserDir(userDir);
 
     AuroraConfig config{};
     config.appName = "Super Mario Galaxy";

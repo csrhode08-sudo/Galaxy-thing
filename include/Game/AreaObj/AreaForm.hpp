@@ -18,8 +18,8 @@ public:
     AreaForm() : _4() {
     }
 
-    virtual void init(const JMapInfoIter&);
-    virtual bool isInVolume(const TVec3f&) const;
+    virtual void init(const JMapInfoIter&) = 0;
+    virtual bool isInVolume(const TVec3f&) const = 0;
 
     TPos3f* _4;
 };

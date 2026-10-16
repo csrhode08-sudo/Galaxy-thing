@@ -1,6 +1,10 @@
 #include "Game/System/ShapePacketUserData.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/Util/MathUtil.hpp"
+#ifdef TARGET_PC
+#include <dolphin/ar.h>
+#include <cstring>
+#endif
 
 #include <JSystem/JKernel/JKRAram.hpp>
 #include <JSystem/JKernel/JKRAramPiece.hpp>
@@ -195,11 +199,13 @@ JSUOutputStream::~JSUOutputStream() {
 JSUInputStream::~JSUInputStream() {
 }
 
+#ifndef TARGET_PC  // Aurora provides PSMTXRotRad
 extern "C" void PSMTXRotRad(Mtx pMtx, char axis, f32 radians) {
     f32 sin = JMASinRadian(radians);
     f32 cos = JMACosRadian(radians);
     PSMTXRotTrig(pMtx, axis, sin, cos);
 }
+#endif
 
 bool JUTException::readPad(u32* pTrigger, u32* pHold) {
     OSTime startTime = OSGetTime();
@@ -1050,6 +1056,19 @@ void JPADrawRotYBillboard(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle)
 }
 
 void JKRAramPiece::startDMA(JKRAMCommand* pCommand) {
+#ifdef TARGET_PC
+    // ARAM is a host buffer; ARAM addresses are offsets into it. Transfers are synchronous.
+    u8* aram = static_cast< u8* >(ARGetStorageAddress());
+    if (aram != nullptr && pCommand->mDataLength != 0) {
+        if (pCommand->mTransferDirection == ARAM_DIR_MRAM_TO_ARAM) {
+            memcpy(aram + pCommand->mDst, reinterpret_cast< void* >(pCommand->mSrc), pCommand->mDataLength);
+        } else {
+            memcpy(reinterpret_cast< void* >(pCommand->mDst), aram + pCommand->mSrc, pCommand->mDataLength);
+        }
+    }
+    doneDMA(reinterpret_cast< uintptr_t >(pCommand));
+    return;
+#endif
     if (pCommand->mSrc < 0x80000000) {
         doneDMA(reinterpret_cast< uintptr_t >(pCommand));
         return;

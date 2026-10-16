@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <cstring>
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JASMutex.hpp"
 #include "JSystem/JAudio2/JASWaveArcLoader.hpp"
@@ -251,7 +253,7 @@ void JASGenericMemPool::free(void* pMemory, u32 size) {
     mFreeMemCount++;
 }
 
-u32 JASKernel::sAramBase;
+uintptr_t JASKernel::sAramBase;
 
 JKRHeap* JASKernel::sSystemHeap;
 
@@ -274,9 +276,16 @@ JASMemChunkPool< 1024, JASThreadingModel::ObjectLevelLockable >* JASKernel::getC
 JASHeap JASKernel::audioAramHeap;
 
 void JASKernel::setupAramHeap(u32 base, u32 size) {
+#ifdef TARGET_PC
+    // On the Wii this "ARAM" is a MEM2 region that the CPU and DSP address directly; use host memory.
+    (void)base;
+    sAramBase = reinterpret_cast< uintptr_t >(std::aligned_alloc(32, (size + 31) & ~31u));
+    std::memset(reinterpret_cast< void* >(sAramBase), 0, size);
+#else
     OSReport("setupAramHeap %x, %x, %x\n", base, ARGetBaseAddress(), size);
     base = ARGetBaseAddress();
     sAramBase = base;
+#endif
     audioAramHeap.initRootHeap((void*)sAramBase, size);
 }
 

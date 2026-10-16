@@ -27,6 +27,14 @@ extern void* MEM1End;
 namespace pc {
 bool IsRunning = true;
 bool IsShuttingDown = false;
+
+static std::string sUserDir = ".";
+const std::string& userDir() {
+    return sUserDir;
+}
+void setUserDir(const std::string& dir) {
+    sUserDir = dir;
+}
 }  // namespace pc
 
 extern "C" void pc_log(const char* fmt, ...) {

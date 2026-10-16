@@ -13,7 +13,7 @@ public:
     virtual ~SimpleBreakableObjBase() {
     }
 
-    virtual void control();
+    virtual void control() = 0;
 };
 
 class SimpleBreakableObj : public SimpleBreakableObjBase {
