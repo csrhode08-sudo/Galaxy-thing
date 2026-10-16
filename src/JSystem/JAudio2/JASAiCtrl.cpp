@@ -93,7 +93,9 @@ void JASDriver::setOutputRate(JASOutputRate param_0) {
         sSubFrames = 10;
         sDacRate = 48000.0f;
     }
+#ifndef TARGET_PC
     sDacRate *= 1.0008897f;
+#endif
 }
 
 const JASDriver::MixFunc JASDriver::sMixFuncs[4] = {
@@ -140,6 +142,8 @@ void JASDriver::updateDSP() {
 
     JASPortCmd::execAllCommand();
     DSPSyncCallback();
+#ifndef TARGET_PC
+    // The CPU mixer is not timed like the DSP, so this watchdog would fire spuriously.
     static u32 old_time = 0;
     static u32 history[10] = {0x000F4240};
     u32 r28 = OSGetTick();
@@ -152,6 +156,7 @@ void JASDriver::updateDSP() {
         JASReport("kill DSP channel");
         JASDSPChannel::killActiveChannel();
     }
+#endif
     JASChannel::receiveBankDisposeMsg();
     JASDSPChannel::updateAll();
 

@@ -270,7 +270,7 @@ s32 JASChannel::initialUpdateDSPChannel(JASDsp::TChannel* i_channel) {
     i_channel->setPitch(pitch);
 
     i_channel->setPauseFlag(mPauseFlag);
-    i_channel->_66 = 0;
+    i_channel->field_0x066 = 0;
     return 0;
 }
 

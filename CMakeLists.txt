@@ -40,6 +40,11 @@ file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS src/Game/*.cpp)
 file(GLOB_RECURSE JSYSTEM_SRC CONFIGURE_DEPENDS src/JSystem/*.cpp)
 file(GLOB_RECURSE NW4R_SRC CONFIGURE_DEPENDS src/nw4r/*.cpp)
 file(GLOB_RECURSE PC_SRC CONFIGURE_DEPENDS pc/src/*.cpp pc/src/*.c)
+# The CPU DSP mixer is built with JSystem (it uses JAudio2's headers and the game prelude).
+file(GLOB PC_AUDIO_SRC CONFIGURE_DEPENDS pc/src/audio/*.cpp)
+list(FILTER PC_SRC EXCLUDE REGEX "pc/src/audio/")
+list(APPEND JSYSTEM_SRC ${PC_AUDIO_SRC})
+add_subdirectory(pc/third_party/freeverb EXCLUDE_FROM_ALL)
 
 # Console-only sources replaced by the PC platform layer.
 list(FILTER JSYSTEM_SRC EXCLUDE REGEX "JAudio2/(dsptask|osdsp|osdsp_task|dspproc)\\.cpp$")
@@ -61,8 +66,9 @@ foreach (lib game jsystem nw4r)
     target_compile_options(smg_${lib} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:SHELL:-include ${CMAKE_SOURCE_DIR}/pc/include/pc/prelude.hpp>")
 endforeach ()
 
+target_link_libraries(smg_jsystem PRIVATE freeverb)
 add_executable(galaxy $<TARGET_OBJECTS:smg_game> $<TARGET_OBJECTS:smg_jsystem> $<TARGET_OBJECTS:smg_nw4r> $<TARGET_OBJECTS:smg_pc>)
-target_link_libraries(galaxy PRIVATE ${AURORA_LIBS})
+target_link_libraries(galaxy PRIVATE ${AURORA_LIBS} freeverb)
 if (WIN32)
     set_target_properties(galaxy PROPERTIES OUTPUT_NAME "SuperMarioGalaxy")
 endif ()
