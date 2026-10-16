@@ -2,6 +2,15 @@
 
 #include "Game/LiveActor/Spine.hpp"
 
+#ifdef TARGET_PC
+// C++17 inline variables: one instance across TUs, valid inside anonymous namespaces too.
+#define NERVE_INSTANCE_INLINE inline
+#define NERVE_INSTANCE_WEAK
+#else
+#define NERVE_INSTANCE_INLINE
+#define NERVE_INSTANCE_WEAK ATTRIBUTE_WEAK
+#endif
+
 /// @brief Used for executing states of a LiveActor.
 class Nerve {
 public:
@@ -22,7 +31,7 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };                                                                                                                                               \
-    name name::sInstance ATTRIBUTE_WEAK;
+    NERVE_INSTANCE_INLINE name name::sInstance NERVE_INSTANCE_WEAK;
 
 #define NEW_NERVE_ONEND(name, parent_class, executor_name, executorOnEnd_name)                                                                       \
     class name : public Nerve {                                                                                                                      \
@@ -37,7 +46,7 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };                                                                                                                                               \
-    name name::sInstance ATTRIBUTE_WEAK;
+    NERVE_INSTANCE_INLINE name name::sInstance NERVE_INSTANCE_WEAK;
 
 /* easy alternative to get a nerve instance (in the standard format) */
 #define GET_NERVE(cls, nerve) (&Nrv##cls::nerve::sInstance)
