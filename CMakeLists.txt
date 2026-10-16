@@ -22,6 +22,21 @@ if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
         $<$<COMPILE_LANGUAGE:C,CXX>:-Wno-c++11-narrowing>
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-register>
     )
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    # clang-cl (Windows): same semantics as the GNU-style build; wchar_t is already 16-bit and templates are
+    # parsed late by default.
+    add_compile_options(
+        $<$<COMPILE_LANGUAGE:C,CXX>:-Wno-multichar>
+        $<$<COMPILE_LANGUAGE:CXX>:-Wno-trigraphs>
+        $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>
+        $<$<COMPILE_LANGUAGE:C,CXX>:/clang:-fno-strict-aliasing>
+        $<$<COMPILE_LANGUAGE:C,CXX>:-Wno-c++11-narrowing>
+        $<$<COMPILE_LANGUAGE:CXX>:-Wno-register>
+        $<$<COMPILE_LANGUAGE:C,CXX>:-Wno-microsoft-cast>
+        $<$<COMPILE_LANGUAGE:C,CXX>:/EHsc>
+        $<$<COMPILE_LANGUAGE:C,CXX>:/utf-8>
+    )
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX)
 endif ()
 
 set(GAME_DEFS TARGET_PC=1 GALAXY_PC=1 NON_MATCHING=1 MTX_USE_PS=1 RMGJ01=0 RMGE01=1 RMGP01=2 RMGK01=3 VERSION=3 NDEBUG=1)
@@ -52,7 +67,11 @@ list(FILTER JSYSTEM_SRC EXCLUDE REGEX "JAudio2/(dsptask|osdsp|osdsp_task|dspproc
 set(AURORA_LIBS aurora::core aurora::gx aurora::gd aurora::vi aurora::pad aurora::mtx aurora::os aurora::dvd aurora::thp aurora::main)
 
 # Game code: C++ semantics close to CodeWarrior's (no strict two-phase lookup, 16-bit wchar_t).
-set(GAME_CXX_FLAGS -fdelayed-template-parsing -fshort-wchar -Werror=return-type)
+if (MSVC)
+    set(GAME_CXX_FLAGS /clang:-Werror=return-type)
+else ()
+    set(GAME_CXX_FLAGS -fdelayed-template-parsing -fshort-wchar -Werror=return-type)
+endif ()
 
 foreach (lib game jsystem nw4r pc)
     string(TOUPPER ${lib} _u)
@@ -63,12 +82,16 @@ foreach (lib game jsystem nw4r pc)
     target_link_libraries(smg_${lib} PRIVATE ${AURORA_LIBS})
 endforeach ()
 foreach (lib game jsystem nw4r)
-    target_compile_options(smg_${lib} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:SHELL:-include ${CMAKE_SOURCE_DIR}/pc/include/pc/prelude.hpp>")
+    if (MSVC)
+        target_compile_options(smg_${lib} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:/FI${CMAKE_SOURCE_DIR}/pc/include/pc/prelude.hpp>")
+    else ()
+        target_compile_options(smg_${lib} PRIVATE "$<$<COMPILE_LANGUAGE:CXX>:SHELL:-include ${CMAKE_SOURCE_DIR}/pc/include/pc/prelude.hpp>")
+    endif ()
 endforeach ()
 
 target_link_libraries(smg_jsystem PRIVATE freeverb)
 add_executable(galaxy $<TARGET_OBJECTS:smg_game> $<TARGET_OBJECTS:smg_jsystem> $<TARGET_OBJECTS:smg_nw4r> $<TARGET_OBJECTS:smg_pc>)
 target_link_libraries(galaxy PRIVATE ${AURORA_LIBS} freeverb)
 if (WIN32)
-    set_target_properties(galaxy PROPERTIES OUTPUT_NAME "SuperMarioGalaxy")
+    set_target_properties(galaxy PROPERTIES OUTPUT_NAME "SuperMarioGalaxy" WIN32_EXECUTABLE OFF)
 endif ()

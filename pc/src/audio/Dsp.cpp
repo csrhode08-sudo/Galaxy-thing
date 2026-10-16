@@ -85,6 +85,7 @@ static bool ValidateChannel(const JASDsp::TChannel& channel) {
         std::fprintf(stderr, "[audio] unhandled channel format: %02x, %02x\n", channel.mSamplesPerBlock, channel.mBytesPerBlock);
         return false;
     }
+    return true;
 }
 
 static u32 ConvertSamplesToDataLength(const JASDsp::TChannel& channel, u32 samples) {

@@ -20,6 +20,9 @@
 
 void smg_main(void);  // GameSystem.cpp
 void pc_initMEM2(u32 size);
+namespace pc {
+    bool loadDolAssets(const std::string& discPath);
+}
 
 namespace {
 
@@ -64,9 +67,12 @@ std::string findDisc(const char* exeDir) {
 
 int main(int argc, char* argv[]) {
     std::string discPath;
+    std::string overlayPath;
     for (int i = 1; i < argc; i++) {
         if ((std::strcmp(argv[i], "--disc") == 0 || std::strcmp(argv[i], "-d") == 0) && i + 1 < argc) {
             discPath = argv[++i];
+        } else if (std::strcmp(argv[i], "--overlay") == 0 && i + 1 < argc) {
+            overlayPath = argv[++i];
         } else if (argv[i][0] != '-') {
             discPath = argv[i];
         }
@@ -115,6 +121,27 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     pc_log("[main] Disc: %s\n", discPath.c_str());
+
+    // Extra files layered over the disc, e.g. the UsEnglish folder taken from the US release for English text.
+    if (overlayPath.empty()) {
+        for (const std::filesystem::path& d : {std::filesystem::current_path(), std::filesystem::path(base ? base : ".")}) {
+            std::error_code ec;
+            if (std::filesystem::is_directory(d / "overlay", ec)) {
+                overlayPath = (d / "overlay").string();
+                break;
+            }
+        }
+    }
+    if (!overlayPath.empty() && aurora_dvd_overlay_directory(overlayPath.c_str())) {
+        pc_log("[main] Overlay: %s\n", overlayPath.c_str());
+    }
+
+    if (!pc::loadDolAssets(discPath)) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Super Mario Galaxy",
+                                 "Couldn't read the game's data tables from the disc. Use the Korean disc (RMGK01).", nullptr);
+        aurora_shutdown();
+        return 1;
+    }
 
     pc::input::init(userDir);
 

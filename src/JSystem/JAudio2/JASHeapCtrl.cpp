@@ -1,3 +1,6 @@
+#ifdef _WIN32
+#include <malloc.h>
+#endif
 #include <cstdlib>
 #include <cstring>
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
@@ -279,7 +282,11 @@ void JASKernel::setupAramHeap(u32 base, u32 size) {
 #ifdef TARGET_PC
     // On the Wii this "ARAM" is a MEM2 region that the CPU and DSP address directly; use host memory.
     (void)base;
+#ifdef _WIN32
+    sAramBase = reinterpret_cast< uintptr_t >(_aligned_malloc((size + 31) & ~31u, 32));
+#else
     sAramBase = reinterpret_cast< uintptr_t >(std::aligned_alloc(32, (size + 31) & ~31u));
+#endif
     std::memset(reinterpret_cast< void* >(sAramBase), 0, size);
 #else
     OSReport("setupAramHeap %x, %x, %x\n", base, ARGetBaseAddress(), size);

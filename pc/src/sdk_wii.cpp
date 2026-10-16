@@ -1,6 +1,7 @@
 // Wii SDK services that have no counterpart in Aurora: NAND (save files) on the host filesystem, system
 // configuration, and inert stand-ins for features that do not exist on PC (Mii channel data, WiiConnect24
 // messages, the HOME menu module loader, the Wii Speaker encoder, the DSP).
+#include <revolution/dvd.h>
 #include "pc/platform.h"
 
 #include <cstdint>
@@ -206,7 +207,13 @@ void NANDInitBanner(void* banner, u32 flag, const u16* title, const u16* comment
 // ---- System configuration ---------------------------------------------------------------------------------
 
 u8 SCGetLanguage(void) {
-    return 9;  // SC_LANG_KOREAN: the game data is the Korean release
+    // English when its text is available (the UsEnglish folder from the US disc, added as an overlay),
+    // otherwise Korean, the language of the RMGK01 data this build targets.
+    static int sLanguage = -1;
+    if (sLanguage < 0) {
+        sLanguage = DVDConvertPathToEntrynum("/UsEnglish/MessageData/Message.arc") >= 0 ? 1 : 9;
+    }
+    return (u8)sLanguage;
 }
 u8 SCGetAspectRatio(void) {
     return 1;  // 16:9
