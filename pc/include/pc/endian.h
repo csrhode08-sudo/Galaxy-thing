@@ -192,6 +192,16 @@ BIN_ASSIGN_OP(^=);
 #undef BIN_ASSIGN_OP
 
 template<>
+constexpr u8 BE<u8>::swap(u8 val) noexcept {
+    return val;
+}
+
+template<>
+constexpr s8 BE<s8>::swap(s8 val) noexcept {
+    return val;
+}
+
+template<>
 constexpr u16 BE<u16>::swap(u16 val) noexcept {
     return RES_U16(val);
 }
