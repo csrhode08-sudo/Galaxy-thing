@@ -264,14 +264,33 @@ namespace JMathInlineVEC {
         return sqdist;
     }
 #else
-    void PSVECCopy(const Vec*, Vec*);
-    void PSVECAdd(const Vec*, const Vec*, Vec*);
-    void PSVECSubtract(const Vec*, const Vec*, Vec*);
-    f32 PSVECDotProduct(const Vec*, const Vec*);
-    f32 PSVECSquareMag(const Vec*);
-    void PSVECNegate(const Vec*, Vec*);
-    f32 PSVECSquareDistance(const Vec*, const Vec*);
-    void PSVECMultiply(const Vec*, const Vec*, Vec*);
+    inline void PSVECCopy(const Vec* a, Vec* b) { *b = *a; }
+    inline void PSVECAdd(const Vec* a, const Vec* b, Vec* ab) {
+        ab->x = a->x + b->x;
+        ab->y = a->y + b->y;
+        ab->z = a->z + b->z;
+    }
+    inline void PSVECSubtract(const Vec* a, const Vec* b, Vec* ab) {
+        ab->x = a->x - b->x;
+        ab->y = a->y - b->y;
+        ab->z = a->z - b->z;
+    }
+    inline f32 PSVECDotProduct(const Vec* a, const Vec* b) { return a->x * b->x + a->y * b->y + a->z * b->z; }
+    inline f32 PSVECSquareMag(const Vec* a) { return a->x * a->x + a->y * a->y + a->z * a->z; }
+    inline void PSVECNegate(const Vec* a, Vec* b) {
+        b->x = -a->x;
+        b->y = -a->y;
+        b->z = -a->z;
+    }
+    inline f32 PSVECSquareDistance(const Vec* a, const Vec* b) {
+        f32 dx = a->x - b->x, dy = a->y - b->y, dz = a->z - b->z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+    inline void PSVECMultiply(const Vec* a, const Vec* b, Vec* ab) {
+        ab->x = a->x * b->x;
+        ab->y = a->y * b->y;
+        ab->z = a->z * b->z;
+    }
 #endif
 };  // namespace JMathInlineVEC
 

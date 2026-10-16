@@ -6,6 +6,12 @@
 #include "Game/Util/SystemUtil.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
 
+#ifdef TARGET_PC
+namespace pc::bmg {
+    void swapMessageFile(void*);
+}
+#endif
+
 #define SYSTEMMESSAGE_ARC "/Memory/SystemMessage.arc"
 #define MESSAGE_ARC "/MessageData/Message.arc"
 
@@ -120,6 +126,9 @@ MessageData::MessageData(const char* pArchiveName)
 
     u8* msgData = (u8*)pArchive->getResource("Message.bmg");
     u8* mapData = (u8*)pArchive->getResource(QUESTIONMARK_MAGIC, "MessageId.tbl");
+#ifdef TARGET_PC
+    pc::bmg::swapMessageFile(msgData);
+#endif
 
     mIDTable = new (JKRHeapToken::Dummy) JMapInfo();
     mIDTable->attach(mapData);

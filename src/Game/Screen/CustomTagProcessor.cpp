@@ -1,3 +1,7 @@
+#ifdef TARGET_PC
+#include "pc/msgarg.h"
+#include <cstring>
+#endif
 #include "Game/Screen/CustomTagProcessor.hpp"
 #include "Game/Screen/ReplaceTagProcessor.hpp"
 #include "Game/System/Language.hpp"
@@ -425,7 +429,13 @@ void CustomTagProcessor::setArgString(const wchar_t* string, s32 index) {
             break;
         }
 
+#ifdef TARGET_PC
+        // A tag has room for 32 bits here; store a handle instead of the 64-bit pointer.
+        u32 handle = pc::msgarg::store(string);
+        memcpy(tag.getParamPtr(0), &handle, sizeof(handle));
+#else
         *reinterpret_cast< const wchar_t** >(tag.getParamPtr(0)) = string;
+#endif
     }
 }
 
@@ -655,7 +665,11 @@ CustomTagProcessor::Operation CustomTagProcessor::exeStringGroup(nw4r::ut::Rect*
     }
 #endif
 
+#ifdef TARGET_PC
+    writeString(rect, pc::msgarg::load(tag.getParamPtr(0)), context);
+#else
     writeString(rect, *reinterpret_cast< const wchar_t** >(tag.getParamPtr(0)), context);
+#endif
     return OPERATION_DEFAULT;
 }
 

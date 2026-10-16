@@ -20,7 +20,12 @@ s32 MessageEditorMessageTag::getParamLength() const {
 
 u8 MessageEditorMessageTag::getParam8(int index) const {
     const u8* pParam = reinterpret_cast< const u8* >(mMessage) + index;
+#ifdef TARGET_PC
+    // Tag parameters were converted as 16-bit units (see pc/src/bmg_swap.cpp).
+    return reinterpret_cast< const u8* >(mMessage)[4 + (index ^ 1)];
+#else
     return pParam[4];
+#endif
 }
 
 u16 MessageEditorMessageTag::getParam16(int index) const {
@@ -29,8 +34,13 @@ u16 MessageEditorMessageTag::getParam16(int index) const {
 }
 
 u32 MessageEditorMessageTag::getParam32(int index) const {
+#ifdef TARGET_PC
+    const u16* pParam = reinterpret_cast< const u16* >(mMessage) + 2 + index * 2;
+    return (u32(pParam[0]) << 16) | pParam[1];
+#else
     const u32* pParam = reinterpret_cast< const u32* >(mMessage) + index;
     return pParam[1];
+#endif
 }
 
 wchar_t* MessageEditorMessageTag::getParamPtr(int index) const {

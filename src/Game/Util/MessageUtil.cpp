@@ -1,3 +1,6 @@
+#ifdef TARGET_PC
+#include "pc/msgarg.h"
+#endif
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
@@ -164,7 +167,11 @@ namespace MR {
                 }
 #endif
                 else if (tag.getGroup() == 7) {
+                    #ifdef TARGET_PC
+                    count += countMessageChar(pc::msgarg::load(tag.getParamPtr(0)));
+#else
                     count += countMessageChar(*reinterpret_cast< const wchar_t* const* >(tag.getParamPtr(0)));
+#endif
                 } else if (tag.isGroupTagId(1, 1)) {
                     break;
                 }
