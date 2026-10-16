@@ -1,3 +1,8 @@
+#ifdef TARGET_PC
+#include "pc/byteswap.h"
+#include <cstring>
+#include <unordered_set>
+#endif
 #include "Game/Map/KCollision.hpp"
 #include "Game/Camera/CameraPolygonCodeUtil.hpp"
 #include "Game/Map/CollisionCode.hpp"
@@ -43,7 +48,107 @@ void KCollisionServer::init(void* pData, const void* pMapData) {
     }
 }
 
+#ifdef TARGET_PC
+namespace {
+    // Converts a collision (.kcl) file to host byte order in place and returns a host header for it. The file is
+    // marked as converted ('KCLc' + the header pointer in its first 16 bytes, which are no longer needed) so that
+    // other servers sharing the same file reuse the header.
+    const u32 KCL_CONVERTED = 0x4B434C63;  // 'KCLc'
+
+    // Converts node `idx` of the node array at `base`. Child arrays and leaf lists are addressed relative to the
+    // array that holds the referencing node (as in KCollisionServer::searchBlock).
+    void swapOctreeNode(u8* base, u32 idx, std::unordered_set< u8* >& lists) {
+        u8* p = base + idx * 4;
+        u32 v = pc::readBE32(p);
+        pc::swap32(p);
+        if ((v & 0x80000000) == 0) {
+            for (u32 child = 0; child < 8; child++) {
+                swapOctreeNode(base + v, child, lists);
+            }
+        } else {
+            // Leaf: offset of the u16 before a 0-terminated prism index list. Lists are shared between leaves.
+            u8* list = base + (v & 0x7FFFFFFF);
+            if (lists.insert(list).second) {
+                for (u16* e = reinterpret_cast< u16* >(list) + 1;; e++) {
+                    pc::swap16(e);
+                    if (*e == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    KCLFile* convertKCL(u8* data) {
+        if (pc::readU32(data) == KCL_CONVERTED) {
+            KCLFile* file;
+            memcpy(&file, data + 8, sizeof(file));
+            return file;
+        }
+
+        KCLFile* file = new (JKRHeapToken::Dummy) KCLFile();
+        const u32 posOffset = pc::readBE32(data + 0x0);
+        const u32 normOffset = pc::readBE32(data + 0x4);
+        const u32 prismOffset = pc::readBE32(data + 0x8);
+        const u32 octreeOffset = pc::readBE32(data + 0xC);
+        std::unordered_set< u8* > lists;
+
+        pc::swap32(data + 0x10, 10);  // thickness, min, masks
+        memcpy(&file->mThickness, data + 0x10, 4);
+        memcpy(&file->mMin, data + 0x14, 12);
+        memcpy(&file->mXMask, data + 0x20, 4);
+        memcpy(&file->mYMask, data + 0x24, 4);
+        memcpy(&file->mZMask, data + 0x28, 4);
+        memcpy(&file->mBlockWidthShift, data + 0x2C, 4);
+        memcpy(&file->mBlockXShift, data + 0x30, 4);
+        memcpy(&file->mBlockXYShift, data + 0x34, 4);
+
+        pc::swap32(data + posOffset, (normOffset - posOffset) / 4);
+        pc::swap32(data + normOffset, (prismOffset - normOffset) / 4);
+        for (u8* prism = data + prismOffset; prism + sizeof(KC_PrismData) <= data + octreeOffset; prism += sizeof(KC_PrismData)) {
+            pc::swap32(prism);
+            pc::swap16(prism + 4, 6);
+        }
+
+        // The root level is a 3D grid of nodes.
+        u32 s = file->mBlockWidthShift;
+        if (file->mBlockXShift == -1 && file->mBlockXYShift == -1) {
+            swapOctreeNode(data + octreeOffset, 0, lists);
+        } else {
+            u32 nx = ((~(u32)file->mXMask) >> s) + 1;
+            u32 ny = ((~(u32)file->mYMask) >> s) + 1;
+            u32 nz = ((~(u32)file->mZMask) >> s) + 1;
+            for (u32 z = 0; z < nz; z++) {
+                for (u32 y = 0; y < ny; y++) {
+                    for (u32 x = 0; x < nx; x++) {
+                        u32 idx = (z << file->mBlockXYShift) | (y << file->mBlockXShift) | x;
+                        swapOctreeNode(data + octreeOffset, idx, lists);
+                    }
+                }
+            }
+        }
+
+        file->mPos = reinterpret_cast< TVec3f* >(data + posOffset);
+        file->mNorms = reinterpret_cast< TVec3f* >(data + normOffset);
+        file->mPrisms = reinterpret_cast< KC_PrismData* >(data + prismOffset);
+        file->mOctree = data + octreeOffset;
+
+        const u32 marker = KCL_CONVERTED;
+        memcpy(data, &marker, 4);
+        memcpy(data + 8, &file, sizeof(file));
+        return file;
+    }
+}  // namespace
+#endif
+
 void KCollisionServer::setData(void* pData) {
+#ifdef TARGET_PC
+    if (reinterpret_cast< KCLFile* >(pData)->mHostMagic == KCLFile::HOST_MAGIC) {
+        mFile = reinterpret_cast< KCLFile* >(pData);  // built in memory (DynamicCollisionObj)
+    } else {
+        mFile = convertKCL(static_cast< u8* >(pData));
+    }
+#else
     mFile = reinterpret_cast< KCLFile* >(pData);
 
     if (!isBinaryInitialized(pData)) {
@@ -52,6 +157,7 @@ void KCollisionServer::setData(void* pData) {
         mFile->mPrisms = reinterpret_cast< KC_PrismData* >(reinterpret_cast< u8* >(mFile) + mFile->mPrismOffset);
         mFile->mOctree = reinterpret_cast< void* >(reinterpret_cast< u8* >(mFile) + mFile->mOctreeOffset);
     }
+#endif
 }
 
 bool KCollisionServer::calcFarthestVertexDistance() {
