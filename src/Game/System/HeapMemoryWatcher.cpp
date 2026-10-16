@@ -136,16 +136,23 @@ void HeapMemoryWatcher::createRootHeap() {
     HeapMemoryWatcher::sRootHeapGDDR3 = pHeap;
 }
 
+#ifdef TARGET_PC
+// 64-bit pointers make most runtime structures larger than on the Wii; fixed-size heaps get headroom.
+#define PC_HEAP_SCALE(size) ((size) * 2)
+#else
+#define PC_HEAP_SCALE(size) (size)
+#endif
+
 void HeapMemoryWatcher::createHeaps() {
     MR::CurrentHeapRestorer heapRestorer = MR::CurrentHeapRestorer(JKRHeap::sRootHeap);
-    ::createExpHeap(0x40000, JKRHeap::sRootHeap, false)->becomeSystemHeap();
-    mAudSystemHeap = ::createSolidHeap(0x1E0000, JKRHeap::sRootHeap);
-    mStationedHeapNapa = ::createExpHeap(0x900000, JKRHeap::sRootHeap, false);
+    ::createExpHeap(PC_HEAP_SCALE(0x40000), JKRHeap::sRootHeap, false)->becomeSystemHeap();
+    mAudSystemHeap = ::createSolidHeap(PC_HEAP_SCALE(0x1E0000), JKRHeap::sRootHeap);
+    mStationedHeapNapa = ::createExpHeap(PC_HEAP_SCALE(0x900000), JKRHeap::sRootHeap, false);
     JKRHeap* pRootHeapGDDR = HeapMemoryWatcher::sRootHeapGDDR3;
     u32 wpadHeapSize = OSRoundUp32B(WPADGetWorkMemorySize()) + 0xD0;
     mWPadHeap = ::createExpHeap(wpadHeapSize, pRootHeapGDDR, false);
-    mHomeButtonLayoutHeap = ::createExpHeap(0x80000, HeapMemoryWatcher::sRootHeapGDDR3, false);
-    mStationedHeapGDDR = ::createExpHeap(0x1400000, HeapMemoryWatcher::sRootHeapGDDR3, false);
+    mHomeButtonLayoutHeap = ::createExpHeap(PC_HEAP_SCALE(0x80000), HeapMemoryWatcher::sRootHeapGDDR3, false);
+    mStationedHeapGDDR = ::createExpHeap(PC_HEAP_SCALE(0x1400000), HeapMemoryWatcher::sRootHeapGDDR3, false);
     createGameHeap();
 }
 

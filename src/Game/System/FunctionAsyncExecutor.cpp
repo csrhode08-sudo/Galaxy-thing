@@ -75,8 +75,15 @@ FunctionAsyncExecutor::FunctionAsyncExecutor() : mMainThreadExec(nullptr), mHold
     }
 
     mMainThreadExec = new (JKRHeapToken::Dummy) FunctionAsyncExecutorOnMainThread(OSGetCurrentThread());
+#ifdef TARGET_PC
+    // Unit size follows the (larger, 64-bit) FunctionAsyncExecInfo; same number of units as on the Wii.
+    const u32 unitSize = (sizeof(FunctionAsyncExecInfo) + 3) & ~3u;
+    _410 = JKRUnitHeap::create(unitSize, unitSize * (0x34A8 / 0x34), 8, MR::getCurrentHeap(), false);
+    _414 = JKRExpHeap::create(0x2800 * 4, MR::getCurrentHeap(), false);
+#else
     _410 = JKRUnitHeap::create(0x34, 0x34A8, 4, MR::getCurrentHeap(), false);
     _414 = JKRExpHeap::create(0x2800, MR::getCurrentHeap(), false);
+#endif
 }
 
 void FunctionAsyncExecutor::update() {
