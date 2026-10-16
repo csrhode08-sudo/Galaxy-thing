@@ -4,6 +4,10 @@
 
 struct JASOscillator {
     struct Point {
+#ifdef TARGET_PC
+        Point() = default;
+        constexpr Point(s16 a, s16 b, s16 c) : _0(a), _2(b), _4(c) {}
+#endif
         /* 0x0 */ BE(s16) _0;
         /* 0x2 */ BE(s16) _2;
         /* 0x4 */ BE(s16) _4;

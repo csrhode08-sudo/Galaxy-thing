@@ -89,7 +89,7 @@ namespace JASBNKParser {
     namespace Ver0 {
         template < typename T >
         struct TOffset {
-            /* 0x0 */ u32 offset;
+            /* 0x0 */ BE(u32) offset;
             T* ptr(void const* stream) const {
                 return JSUConvertOffsetToPtr< T >(stream, offset);
             }
@@ -98,8 +98,8 @@ namespace JASBNKParser {
         struct TOsc {
             /* 0x00 */ BE(u8) mTarget;
             /* 0x04 */ BE(f32) field_0x4;
-            /* 0x08 */ BE(TOffset< JASOscillator::Point >) mPointOffset;
-            /* 0x0C */ BE(TOffset< JASOscillator::Point >) field_0xc;
+            /* 0x08 */ TOffset< JASOscillator::Point > mPointOffset;
+            /* 0x0C */ TOffset< JASOscillator::Point > field_0xc;
             /* 0x10 */ BE(f32) mScale;
             /* 0x14 */ BE(f32) field_0x14;
         };

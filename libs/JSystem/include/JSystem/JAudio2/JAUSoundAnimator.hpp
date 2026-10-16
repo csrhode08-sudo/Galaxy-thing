@@ -135,22 +135,28 @@ public:
     u32 getStartSoundIndex(f32) const;
     u32 getEndSoundIndex(f32) const;
     u16 getNumSounds() const {
-        if (mControl != nullptr) {
-            return mControl->getNumSounds(this);
+        if (control() != nullptr) {
+            return control()->getNumSounds(this);
         } else {
             return mNumSounds;
         }
     }
 
     const JAUSoundAnimationSound* getSound(int i_index) const {
-        if (mControl != nullptr) {
-            return mControl->getSound(this, i_index);
+        if (control() != nullptr) {
+            return control()->getSound(this, i_index);
         } else {
             return &mSounds + i_index;
         }
     }
 
     /* 0x0 */ BE(u16) mNumSounds;
+#ifdef TARGET_PC
+    // Always 0 in data files; runtime control objects cannot live in a 32-bit field on PC.
+    JAUSoundAnimationControl* control() const { return nullptr; }
+#else
+    JAUSoundAnimationControl* control() const { return mControl; }
+#endif
     /* 0x4 */ OFFSET_PTR_V0 mControl;
     /* 0x8 */ JAUSoundAnimationSound mSounds;
 };
