@@ -445,6 +445,20 @@ void parseAutoInput() {
     }
 }
 
+// "P<x>_<y>" points the remote at x,y in percent of the screen (-100..100, +y down) while active.
+bool autoPointer(float& x, float& y) {
+    for (const AutoInput& in : sAutoInputs) {
+        if (in.name.size() > 1 && in.name[0] == 'P' && sFrameCounter >= in.start && sFrameCounter < in.start + in.frames) {
+            size_t us = in.name.find('_');
+            if (us == std::string::npos) continue;
+            x = std::strtof(in.name.c_str() + 1, nullptr) / 100.0f;
+            y = std::strtof(in.name.c_str() + us + 1, nullptr) / 100.0f;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool autoActive(const char* name) {
     for (const AutoInput& in : sAutoInputs) {
         if (in.name == name && sFrameCounter >= in.start && sFrameCounter < in.start + in.frames) {
@@ -485,7 +499,7 @@ void newFrame(float dt) {
     }
 
     // Spin: a press starts a short burst of acceleration, like flicking the remote.
-    bool spin = actionHeld(Action::Spin);
+    bool spin = actionHeld(Action::Spin) || autoActive("SHAKE");
     if (spin && !sPrevSpin) {
         sShakeFrames = 8;
     }
@@ -555,6 +569,9 @@ int readKPAD(int chan, KPADStatus* out, int count) {
         posX = sMouseX * 2.0f - 1.0f;
         posY = sMouseY * 2.0f - 1.0f;
         pointerValid = sSettings.mousePointer && sMouseInWindow;
+    }
+    if (!sCapturing && autoPointer(posX, posY)) {
+        pointerValid = true;
     }
 
     int n = std::min(count, kStatusesPerFrame);

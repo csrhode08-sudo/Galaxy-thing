@@ -11,4 +11,4 @@ fi
 export LD_LIBRARY_PATH=/home/claude/deps/gl:$LD_LIBRARY_PATH
 export LIBGL_ALWAYS_SOFTWARE=1
 export SDL_AUDIO_DRIVER=dummy
-exec /home/claude/galaxy-pc/build/galaxy --disc "$GAME_DIR" "$@"
+exec "$(dirname "$0")/../build/galaxy" --disc "$GAME_DIR" "$@"
