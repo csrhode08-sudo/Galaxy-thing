@@ -208,7 +208,13 @@ void J3DModelX::drawIn(J3DMaterial* material, bool fog, MtxPtr base, J3DModel* m
     }
 
     for (u32 i = 0; i <= 15; i++) {
+#ifdef TARGET_PC
+        // CodeWarrior allocates bitfields from the most significant bit: field _N is bit (31 - N) there, but bit N
+        // here. Display list i belongs to field _(31 - i).
+        if (*reinterpret_cast< u32* >(&mFlags) & (1u << (31 - i))) {
+#else
         if (*reinterpret_cast< u32* >(&mFlags) & (1 << i)) {
+#endif
             GXCallDisplayList(mDisplayLists[i], mDisplayListSizes[i]);
         }
     }

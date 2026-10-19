@@ -1177,7 +1177,11 @@ void Mario::procJump(bool a1) {
     f32 jumpGravity;
     f32 gravityScale = 1.0f;
     if (!a1 && !_10._1F && _430 == 0 && _3BC < 6 && mActor->isRequestJump2P()) {
+#ifdef TARGET_PC
+        _1C._B = true;  // 0x00100000 with CodeWarrior's MSB-first bitfields
+#else
         _1C_WORD |= 0x00100000;
+#endif
         mMovementStates.jumping = false;
         _3BC = 6;
         _10._1F = true;
@@ -2328,7 +2332,11 @@ void Mario::doLanding() {
     _10._1F = false;
     _10._21 = false;
     _3CE = 0;
+#ifdef TARGET_PC
+    _1C.mIsUnderwater = true;  // 0x2000 with CodeWarrior's MSB-first bitfields
+#else
     _1C_WORD |= 0x2000;
+#endif
 
     f32 deltadot = MR::abs((mPosition - _4B0).dot(*getGravityVec()));
     if (_3BC <= 3 && deltadot < 1.0f && mJumpVec.length() < 10.0f) {

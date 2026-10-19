@@ -2212,7 +2212,11 @@ void MarioActor::calcAndSetBaseMtx() {
         _938 = *getPosition() - vec;
         PSMTXCopy(getBaseMtx(), receivedMtx);
 
+#ifdef TARGET_PC
+        if (mMario->mMovementStates._37) {  // bit 8 of the high word with CodeWarrior's MSB-first bitfields
+#else
         if (mMario->mMovementStates_HIGH_WORD >> 8 & 1) {
+#endif
             mMario->_688 = *pPosition;
         }
 
