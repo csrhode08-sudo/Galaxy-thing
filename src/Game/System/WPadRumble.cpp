@@ -164,7 +164,15 @@ WPadRumble* WPadRumble::getRumbleInstance() const {
 }
 
 bool WPadRumble::vibratePatternIfNotExist(const void* pParam1, const char* pPatternName) {
+#ifdef TARGET_PC
+    const RumblePattern* pPattern = RumbleData::getPattern(pPatternName);
+    if (pPattern == nullptr) {
+        return false;  // unknown pattern name: no rumble rather than a crash
+    }
+    return setRumblePatternIfNotExist(pParam1, *pPattern, false);
+#else
     return setRumblePatternIfNotExist(pParam1, *RumbleData::getPattern(pPatternName), false);
+#endif
 }
 
 bool WPadRumble::setRumblePatternIfNotExist(const void* pParam1, const RumblePattern& rParam2, bool param3) {

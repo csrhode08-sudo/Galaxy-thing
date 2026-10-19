@@ -64,6 +64,54 @@ add_subdirectory(pc/third_party/freeverb EXCLUDE_FROM_ALL)
 # Console-only sources replaced by the PC platform layer.
 list(FILTER JSYSTEM_SRC EXCLUDE REGEX "JAudio2/(dsptask|osdsp|osdsp_task|dspproc)\\.cpp$")
 
+# String literals in Shift-JIS, like the original CodeWarrior build: the game looks things up by Japanese names
+# (object, demo, camera, animation and rumble names) that come from the disc in Shift-JIS. Files with such literals
+# are compiled from converted copies in ${CMAKE_BINARY_DIR}/sjis (tools/sjis_literals.py).
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+set(SJIS_TOOL ${CMAKE_SOURCE_DIR}/tools/sjis_literals.py)
+set(SJIS_DIR ${CMAKE_BINARY_DIR}/sjis)
+execute_process(COMMAND ${Python3_EXECUTABLE} ${SJIS_TOOL} --scan ${CMAKE_SOURCE_DIR} src include libs
+                OUTPUT_VARIABLE SJIS_FILES RESULT_VARIABLE _sjis_rc)
+if (NOT _sjis_rc EQUAL 0)
+    message(FATAL_ERROR "sjis_literals.py --scan failed")
+endif ()
+set(SJIS_OUTPUTS)
+foreach (rel ${SJIS_FILES})
+    set(_out ${SJIS_DIR}/${rel})
+    add_custom_command(OUTPUT ${_out}
+                       COMMAND ${Python3_EXECUTABLE} ${SJIS_TOOL} ${CMAKE_SOURCE_DIR}/${rel} ${_out}
+                       DEPENDS ${CMAKE_SOURCE_DIR}/${rel} ${SJIS_TOOL}
+                       COMMENT "Shift-JIS literals: ${rel}" VERBATIM)
+    list(APPEND SJIS_OUTPUTS ${_out})
+    if (NOT EXISTS ${_out})
+        # Headers must exist before the first compile scans for them.
+        execute_process(COMMAND ${Python3_EXECUTABLE} ${SJIS_TOOL} ${CMAKE_SOURCE_DIR}/${rel} ${_out})
+    endif ()
+endforeach ()
+add_custom_target(sjis_literals DEPENDS ${SJIS_OUTPUTS})
+# Converted headers shadow the originals (after the PC shims in pc/include).
+list(INSERT GAME_INCLUDES 1
+    ${SJIS_DIR}/include
+    ${SJIS_DIR}/libs/JSystem/include
+    ${SJIS_DIR}/libs/nw4r/include
+    ${SJIS_DIR}/libs/RVLFaceLib/include
+    ${SJIS_DIR}/libs/RVL_SDK/include
+)
+foreach (_list GAME_SRC JSYSTEM_SRC NW4R_SRC)
+    set(_new)
+    foreach (src ${${_list}})
+        file(RELATIVE_PATH rel ${CMAKE_SOURCE_DIR} ${src})
+        if (rel IN_LIST SJIS_FILES)
+            get_filename_component(_dir ${src} DIRECTORY)
+            set_source_files_properties(${SJIS_DIR}/${rel} PROPERTIES INCLUDE_DIRECTORIES ${_dir})
+            list(APPEND _new ${SJIS_DIR}/${rel})
+        else ()
+            list(APPEND _new ${src})
+        endif ()
+    endforeach ()
+    set(${_list} ${_new})
+endforeach ()
+
 set(AURORA_LIBS aurora::core aurora::gx aurora::gd aurora::vi aurora::pad aurora::mtx aurora::os aurora::dvd aurora::thp aurora::main)
 
 # Game code: C++ semantics close to CodeWarrior's (no strict two-phase lookup, 16-bit wchar_t).
@@ -83,6 +131,7 @@ foreach (lib game jsystem nw4r pc)
     target_compile_definitions(smg_${lib} PRIVATE ${GAME_DEFS})
     target_compile_options(smg_${lib} PRIVATE ${GAME_CXX_FLAGS})
     target_link_libraries(smg_${lib} PRIVATE ${AURORA_LIBS})
+    add_dependencies(smg_${lib} sjis_literals)
 endforeach ()
 if (MSVC)
     target_compile_options(smg_pc PRIVATE "/FI${CMAKE_SOURCE_DIR}/pc/include/pc/win_compat.h")

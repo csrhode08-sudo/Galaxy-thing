@@ -45,3 +45,24 @@ Dusklight (CC0) for reference PC fixes to the shared JSystem/nw4r code.
   (nw4r LinkList `-1` / JGadget TLinkList `1` = resolve from the real layout), alignment masks that drop the upper
   pointer bits (ALIGN_PREV), NULL `%s` (CodeWarrior printed nothing).
 - Windows: clang-cl, Dawn prebuilt; built by .github/workflows/windows.yml.
+
+## Lessons from getting the Windows build to run
+- **Shift-JIS literals.** CodeWarrior compiled the game's Japanese string literals in Shift-JIS, and the game looks
+  things up by those names (demos, cameras, rumble patterns, Mario's animations) against Shift-JIS data from the
+  disc. `tools/sjis_literals.py` rewrites such literals as octal escapes into `build/sjis/` before compiling.
+- **Overridden JSystem functions.** The game replaces some JSystem functions (`Overwrite*.cpp`); on the Wii this
+  used weak symbols. On PC the JSystem copies are compiled out (`#ifndef TARGET_PC`) and `ATTRIBUTE_WEAK` is empty:
+  on Windows a call to a weak function can resolve to address 0.
+- **MSVC ABI.** Pointer-to-member-function size depends on how much of the class a translation unit sees; the
+  Windows build uses `/vmg /vmv` so every TU agrees. Class/struct keys must match between forward declarations and
+  definitions (they are part of MSVC-mangled names) — `tools/fix_tag_mismatch.py`.
+- **Stacks.** Windows threads default to 1 MB; the game needs more (`/STACK:33554432`).
+- **Big-endian data found late:** Yaz0 header size (FileRipper), THP frame/component sizes, CANM camera animations,
+  DRW1 draw-matrix indices, CITS chord tables, sound IDs (`0xSSGGWWWW` composites), TEV/colour words packed into
+  display lists, CodeWarrior's MSB-first bitfield order where flags are read as raw words.
+- **64-bit sizes:** `OSMessage` buffers (`* 4` → `sizeof(OSMessage)`), JPA function tables, matrix array lengths.
+- **Aurora:** file handles are kept in a side table, not `DVDCommandBlock::userData` (games use it).
+- Crash reports (`pc/src/crash.cpp`) print module offsets; CI publishes `SuperMarioGalaxy.pdb` with each release so
+  they can be symbolized with `llvm-symbolizer --obj=SuperMarioGalaxy.exe 0x140000000+offset`.
+- Test automation: `GALAXY_AUTOINPUT` (pc/src/input.cpp) scripts buttons, stick and pointer; `PC_TEST_MOVIE=<frames>`
+  starts the stage's movie; `PC_NO_SILHOUETTE`, `AURORA_DBG_SHADERS/NOLIGHT/TEX/REGS` are rendering debug switches.
