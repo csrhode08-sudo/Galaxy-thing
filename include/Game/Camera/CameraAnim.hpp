@@ -5,18 +5,18 @@
 struct CanmFileHeader {
     /* 0x00 */ u8 mMagic[4];
     /* 0x04 */ u8 mType[4];
-    /* 0x08 */ s32 _8;
-    /* 0x0C */ s32 _C;
-    /* 0x10 */ s32 _10;
-    /* 0x14 */ s32 _14;
-    /* 0x18 */ u32 mNrFrames;
-    /* 0x1C */ u32 mValueOffset;
+    /* 0x08 */ BE(s32) _8;
+    /* 0x0C */ BE(s32) _C;
+    /* 0x10 */ BE(s32) _10;
+    /* 0x14 */ BE(s32) _14;
+    /* 0x18 */ BE(u32) mNrFrames;
+    /* 0x1C */ BE(u32) mValueOffset;
 };
 
 struct CanmKeyFrameComponentInfo {
-    /* 0x0 */ u32 mCount;
-    /* 0x4 */ u32 mOffset;
-    /* 0x8 */ u32 mType;
+    /* 0x0 */ BE(u32) mCount;
+    /* 0x4 */ BE(u32) mOffset;
+    /* 0x8 */ BE(u32) mType;
 };
 
 struct CanmKeyFrameInfo {
@@ -31,8 +31,8 @@ struct CanmKeyFrameInfo {
 };
 
 struct CamnFrameComponentInfo {
-    /* 0x0 */ u32 mCount;
-    /* 0x4 */ u32 mOffset;
+    /* 0x0 */ BE(u32) mCount;
+    /* 0x4 */ BE(u32) mOffset;
 };
 
 struct CanmFrameInfo {
@@ -122,7 +122,7 @@ public:
     }
 
     /* 0x4 */ CanmFrameInfo* mInfo;
-    /* 0x8 */ f32* mValues;
+    /* 0x8 */ BE(f32)* mValues;
 };
 
 class KeyCamAnmDataAccessor : public BaseCamAnmDataAccessor {
@@ -145,5 +145,5 @@ public:
     f32 calcHermite(f32, f32, f32, f32, f32, f32, f32) const;
 
     /* 0x4 */ CanmKeyFrameInfo* mInfo;
-    /* 0x8 */ f32* mValues;
+    /* 0x8 */ BE(f32)* mValues;
 };
