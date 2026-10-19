@@ -68,7 +68,10 @@ set(AURORA_LIBS aurora::core aurora::gx aurora::gd aurora::vi aurora::pad aurora
 
 # Game code: C++ semantics close to CodeWarrior's (no strict two-phase lookup, 16-bit wchar_t).
 if (MSVC)
-    set(GAME_CXX_FLAGS /clang:-Werror=return-type)
+    # /vmg /vmv: one pointer-to-member-function layout everywhere. By default MSVC sizes them by the class's
+    # inheritance, which differs between translation units that see a class only forward-declared and ones that
+    # see its definition, so calls through them jump to garbage.
+    set(GAME_CXX_FLAGS /clang:-Werror=return-type /vmg /vmv)
 else ()
     set(GAME_CXX_FLAGS -fdelayed-template-parsing -fshort-wchar -Werror=return-type)
 endif ()
