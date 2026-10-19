@@ -201,9 +201,11 @@ JASBasicBank* JASBNKParser::Ver1::createBasicBank(void const* stream, JKRHeap* h
     return bank;
 }
 
+#ifndef TARGET_PC  // the game overrides this (Game/AudioLib/OverwriteJAudio.cpp)
 inline JASInstParam::JASInstParam() {
     init();
 }
+#endif
 
 JASBasicBank* JASBNKParser::Ver0::createBasicBank(void const* stream, JKRHeap* heap) {
     if (heap == nullptr) {

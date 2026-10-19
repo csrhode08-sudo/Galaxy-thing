@@ -29,8 +29,10 @@
 #define ATTRIBUTE_PACKED
 #endif
 #ifndef ATTRIBUTE_WEAK
-// Objects defined in headers (e.g. nerve singletons) rely on weak linkage, as with CodeWarrior.
-#define ATTRIBUTE_WEAK __attribute__((weak))
+// CodeWarrior used weak declarations so the game's Overwrite*.cpp could replace JSystem functions. On PC the
+// JSystem copies are compiled out instead, and weak must not be used: on Windows (COFF) a call to a weak
+// function can resolve to null.
+#define ATTRIBUTE_WEAK
 #endif
 
 #ifndef TRUE
