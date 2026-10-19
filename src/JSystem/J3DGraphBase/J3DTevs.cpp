@@ -261,7 +261,12 @@ bool isTexNoReg(void* pDL) {
 }
 
 u16 getTexNoReg(void* pDL) {
+#ifdef TARGET_PC
+    const u8* p = (const u8*)pDL + 1;  // display lists are big-endian
+    u32 var_r31 = u32(p[0]) << 24 | u32(p[1]) << 16 | u32(p[2]) << 8 | p[3];
+#else
     u32 var_r31 = *(u32*)((u8*)pDL + 1);
+#endif
     return var_r31 & 0xFFFFFF;
 }
 

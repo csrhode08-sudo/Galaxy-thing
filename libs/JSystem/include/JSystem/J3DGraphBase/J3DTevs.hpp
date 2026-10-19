@@ -175,8 +175,14 @@ struct J3DTevStage {
     }
 
     void load(u32 param_1) const {
+#ifdef TARGET_PC
+        // The 4 bytes at field_0x0 / field_0x4 are a BP command in big-endian byte order.
+        J3DGDWriteBPCmd(u32(field_0x0) << 24 | u32(mTevColorOp) << 16 | u32(mTevColorAB) << 8 | mTevColorCD);
+        J3DGDWriteBPCmd(u32(field_0x4) << 24 | u32(mTevAlphaOp) << 16 | u32(mTevAlphaAB) << 8 | mTevSwapModeInfo);
+#else
         J3DGDWriteBPCmd(*(u32*)&field_0x0);
         J3DGDWriteBPCmd(*(u32*)&field_0x4);
+#endif
     }
 
     J3DTevStage& operator=(const J3DTevStage& other) {
