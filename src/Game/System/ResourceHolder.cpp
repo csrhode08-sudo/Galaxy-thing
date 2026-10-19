@@ -130,7 +130,7 @@ s32 ResourceHolder::count(JKRArchive* pArchive, const char* pExtName, const char
         if (finder->mFileIsFolder) {
             if (finder->mName[0] != '.') {
                 char path[128];
-                sprintf(path, "%s%s%s", pPath, "/", finder->mName);
+                sprintf(path, "%s%s%s", pPath != nullptr ? pPath : "", "/", finder->mName);  // CW printed NULL as ""
                 num += count(pArchive, pExtName, path);
             }
         } else {
@@ -152,7 +152,7 @@ void ResourceHolder::mount(JKRArchive* pArchive, char* pPath) {
         if (finder->mFileIsFolder) {
             if (finder->mName[0] != '.') {
                 char path[128];
-                snprintf(path, 128, "%s/%s", pPath, finder->mName);
+                snprintf(path, 128, "%s/%s", pPath != nullptr ? pPath : "", finder->mName);  // CW printed NULL as ""
                 mount(pArchive, path);
             }
         } else {

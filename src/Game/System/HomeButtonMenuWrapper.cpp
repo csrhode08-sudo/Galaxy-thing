@@ -22,6 +22,27 @@ static RSOExportFuncTable exp_tbl[] = {{"HBMCreateRSO", (u32*)&HBMCreateRSO},
 
 typedef void (*ProloguePtr)(BOOL);
 
+#ifdef TARGET_PC
+// The HOME button menu is a PowerPC relocatable module (RSO); it can't run here. The PC build uses its own
+// menu (F1), so the HOME menu calls do nothing and report "back to the game" straight away.
+void RSO::setupRsoHomeButtonMenu() {
+}
+void RSO::HBMCreate(const HBMDataInfo*) {
+}
+void RSO::HBMInit() {
+}
+void RSO::HBMCalc(const HBMControllerData*) {
+}
+void RSO::HBMDraw() {
+}
+HBMSelectBtnNum RSO::HBMGetSelectBtnNum() {
+    return HBM_SELECT_HOMEBTN;
+}
+void RSO::HBMSetAdjustFlag(int) {
+}
+void RSO::HBMStartBlackOut() {
+}
+#else
 void RSO::setupRsoHomeButtonMenu() {
     u32 i;
     RSOObjectHeader* rsoPtr;
@@ -87,6 +108,8 @@ void RSO::HBMSetAdjustFlag(int flag) {
 void RSO::HBMStartBlackOut() {
     (*HBMStartBlackOutRSO)();
 }
+
+#endif
 
 void _unresolved(void) {
 }

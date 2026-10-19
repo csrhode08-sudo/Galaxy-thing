@@ -22,7 +22,7 @@ jobs:
           cd extern/aurora
           git checkout 3227d76
           git submodule update --init --recursive
-          git apply ../../patches/aurora-dvd-directory.patch
+          git apply ../../patches/aurora-galaxy-pc.patch
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
