@@ -98,4 +98,7 @@ add_executable(galaxy $<TARGET_OBJECTS:smg_game> $<TARGET_OBJECTS:smg_jsystem> $
 target_link_libraries(galaxy PRIVATE ${AURORA_LIBS} freeverb)
 if (WIN32)
     set_target_properties(galaxy PROPERTIES OUTPUT_NAME "SuperMarioGalaxy" WIN32_EXECUTABLE OFF)
+    # The game deliberately redefines some JSystem functions (Overwrite*.cpp). ELF resolves these as
+    # weak symbols with the first (game) definition winning; COFF needs to be told to do the same.
+    target_link_options(galaxy PRIVATE "/FORCE:MULTIPLE" "/errorlimit:0")
 endif ()
