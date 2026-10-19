@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# Only the newest push matters: cancel older builds so they can't overwrite the release with older code.
+concurrency:
+  group: windows-build
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: windows-latest
