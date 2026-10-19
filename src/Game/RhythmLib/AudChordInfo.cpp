@@ -31,7 +31,7 @@ bool AudChordTable::setChordTableResource(void* pRes) {
         return false;
     }
 
-    u8* base = res + 0x10;
+    u8* base = res + 0xC;  // flag, 'CITS', size, then counts
     mChordCount = (u16)*(BE(u16)*)(base + 0);
     mScaleCount = (u16)*(BE(u16)*)(base + 2);
     const BE(u32)* chordOffs = (const BE(u32)*)(base + 4);
