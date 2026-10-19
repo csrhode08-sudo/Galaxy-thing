@@ -16,6 +16,20 @@ public:
         set(r, g, b, a);
     }
 
+#ifdef TARGET_PC
+    // Packed colors are 0xRRGGBBAA (big-endian layout of r, g, b, a); keep that meaning on little-endian hosts.
+    Color8(u32 color) {
+        set(color >> 24, color >> 16, color >> 8, color);
+    }
+
+    inline operator GXColor() const {
+        return mGXColor;
+    }
+
+    inline operator u32() const {
+        return (u32(r) << 24) | (u32(g) << 16) | (u32(b) << 8) | u32(a);
+    }
+#else
     Color8(u32 color) {
         mColor = color;
     }
@@ -27,6 +41,7 @@ public:
     inline operator u32() const {
         return mColor;
     }
+#endif
 
     inline const Color8& operator=(const GXColor& rOther) {
         mGXColor = rOther;

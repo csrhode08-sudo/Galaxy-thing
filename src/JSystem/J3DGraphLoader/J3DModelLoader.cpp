@@ -492,6 +492,14 @@ void J3DModelLoader::readDraw(J3DDrawBlock const* i_block) {
     modelData->getJointTree().mDrawMtxData.mEntryNum = i_block->mMtxNum - mpModelData->getJointTree().mWEvlpMtxNum;
     modelData->getJointTree().mDrawMtxData.mDrawMtxFlag = JSUConvertOffsetToPtr< u8 >(i_block, i_block->mpDrawMtxFlag);
     modelData->getJointTree().mDrawMtxData.mDrawMtxIndex = JSUConvertOffsetToPtr< u16 >(i_block, i_block->mpDrawMtxIndex);
+#ifdef TARGET_PC
+    if (pc::j3d::gConvert) {
+        u16* idx = modelData->getJointTree().mDrawMtxData.mDrawMtxIndex;
+        for (u16 k = 0; k < i_block->mMtxNum; k++) {
+            idx[k] = __builtin_bswap16(idx[k]);
+        }
+    }
+#endif
     for (i = 0; i < modelData->getJointTree().mDrawMtxData.mEntryNum; i++) {
         if (modelData->getJointTree().mDrawMtxData.mDrawMtxFlag[i] == 1) {
             break;

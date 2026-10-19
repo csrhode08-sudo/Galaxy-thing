@@ -1,4 +1,5 @@
 #include "Game/Screen/MoviePlayingSequence.hpp"
+#include "Game/Util/MessageUtil.hpp"
 #include "Game/Demo/DemoPadRumbler.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/MarioAccess.hpp"
@@ -238,7 +239,13 @@ MoviePlayingSequence::MoviePlayingSequence(const char* pName, s32 movieType) : L
         mSubtitles.init(subtitleNum);
 
         for (s32 i = 0; i < subtitleNum; i++) {
+#ifdef TARGET_PC
+            // Not every region's message archive has every subtitle (the Korean one has none of the story demos).
+            if (MovieSubtitlesUtil::isExistSubtitles(mInfo->mMovieName, i) &&
+                MR::getLayoutMessageDirect(MovieSubtitlesUtil::getSubtitlesMessageId(mInfo->mMovieName, i)) != nullptr) {
+#else
             if (MovieSubtitlesUtil::isExistSubtitles(mInfo->mMovieName, i)) {
+#endif
                 mSubtitles.push_back(createSubtitles(mInfo, i));
             }
         }

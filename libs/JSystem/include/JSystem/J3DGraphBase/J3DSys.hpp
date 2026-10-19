@@ -131,14 +131,28 @@ public:
     int mVtxColNum = 0;
 #endif
 
+#ifdef TARGET_PC
+    // Number of matrices in the current model's draw/normal matrix arrays (at least 10), so indexed matrix
+    // loads can reach every entry. Defined in J3DSys.cpp (needs J3DModel).
+    u32 getModelDrawMtxCount() const;
+#endif
+
     void setModelDrawMtx(Mtx* pMtxArr) {
         mModelDrawMtx = pMtxArr;
+#ifdef TARGET_PC
+        GXSETARRAY(GX_POS_MTX_ARRAY, mModelDrawMtx, getModelDrawMtxCount() * sizeof(Mtx), sizeof(*mModelDrawMtx), true);
+#else
         GXSETARRAY(GX_POS_MTX_ARRAY, mModelDrawMtx, 10 * sizeof(Mtx), sizeof(*mModelDrawMtx), true);
+#endif
     }
 
     void setModelNrmMtx(Mtx33* pMtxArr) {
         mModelNrmMtx = pMtxArr;
+#ifdef TARGET_PC
+        GXSETARRAY(GX_NRM_MTX_ARRAY, mModelNrmMtx, getModelDrawMtxCount() * sizeof(Mtx33), sizeof(*mModelNrmMtx), true);
+#else
         GXSETARRAY(GX_NRM_MTX_ARRAY, mModelNrmMtx, 10 * sizeof(Mtx33), sizeof(*mModelNrmMtx), true);
+#endif
     }
 
     void setNBTScale(BE(Vec)* scale) {

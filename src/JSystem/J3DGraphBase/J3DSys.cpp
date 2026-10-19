@@ -349,3 +349,19 @@ void J3DSys::reinitPixelProc() {
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
     GXSetZCompLoc(GX_TRUE);
 }
+
+#ifdef TARGET_PC
+#include "JSystem/J3DGraphAnimator/J3DModel.hpp"
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+
+u32 J3DSys::getModelDrawMtxCount() const {
+    u32 n = 10;
+    if (mModel != nullptr && mModel->getModelData() != nullptr) {
+        u32 drawNum = mModel->getModelData()->getDrawMtxNum();
+        if (drawNum > n) {
+            n = drawNum;
+        }
+    }
+    return n;
+}
+#endif

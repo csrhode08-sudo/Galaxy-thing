@@ -71,7 +71,19 @@ jobs:
         run: |
           mkdir -p dist
           cp build/SuperMarioGalaxy.exe dist/
-          find build -maxdepth 3 -name "*.dll" -exec cp {} dist/ \; || true
+          # Every DLL the build produced or fetched (SDL3, Dawn, nod, libpng, zlib), plus the MSVC runtime.
+          find build -name "*.dll" ! -path "*CMakeFiles*" -exec cp {} dist/ \; || true
+          for f in msvcp140.dll msvcp140_atomic_wait.dll vcruntime140.dll vcruntime140_1.dll; do
+            cp "/c/Windows/System32/$f" dist/ 2>/dev/null || true
+          done
+          # Fail the release if anything the exe imports is missing.
+          missing=0
+          for dll in $(llvm-objdump -p dist/SuperMarioGalaxy.exe | sed -n 's/.*DLL Name: //p' | tr -d '\r'); do
+            lc=$(echo "$dll" | tr 'A-Z' 'a-z')
+            case "$lc" in kernel32.dll|user32.dll|shell32.dll|ole32.dll|oleaut32.dll|ntdll.dll|dxgi.dll|imm32.dll|gdi32.dll|advapi32.dll|setupapi.dll|winmm.dll|version.dll|cfgmgr32.dll|hid.dll|d3d12.dll|d3d11.dll|dxcompiler.dll|dxil.dll|api-ms-win-*) continue;; esac
+            if ! ls dist | tr 'A-Z' 'a-z' | grep -qx "$lc"; then echo "missing $dll"; missing=1; fi
+          done
+          [ $missing = 0 ]
           cp README-PC.txt dist/
           ls -la dist
           cd dist && 7z a ../SuperMarioGalaxy-windows.zip . > /dev/null

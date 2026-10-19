@@ -20,6 +20,11 @@ namespace LayoutCoreUtil {
 
     u16 setTextBoxMessage(nw4r::lyt::TextBox* pTextBox, const wchar_t* pMsg) {
         wchar_t buffer[512];
+#ifdef TARGET_PC
+        if (pMsg == nullptr) {
+            pMsg = L"";  // missing message ID in this region's archive
+        }
+#endif
         ReplaceTagProcessor::Replace(buffer, pMsg);
         return pTextBox->SetString(buffer, 0, MR::getStringLengthWithMessageTag(buffer));
     }
