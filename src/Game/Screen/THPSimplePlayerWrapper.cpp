@@ -290,7 +290,7 @@ bool THPSimplePlayerWrapper::loadStop() {
 s32 THPSimplePlayerWrapper::decode(s32 audio) {
     bool isValid = mReadBuffer[mNextDecodeIndex].isValid == true;
     if (isValid) {
-        u32* compSize = (u32*)mReadBuffer[mNextDecodeIndex].ptr + 2;
+        BE(u32)* compSize = (BE(u32)*)mReadBuffer[mNextDecodeIndex].ptr + 2;  // frame header is big-endian
         u8* ptr = mReadBuffer[mNextDecodeIndex].ptr + mFrameComp.numComponents * 4 + 8;
 
         if (mAudioExist) {
@@ -471,7 +471,7 @@ void THPSimplePlayerWrapper::dvdCallBack(s32 result) {
     mTotalReadFrame++;
     mReadBuffer[mReadIndex].isValid = 1;
     mCurOffset += mReadSize;
-    mReadSize = *(u32*)mReadBuffer[mReadIndex].ptr;
+    mReadSize = *(BE(u32)*)mReadBuffer[mReadIndex].ptr;  // next frame size, big-endian
     int index = mReadIndex;
     index = getNextBuffer(index);
     mReadIndex = index;
@@ -665,7 +665,7 @@ void THPSimplePlayerWrapper::exeReadPreLoad() {
 
 void THPSimplePlayerWrapper::endReadPreLoadOne() {
     mCurOffset += mReadSize;
-    mReadSize = *(s32*)mReadBuffer[mReadIndex].ptr;
+    mReadSize = (s32) * (BE(u32)*)mReadBuffer[mReadIndex].ptr;  // next frame size, big-endian
     mReadBuffer[mReadIndex].isValid = 1;
     mReadBuffer[mReadIndex].frameNumber = mTotalReadFrame;
     mReadIndex = getNextBuffer(mReadIndex);

@@ -285,7 +285,9 @@ void GameSystem::updateSceneController() {
 #ifdef TARGET_PC
     pc::ui::setLoadingScreen(mSceneController->isChangingScenePC());
     extern void MovieStarter_pcTestTick();
-    MovieStarter_pcTestTick();
+    if (!mSceneController->isChangingScenePC()) {
+        MovieStarter_pcTestTick();
+    }
 #endif
 }
 
