@@ -668,6 +668,7 @@ void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 }
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 void JPADrawLine(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {
     if (param_1->checkStatus(JPAPtclStts_Invisible)) {
         return;
@@ -694,6 +695,7 @@ void JPADrawLine(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {
     GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 }
+#endif
 
 JPANode< JPABaseParticle >* getNext(JPANode< JPABaseParticle >* param_0) {
     return param_0->getNext();
@@ -705,6 +707,7 @@ JPANode< JPABaseParticle >* getPrev(JPANode< JPABaseParticle >* param_0) {
 
 typedef JPANode< JPABaseParticle >* (*getNodeFunc)(JPANode< JPABaseParticle >*);
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 void JPADrawStripe(JPAEmitterWorkData* param_0) {
     JPABaseShape* shape = param_0->mpRes->getBsp();
     u32 ptcl_num = param_0->mpAlivePtcl->getNum();
@@ -787,7 +790,9 @@ void JPADrawStripe(JPAEmitterWorkData* param_0) {
     GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 }
+#endif
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 void JPADrawStripeX(JPAEmitterWorkData* param_0) {
     JPABaseShape* shape = param_0->mpRes->getBsp();
     u32 ptcl_num = param_0->mpAlivePtcl->getNum();
@@ -920,6 +925,7 @@ void JPADrawStripeX(JPAEmitterWorkData* param_0) {
     GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 }
+#endif
 
 void JPADrawEmitterCallBackB(JPAEmitterWorkData* work) {
     if (work->mpEmtr->mpEmtrCallBack == nullptr) {

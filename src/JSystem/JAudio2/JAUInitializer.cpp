@@ -37,6 +37,7 @@ JAU_JASInitializer::JAU_JASInitializer() {
     waveArcDir_ = nullptr;
 }
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 inline void JAU_JASInitializer::initJASystem(JKRSolidHeap* pHeap) {
     JASKernel::setupRootHeap(pHeap, heapSize_);
 
@@ -85,6 +86,7 @@ inline void JAU_JASInitializer::initJASystem(JKRSolidHeap* pHeap) {
         break;
     }
 }
+#endif
 
 JAU_JAIInitializer::JAU_JAIInitializer() {
     mMaxNumSe = 100;

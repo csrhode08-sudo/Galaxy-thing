@@ -120,6 +120,7 @@ bool JASWaveArc::sendLoadCmd() {
     return true;
 }
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 bool JASWaveArc::load(JASHeap* heap) {
     if (mEntryNum < 0) {
         return false;
@@ -137,6 +138,7 @@ bool JASWaveArc::load(JASHeap* heap) {
     }
     return sendLoadCmd();
 }
+#endif
 
 bool JASWaveArc::loadTail(JASHeap* heap) {
     if (mEntryNum < 0) {
@@ -178,6 +180,7 @@ void JASWaveArc::setEntryNum(s32 entryNum) {
     mEntryNum = entryNum;
 }
 
+#ifndef TARGET_PC  // the game overrides this (Game/System/Overwrite*.cpp)
 void JASWaveArc::setFileName(char const* fileName) {
     char* currentDir = JASWaveArcLoader::getCurrentDir();
     size_t length = strlen(currentDir);
@@ -196,3 +199,4 @@ void JASWaveArc::setFileName(char const* fileName) {
     }
     setEntryNum(entryNum);
 }
+#endif

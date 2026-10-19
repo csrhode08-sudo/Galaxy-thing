@@ -95,8 +95,31 @@ void printStack(CONTEXT* ctx) {
         }
     };
     if (ctx != nullptr) {
-        log("  at:\n");
-        printAddr(reinterpret_cast<void*>(ctx->Rip));
+        // Walk the crashing thread's own stack from the exception context.
+        log("  crashing thread:\n");
+        CONTEXT c = *ctx;
+        DWORD64 probeBase = 0;
+        if (c.Rip == 0 || RtlLookupFunctionEntry(c.Rip, &probeBase, nullptr) == nullptr) {
+            // Called through a bad (e.g. null) pointer: the return address is on top of the stack.
+            printAddr(reinterpret_cast<void*>(c.Rip));
+            c.Rip = *reinterpret_cast<DWORD64*>(c.Rsp);
+            c.Rsp += 8;
+        }
+        for (int depth = 0; depth < 48 && c.Rip != 0; depth++) {
+            printAddr(reinterpret_cast<void*>(c.Rip));
+            DWORD64 imageBase = 0;
+            PRUNTIME_FUNCTION fn = RtlLookupFunctionEntry(c.Rip, &imageBase, nullptr);
+            if (fn == nullptr) {
+                // Leaf function: return address at [rsp].
+                c.Rip = *reinterpret_cast<DWORD64*>(c.Rsp);
+                c.Rsp += 8;
+                continue;
+            }
+            void* handlerData = nullptr;
+            DWORD64 establisher = 0;
+            RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, c.Rip, fn, &c, &handlerData, &establisher, nullptr);
+        }
+        log("  handler:\n");
     }
     for (USHORT i = 0; i < n; i++) {
         printAddr(frames[i]);
