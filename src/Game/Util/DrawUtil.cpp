@@ -124,6 +124,55 @@ namespace MR {
         GXSetZMode(GX_FALSE, GX_NEVER, GX_FALSE);
     }
 
+#ifdef TARGET_PC
+    // Z textures aren't emulated: draw a depth-only quad at the far plane.
+    void clearZBuffer() {
+        JUTVideo* pJUTVideo = JUTVideo::getManager();
+        u16 width = pJUTVideo->getFbWidth();
+        u16 height = pJUTVideo->getEfbHeight();
+        Mtx44 projMtx;
+        C_MTXOrtho(projMtx, 0.0f, height, 0.0f, width, 0.0f, 1.0f);
+        GXSetProjection(projMtx, GX_ORTHOGRAPHIC);
+        MR::setDefaultViewportAndScissor();
+        TMtx34f mtxImm;
+        mtxImm.identity();
+        GXLoadPosMtxImm(mtxImm, GX_PNMTX0);
+        GXSetCurrentMtx(GX_PNMTX0);
+        GXClearVtxDesc();
+        GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+        GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+        GXSetNumChans(0);
+        GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        GXSetNumTexGens(0);
+        GXSetNumTevStages(1);
+        GXColor tev0 = {0, 0, 0, 0};
+        GXSetTevColor(GX_TEVREG0, tev0);
+        GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A0);
+        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
+        GXSetZCompLoc(GX_FALSE);
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
+        GXSetColorUpdate(GX_FALSE);
+        GXSetAlphaUpdate(GX_FALSE);
+        GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+        GXSetCullMode(GX_CULL_NONE);
+
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        GXPosition3f32(0.0f, 0.0f, -1.0f);
+        GXPosition3f32(width, 0.0f, -1.0f);
+        GXPosition3f32(width, height, -1.0f);
+        GXPosition3f32(0.0f, height, -1.0f);
+        GXEnd();
+
+        GXSetZCompLoc(GX_TRUE);
+        GXSetColorUpdate(GX_TRUE);
+        GXSetCullMode(GX_CULL_BACK);
+    }
+#else
     void clearZBuffer() {
         JUTVideo* pJUTVideo = JUTVideo::getManager();
         u16 width = pJUTVideo->getFbWidth();
@@ -190,6 +239,8 @@ namespace MR {
         GXSetZCompLoc(GX_TRUE);
         GXSetColorUpdate(GX_TRUE);
     }
+
+#endif
 
     void clearAlphaBuffer(u8 alpha) {
         JUTVideo* pVideo = JUTVideo::getManager();

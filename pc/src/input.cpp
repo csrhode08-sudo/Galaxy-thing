@@ -1,4 +1,7 @@
 // Galaxy PC input layer: Wii Remote + Nunchuk emulation over SDL3 keyboard, mouse and gamepads.
+#include <cstdlib>
+#include <string>
+#include <vector>
 #include "pc/input.h"
 #include "pc/platform.h"
 
@@ -405,8 +408,56 @@ void handleEvent(const SDL_Event& ev) {
     }
 }
 
+// Test automation: GALAXY_AUTOINPUT="A@600:10,STICKU@900:120,..." holds a button or stick direction from a frame
+// for a number of frames. Used to drive the game in unattended test runs.
+namespace {
+struct AutoInput {
+    std::string name;
+    u32 start;
+    u32 frames;
+};
+std::vector<AutoInput> sAutoInputs;
+u32 sFrameCounter;
+bool sAutoParsed;
+
+void parseAutoInput() {
+    sAutoParsed = true;
+    const char* env = std::getenv("GALAXY_AUTOINPUT");
+    if (env == nullptr) {
+        return;
+    }
+    std::string spec(env);
+    size_t pos = 0;
+    while (pos < spec.size()) {
+        size_t end = spec.find(',', pos);
+        if (end == std::string::npos) end = spec.size();
+        std::string tok = spec.substr(pos, end - pos);
+        size_t at = tok.find('@');
+        if (at != std::string::npos) {
+            AutoInput in;
+            in.name = tok.substr(0, at);
+            size_t colon = tok.find(':', at);
+            in.start = (u32)std::strtoul(tok.c_str() + at + 1, nullptr, 10);
+            in.frames = colon != std::string::npos ? (u32)std::strtoul(tok.c_str() + colon + 1, nullptr, 10) : 6;
+            sAutoInputs.push_back(in);
+        }
+        pos = end + 1;
+    }
+}
+
+bool autoActive(const char* name) {
+    for (const AutoInput& in : sAutoInputs) {
+        if (in.name == name && sFrameCounter >= in.start && sFrameCounter < in.start + in.frames) {
+            return true;
+        }
+    }
+    return false;
+}
+}  // namespace
+
 void newFrame(float dt) {
     std::lock_guard lock(sMutex);
+    sFrameCounter++;
     if (sCapturing) {
         return;
     }
@@ -462,6 +513,17 @@ int readKPAD(int chan, KPADStatus* out, int count) {
         for (const auto& m : map) {
             if (actionHeld(m.a)) hold |= m.bit;
         }
+        if (!sAutoParsed) parseAutoInput();
+        if (!sAutoInputs.empty()) {
+            static const struct { const char* n; u32 bit; } kAuto[] = {
+                {"A", WPAD_BUTTON_A}, {"B", WPAD_BUTTON_B}, {"Z", WPAD_BUTTON_Z}, {"C", WPAD_BUTTON_C},
+                {"UP", WPAD_BUTTON_UP}, {"DOWN", WPAD_BUTTON_DOWN}, {"LEFT", WPAD_BUTTON_LEFT}, {"RIGHT", WPAD_BUTTON_RIGHT},
+                {"PLUS", WPAD_BUTTON_PLUS}, {"MINUS", WPAD_BUTTON_MINUS}, {"1", WPAD_BUTTON_1}, {"2", WPAD_BUTTON_2},
+            };
+            for (const auto& a : kAuto) {
+                if (autoActive(a.n)) hold |= a.bit;
+            }
+        }
     }
 
     // Nunchuk stick, radial deadzone, clamped to the unit circle.
@@ -469,6 +531,10 @@ int readKPAD(int chan, KPADStatus* out, int count) {
     if (!sCapturing) {
         sx = actionAxis(Action::MoveLeft, Action::MoveRight);
         sy = actionAxis(Action::MoveDown, Action::MoveUp);  // KPAD stick: +y is up
+        if (autoActive("STICKU")) sy = 1.0f;
+        if (autoActive("STICKD")) sy = -1.0f;
+        if (autoActive("STICKL")) sx = -1.0f;
+        if (autoActive("STICKR")) sx = 1.0f;
         float m = std::sqrt(sx * sx + sy * sy);
         if (m < sSettings.stickDeadzone) {
             sx = sy = 0.0f;

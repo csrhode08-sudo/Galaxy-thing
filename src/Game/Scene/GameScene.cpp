@@ -170,15 +170,35 @@ void GameScene::update() {
     }
 }
 
+#ifdef TARGET_PC
+#include <cstdlib>
+#include <cstring>
+// Debugging aid: GALAXY_DBG_SKIP may list "3d", "2d", "odh", "mirror" to leave parts of the scene out.
+static bool pcSkip(const char* part) {
+    static const char* sSkip = std::getenv("GALAXY_DBG_SKIP");
+    return sSkip != nullptr && std::strstr(sSkip, part) != nullptr;
+}
+#else
+static bool pcSkip(const char*) {
+    return false;
+}
+#endif
+
 void GameScene::draw() const {
     MR::drawInit();
     LightFunction::initLightRegisterAll();
-    drawOdhCapture();
+    if (!pcSkip("odh")) drawOdhCapture();
     CategoryList::execute(MR::DrawType_MiiFaceIcon);
     CategoryList::execute(MR::DrawType_MiiFaceNew);
-    drawMirror();
-    draw3D();
-    draw2D();
+    if (!pcSkip("mirror")) drawMirror();
+    if (!pcSkip("3d")) draw3D();
+    if (!pcSkip("2d")) draw2D();
+#ifdef TARGET_PC
+    if (pcSkip("red")) {
+        GXColor c = {255, 0, 0, 255};
+        MR::fillScreen(c);
+    }
+#endif
     MR::reinitGX();
 }
 

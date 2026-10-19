@@ -323,20 +323,34 @@ void MainLoopFramework::clearEfb(int param1, int param2, int param3, int param4,
     GXSetScissor(0, 0, fbWidth, efbHeight);
     GXLoadPosMtxImm(e_mtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
+#ifdef TARGET_PC
+    // Z textures aren't emulated: draw the clear quad at the far plane instead of replacing Z from a texture.
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+#else
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_U16, 0);
     GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_U8, 0);
+#endif
     GXSetNumChans(0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+#ifdef TARGET_PC
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXSetTevColor(GX_TEVREG0, color);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+#else
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXLoadTexObj(&clear_z_tobj, GX_TEXMAP0);
     GXSetNumTevStages(1);
     GXSetTevColor(GX_TEVREG0, color);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+#endif
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A0);
@@ -354,6 +368,17 @@ void MainLoopFramework::clearEfb(int param1, int param2, int param3, int param4,
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
     GXSetCullMode(GX_CULL_BACK);
 
+#ifdef TARGET_PC
+    GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    {
+        const f32 x0 = param1, y0 = param2, x1 = param1 + param3, y1 = param2 + param4, z = -1.0f;  // view-space far plane
+        GXPosition3f32(x0, y0, z);
+        GXPosition3f32(x1, y0, z);
+        GXPosition3f32(x1, y1, z);
+        GXPosition3f32(x0, y1, z);
+    }
+    GXEnd();
+#else
     GXBegin(GX_QUADS, GX_VTXFMT0, 4);
     {
         GXPosition2u16(param1, param2);
@@ -369,6 +394,7 @@ void MainLoopFramework::clearEfb(int param1, int param2, int param3, int param4,
         GXTexCoord2u8(0, 1);
     }
     GXEnd();
+#endif
 
     GXSetZTexture(GX_ZT_DISABLE, GX_TF_Z24X8, 0);
     GXSetZCompLoc(GX_TRUE);

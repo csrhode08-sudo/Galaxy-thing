@@ -9,6 +9,7 @@
 #include <revolution/vi.h>
 
 #include <aurora/aurora.h>
+#include <aurora/gfx.h>
 #include <aurora/event.h>
 #include <imgui.h>
 
@@ -197,7 +198,8 @@ void frameEnd() {
         auto now = std::chrono::steady_clock::now();
         double secs = std::chrono::duration<double>(now - sLast).count();
         sLast = now;
-        OSReport("[frame] %u (%.1f fps)\n", sFrames, 300.0 / secs);
+        const AuroraStats* st = aurora_get_stats();
+        OSReport("[frame] %u (%.1f fps) draws %u\n", sFrames, 300.0 / secs, st ? (unsigned)st->drawCallCount : 0u);
     }
     if (sFrameBegun) {
         pc::ui::draw(sDt);

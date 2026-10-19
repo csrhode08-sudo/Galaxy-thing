@@ -335,6 +335,11 @@ void J3DGDSetTexLookupMode(GXTexMapID id, GXTexWrapMode wrap_s, GXTexWrapMode wr
 }
 
 void J3DGDSetTexImgAttr(GXTexMapID id, u16 width, u16 height, GXTexFmt format) {
+#ifdef TARGET_PC
+    // Texture images are bound as whole texture objects on PC (J3DTevBlock::loadTexture); register writes
+    // here would pair the new size/format with whatever image the emulator had bound before.
+    return;
+#endif
     J3DGDWriteBPCmd(BP_IMAGE_ATTR(width - 1, height - 1, format, J3DGDTexImage0Ids[id]));
 }
 
@@ -347,11 +352,17 @@ void J3DGDSetTexImgPtr(GXTexMapID id, void* image_ptr) {
 }
 
 void J3DGDSetTexImgPtrRaw(GXTexMapID id, u32 image_ptr_raw) {
+#ifdef TARGET_PC
+    return;
+#endif
     GDOverflowCheck(5);
     J3DGDWriteBPCmd(BP_IMAGE_PTR(image_ptr_raw, J3DGDTexImage3Ids[id]));
 }
 
 void J3DGDSetTexTlut(GXTexMapID id, u32 tmem_addr, GXTlutFmt format) {
+#ifdef TARGET_PC
+    return;
+#endif
     J3DGDWriteBPCmd(BP_TEX_TLUT((tmem_addr - 0x80000) >> 9, format, J3DGDTexTlutIds[id]));
 }
 

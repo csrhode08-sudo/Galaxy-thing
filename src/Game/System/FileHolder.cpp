@@ -33,8 +33,15 @@ void FileHolderFileEntry::setContext(void* pContext, JKRHeap* pHeap) {
     mContext = pContext;
     mHeap = pHeap;
 
+#ifdef TARGET_PC
+    // With real threads the waiting thread can wake and mark the entry done before this thread continues;
+    // update the state first so it isn't overwritten afterwards (which made a later wait block forever).
+    mState = FILE_HOLDER_STATE_READING;
+    OSSendMessage(&mQueue, nullptr, OS_MESSAGE_NOBLOCK);
+#else
     OSSendMessage(&mQueue, nullptr, OS_MESSAGE_NOBLOCK);
     mState = FILE_HOLDER_STATE_READING;
+#endif
 }
 
 FileHolder::FileHolder() {
