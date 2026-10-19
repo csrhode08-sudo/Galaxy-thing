@@ -166,8 +166,15 @@ namespace MR {
     }
 
     const char* getCurrentRegionPrefix() {
+#ifdef TARGET_PC
+        // extractString writes a terminator after the 2 copied characters; the console got away with the
+        // 2-byte buffer, but here it clobbers a saved register.
+        char prefix[3];
+        MR::extractString(prefix, getCurrentLanguagePrefix(), 2, 3);
+#else
         char prefix[2];
         MR::extractString(prefix, getCurrentLanguagePrefix(), sizeof(prefix), 3);
+#endif
 
         if (MR::isEqualString(prefix, "Jp")) {
             return "Jp";

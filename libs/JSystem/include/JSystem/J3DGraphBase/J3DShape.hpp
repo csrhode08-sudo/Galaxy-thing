@@ -111,7 +111,12 @@ public:
         initialize();
     }
 
+#ifdef TARGET_PC
+    // Array commands carry 64-bit pointers and sizes on PC (GDSetArraySized).
+    static const int kVcdVatDLSize = 0x200;
+#else
     static const int kVcdVatDLSize = 0xC0;
+#endif
 
     void initialize();
     void addTexMtxIndexInDL(GXAttr, u32);

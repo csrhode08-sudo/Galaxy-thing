@@ -79,12 +79,14 @@ void JASWaveArc::loadToAramCallback(void* this_) {
     {
         DVDFileInfo info;
         if (!DVDFastOpen(tmp->mEntryNum, &info)) {
+            OSReport("[audio] wave archive entry %d could not be opened\n", tmp->mEntryNum);
             return;
         }
         const s32 length = (s32)info.length;
         const s32 read = DVDReadPrio(&info, reinterpret_cast< void* >(tmp->mBase), length, 0, 2);
         DVDClose(&info);
         if (read < 0) {
+            OSReport("[audio] wave archive entry %d read failed\n", tmp->mEntryNum);
             return;
         }
     }
@@ -130,6 +132,7 @@ bool JASWaveArc::load(JASHeap* heap) {
         heap = JASWaveArcLoader::getRootHeap();
     }
     if (mHeap.alloc(heap, mFileLength) == false) {
+        OSReport("[audio] no audio memory for wave archive %d (0x%x bytes)\n", mEntryNum, mFileLength);
         return false;
     }
     return sendLoadCmd();
@@ -184,6 +187,9 @@ void JASWaveArc::setFileName(char const* fileName) {
     strcat(path, fileName);
     path[length] = '\0';
     int entryNum = DVDConvertPathToEntrynum(path);
+    if (entryNum < 0) {
+        OSReport("[audio] wave archive not found: %s\n", path);
+    }
     delete[] path;
     if (entryNum < 0) {
         return;

@@ -131,10 +131,20 @@ void GameSystemSceneController::initializeScene() {
 #ifdef TARGET_PC
     OSReport("[scene] %s / %s (scenario %d)\n", mCurrSceneControlInfo.mScene, mCurrSceneControlInfo.mStage, mCurrSceneControlInfo.mScenarioNo);
 #endif
+#ifdef TARGET_PC
+#define PC_HEAPLOG(tag) OSReport("[heap] %s: scene napa free 0x%x\n", tag, SingletonHolder< HeapMemoryWatcher >::get()->mSceneHeapNapa->getFreeSize())
+#else
+#define PC_HEAPLOG(tag)
+#endif
+    PC_HEAPLOG("start");
     mScene = MR::createScene(mCurrSceneControlInfo.mScene);
+    PC_HEAPLOG("createScene");
     mScene->initNameObjListExecutor();
+    PC_HEAPLOG("initNameObjListExecutor");
     mScene->initSceneObjHolder();
+    PC_HEAPLOG("initSceneObjHolder");
     mScene->init();
+    PC_HEAPLOG("init");
 
     SceneFunction::allocateDrawBufferActorList();
     MR::clearFileLoaderRequestFileInfo(mIsResetProcessing);

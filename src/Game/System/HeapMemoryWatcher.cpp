@@ -1,3 +1,4 @@
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/System/HeapMemoryWatcher.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
@@ -168,8 +169,28 @@ HeapMemoryWatcher::HeapMemoryWatcher()
     createHeaps();
 }
 
-void HeapMemoryWatcher::memoryErrorCallback(void*, u32, int) {
+void HeapMemoryWatcher::memoryErrorCallback(void* pHeap, u32 size, int align) {
+#ifdef TARGET_PC
+    JKRHeap* heap = static_cast< JKRHeap* >(pHeap);
+    HeapMemoryWatcher* w = SingletonHolder< HeapMemoryWatcher >::get();
+    const char* name = "?";
+    if (w != nullptr) {
+        if (heap == w->mStationedHeapNapa) name = "StationedNapa";
+        else if (heap == w->mStationedHeapGDDR) name = "StationedGDDR";
+        else if (heap == w->mGameHeapNapa) name = "GameNapa";
+        else if (heap == w->mGameHeapGDDR) name = "GameGDDR";
+        else if (heap == w->mSceneHeapNapa) name = "SceneNapa";
+        else if (heap == w->mSceneHeapGDDR) name = "SceneGDDR";
+        else if (heap == w->mFileCacheHeap) name = "FileCache";
+        else if (heap == w->mAudSystemHeap) name = "AudSystem";
+        else if (heap == JKRHeap::sRootHeap) name = "Root";
+        else if (heap == sRootHeapGDDR3) name = "RootGDDR3";
+    }
+    OSPanic(__FILE__, 537, "out of memory: heap %p (%s) size 0x%x free 0x%x total 0x%x, request 0x%x align %d", heap, name,
+            heap ? (u32)((u8*)heap->mEnd - (u8*)heap->mStart) : 0, heap ? heap->getFreeSize() : 0, heap ? heap->getTotalFreeSize() : 0, size, align);
+#else
     OSPanic(__FILE__, 537, "");
+#endif
 }
 
 void HeapMemoryWatcher::checkRestMemory() {
