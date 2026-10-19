@@ -107,8 +107,14 @@ void THPSimplePlayerWrapper::quit() {
 
 bool THPSimplePlayerWrapper::open(const char* pName) {
     if (!tryDvdOpen(pName)) {
+#ifdef TARGET_PC
+        OSReport("[movie] could not open %s (init %d, open %d)\n", pName, (int)_8, (int)mOpen);
+#endif
         return false;
     }
+#ifdef TARGET_PC
+    OSReport("[movie] opened %s\n", pName);
+#endif
 
     setNerve(GET_NERVE(THPSimplePlayerWrapper, HostTypeReadHeader));
     return true;
@@ -484,6 +490,15 @@ void THPSimplePlayerWrapper::dvdCallBack(s32 result) {
 }
 
 void THPSimplePlayerWrapper::readAsyncCallBack(s32 a1) {
+#ifdef TARGET_PC
+    {
+        static int sLogged = 0;
+        if (sLogged < 12) {
+            sLogged++;
+            OSReport("[movie] read done %d\n", a1);
+        }
+    }
+#endif
     if (a1 < 0) {
         if (!isNerve(GET_NERVE(THPSimplePlayerWrapper, HostTypeReadHeader)) && !isNerve(GET_NERVE(THPSimplePlayerWrapper, HostTypeReadFrameComp)) &&
             !isNerve(GET_NERVE(THPSimplePlayerWrapper, HostTypeReadVideoComp)) &&
@@ -703,6 +718,9 @@ bool THPSimplePlayerWrapper::tryFinishDvdOpen() {
     }
 
     setupParams();
+#ifdef TARGET_PC
+    OSReport("[movie] header ok: %ux%u, %u frames, audio %d\n", (u32)mVideoInfo.xSize, (u32)mVideoInfo.ySize, (u32)mHeader.numFrames, (int)mAudioExist);
+#endif
     _9 = 1;
     setNerve(GET_NERVE(THPSimplePlayerWrapper, HostTypeWait));
     return true;
