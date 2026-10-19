@@ -140,6 +140,7 @@ namespace pc {
 }  // namespace pc
 
 static void ThreadEntryWrapper(OSThread* thread, PCThreadData* data) {
+    pc::onThreadStart();
     // Set thread-local pointer
     tls_currentThread = thread;
     tls_threadData = data;

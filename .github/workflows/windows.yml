@@ -34,7 +34,7 @@ jobs:
       - name: Configure
         shell: pwsh
         run: |
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl *> configure.log
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl *> configure.log
           $rc = $LASTEXITCODE
           Get-Content configure.log -Tail 100
           exit $rc
@@ -95,4 +95,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete test-build -y --cleanup-tag || true
-          gh release create test-build SuperMarioGalaxy-windows.zip --title "Test build" --notes "Built from ${GITHUB_SHA}" --prerelease
+          cp build/SuperMarioGalaxy.pdb . 2>/dev/null || true
+          gh release create test-build SuperMarioGalaxy-windows.zip $(ls SuperMarioGalaxy.pdb 2>/dev/null) --title "Test build" --notes "Built from ${GITHUB_SHA}" --prerelease

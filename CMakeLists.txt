@@ -101,4 +101,7 @@ if (WIN32)
     # The game deliberately redefines some JSystem functions (Overwrite*.cpp). ELF resolves these as
     # weak symbols with the first (game) definition winning; COFF needs to be told to do the same.
     target_link_options(galaxy PRIVATE "/FORCE:MULTIPLE" "/errorlimit:0")
+    # Linux gives threads 8 MB of stack; Windows defaults to 1 MB, which the game overruns. Reserve 32 MB
+    # (also the default for every thread the game creates).
+    target_link_options(galaxy PRIVATE "/STACK:33554432")
 endif ()

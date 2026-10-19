@@ -6,12 +6,21 @@
 
 #include <string>
 
+#include <cstdarg>
+
 namespace pc {
 extern bool IsRunning;
 extern bool IsShuttingDown;
 // Per-user writable directory (settings, saves).
 const std::string& userDir();
 void setUserDir(const std::string& dir);
+
+// Logging (console + galaxy-log.txt) and crash reports (pc/src/crash.cpp).
+void openLogFile(const std::string& exeDir, const std::string& userDir);
+void installCrashHandler();
+void onThreadStart();
+void log(const char* fmt, ...);
+void logV(const char* fmt, va_list args);
 }  // namespace pc
 
 #ifdef __cplusplus

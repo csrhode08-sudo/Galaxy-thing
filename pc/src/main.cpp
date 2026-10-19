@@ -32,7 +32,7 @@ void logCallback(AuroraLogLevel level, const char* module, const char* message, 
     if (level == LOG_DEBUG) {
         return;
     }
-    std::fprintf(stderr, "[%s %s] %.*s\n", kLevels[level], module, (int)len, message);
+    pc::log("[%s %s] %.*s\n", kLevels[level], module, (int)len, message);
     if (level == LOG_FATAL) {
         std::fflush(stderr);
         std::abort();
@@ -67,6 +67,7 @@ std::string findDisc(const char* exeDir) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    pc::installCrashHandler();
     std::string discPath;
     std::string overlayPath;
     for (int i = 1; i < argc; i++) {
@@ -88,6 +89,7 @@ int main(int argc, char* argv[]) {
     std::string userDir = prefPath ? prefPath : ".";
     if (prefPath) SDL_free(prefPath);
     pc::setUserDir(userDir);
+    pc::openLogFile(base ? base : "", userDir);
 
     AuroraConfig config{};
     config.appName = "Super Mario Galaxy";
