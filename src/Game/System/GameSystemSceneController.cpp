@@ -215,6 +215,13 @@ bool GameSystemSceneController::isStopSound() const {
     return true;
 }
 
+#ifdef TARGET_PC
+bool GameSystemSceneController::isChangingScenePC() const {
+    return !isCurrentNerve(GET_NERVE(GameSystemSceneController, GameSystemSceneControllerNormal)) &&
+           !isCurrentNerve(GET_NERVE(GameSystemSceneController, GameSystemSceneControllerNotInitialized));
+}
+#endif
+
 bool GameSystemSceneController::isReadyToStartScene() const {
     return isCurrentNerve(GET_NERVE(GameSystemSceneController, GameSystemSceneControllerReadyToStartScene)) &&
            !mScenarioSelectScene->isScenarioSelecting();

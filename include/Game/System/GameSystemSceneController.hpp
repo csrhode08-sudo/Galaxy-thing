@@ -52,6 +52,9 @@ public:
     void destroyScene();
     bool isStopSound() const;
     bool isReadyToStartScene() const;
+#ifdef TARGET_PC
+    bool isChangingScenePC() const;  // loading / changing scenes (shows the controls hint)
+#endif
     bool isFirstUpdateSceneNerveNormal() const;
     void startScene();
     void updateScene();

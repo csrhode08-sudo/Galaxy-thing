@@ -1,4 +1,7 @@
 #ifdef TARGET_PC
+#include "pc/controls_menu.h"
+#endif
+#ifdef TARGET_PC
 #include "pc/frame.h"
 #endif
 #include "Game/System/GameSystem.hpp"
@@ -279,6 +282,9 @@ void GameSystem::updateSceneController() {
     if (isResetProcessing) {
         mSceneController->updateSceneDuringResetProcessing();
     }
+#ifdef TARGET_PC
+    pc::ui::setLoadingScreen(mSceneController->isChangingScenePC());
+#endif
 }
 
 void GameSystem::calcAnim() {
