@@ -2,7 +2,11 @@ name: Windows build
 
 on:
   push:
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -28,25 +32,55 @@ jobs:
         run: choco install ninja -y --no-progress
 
       - name: Configure
-        shell: cmd
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl *> configure.log
+          $rc = $LASTEXITCODE
+          Get-Content configure.log -Tail 100
+          exit $rc
 
       - name: Build
-        shell: cmd
-        run: cmake --build build --target galaxy -- -k 0
+        shell: pwsh
+        run: |
+          cmake --build build --target galaxy -- -k 0 *> build.log
+          $rc = $LASTEXITCODE
+          Get-Content build.log -Tail 200
+          exit $rc
 
-      - name: Package
+      # Logs are published to the ci-logs branch so they can be read without the Actions log service.
+      - name: Publish logs
         if: always()
         shell: bash
         run: |
-          mkdir -p dist
-          cp build/SuperMarioGalaxy.exe dist/ || true
-          find build -maxdepth 3 -name "*.dll" -exec cp {} dist/ \; || true
-          cp README-PC.txt dist/ 2>/dev/null || true
-          ls -la dist
+          mkdir -p ci-out
+          cp configure.log build.log ci-out/ 2>/dev/null || true
+          grep -E "error|FAILED|undefined" build.log | head -3000 > ci-out/errors.txt || true
+          echo "${GITHUB_SHA} ${{ job.status }}" > ci-out/status.txt
+          cd ci-out
+          git init -q
+          git config user.name "ci"
+          git config user.email "ci@users.noreply.github.com"
+          git checkout -q -b ci-logs
+          git add -A
+          git commit -q -m "CI logs for ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" ci-logs
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: SuperMarioGalaxy-windows
-          path: dist/
+      - name: Package
+        if: success()
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp build/SuperMarioGalaxy.exe dist/
+          find build -maxdepth 3 -name "*.dll" -exec cp {} dist/ \; || true
+          cp README-PC.txt dist/
+          ls -la dist
+          cd dist && 7z a ../SuperMarioGalaxy-windows.zip . > /dev/null
+
+      - name: Publish test build
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete test-build -y --cleanup-tag || true
+          gh release create test-build SuperMarioGalaxy-windows.zip --title "Test build" --notes "Built from ${GITHUB_SHA}" --prerelease
