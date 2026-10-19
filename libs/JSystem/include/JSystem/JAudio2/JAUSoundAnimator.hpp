@@ -107,6 +107,19 @@ public:
     /* 0x0C */ BE(f32) mBasePitch;
     /* 0x10 */  // u32 mFlags;
     union {
+#ifdef TARGET_PC
+        // File data: CodeWarrior packs bitfields from the most significant bit, so declare them in reverse.
+        /* 0x10 */ struct {
+            bool mPlaysOnlyForward : 1;
+            bool mPlaysOnlyReverse : 1;
+            bool mStopsWhenAnimationChanges : 1;
+            bool mPlaysOnlyOnce : 1;
+            bool mStopsWhenNoteOff : 1;
+            bool mStopsWhenSpeedIsZero : 1;
+            bool mSetsLifeTime : 1;
+            bool mPlaysAtIntervals : 1;
+        };
+#else
         /* 0x10 */ struct {
             bool mPlaysAtIntervals : 1;
             bool mSetsLifeTime : 1;
@@ -117,6 +130,7 @@ public:
             bool mPlaysOnlyReverse : 1;
             bool mPlaysOnlyForward : 1;
         };
+#endif
         /* 0x10 */ u32 mFlags;
     };
     /* 0x14 */ u8 mBaseVolume;
