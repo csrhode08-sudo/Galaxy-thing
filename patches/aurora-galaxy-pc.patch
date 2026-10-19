@@ -24,6 +24,19 @@ index a352797..b9ac82d 100644
  /**
   * \brief Specify a set of overlay files to be used by the DVD layer.
   *
+diff --git a/include/dolphin/types.h b/include/dolphin/types.h
+index 01f52f8..453d4f2 100644
+--- a/include/dolphin/types.h
++++ b/include/dolphin/types.h
+@@ -91,7 +91,7 @@ typedef int BOOL;
+ #if defined(__MWERKS__)
+ #define AT_ADDRESS(addr) : (addr)
+ #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
+-#elif defined(__GNUC__)
++#elif defined(__GNUC__) || defined(__clang__)
+ #define AT_ADDRESS(addr)
+ #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
+ #elif defined(_MSC_VER)
 diff --git a/lib/dolphin/dvd/dvd.cpp b/lib/dolphin/dvd/dvd.cpp
 index 94481a4..ec4ce16 100644
 --- a/lib/dolphin/dvd/dvd.cpp
