@@ -303,7 +303,7 @@ index aaf7c60..54ab020 100644
        return factor == GX_BL_SRCALPHA || factor == GX_BL_INVSRCALPHA;
      };
 diff --git a/lib/gx/shader.cpp b/lib/gx/shader.cpp
-index 9dfbdac..1c58c23 100644
+index 9dfbdac..b0209a1 100644
 --- a/lib/gx/shader.cpp
 +++ b/lib/gx/shader.cpp
 @@ -1,3 +1,4 @@
@@ -353,6 +353,28 @@ index 9dfbdac..1c58c23 100644
      if (tcg.type == GX_TG_MTX2x4 || tcg.type == GX_TG_MTX3x4) {
        if (info.indexAttr.test(GX_VA_TEX0MTXIDX + i)) {
          vtxXfrAttrs += fmt::format("\n    var tc{0}_tmp = tc{0} * ubuf.postex_mtx[in_texmtxidx{0} / 3u];", i);
+@@ -1594,6 +1607,21 @@ std::string build_shader_source(const ShaderConfig& config, DstAlphaMode dstAlph
+         "var tex{0}_samp: sampler;",
+         i, i * 2, i * 2 + 1);
+   }
++  {
++    // Rendering debug aids: AURORA_DBG_TEX shows the first sampled texture, AURORA_DBG_REGS shows C0+C1.
++    static const bool dbgTex = std::getenv("AURORA_DBG_TEX") != nullptr;
++    static const bool dbgRegs = std::getenv("AURORA_DBG_REGS") != nullptr;
++    if (dbgTex) {
++      for (u32 i = 0; i < config.tevStageCount; ++i) {
++        if (config.tevStages[i].texMapId != GX_TEXMAP_NULL) {
++          fragmentFn += fmt::format("\n    prev = vec4f(sampled{}.rgb, prev.a);", i);
++          break;
++        }
++      }
++    } else if (dbgRegs) {
++      fragmentFn += "\n    prev = vec4f(tevreg0.rgb + tevreg1.rgb, prev.a);";
++    }
++  }
+   if (!prevColorNormalized && !prevAlphaNormalized) {
+     fragmentFn += "\n    prev = tev_overflow_vec4f(prev);";
+   } else if (!prevColorNormalized) {
 diff --git a/lib/gx/texture.cpp b/lib/gx/texture.cpp
 index a56709a..1319bd4 100644
 --- a/lib/gx/texture.cpp

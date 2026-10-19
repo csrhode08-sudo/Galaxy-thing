@@ -949,6 +949,12 @@ void MarioActor::drawModelBlur() const {
 }
 
 void MarioActor::createTextureDL(DLholder* pHolder, u16 texMapID, u16 texIndex) {
+#ifdef TARGET_PC
+    // A display list can't point the GPU at a host texture; leave the material's own texture in place.
+    pHolder->mDL = nullptr;
+    pHolder->mSize = 0;
+    return;
+#endif
     MR::ProhibitSchedulerAndInterrupts prohibit(false);
 
     u8 tempDL[0x200] ATTRIBUTE_ALIGN(32);

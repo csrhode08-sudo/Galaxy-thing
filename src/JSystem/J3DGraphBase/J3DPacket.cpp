@@ -168,6 +168,18 @@ bool J3DMatPacket::isSame(J3DMatPacket* pOther) const {
     return mDiffFlag == pOther->mDiffFlag && (mDiffFlag >> 31) == 0;
 }
 
+#ifdef TARGET_PC
+void J3DMatPacket::loadTexturesPC() const {
+    if (mpMaterial == nullptr || mpMaterial->mTevBlock == nullptr) {
+        return;
+    }
+    if (mpTexture != nullptr) {
+        j3dSys.setTexture(mpTexture);
+    }
+    mpMaterial->mTevBlock->loadTexture();
+}
+#endif
+
 void J3DMatPacket::draw() {
 #ifdef TARGET_PC
     j3dSys.setTexture(mpTexture);

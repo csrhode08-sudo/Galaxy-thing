@@ -78,6 +78,9 @@ void ElectricRailHolder::draw() const {
         }
 
         J3DMatPacket* pPacket = pItem->mMatPacket;
+#ifdef TARGET_PC
+        pPacket->loadTexturesPC();
+#endif
         pItem->mMatPacket->callDL();
 
         if (pPacket->mpShapePacket->mpDisplayListObj != nullptr) {

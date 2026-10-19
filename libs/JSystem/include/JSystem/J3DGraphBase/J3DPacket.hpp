@@ -320,6 +320,12 @@ public:
     virtual int entry(J3DDrawBuffer*);
     virtual void draw();
 
+#ifdef TARGET_PC
+    // Display lists can't carry host texture pointers, so textures are bound separately. Code that calls a
+    // material's display list directly (instead of going through draw()) must call this first.
+    void loadTexturesPC() const;
+#endif
+
 public:
     /* 0x28 */ J3DShapePacket* mpInitShapePacket;
     /* 0x2C */ J3DShapePacket* mpShapePacket;

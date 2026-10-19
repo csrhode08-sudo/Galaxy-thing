@@ -495,6 +495,9 @@ namespace MR {
             J3DMatPacket* pMatPacket = pModel->getMatPacket(pMaterial->mIndex);
             J3DShapePacket* pShapePacket = pModel->getShapePacket(pMaterial->mShape->mIndex);
             j3dSys.setMatPacket(pMatPacket);
+#ifdef TARGET_PC
+            pMatPacket->loadTexturesPC();
+#endif
             pMatPacket->callDL();
             pShapePacket->getShape()->loadPreDrawSetting();
 

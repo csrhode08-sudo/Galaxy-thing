@@ -188,6 +188,9 @@ void J3DModelX::drawIn(J3DMaterial* material, bool fog, MtxPtr base, J3DModel* m
     J3DMatPacket* matPacket = getMatPacket(material->getIndex());
     J3DShapePacket* packet = model ? model->getShapePacket(material->getShape()->getIndex()) : getShapePacket(material->getShape()->getIndex());
     j3dSys.setMatPacket(matPacket);
+#ifdef TARGET_PC
+    matPacket->loadTexturesPC();
+#endif
     matPacket->callDL();
 
     if (fog) {
@@ -261,6 +264,9 @@ bool J3DModelX::simpleDrawSetup(J3DMaterial* material) {
     J3DMatPacket* matPacket = getMatPacket(material->getIndex());
     J3DShapePacket* packet = getShapePacket(material->getShape()->getIndex());
     j3dSys.setMatPacket(matPacket);
+#ifdef TARGET_PC
+    matPacket->loadTexturesPC();
+#endif
     matPacket->callDL();
     packet->getShape()->loadPreDrawSetting();
     if (packet->getDisplayListObj()) {

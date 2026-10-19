@@ -39,6 +39,9 @@ void DrawBufferShapeDrawer::swap(DrawBufferShapeDrawer* pOther) {
 }
 
 void DrawBufferShapeDrawer::draw() const {
+#ifdef TARGET_PC
+    mMatPacket->loadTexturesPC();
+#endif
     mMatPacket->mpDisplayListObj->callDL();
 
     J3DShapePacket* firstPacket = mPackets[0]->mShapePacket;
