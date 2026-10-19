@@ -275,11 +275,13 @@ void ARStartDMA(u32 type, u32 mainmem, u32 aram, u32 len) {
 // ---- Mii (RVLFaceLib): no Mii data on PC; the game falls back to its own icons ------------------------------
 
 enum { RFLErrcode_Success = 0, RFLErrcode_NotAvailable = 1 };
+// The face library itself "initializes" fine (so File Select doesn't show the Mii Channel error); the Mii
+// database is simply empty, so the game offers its character icons instead of Miis.
 s32 RFLInitResAsync(void*, void*, u32, BOOL) {
-    return RFLErrcode_NotAvailable;
+    return RFLErrcode_Success;
 }
 s32 RFLGetAsyncStatus(void) {
-    return RFLErrcode_NotAvailable;
+    return RFLErrcode_Success;
 }
 s32 RFLGetLastReason(void) {
     return 0;

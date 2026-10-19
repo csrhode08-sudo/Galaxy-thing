@@ -8,7 +8,16 @@
 #include <JSystem/JMath/JMath.hpp>
 #include <revolution/mtx.h>
 
+#ifdef TARGET_PC
+#include <cmath>
+// MSL's __fpclassifyf returns 1 for NaN (glibc's returns 1 for infinity, and MSVC has none).
+static inline int __msl_fpclassifyf(f32 x) {
+    return std::isnan(x) ? 1 : 0;
+}
+#define __fpclassifyf __msl_fpclassifyf
+#else
 extern "C" int __fpclassifyf(f32);
+#endif
 
 void MathUtil_FORCE_MATCH_SDATA2() {
     (void)1.0f;

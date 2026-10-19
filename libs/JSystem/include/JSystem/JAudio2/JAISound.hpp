@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 class JAISound;
-class JASTrack;
+struct JASTrack;
 
 class JAISoundID {
 public:
@@ -316,8 +316,13 @@ struct JAISoundFader {
 template < typename T >
 struct JAISoundStrategy {
     virtual ~JAISoundStrategy() {};
+#ifdef TARGET_PC
+    virtual void calc(T*) {}
+    virtual void mix(T*, JASSoundParams*) {}
+#else
     virtual void calc(T*);
     virtual void mix(T*, JASSoundParams*);
+#endif
 };
 
 template < typename T >
@@ -394,7 +399,7 @@ public:
 
 class JAISoundHandle;
 class JAIAudible;
-struct JAIAudience;
+class JAIAudience;
 class JAISe;
 class JAISeq;
 struct JAISoundChild;
