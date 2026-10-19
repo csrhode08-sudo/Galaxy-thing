@@ -191,6 +191,14 @@ void frameBegin() {
 }
 
 void frameEnd() {
+    static u32 sFrames;
+    static auto sLast = std::chrono::steady_clock::now();
+    if (++sFrames % 300 == 0) {
+        auto now = std::chrono::steady_clock::now();
+        double secs = std::chrono::duration<double>(now - sLast).count();
+        sLast = now;
+        OSReport("[frame] %u (%.1f fps)\n", sFrames, 300.0 / secs);
+    }
     if (sFrameBegun) {
         pc::ui::draw(sDt);
         aurora_end_frame();

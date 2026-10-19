@@ -22,7 +22,8 @@ JASTaskThread::~JASTaskThread() {
 
 void* JASTaskThread::allocCallStack(JASThreadCallback callback, const void* msg, u32 msgSize) {
     ThreadMemPool* heap;
-    u32 size = msgSize + 8;
+    // The header is 8 bytes on the Wii; with a 64-bit callback pointer the message starts later.
+    u32 size = msgSize + offsetof(JASThreadCallStack, msg);
     JASThreadCallStack* callStack = (JASThreadCallStack*)JASKernel::getCommandHeap()->alloc(size);
     if (callStack == NULL) {
         return NULL;
@@ -36,7 +37,7 @@ void* JASTaskThread::allocCallStack(JASThreadCallback callback, const void* msg,
 
 void* JASTaskThread::allocCallStack(JASThreadCallback callback, void* msg) {
     JASThreadCallStack* callStack;
-    callStack = (JASThreadCallStack*)JASKernel::getCommandHeap()->alloc(12);
+    callStack = (JASThreadCallStack*)JASKernel::getCommandHeap()->alloc(offsetof(JASThreadCallStack, msg) + sizeof(void*));  // 12 on the Wii
     if (callStack == NULL) {
         return NULL;
     }

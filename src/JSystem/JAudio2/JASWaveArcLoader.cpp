@@ -111,7 +111,7 @@ bool JASWaveArc::sendLoadCmd() {
 
     _5A++;
 
-    if (JASDvd::getThreadPointer()->sendCmdMsg(loadToAramCallback, &commandInfo, 0x10) == 0) {
+    if (JASDvd::getThreadPointer()->sendCmdMsg(loadToAramCallback, &commandInfo, sizeof(commandInfo)) == 0) {  // 0x10 on the Wii
         mHeap.free();
         return false;
     }

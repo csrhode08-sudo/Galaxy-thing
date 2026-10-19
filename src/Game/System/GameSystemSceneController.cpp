@@ -128,6 +128,9 @@ void GameSystemSceneController::initializeScene() {
 
     MR::resetWPad();
 
+#ifdef TARGET_PC
+    OSReport("[scene] %s / %s (scenario %d)\n", mCurrSceneControlInfo.mScene, mCurrSceneControlInfo.mStage, mCurrSceneControlInfo.mScenarioNo);
+#endif
     mScene = MR::createScene(mCurrSceneControlInfo.mScene);
     mScene->initNameObjListExecutor();
     mScene->initSceneObjHolder();
