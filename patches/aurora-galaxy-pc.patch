@@ -269,11 +269,74 @@ index 029a3d0..c89a901 100644
    case GX_CLAMP:
      return wgpu::AddressMode::ClampToEdge;
    case GX_REPEAT:
+diff --git a/lib/gx/gx.hpp b/lib/gx/gx.hpp
+index 9e85609..5b27680 100644
+--- a/lib/gx/gx.hpp
++++ b/lib/gx/gx.hpp
+@@ -1,4 +1,5 @@
+ #pragma once
++#include <cstdlib>
+ #include <dolphin/gx.h>
+ #include <aurora/math.hpp>
+ 
+@@ -46,7 +47,7 @@ constexpr float GX_LARGE_NUMBER = -1048576.0f;
+ 
+ namespace aurora::gx {
+ constexpr bool EnableNormalVisualization = false;
+-constexpr bool EnableDebugPrints = false;
++inline const bool EnableDebugPrints = std::getenv("AURORA_DBG_SHADERS") != nullptr;
+ constexpr bool UsePerPixelLighting = false;
+ constexpr bool UseReversedZ = true;
+ 
+diff --git a/lib/gx/pipeline.cpp b/lib/gx/pipeline.cpp
+index aaf7c60..54ab020 100644
+--- a/lib/gx/pipeline.cpp
++++ b/lib/gx/pipeline.cpp
+@@ -27,7 +27,8 @@ gfx::CompiledPipeline create_pipeline(const PipelineConfig& config, const gfx::R
+       .depthUpdate = config.depthUpdate,
+   };
+   gfx::CompiledPipeline pipeline;
+-  if (config.alphaUpdate && config.dstAlpha != UINT32_MAX && config.dstAlpha != 0) {
++  // A constant destination alpha of 0 is a real value too (Galaxy clears EFB alpha this way for its silhouette pass).
++  if (config.alphaUpdate && config.dstAlpha != UINT32_MAX) {
+     const auto usesSourceAlpha = [](GXBlendFactor factor) {
+       return factor == GX_BL_SRCALPHA || factor == GX_BL_INVSRCALPHA;
+     };
 diff --git a/lib/gx/shader.cpp b/lib/gx/shader.cpp
-index 9dfbdac..abeaa7e 100644
+index 9dfbdac..1c58c23 100644
 --- a/lib/gx/shader.cpp
 +++ b/lib/gx/shader.cpp
-@@ -1248,8 +1248,14 @@ std::string build_shader_source(const ShaderConfig& config, DstAlphaMode dstAlph
+@@ -1,3 +1,4 @@
++#include <cstdlib>
+ #include "../gfx/hash.hpp"
+ #include "../gfx/types.hpp"
+ 
+@@ -565,8 +566,13 @@ std::string vtx_attr(const ShaderConfig& config, GXAttr attr) {
+       // Default normal
+       return "vec3f(1.0, 0.0, 0.0)"s;
+     }
++    if (attr == GX_VA_CLR1 && config.attrs[GX_VA_CLR0].attrType != GX_NONE) {
++      // Like hardware (and Dolphin): a missing second color falls back to the first.
++      return "in_clr0"s;
++    }
+     if (attr == GX_VA_CLR0 || attr == GX_VA_CLR1) {
+-      return "vec4f(0.0, 0.0, 0.0, 0.0)"s;
++      // No vertex color: the channel's material color from the vertex is white, not black.
++      return "vec4f(1.0, 1.0, 1.0, 1.0)"s;
+     }
+     UNLIKELY FATAL("unmapped vtx attr {}", underlying(attr));
+   }
+@@ -806,7 +812,8 @@ auto lighting_func(const ShaderConfig& config, const ColorChannelConfig& cc, u8
+   } else if (cc.matSrc == GX_SRC_REG) {
+     matSrc = fmt::format("ubuf.cc{0}{1}_mat", i, alpha ? "a"sv : ""sv);
+   }
+-  if (!cc.lightingEnabled) {
++  static const bool dbgNoLight = std::getenv("AURORA_DBG_NOLIGHT") != nullptr;
++  if (!cc.lightingEnabled || dbgNoLight) {
+     return fmt::format("\n    {0}{2} = {1}{2};", outVar, matSrc, swizzle);
+   }
+   GXDiffuseFn diffFn = cc.diffFn;
+@@ -1248,8 +1255,14 @@ std::string build_shader_source(const ShaderConfig& config, DstAlphaMode dstAlph
        vtxXfrAttrs += fmt::format("\n    var tc{} = vec4f({}, 1.0);", i, nbt_slice_local(NbtSlice::B));
      } else if (tcg.src == GX_TG_TANGENT) {
        vtxXfrAttrs += fmt::format("\n    var tc{} = vec4f({}, 1.0);", i, nbt_slice_local(NbtSlice::T));

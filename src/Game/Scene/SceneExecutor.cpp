@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "Game/Map/Air.hpp"
 #include "Game/MapObj/SpiderThread.hpp"
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
@@ -255,6 +256,10 @@ void SceneFunction::executeDrawListXlu() {
 }
 
 void SceneFunction::executeDrawSilhouetteAndFillShadow() {
+#ifdef TARGET_PC
+    static const bool sNoSilhouette = std::getenv("PC_NO_SILHOUETTE") != nullptr;  // rendering debug aid
+    if (!sNoSilhouette)
+#endif
     MR::fillSilhouetteColor();
     MR::loadViewMtx();
     MR::loadProjectionMtx();
