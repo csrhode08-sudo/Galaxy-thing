@@ -248,6 +248,27 @@ index 04f97f5..b29c721 100644
    SET_REG_FIELD(0, obj->mode0, 8, 24, GXTexMode0Ids[id]);
    SET_REG_FIELD(0, obj->mode1, 8, 24, GXTexMode1Ids[id]);
    SET_REG_FIELD(0, obj->image0, 8, 24, GXTexImage0Ids[id]);
+diff --git a/lib/gfx/texture.cpp b/lib/gfx/texture.cpp
+index 029a3d0..c89a901 100644
+--- a/lib/gfx/texture.cpp
++++ b/lib/gfx/texture.cpp
+@@ -55,7 +55,15 @@ bool setup_swizzle(wgpu::TextureComponentSwizzleDescriptor& swizzle, u32 format)
+ 
+ wgpu::AddressMode wgpu_address_mode(GXTexWrapMode mode) {
+   switch (mode) {
+-    DEFAULT_FATAL("invalid wrap mode {}", underlying(mode));
++  default: {
++    // Wrap mode 3 is reserved on hardware; a texture object that was never fully set up can carry it.
++    static bool warned = false;
++    if (!warned) {
++      warned = true;
++      Log.warn("invalid wrap mode {}, using repeat", underlying(mode));
++    }
++    return wgpu::AddressMode::Repeat;
++  }
+   case GX_CLAMP:
+     return wgpu::AddressMode::ClampToEdge;
+   case GX_REPEAT:
 diff --git a/lib/gx/shader.cpp b/lib/gx/shader.cpp
 index 9dfbdac..abeaa7e 100644
 --- a/lib/gx/shader.cpp

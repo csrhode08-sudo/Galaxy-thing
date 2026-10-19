@@ -90,10 +90,18 @@ public:
     }
 
     JAISoundID getSoundID() const {
+#ifdef TARGET_PC
+        return JAISoundID((u32)mSoundID);  // stored big-endian in the sound animation file
+#else
         return mSoundID;
+#endif
     }
 
+#ifdef TARGET_PC
+    /* 0x00 */ BE(u32) mSoundID;
+#else
     /* 0x00 */ JAISoundID mSoundID;
+#endif
     /* 0x04 */ BE(f32) mNoteOnTime;
     /* 0x08 */ BE(f32) mNoteOffTime;
     /* 0x0C */ BE(f32) mBasePitch;

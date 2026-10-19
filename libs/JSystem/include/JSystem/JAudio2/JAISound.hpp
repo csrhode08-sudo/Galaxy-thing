@@ -76,6 +76,20 @@ public:
 
     /* 0x00 */ union {
         u32 mComposite;
+#ifdef TARGET_PC
+        // Sound IDs are compared and masked as 0xSSGGWWWW composites throughout the game, so on a
+        // little-endian host the parts are laid out in reverse to keep the composite's meaning.
+        struct {
+            u16 waveID;
+            union {
+                u16 value;
+                struct {
+                    u8 groupID;
+                    u8 sectionID;
+                } parts;
+            } type;
+        } info;
+#else
         struct {
             union {
                 u16 value;
@@ -86,6 +100,7 @@ public:
             } type;
             u16 waveID;
         } info;
+#endif
     } mID;
 };
 
