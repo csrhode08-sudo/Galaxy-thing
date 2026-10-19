@@ -2,13 +2,14 @@
 
 #include <revolution.h>
 
+// Big-endian file data.
 struct ResNTAB {
-    /* 0x0 */ u16 mEntryNum;
-    /* 0x2 */ u16 _2;
+    /* 0x0 */ BE(u16) mEntryNum;
+    /* 0x2 */ BE(u16) _2;
 
     /* 0x4 */ struct Entry {
-        u16 mKeyCode;
-        u16 mOffs;
+        BE(u16) mKeyCode;
+        BE(u16) mOffs;
     } mEntries[1];
 };
 
