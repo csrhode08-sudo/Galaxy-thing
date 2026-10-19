@@ -9,6 +9,7 @@
 #include <dolphin/os.h>
 
 #include <thread>
+#include <chrono>
 #include <mutex>
 #include <condition_variable>
 #include <unordered_map>
@@ -39,6 +40,9 @@ struct PCThreadData {
     void* param;
     bool started   = false;
     bool suspended = false;
+    // Set once the thread first blocks (or exits). On the Wii a resumed higher-priority thread runs until it blocks
+    // before the creator continues; threads commonly initialize their message queues on entry and rely on that.
+    std::atomic<bool> reachedIdle{false};
 
     ~PCThreadData() {
         if (pc::IsShuttingDown && nativeThread.joinable()) {
@@ -125,9 +129,20 @@ static OSSwitchThreadCallback sSwitchThreadCallback = nullptr;
 // ============================================================================
 
 // Thread entry wrapper - runs on the new std::thread
+static thread_local PCThreadData* tls_threadData = nullptr;
+
+namespace pc {
+    void NotifyThreadIdle() {
+        if (tls_threadData != nullptr && !tls_threadData->reachedIdle.load(std::memory_order_relaxed)) {
+            tls_threadData->reachedIdle.store(true, std::memory_order_release);
+        }
+    }
+}  // namespace pc
+
 static void ThreadEntryWrapper(OSThread* thread, PCThreadData* data) {
     // Set thread-local pointer
     tls_currentThread = thread;
+    tls_threadData = data;
 
     // Set context pointers for this thread
     OSClearContext(&thread->context);
@@ -137,6 +152,7 @@ static void ThreadEntryWrapper(OSThread* thread, PCThreadData* data) {
 
     // Call the actual thread function
     void* result = data->func(data->param);
+    data->reachedIdle.store(true, std::memory_order_release);
 
     // Thread returned - equivalent to OSExitThread
     thread->val   = result;
@@ -352,6 +368,11 @@ s32 OSResumeThread(OSThread* thread) {
 
                 data->nativeThread = std::thread(ThreadEntryWrapper, thread, data);
                 OSReport("[PC-OSThread] Started thread %p\n", thread);
+                // Let the new thread run up to its first blocking point (see PCThreadData::reachedIdle).
+                const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(250);
+                while (!data->reachedIdle.load(std::memory_order_acquire) && std::chrono::steady_clock::now() < deadline) {
+                    std::this_thread::sleep_for(std::chrono::microseconds(50));
+                }
             } else {
                 // Resume from suspension: signal the condition variable
                 // IMPORTANT: Set suspended to false BEFORE notifying to pass the wait predicate
@@ -383,6 +404,7 @@ s32 OSSuspendThread(OSThread* thread) {
             // This replicates the GameCube behavior where OSSuspendThread yields the CPU
             // immediately.
             if (thread == OSGetCurrentThread()) {
+                pc::NotifyThreadIdle();
                 // Block until 'suspended' becomes false (set by OSResumeThread)
                 // The predicate protects against spurious wakeups.
                 data->cv.wait(threadLock, [data] { return !data->suspended; });
@@ -422,6 +444,7 @@ void OSSleepThread(OSThreadQueue* queue) {
     currentThread->link.next = nullptr;
     queue->tail = currentThread;
 
+    pc::NotifyThreadIdle();
     // Wait on the condition variable for this queue
     std::condition_variable& cv = GetQueueCV(queue);
     std::unique_lock<std::mutex> lock(GetQueueCvMutex());

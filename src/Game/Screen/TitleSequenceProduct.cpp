@@ -9,6 +9,7 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "Game/Util/TriggerChecker.hpp"
+#include <revolution/os.h>
 
 namespace {
     static const s32 sPressABAppearFrame = 25;
@@ -87,6 +88,13 @@ void TitleSequenceProduct::exeBgmPrepare() {
     if (MR::isPreparedStageBgm()) {
         setNerve(GET_NERVE_ANON(TitleSequenceProductLogoFadein));
     }
+#ifdef TARGET_PC
+    // Don't let a stream that never reports ready hold the title screen forever.
+    else if (MR::isStep(this, 180)) {
+        OSReport("[title] stage BGM not prepared after 180 frames; continuing\n");
+        setNerve(GET_NERVE_ANON(TitleSequenceProductLogoFadein));
+    }
+#endif
 }
 
 void TitleSequenceProduct::exeLogoFadein() {

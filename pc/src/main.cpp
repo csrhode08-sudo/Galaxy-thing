@@ -1,3 +1,4 @@
+#include <cstdlib>
 // Super Mario Galaxy PC: program entry point.
 #include "pc/frame.h"
 #include "pc/input.h"
@@ -98,6 +99,13 @@ int main(int argc, char* argv[]) {
     config.windowPosY = -1;
     config.windowWidth = 1280;
     config.windowHeight = 960;
+    if (const char* size = std::getenv("GALAXY_WINDOW")) {  // e.g. GALAXY_WINDOW=640x480
+        int w = 0, h = 0;
+        if (std::sscanf(size, "%dx%d", &w, &h) == 2 && w > 0 && h > 0) {
+            config.windowWidth = w;
+            config.windowHeight = h;
+        }
+    }
     config.logCallback = &logCallback;
     config.logLevel = LOG_INFO;
     config.allowCpuAdapter = true;

@@ -1,3 +1,5 @@
+#include <revolution/os.h>
+#include <cstdlib>
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/AreaObj.hpp"
 #include "Game/Boss.hpp"
@@ -8108,6 +8110,12 @@ namespace NameObjFactory {
         }
 
         const Name2CreateFunc* pName2CreateFunc = getName2CreateFunc(pName, nullptr);
+
+#ifdef TARGET_PC
+        if (std::getenv("PC_OBJLOG") != nullptr) {
+            OSReport("[obj] %s%s\n", pName, (pName2CreateFunc == nullptr || pName2CreateFunc->mCreateFunc == nullptr) ? " (no creator)" : "");
+        }
+#endif
 
         if (pName2CreateFunc == nullptr) {
             return nullptr;

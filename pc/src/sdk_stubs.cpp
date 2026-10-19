@@ -101,6 +101,8 @@ void OSInitMessageQueue(OSMessageQueue* mq, OSMessage* msgArray, s32 msgCount) {
     GetMsgQueueData(mq);  // Ensure side-table entry exists
 }
 
+namespace pc { void NotifyThreadIdle(); }
+
 int OSSendMessage(OSMessageQueue* mq, void* msg, s32 flags) {
     if (!mq) return 0;
 
@@ -132,6 +134,7 @@ BOOL OSReceiveMessage(OSMessageQueue* mq, OSMessage* msg, s32 flags) {
 
     if (mq->usedCount == 0) {
         if (flags == OS_MESSAGE_NOBLOCK) return 0;
+        pc::NotifyThreadIdle();
         // BLOCK: wait until a message arrives
         data.cvReceive.wait(lock, [mq] { return mq->usedCount > 0 || pc::IsShuttingDown; });
     }

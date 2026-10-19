@@ -221,6 +221,15 @@ void FileSelector::notifyItem(FileSelectItem* pItem, s32 msg) {
 
 void FileSelector::control() {
     _C0 = nullptr;
+#ifdef TARGET_PC
+    {
+        static const Nerve* sLast = nullptr;
+        if (mSpine->getCurrentNerve() != sLast) {
+            sLast = mSpine->getCurrentNerve();
+            OSReport("[FileSelector] nerve %p step %d\n", sLast, getNerveStep());
+        }
+    }
+#endif
 
     for (int i = 0; i < mItems->getObjNum(); i++) {
         LiveActor* pActor = mItems->getActor(i);
@@ -240,6 +249,9 @@ void FileSelector::control() {
 }
 
 bool FileSelector::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+#ifdef TARGET_PC
+    if (!MR::isMsgUpdateBaseMtx(msg)) OSReport("[FileSelector] msg %u\n", msg);
+#endif
     if (MR::isMsgAutoRushBegin(msg) && isNerve(GET_NERVE(FileSelector, FileSelectorNrvWaitBind))) {
         MR::hidePlayer();
         setNerve(GET_NERVE(FileSelector, FileSelectorNrvTitle));
