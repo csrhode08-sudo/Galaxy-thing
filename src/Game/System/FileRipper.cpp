@@ -172,7 +172,7 @@ bool FileRipper::decompressSzsSub(u8* src, u8* dest) {
         return false;
     }
 
-    u32 data_len = *(u32*)(src + 4);
+    u32 data_len = (u32(src[4]) << 24) | (u32(src[5]) << 16) | (u32(src[6]) << 8) | src[7];  // big-endian
     u8* dest_end = dest + data_len;
     src += 0x10;
 
