@@ -38,6 +38,6 @@ Saves and settings live in %APPDATA%\GalaxyPC\SuperMarioGalaxy\.
 
 Known problems in this build
 ----------------------------
-- Mario (and some other lit models) can draw as a dark silhouette, and scenes look too dark.
+- A few objects can still draw as black shapes.
 - Music streams and story movies may be missing or silent; sound effects should play.
 - Text is Korean (it comes from the Korean disc).
