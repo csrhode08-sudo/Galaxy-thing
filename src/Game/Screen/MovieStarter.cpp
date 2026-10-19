@@ -6,6 +6,22 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
+#ifdef TARGET_PC
+#include <cstdlib>
+// Test aid: PC_TEST_MOVIE=<frames> starts the stage's first movie that many frames after it loads.
+namespace {
+    MovieStarter* sTestStarter = nullptr;
+    int sTestCountdown = -1;
+}  // namespace
+
+void MovieStarter_pcTestTick() {
+    if (sTestStarter != nullptr && sTestCountdown > 0 && --sTestCountdown == 0) {
+        sTestStarter->appear();
+        sTestStarter = nullptr;
+    }
+}
+#endif
+
 MovieStarter::MovieStarter(const char* pName) : LiveActor(pName), mMovieType(-1) {
 }
 
@@ -21,6 +37,12 @@ void MovieStarter::init(const JMapInfoIter& rIter) {
     MR::createMoviePlayingSequence();
     MR::getJMapInfoArg0WithInit(rIter, &mMovieType);
     makeActorDead();
+#ifdef TARGET_PC
+    if (const char* env = std::getenv("PC_TEST_MOVIE"); env != nullptr && sTestStarter == nullptr) {
+        sTestStarter = this;
+        sTestCountdown = std::atoi(env);
+    }
+#endif
 }
 
 void MovieStarter::appear() {
