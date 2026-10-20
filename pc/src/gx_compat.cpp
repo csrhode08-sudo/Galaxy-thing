@@ -8,6 +8,7 @@
 #include <revolution/thp.h>
 
 #include <cctype>
+#include <cstdlib>
 
 namespace pc_gx {
 volatile WGPipe gWGPipe;
@@ -220,6 +221,49 @@ void THPGXYuv2RgbDraw(u8* y_data, u8* u_data, u8* v_data, s16 x, s16 y, s16 text
     GXPosition3s16(x, y + polygonHeight, 0);
     GXTexCoord2u16(0, 1);
     GXEnd();
+}
+
+// Test aid: PC_THP_SELFTEST=1 draws a synthetic movie frame (grey ramp left to right, U/V ramps top to bottom) in
+// the top-left corner every frame; =2 shows only the Y plane with a plain TEV.
+void pc_thpSelfTest(void) {
+    static const char* env = std::getenv("PC_THP_SELFTEST");
+    if (env == nullptr) {
+        return;
+    }
+    constexpr int W = 64, H = 32;
+    alignas(32) static u8 ybuf[W * H];
+    alignas(32) static u8 ubuf[W * H / 4];
+    alignas(32) static u8 vbuf[W * H / 4];
+    static bool init = false;
+    if (!init) {
+        init = true;
+        auto put = [](u8* buf, int w, int x, int y, u8 v) {
+            const int tile = (y / 4) * (w / 8) + x / 8;
+            buf[tile * 32 + (y & 3) * 8 + (x & 7)] = v;
+        };
+        for (int y = 0; y < H; y++) {
+            for (int x = 0; x < W; x++) {
+                put(ybuf, W, x, y, static_cast<u8>(16 + x * 219 / (W - 1)));
+            }
+        }
+        for (int y = 0; y < H / 2; y++) {
+            for (int x = 0; x < W / 2; x++) {
+                put(ubuf, W / 2, x, y, static_cast<u8>(255 - y * 255 / (H / 2 - 1)));
+                put(vbuf, W / 2, x, y, static_cast<u8>(y * 255 / (H / 2 - 1)));
+            }
+        }
+    }
+    static GXRenderModeObj rmode{};
+    rmode.fbWidth = 640;
+    rmode.efbHeight = 456;
+    THPGXYuv2RgbSetup(&rmode);
+    if (env[0] == '2') {
+        GXSetNumTevStages(1);
+        GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+        GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
+    }
+    THPGXYuv2RgbDraw(ybuf, ubuf, vbuf, 0, 0, W, H, 320, 160);
+    THPGXRestore();
 }
 
 void THPGXSetTexObjFilter(GXTexFilter filter) {

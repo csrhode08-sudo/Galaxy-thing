@@ -230,6 +230,9 @@ void GameSystem::draw() {
     mErrorWatcher->draw();
     mHomeButtonLayout->draw();
     SingletonHolder< GameSystemResetAndPowerProcess >::get()->draw();
+#ifdef TARGET_PC
+    pc_thpSelfTest();
+#endif
 }
 
 void GameSystem::update() {
