@@ -36,8 +36,12 @@ F11 toggles fullscreen.
 
 Saves and settings live in %APPDATA%\GalaxyPC\SuperMarioGalaxy\.
 
+The game runs at the Wii's 60 frames per second whatever your monitor's refresh rate.
+
 Known problems in this build
 ----------------------------
 - A few objects can still draw as black shapes.
-- Music streams and story movies may be missing or silent; sound effects should play.
+- Some sounds may be missing.
+- Only the opening of the game (title, file select, the storybook, the Star Festival and Bowser's attack) has
+  been tested so far; later galaxies may still crash. If one does, send the console window.
 - Text is Korean (it comes from the Korean disc).
