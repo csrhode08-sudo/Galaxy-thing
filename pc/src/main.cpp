@@ -10,6 +10,7 @@
 
 #include <aurora/aurora.h>
 #include <aurora/dvd.h>
+#include <revolution/dvd.h>
 #include <aurora/main.h>
 
 #include <SDL3/SDL.h>
@@ -138,6 +139,41 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     pc_log("[main] Disc: %s\n", discPath.c_str());
+
+    // English text and menus: the US release (RMGE01) next to the Korean disc provides its UsEnglish folder.
+    if (std::getenv("GALAXY_KOREAN") == nullptr) {
+        std::vector<std::filesystem::path> dirs = {std::filesystem::path(discPath).parent_path(), std::filesystem::current_path()};
+        if (base) dirs.emplace_back(base);
+        bool found = false;
+        for (const auto& d : dirs) {
+            std::error_code ec;
+            for (const auto& entry : std::filesystem::directory_iterator(d, ec)) {
+                if (found) break;
+                if (!entry.is_regular_file(ec) || !hasDiscExtension(entry.path())) continue;
+                if (std::filesystem::equivalent(entry.path(), discPath, ec)) continue;
+                const std::string p = entry.path().string();
+                if (aurora_dvd_overlay_disc(p.c_str(), "RMGE01", "/UsEnglish/")) {
+                    pc_log("[main] English from: %s\n", p.c_str());
+                    found = true;
+                }
+            }
+            if (found) break;
+        }
+    }
+
+    // Test aid: PC_DVD_SELFTEST=<disc path> prints the start of that file from the (overlaid) disc and exits.
+    if (const char* testPath = std::getenv("PC_DVD_SELFTEST")) {
+        DVDFileInfo fi;
+        if (DVDOpen(testPath, &fi)) {
+            static u8 buf[64] __attribute__((aligned(32)));
+            const s32 n = DVDReadPrio(&fi, buf, 32, 0, 2);
+            pc_log("[dvdtest] %s: size %u, read %d: %.32s\n", testPath, (unsigned)fi.length, (int)n, (const char*)buf);
+            DVDClose(&fi);
+        } else {
+            pc_log("[dvdtest] %s: not found\n", testPath);
+        }
+        std::exit(0);
+    }
 
     // Extra files layered over the disc, e.g. the UsEnglish folder taken from the US release for English text.
     if (overlayPath.empty()) {

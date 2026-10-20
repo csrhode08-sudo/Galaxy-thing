@@ -1,8 +1,8 @@
 diff --git a/include/aurora/dvd.h b/include/aurora/dvd.h
-index a352797..b9ac82d 100644
+index a352797..82b0203 100644
 --- a/include/aurora/dvd.h
 +++ b/include/aurora/dvd.h
-@@ -98,6 +98,21 @@ typedef struct AuroraOverlayCallbacks {
+@@ -98,6 +98,28 @@ typedef struct AuroraOverlayCallbacks {
   */
  void aurora_dvd_overlay_callbacks(const AuroraOverlayCallbacks* callbacks);
  
@@ -21,6 +21,13 @@ index a352797..b9ac82d 100644
 + */
 +bool aurora_dvd_overlay_directory(const char* root);
 +
++/**
++ * \brief Adds the files of a second disc image whose paths start with `pathPrefix` on top of the opened disc
++ * (Galaxy PC addition). Fails if the image can't be opened or its game ID doesn't start with `requiredGameId`.
++ * Loose files from aurora_dvd_overlay_directory take precedence.
++ */
++bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix);
++
  /**
   * \brief Specify a set of overlay files to be used by the DVD layer.
   *
@@ -38,7 +45,7 @@ index 01f52f8..453d4f2 100644
  #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
  #elif defined(_MSC_VER)
 diff --git a/lib/dolphin/dvd/dvd.cpp b/lib/dolphin/dvd/dvd.cpp
-index 94481a4..1af6b91 100644
+index 94481a4..2d19f45 100644
 --- a/lib/dolphin/dvd/dvd.cpp
 +++ b/lib/dolphin/dvd/dvd.cpp
 @@ -1,3 +1,6 @@
@@ -113,42 +120,113 @@ index 94481a4..1af6b91 100644
    }
    return s_disc;
  }
-@@ -709,6 +744,123 @@ bool aurora_dvd_open(const char* disc_path) {
+@@ -709,6 +744,235 @@ bool aurora_dvd_open(const char* disc_path) {
    return true;
  }
  
 +// Directory-backed "disc": every file below `root` is served as an overlay file. Used for extracted game files.
 +namespace {
++// An overlay file is either a host file or a file inside a second disc image (see aurora_dvd_overlay_disc).
 +struct DirFile {
 +  std::string path;
++  NodHandle* partition = nullptr;
++  uint32_t fstIndex = 0;
++};
++
++struct OverlayHandle {
++  SDL_IOStream* io = nullptr;
++  NodHandle* nod = nullptr;
 +};
 +
 +void* dirOpen(void* userData) {
 +  auto* file = static_cast<DirFile*>(userData);
-+  return SDL_IOFromFile(file->path.c_str(), "rb");
++  if (file->partition != nullptr) {
++    NodHandle* handle = nullptr;
++    if (nod_partition_open_file(file->partition, file->fstIndex, &handle) != NOD_RESULT_OK || handle == nullptr) {
++      return nullptr;
++    }
++    return new OverlayHandle{.nod = handle};
++  }
++  SDL_IOStream* io = SDL_IOFromFile(file->path.c_str(), "rb");
++  return io != nullptr ? new OverlayHandle{.io = io} : nullptr;
 +}
 +
-+void dirClose(void* handle) { SDL_CloseIO(static_cast<SDL_IOStream*>(handle)); }
++void dirClose(void* handle) {
++  auto* h = static_cast<OverlayHandle*>(handle);
++  if (h->io != nullptr) {
++    SDL_CloseIO(h->io);
++  }
++  if (h->nod != nullptr) {
++    nod_free(h->nod);
++  }
++  delete h;
++}
 +
 +int64_t dirRead(void* handle, uint8_t* buf, size_t len) {
-+  auto* io = static_cast<SDL_IOStream*>(handle);
++  auto* h = static_cast<OverlayHandle*>(handle);
 +  size_t total = 0;
 +  while (total < len) {
-+    const size_t n = SDL_ReadIO(io, buf + total, len - total);
++    int64_t n;
++    if (h->nod != nullptr) {
++      n = nod_read(h->nod, buf + total, len - total);
++      if (n < 0) {
++        return total != 0 ? static_cast<int64_t>(total) : -1;
++      }
++    } else {
++      n = static_cast<int64_t>(SDL_ReadIO(h->io, buf + total, len - total));
++    }
 +    if (n == 0) {
 +      break;
 +    }
-+    total += n;
++    total += static_cast<size_t>(n);
 +  }
 +  return static_cast<int64_t>(total);
 +}
 +
 +int64_t dirSeek(void* handle, int64_t offset, int32_t whence) {
++  auto* h = static_cast<OverlayHandle*>(handle);
++  if (h->nod != nullptr) {
++    return nod_seek(h->nod, offset, whence);
++  }
 +  const SDL_IOWhence w = whence == 1 ? SDL_IO_SEEK_CUR : whence == 2 ? SDL_IO_SEEK_END : SDL_IO_SEEK_SET;
-+  return SDL_SeekIO(static_cast<SDL_IOStream*>(handle), offset, w);
++  return SDL_SeekIO(h->io, offset, w);
 +}
 +
 +std::vector<std::unique_ptr<DirFile>> s_dirFiles;
++
++// Second disc images whose files (below a path prefix) are added as overlay files.
++struct OverlayDisc {
++  NodHandle* disc = nullptr;
++  NodHandle* partition = nullptr;
++  std::string prefix;
++};
++std::vector<OverlayDisc> s_overlayDiscs;
++
++struct FstWalk {
++  std::vector<std::pair<std::string, uint32_t>> dirs;  // path, end index
++  std::string prefix;
++  NodHandle* partition;
++  std::map<std::string, std::pair<std::string, size_t>>* byPath;
++  std::map<std::string, std::pair<NodHandle*, uint32_t>>* discFiles;
++};
++
++uint32_t fstWalkCallback(uint32_t index, NodNodeKind kind, const char* name, uint32_t size, void* userData) {
++  auto* w = static_cast<FstWalk*>(userData);
++  while (!w->dirs.empty() && index >= w->dirs.back().second) {
++    w->dirs.pop_back();
++  }
++  const std::string parent = w->dirs.empty() ? std::string() : w->dirs.back().first;
++  if (kind == NOD_NODE_KIND_DIRECTORY) {
++    w->dirs.emplace_back(index == 0 ? std::string() : parent + "/" + name, size);
++  } else {
++    std::string path = parent + "/" + name;
++    if (path.compare(0, w->prefix.size(), w->prefix) == 0) {
++      (*w->byPath)[path] = {std::string(), size};
++      (*w->discFiles)[path] = {w->partition, index};
++    }
++  }
++  return index + 1;
++}
 +}  // namespace
 +
 +// Directories whose files are served as overlay files; later directories override earlier ones.
@@ -157,10 +235,12 @@ index 94481a4..1af6b91 100644
 +static bool registerOverlayDirectory(const char* root) {
 +  namespace fs = std::filesystem;
 +  std::error_code ec;
-+  if (root == nullptr || !fs::is_directory(root, ec)) {
-+    return false;
++  if (root != nullptr) {
++    if (!fs::is_directory(root, ec)) {
++      return false;
++    }
++    s_overlayRoots.emplace_back(root);
 +  }
-+  s_overlayRoots.emplace_back(root);
 +
 +  static const AuroraOverlayCallbacks callbacks{
 +      .open = dirOpen,
@@ -171,6 +251,11 @@ index 94481a4..1af6b91 100644
 +  aurora_dvd_overlay_callbacks(&callbacks);
 +
 +  std::map<std::string, std::pair<std::string, size_t>> byPath;  // disc path -> (host path, size)
++  std::map<std::string, std::pair<NodHandle*, uint32_t>> discFiles;  // disc path -> (overlay disc, FST index)
++  for (const auto& d : s_overlayDiscs) {
++    FstWalk walk{.prefix = d.prefix, .partition = d.partition, .byPath = &byPath, .discFiles = &discFiles};
++    nod_partition_iterate_fst(d.partition, fstWalkCallback, &walk);
++  }
 +  for (const auto& r : s_overlayRoots) {
 +    const fs::path base(r);
 +    for (auto it = fs::recursive_directory_iterator(base, ec); it != fs::recursive_directory_iterator(); it.increment(ec)) {
@@ -179,6 +264,7 @@ index 94481a4..1af6b91 100644
 +      }
 +      std::string rel = "/" + fs::relative(it->path(), base, ec).generic_string();
 +      byPath[rel] = {it->path().string(), static_cast<size_t>(it->file_size(ec))};
++      discFiles.erase(rel);  // loose files override files from overlay discs
 +    }
 +  }
 +
@@ -188,6 +274,10 @@ index 94481a4..1af6b91 100644
 +  for (const auto& [rel, host] : byPath) {
 +    auto file = std::make_unique<DirFile>();
 +    file->path = host.first;
++    if (const auto it = discFiles.find(rel); it != discFiles.end()) {
++      file->partition = it->second.first;
++      file->fstIndex = it->second.second;
++    }
 +    files.push_back(AuroraOverlayFile{rel.c_str(), file.get(), host.second});
 +    s_dirFiles.push_back(std::move(file));
 +  }
@@ -234,10 +324,39 @@ index 94481a4..1af6b91 100644
 +  return ok;
 +}
 +
++bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix) {
++  if (!s_initialized || discPath == nullptr) {
++    return false;
++  }
++  NodHandle* disc = nullptr;
++  const NodDiscOptions options{.preloader_threads = 0};
++  if (nod_disc_open(discPath, &options, &disc) != NOD_RESULT_OK || disc == nullptr) {
++    return false;
++  }
++  NodDiscHeader header{};
++  if (requiredGameId != nullptr &&
++      (nod_disc_header(disc, &header) != NOD_RESULT_OK ||
++       std::strncmp(header.game_id, requiredGameId, std::min<size_t>(6, std::strlen(requiredGameId))) != 0)) {
++    nod_free(disc);
++    return false;
++  }
++  NodHandle* partition = nullptr;
++  if (nod_disc_open_partition_kind(disc, NOD_PARTITION_KIND_DATA, nullptr, &partition) != NOD_RESULT_OK ||
++      partition == nullptr) {
++    nod_free(disc);
++    return false;
++  }
++  s_worker.stop();
++  s_overlayDiscs.push_back({.disc = disc, .partition = partition, .prefix = pathPrefix != nullptr ? pathPrefix : ""});
++  const bool ok = registerOverlayDirectory(nullptr);
++  s_worker.start();
++  return ok;
++}
++
  void aurora_dvd_close(void) {
    s_worker.stop();
    clearState();
-@@ -1062,7 +1214,7 @@ BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
+@@ -1062,7 +1326,7 @@ BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
  BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
    std::lock_guard lock(s_fstLock);
  
@@ -246,7 +365,7 @@ index 94481a4..1af6b91 100644
      return FALSE;
    }
  
-@@ -1084,7 +1236,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
+@@ -1084,7 +1348,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
        return FALSE;
      }
  
@@ -256,7 +375,7 @@ index 94481a4..1af6b91 100644
    } else {
      NodHandle* handle = nullptr;
      NodResult result = nod_partition_open_file(s_partition, entry.origEntryNum, &handle);
-@@ -1092,7 +1245,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
+@@ -1092,7 +1357,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
        return FALSE;
      }
  
@@ -266,7 +385,7 @@ index 94481a4..1af6b91 100644
    }
  
    atomic_store_release(fileInfo->cb.state, DVD_STATE_END);
-@@ -1112,10 +1266,7 @@ BOOL DVDClose(DVDFileInfo* fileInfo) {
+@@ -1112,10 +1378,7 @@ BOOL DVDClose(DVDFileInfo* fileInfo) {
      return FALSE;
    }
    s_worker.drain_command(&fileInfo->cb);
@@ -278,7 +397,7 @@ index 94481a4..1af6b91 100644
    atomic_store_release(fileInfo->cb.state, DVD_STATE_END);
    return TRUE;
  }
-@@ -1294,7 +1445,7 @@ void* DVDGetFSTLocation(void) {
+@@ -1294,7 +1557,7 @@ void* DVDGetFSTLocation(void) {
  
  BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
    ASSERTMSGLINE(0x46C, fileInfo, "DVDPrepareStreamAsync(): NULL file info was specified");
