@@ -3,6 +3,7 @@
 #include "Game/System/ResourceInfo.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include <cstring>
 #include <revolution/types.h>
 
@@ -192,9 +193,18 @@ u32 XanimeResourceTable::initGroupInfo(ResourceHolder* pResourceHolder, XanimeGr
             entry->mLoop = 0.0f;
             entry->mAttribute = 0;
         } else {
+#ifdef TARGET_PC
+            // The original reads J3DAnmBase's attribute and frame count at their 32-bit offsets (4 and 6); with
+            // an 8-byte vtable pointer those land inside the pointer.
+            const J3DAnmTransform* pAnm = static_cast< const J3DAnmTransform* >(entry->_20[0]);
+            entry->mAttribute = pAnm->getAttribute();
+            entry->mLoop = 0.0f;
+            entry->mEnd = static_cast< f32 >(pAnm->getFrameMax());
+#else
             entry->mAttribute = static_cast< u8* >(entry->_20[0])[4];
             entry->mLoop = 0.0f;
             entry->mEnd = static_cast< f32 >(reinterpret_cast< const s16* >(entry->_20[0])[3]);
+#endif
         }
 
         XanimeBckTable* ofsTables[1];
