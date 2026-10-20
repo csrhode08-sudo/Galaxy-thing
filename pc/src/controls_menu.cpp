@@ -267,13 +267,10 @@ void drawGraphicsPage() {
     ImGui::Spacing();
 
     sectionHeading("Anti-aliasing");
-    static const int kMsaa[] = {1, 2, 4, 8};
-    static const char* kMsaaNames[] = {"Off", "2x", "4x", "8x"};
-    int msaaIdx = 0;
-    for (int i = 0; i < 4; i++) {
-        if (kMsaa[i] == g.msaa) msaaIdx = i;
-    }
-    if (pillChoice("msaa", &msaaIdx, kMsaaNames, 4)) {
+    static const int kMsaa[] = {1, 4};
+    static const char* kMsaaNames[] = {"Off", "4x"};
+    int msaaIdx = g.msaa > 1 ? 1 : 0;
+    if (pillChoice("msaa", &msaaIdx, kMsaaNames, 2)) {
         g.msaa = kMsaa[msaaIdx];
         changed = true;
     }

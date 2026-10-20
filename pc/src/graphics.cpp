@@ -48,7 +48,7 @@ void load(const std::string& configDir) {
         const std::string k = line.substr(0, eq);
         const int v = std::atoi(line.c_str() + eq + 1);
         if (k == "resolution") sSettings.resolution = std::clamp(v, 0, 6);
-        else if (k == "msaa") sSettings.msaa = clampChoice(v, {1, 2, 4, 8}, 1);
+        else if (k == "msaa") sSettings.msaa = v > 1 ? 4 : 1;  // WebGPU supports only 1 or 4 samples
         else if (k == "anisotropy") sSettings.anisotropy = clampChoice(v, {1, 2, 4, 8, 16}, 16);
         else if (k == "vsync") sSettings.vsync = v != 0;
         else if (k == "fullscreen") sSettings.fullscreen = v != 0;
