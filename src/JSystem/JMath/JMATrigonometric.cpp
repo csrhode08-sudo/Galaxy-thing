@@ -36,7 +36,20 @@ namespace JMath {
         if (x == 0.0f) {
             return 0.0f;
         }
+#ifdef TARGET_PC
+        // A NaN ratio (e.g. from a quaternion between nearly parallel vectors) indexes the table with 0x80000000 on
+        // the Wii, which the 32-bit address wrap turns into mTable[0]. Keep the index in range here.
+        const f32 idx = 0.5f + Len * y / x;
+        if (!(idx >= 0.0f)) {
+            return mTable[0];
+        }
+        if (idx >= static_cast< f32 >(Len)) {
+            return _1000;
+        }
+        return mTable[static_cast< s32 >(idx)];
+#else
         return mTable[static_cast< s32 >(0.5f + Len * y / x)];
+#endif
     }
 
     template < int Bits, typename T >

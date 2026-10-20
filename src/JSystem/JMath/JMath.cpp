@@ -34,6 +34,8 @@ void JMAQuatLerp(__REGISTER const Quaternion* p, __REGISTER const Quaternion* q,
         
         ps_sum0     dp, dp, dp, dp
     }
+#else
+    dp = p->x * q->x + p->y * q->y + (p->z * q->z + p->w * q->w);
 #endif  // clang-format on
     f32 local_78 = dp;
 
@@ -67,6 +69,14 @@ void JMAVECScaleAdd(__REGISTER const Vec* vec1, __REGISTER const Vec* vec2, __RE
         ps_madds0 rz, v1z,  scale, v2z
         psq_st rz, 8(dst), 1, 0
 	}
+#else
+    // dst = vec1 * scale + vec2
+    const f32 x = vec1->x * scale + vec2->x;
+    const f32 y = vec1->y * scale + vec2->y;
+    const f32 z = vec1->z * scale + vec2->z;
+    dst->x = x;
+    dst->y = y;
+    dst->z = z;
 #endif  // clang-format on
 }
 
