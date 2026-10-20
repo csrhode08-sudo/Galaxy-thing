@@ -43,6 +43,10 @@ size, keep the file name (save as .png or .dds) and put it in %APPDATA%\GalaxyPC
 (subfolders are fine). Replacements load when the game starts. The names follow Dolphin's texture-pack
 convention. The Graphics page has buttons that open both folders.
 
+"Save all menu & HUD images" (same page) saves every menu and HUD image at once - in English when the US disc is
+next to the Korean one - to %APPDATA%\GalaxyPC\SuperMarioGalaxy\ui_textures\, sorted into folders by screen.
+Edit any of them, keep the file name, and put the edited files (folders and all is fine) in the textures folder.
+
 Saves and settings live in %APPDATA%\GalaxyPC\SuperMarioGalaxy\.
 
 The game runs at the Wii's 60 frames per second whatever your monitor's refresh rate.

@@ -33,6 +33,29 @@ index a352797..b217c80 100644
  /**
   * \brief Specify a set of overlay files to be used by the DVD layer.
   *
+diff --git a/include/aurora/texture.hpp b/include/aurora/texture.hpp
+index 6c68778..8d45656 100644
+--- a/include/aurora/texture.hpp
++++ b/include/aurora/texture.hpp
+@@ -5,6 +5,7 @@
+ #include <filesystem>
+ #include <optional>
+ #include <span>
++#include <string>
+ #include <string_view>
+ #include <variant>
+ #include <vector>
+@@ -97,6 +98,10 @@ void reload_replacement_directory(const std::filesystem::path& root, Replacement
+ 
+ bool has_replacement(const GXTexObj* obj, const GXTlutObj* tlut = nullptr);
+ 
++/// Writes `obj` (with `tlut` for palette formats) as a PNG named like a replacement file, in `dir`
++/// (Galaxy PC addition). Returns the file name, or an empty string on failure.
++std::string dump_texture_png(const GXTexObj* obj, const GXTlutObj* tlut, const std::filesystem::path& dir);
++
+ } // namespace aurora::texture
+ 
+ #endif
 diff --git a/include/dolphin/types.h b/include/dolphin/types.h
 index 01f52f8..453d4f2 100644
 --- a/include/dolphin/types.h
@@ -495,6 +518,71 @@ index 04f97f5..b29c721 100644
    SET_REG_FIELD(0, obj->mode0, 8, 24, GXTexMode0Ids[id]);
    SET_REG_FIELD(0, obj->mode1, 8, 24, GXTexMode1Ids[id]);
    SET_REG_FIELD(0, obj->image0, 8, 24, GXTexImage0Ids[id]);
+diff --git a/lib/gfx/png_io.cpp b/lib/gfx/png_io.cpp
+index 9fb1379..1607d87 100644
+--- a/lib/gfx/png_io.cpp
++++ b/lib/gfx/png_io.cpp
+@@ -3,6 +3,7 @@
+ #include "../io.hpp"
+ #include "png.h"
+ 
++#include <cstdio>
+ #include <cstring>
+ 
+ static aurora::Module Log("aurora::gfx::png");
+@@ -106,4 +107,42 @@ load_png_file(const std::filesystem::path& path) noexcept {
+   }
+   return parse_png_bytes(*bytes);
+ }
++bool write_rgba8_png(const std::filesystem::path& path, uint32_t width, uint32_t height, ArrayRef<uint8_t> pixels) noexcept {
++  if (width == 0 || height == 0 || pixels.size() < static_cast<size_t>(width) * height * 4) {
++    return false;
++  }
++  std::error_code ec;
++  std::filesystem::create_directories(path.parent_path(), ec);
++#ifdef _WIN32
++  FILE* file = _wfopen(path.wstring().c_str(), L"wb");
++#else
++  FILE* file = std::fopen(path.string().c_str(), "wb");
++#endif
++  if (file == nullptr) {
++    return false;
++  }
++  png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
++  png_infop info = png != nullptr ? png_create_info_struct(png) : nullptr;
++  if (png == nullptr || info == nullptr) {
++    png_destroy_write_struct(&png, &info);
++    std::fclose(file);
++    return false;
++  }
++  if (setjmp(png_jmpbuf(png))) {
++    png_destroy_write_struct(&png, &info);
++    std::fclose(file);
++    return false;
++  }
++  png_init_io(png, file);
++  png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
++               PNG_FILTER_TYPE_DEFAULT);
++  png_write_info(png, info);
++  for (uint32_t y = 0; y < height; ++y) {
++    png_write_row(png, const_cast<png_bytep>(pixels.data() + static_cast<size_t>(y) * width * 4));
++  }
++  png_write_end(png, nullptr);
++  png_destroy_write_struct(&png, &info);
++  std::fclose(file);
++  return true;
++}
+ }
+diff --git a/lib/gfx/png_io.hpp b/lib/gfx/png_io.hpp
+index 3e15fbf..019c4b7 100644
+--- a/lib/gfx/png_io.hpp
++++ b/lib/gfx/png_io.hpp
+@@ -8,4 +8,5 @@
+ namespace aurora::gfx::png {
+ std::optional<ConvertedTexture> parse_png_bytes(ArrayRef<uint8_t> bytes) noexcept;
+ std::optional<ConvertedTexture> load_png_file(const std::filesystem::path& path) noexcept;
++bool write_rgba8_png(const std::filesystem::path& path, uint32_t width, uint32_t height, ArrayRef<uint8_t> pixels) noexcept;
+ } // namespace aurora::gfx::png
 diff --git a/lib/gfx/texture.cpp b/lib/gfx/texture.cpp
 index 029a3d0..c89a901 100644
 --- a/lib/gfx/texture.cpp
@@ -623,10 +711,19 @@ index 9dfbdac..b0209a1 100644
      fragmentFn += "\n    prev = tev_overflow_vec4f(prev);";
    } else if (!prevColorNormalized) {
 diff --git a/lib/gx/texture.cpp b/lib/gx/texture.cpp
-index a56709a..ee05460 100644
+index a56709a..2887580 100644
 --- a/lib/gx/texture.cpp
 +++ b/lib/gx/texture.cpp
-@@ -46,6 +46,7 @@ struct DynamicPaletteEntry {
+@@ -4,6 +4,8 @@
+ #include "../gfx/tex_palette_conv.hpp"
+ #include "../gfx/texture_convert.hpp"
+ #include "../gfx/texture_replacement.hpp"
++#include "../gfx/png_io.hpp"
++#include <aurora/texture.hpp>
+ #include "shader_info.hpp"
+ 
+ #include <absl/container/flat_hash_map.h>
+@@ -46,6 +48,7 @@ struct DynamicPaletteEntry {
  
  struct CachedTextureEntry {
    gfx::TextureHandle handle;
@@ -634,7 +731,7 @@ index a56709a..ee05460 100644
    u32 texDataVersion = 0;
    u32 tlutObjId = 0;
    u32 tlutDataVersion = 0;
-@@ -206,6 +207,7 @@ void store_cached_texture(const GXTexObj_& obj, gfx::TextureHandle handle, u32 t
+@@ -206,6 +209,7 @@ void store_cached_texture(const GXTexObj_& obj, gfx::TextureHandle handle, u32 t
    }
  
    entry.handle = std::move(handle);
@@ -642,7 +739,7 @@ index a56709a..ee05460 100644
    entry.texDataVersion = obj.texDataVersion;
    entry.tlutObjId = tlutObjId;
    entry.tlutDataVersion = tlutDataVersion;
-@@ -595,6 +597,22 @@ void invalidate_replacement(uint64_t replacementId) noexcept {
+@@ -595,6 +599,22 @@ void invalidate_replacement(uint64_t replacementId) noexcept {
  gfx::TextureHandle resolve_static_texture(const GXTexObj_& obj) {
    ZoneScoped;
  
@@ -665,7 +762,7 @@ index a56709a..ee05460 100644
    if (obj.texObjId != 0) {
      if (const auto it = s_textureObjectCaches.find(obj.texObjId); it != s_textureObjectCaches.end()) {
        auto& entry = it->second;
-@@ -603,6 +621,23 @@ gfx::TextureHandle resolve_static_texture(const GXTexObj_& obj) {
+@@ -603,6 +623,23 @@ gfx::TextureHandle resolve_static_texture(const GXTexObj_& obj) {
          ++s_stats.objectHits;
          return entry.handle;
        }
@@ -689,3 +786,46 @@ index a56709a..ee05460 100644
      }
    }
  
+@@ -877,3 +914,42 @@ void resolve_sampled_textures(const ShaderInfo& info) noexcept {
+   }
+ }
+ } // namespace aurora::gx
++
++namespace aurora::texture {
++std::string dump_texture_png(const GXTexObj* obj_, const GXTlutObj* tlut_, const std::filesystem::path& dir) {
++  const auto& obj = *reinterpret_cast<const GXTexObj_*>(obj_);
++  const auto* tlut = reinterpret_cast<const GXTlutObj_*>(tlut_);
++  if (!obj.has_data() || obj.width() == 0 || obj.height() == 0) {
++    return {};
++  }
++  const bool palette = gx::is_palette_format(obj.format());
++  if (palette && (tlut == nullptr || tlut->data == nullptr)) {
++    return {};
++  }
++  const auto keys = gx::hash_texture_source(obj, palette ? tlut : nullptr, true);
++  if (!keys.sourceKey.has_value()) {
++    return {};
++  }
++  std::string name = gfx::texture_replacement::build_texture_replacement_name(*keys.sourceKey);
++  if (const auto dot = name.rfind('.'); dot != std::string::npos) {
++    name = name.substr(0, dot) + ".png";
++  }
++  const ArrayRef texData{static_cast<const uint8_t*>(obj.data), UINT32_MAX};
++  gfx::ConvertedTexture pixels;
++  if (palette) {
++    const size_t tlutBytes = gx::texture::tlut_source_size(tlut->numEntries);
++    pixels = gfx::convert_texture_palette(obj.format(), obj.width(), obj.height(), 1, texData, tlut->format,
++                                          tlut->numEntries, {static_cast<const uint8_t*>(tlut->data), tlutBytes});
++  } else {
++    pixels = gfx::convert_texture(obj.format(), obj.width(), obj.height(), 1, texData);
++  }
++  const size_t rgbaBytes = static_cast<size_t>(obj.width()) * obj.height() * 4;
++  if (pixels.data.empty() || pixels.format != wgpu::TextureFormat::RGBA8Unorm || pixels.data.size() < rgbaBytes) {
++    return {};
++  }
++  if (!gfx::png::write_rgba8_png(dir / name, obj.width(), obj.height(), {pixels.data.data(), rgbaBytes})) {
++    return {};
++  }
++  return name;
++}
++} // namespace aurora::texture

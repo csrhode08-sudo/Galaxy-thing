@@ -4,6 +4,7 @@
 #include "pc/input.h"
 #include "pc/platform.h"
 #include "pc/graphics.h"
+#include "pc/ui_dump.h"
 #include "pc/controls_menu.h"
 
 #include <revolution/os.h>
@@ -197,6 +198,9 @@ int main(int argc, char* argv[]) {
     }
 
     pc::input::init(userDir);
+    if (std::getenv("PC_UI_DUMP") != nullptr) {  // test aid: save all UI images at startup
+        pc::dumpUiTextures(pc::graphics::uiDumpFolder());
+    }
 
     OSInit();
     pc_initMEM2(160 * 1024 * 1024);

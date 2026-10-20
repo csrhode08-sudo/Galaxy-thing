@@ -79,6 +79,10 @@ std::string dumpFolder() {
     return sDir + "/texture_dumps";
 }
 
+std::string uiDumpFolder() {
+    return sDir + "/ui_textures";
+}
+
 std::string replacementFolder() {
     return sDir + "/textures";
 }

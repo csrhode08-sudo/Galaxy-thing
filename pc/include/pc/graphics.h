@@ -23,7 +23,8 @@ void save();
 Settings& settings();
 const Settings& startupSettings();
 std::string dumpFolder();         // where dumped textures go
-std::string replacementFolder();  // where replacement textures are loaded from
+std::string replacementFolder();
+std::string uiDumpFolder();       // where "Save all menu & HUD images" writes  // where replacement textures are loaded from
 void loadReplacements();          // after aurora_initialize  // the values the game was started with (for "restart to apply")
 
 }  // namespace pc::graphics

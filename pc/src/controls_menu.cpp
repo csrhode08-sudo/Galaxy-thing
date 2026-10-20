@@ -3,6 +3,7 @@
 #include "pc/controls_menu.h"
 #include "pc/graphics.h"
 #include "pc/input.h"
+#include "pc/ui_dump.h"
 
 #include <imgui.h>
 
@@ -332,6 +333,15 @@ void drawGraphicsPage() {
         }
         SDL_OpenURL(url.c_str());
     };
+    static std::string sUiDumpStatus;
+    if (pillButton("Save all menu & HUD images", false)) {
+        sUiDumpStatus = pc::dumpUiTextures(graphics::uiDumpFolder());
+        openFolder(graphics::uiDumpFolder());
+    }
+    if (!sUiDumpStatus.empty()) {
+        ImGui::SameLine();
+        ImGui::TextColored(kGold, "%s", sUiDumpStatus.c_str());
+    }
     if (pillButton("Open saved textures", false)) {
         openFolder(graphics::dumpFolder());
     }
