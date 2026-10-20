@@ -204,34 +204,34 @@ public:
     }
 
     f32 getIncTransX() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[5];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[5];
     }
     f32 getInitTransX() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[0];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[0];
     }
     f32 getIncTransY() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[6];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[6];
     }
     f32 getInitTransY() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[1];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[1];
     }
     f32 getIncScaleX() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[7];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[7];
     }
     f32 getInitScaleX() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[2];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[2];
     }
     f32 getIncScaleY() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[8];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[8];
     }
     f32 getInitScaleY() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[3];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[3];
     }
     f32 getIncRot() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[9];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[9];
     }
     f32 getInitRot() const {
-        return ((f32*)mpTexCrdMtxAnmTbl)[4];
+        return ((const BE(f32)*)mpTexCrdMtxAnmTbl)[4];
     }
     u8 getTexAnmKeyNum() const {
         return mpData->mTexAnmNum;

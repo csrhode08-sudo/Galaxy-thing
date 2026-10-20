@@ -476,7 +476,7 @@ void JPABaseEmitter::init(JPAEmitterManager* pManager, JPAResource* pResource) {
         MR::normalize(&mLocalDir);
     }
 
-    const JGeometry::TVec3< s16 >& rRotation = mpRes->getDyn()->mpData->mEmitterRot;
+    const auto& rRotation = mpRes->getDyn()->mpData->mEmitterRot;
     const s16 x = rRotation.x;
     const s16 z = rRotation.z;
     const s16 y = rRotation.y;

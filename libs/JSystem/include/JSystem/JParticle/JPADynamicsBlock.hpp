@@ -11,9 +11,9 @@ struct JPADynamicsBlockData {
 
     /* 0x08 */ BE(u32) mFlags;
     /* 0x0C */ BE(u32) mResUserWork;
-    /* 0x10 */ JGeometry::TVec3< f32 > mEmitterScl;
-    /* 0x1C */ JGeometry::TVec3< f32 > mEmitterTrs;
-    /* 0x28 */ JGeometry::TVec3< f32 > mEmitterDir;
+    /* 0x10 */ BE(Vec) mEmitterScl;
+    /* 0x1C */ BE(Vec) mEmitterTrs;
+    /* 0x28 */ BE(Vec) mEmitterDir;
     /* 0x34 */ BE(f32) mInitialVelOmni;
     /* 0x38 */ BE(f32) mInitialVelAxis;
     /* 0x3C */ BE(f32) mInitialVelRndm;
@@ -27,7 +27,9 @@ struct JPADynamicsBlockData {
     /* 0x5C */ BE(f32) mVolumeMinRad;
     /* 0x60 */ BE(f32) mAirResist;
     /* 0x64 */ BE(f32) mMoment;
-    /* 0x68 */ JGeometry::TVec3< s16 > mEmitterRot;
+    /* 0x68 */ struct {
+        BE(s16) x, y, z;
+    } mEmitterRot;
     /* 0x6E */ BE(s16) mMaxFrame;
     /* 0x70 */ BE(s16) mStartFrame;
     /* 0x72 */ BE(s16) mLifeTime;

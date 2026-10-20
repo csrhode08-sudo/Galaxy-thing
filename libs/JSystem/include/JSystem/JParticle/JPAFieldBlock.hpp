@@ -125,8 +125,8 @@ public:
     /* 0x00 */ u8 mMagic[4];
     /* 0x04 */ BE(u32) mSize;
     /* 0x08 */ BE(u32) mFlags;
-    /* 0x0C */ JGeometry::TVec3< f32 > mPos;
-    /* 0x18 */ JGeometry::TVec3< f32 > mDir;
+    /* 0x0C */ BE(Vec) mPos;
+    /* 0x18 */ BE(Vec) mDir;
     /* 0x24 */ BE(f32) mMag;
     /* 0x28 */ BE(f32) mMagRndm;
     /* 0x2C */ BE(f32) mVal1;
@@ -191,10 +191,12 @@ public:
         return mMag;
     }
     void getPosOrig(JGeometry::TVec3< f32 >* pos) {
-        pos->set(mpData->mPos);
+        const Vec v = mpData->mPos;
+        pos->set(v.x, v.y, v.z);
     }
     void getDirOrig(JGeometry::TVec3< f32 >* dir) {
-        dir->set(mpData->mDir);
+        const Vec v = mpData->mDir;
+        dir->set(v.x, v.y, v.z);
     }
     f32 getMagOrig() {
         return mpData->mMag;

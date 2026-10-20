@@ -65,11 +65,23 @@ void JPAVolumeCube(JPAEmitterWorkData* work) {
     work->mVolumeCalcData.mVelAxis.set< f32 >(work->mVolumeCalcData.mVolumePos.x, 0.0f, work->mVolumeCalcData.mVolumePos.z);
 }
 
+#ifdef TARGET_PC
+// The Broadway's divw doesn't trap on a zero divisor (the result is 0, or -1 for a negative dividend); x86 does.
+static inline s32 divw(s32 a, s32 b) {
+    if (b == 0 || (a == INT32_MIN && b == -1)) {
+        return a < 0 ? -1 : 0;
+    }
+    return a / b;
+}
+#else
+#define divw(a, b) ((a) / (b))
+#endif
+
 static void JPAVolumeSphere(JPAEmitterWorkData* work) {
     s16 phi, theta;
     if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
-        phi = (u16)(work->mVolumeX * 0x8000 / (work->mDivNumber - 1) + 0x4000);
-        u16 angle = (u16)(work->mVolumeAngleNum * 0x10000 / (work->mVolumeAngleMax - 1));
+        phi = (u16)(divw(work->mVolumeX * 0x8000, work->mDivNumber - 1) + 0x4000);
+        u16 angle = (u16)divw(work->mVolumeAngleNum * 0x10000, work->mVolumeAngleMax - 1);
         theta = (f32)angle * work->mVolumeSweep + 0x8000;
         work->mVolumeAngleNum++;
         if (work->mVolumeAngleNum == work->mVolumeAngleMax) {
