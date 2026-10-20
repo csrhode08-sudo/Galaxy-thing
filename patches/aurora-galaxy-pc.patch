@@ -466,10 +466,26 @@ index 9dfbdac..b0209a1 100644
      fragmentFn += "\n    prev = tev_overflow_vec4f(prev);";
    } else if (!prevColorNormalized) {
 diff --git a/lib/gx/texture.cpp b/lib/gx/texture.cpp
-index a56709a..1319bd4 100644
+index a56709a..ee05460 100644
 --- a/lib/gx/texture.cpp
 +++ b/lib/gx/texture.cpp
-@@ -595,6 +595,22 @@ void invalidate_replacement(uint64_t replacementId) noexcept {
+@@ -46,6 +46,7 @@ struct DynamicPaletteEntry {
+ 
+ struct CachedTextureEntry {
+   gfx::TextureHandle handle;
++  bool privateHandle = false; // owned by this texture object alone; updated in place when its data changes
+   u32 texDataVersion = 0;
+   u32 tlutObjId = 0;
+   u32 tlutDataVersion = 0;
+@@ -206,6 +207,7 @@ void store_cached_texture(const GXTexObj_& obj, gfx::TextureHandle handle, u32 t
+   }
+ 
+   entry.handle = std::move(handle);
++  entry.privateHandle = false;
+   entry.texDataVersion = obj.texDataVersion;
+   entry.tlutObjId = tlutObjId;
+   entry.tlutDataVersion = tlutDataVersion;
+@@ -595,6 +597,22 @@ void invalidate_replacement(uint64_t replacementId) noexcept {
  gfx::TextureHandle resolve_static_texture(const GXTexObj_& obj) {
    ZoneScoped;
  
@@ -492,3 +508,27 @@ index a56709a..1319bd4 100644
    if (obj.texObjId != 0) {
      if (const auto it = s_textureObjectCaches.find(obj.texObjId); it != s_textureObjectCaches.end()) {
        auto& entry = it->second;
+@@ -603,6 +621,23 @@ gfx::TextureHandle resolve_static_texture(const GXTexObj_& obj) {
+         ++s_stats.objectHits;
+         return entry.handle;
+       }
++      // The same texture object with new data (GXInitTexObjData, e.g. a movie frame): write the new data into a
++      // texture of its own instead of creating a new texture for every version.
++      if (entry.handle && entry.tlutObjId == 0 && entry.replacementId == 0 && !entry.handle->isReplacement &&
++          entry.handle->size.width == obj.width() && entry.handle->size.height == obj.height() &&
++          entry.handle->mipCount == obj.mip_count() && entry.handle->gxFormat == obj.format() && obj.data != nullptr) {
++        const size_t sourceBytes = texture_source_size(obj.format(), obj.width(), obj.height(), obj.mip_count());
++        if (!entry.privateHandle) {
++          entry.handle = gfx::new_dynamic_texture_2d(obj.width(), obj.height(), obj.mip_count(), obj.format(),
++                                                     "GX Updated Texture");
++          entry.privateHandle = true;
++        }
++        gfx::write_texture(*entry.handle, {static_cast<const uint8_t*>(obj.data), sourceBytes});
++        entry.texDataVersion = obj.texDataVersion;
++        entry.lastUsedFrame = s_frameCount;
++        s_stats.uploadBytes += texture_handle_size(entry.handle);
++        return entry.handle;
++      }
+     }
+   }
+ 

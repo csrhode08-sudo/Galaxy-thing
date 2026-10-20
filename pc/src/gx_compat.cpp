@@ -200,16 +200,43 @@ void THPGXYuv2RgbSetup(const GXRenderModeObj* rmode) {
 
 void THPGXYuv2RgbDraw(u8* y_data, u8* u_data, u8* v_data, s16 x, s16 y, s16 textureWidth, s16 textureHeight, s16 polygonWidth,
                       s16 polygonHeight) {
-    GXTexObj tobj0, tobj1, tobj2;
-    GXInitTexObj(&tobj0, y_data, textureWidth, textureHeight, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
-    GXInitTexObjLOD(&tobj0, sThpFilter, sThpFilter, 0, 0, 0, GX_FALSE, GX_FALSE, GX_ANISO_1);
-    GXLoadTexObj(&tobj0, GX_TEXMAP0);
-    GXInitTexObj(&tobj1, u_data, textureWidth >> 1, textureHeight >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
-    GXInitTexObjLOD(&tobj1, sThpFilter, sThpFilter, 0, 0, 0, GX_FALSE, GX_FALSE, GX_ANISO_1);
-    GXLoadTexObj(&tobj1, GX_TEXMAP1);
-    GXInitTexObj(&tobj2, v_data, textureWidth >> 1, textureHeight >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
-    GXInitTexObjLOD(&tobj2, sThpFilter, sThpFilter, 0, 0, 0, GX_FALSE, GX_FALSE, GX_ANISO_1);
-    GXLoadTexObj(&tobj2, GX_TEXMAP2);
+    // Keep one set of texture objects per frame buffer and only swap in new data, so the renderer updates the same
+    // textures every frame instead of creating new ones.
+    struct PlaneSet {
+        const u8* key;
+        s16 width, height;
+        GXTexObj obj[3];
+    };
+    static PlaneSet sSets[4];
+    static int sNextSet = 0;
+    PlaneSet* set = nullptr;
+    for (PlaneSet& candidate : sSets) {
+        if (candidate.key == y_data && candidate.width == textureWidth && candidate.height == textureHeight) {
+            set = &candidate;
+            break;
+        }
+    }
+    u8* const planes[3] = {y_data, u_data, v_data};
+    if (set == nullptr) {
+        set = &sSets[sNextSet];
+        sNextSet = (sNextSet + 1) % 4;
+        set->key = y_data;
+        set->width = textureWidth;
+        set->height = textureHeight;
+        for (int i = 0; i < 3; i++) {
+            const int shift = i == 0 ? 0 : 1;
+            GXInitTexObj(&set->obj[i], planes[i], textureWidth >> shift, textureHeight >> shift, GX_TF_I8, GX_CLAMP, GX_CLAMP,
+                         GX_FALSE);
+        }
+    } else {
+        for (int i = 0; i < 3; i++) {
+            GXInitTexObjData(&set->obj[i], planes[i]);
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        GXInitTexObjLOD(&set->obj[i], sThpFilter, sThpFilter, 0, 0, 0, GX_FALSE, GX_FALSE, GX_ANISO_1);
+        GXLoadTexObj(&set->obj[i], static_cast<GXTexMapID>(GX_TEXMAP0 + i));
+    }
 
     GXBegin(GX_QUADS, GX_VTXFMT7, 4);
     GXPosition3s16(x, y, 0);
