@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "JSystem/JUtility/JUTConsole.hpp"
 #include "JSystem/JUtility/JUTException.hpp"
@@ -147,6 +148,15 @@ void* JKRExpHeap::do_alloc(u32 size, int align) {
         }
     }
 
+#ifdef TARGET_PC
+    {
+        // Debug aid: PC_HEAP_LOG=<min bytes> logs large allocations with their caller.
+        static const char* sEnv = std::getenv("PC_HEAP_LOG");
+        if (sEnv != nullptr && size >= (u32)std::strtoul(sEnv, nullptr, 0)) {
+            OSReport("[alloc] heap %p size 0x%x free-after 0x%x caller %p\n", this, size, getTotalFreeSize(), __builtin_return_address(0));
+        }
+    }
+#endif
     if (ptr == nullptr) {
         JUTWarningConsole_f(":::cannot alloc memory (0x%x byte).\n", size);
 

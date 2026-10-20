@@ -176,14 +176,17 @@ namespace msl {
                 return;
             }
 
+            // The Wii's 4-byte iterator size picks the pivots; sizeof(TIt) is 8 on PC, which with 21-39 elements
+            // puts them outside the range.
+            static const long IT_SIZE = 4;
             static int shuffle = -4;
-            TIt m = first + (len / static_cast< long >(sizeof(TIt)) + shuffle % SHUFFLE_MAX);
+            TIt m = first + (len / IT_SIZE + shuffle % SHUFFLE_MAX);
 
             if (++shuffle >= SHUFFLE_MAX) {
                 shuffle = SHUFFLE_MIN;
             }
 
-            TIt i1 = first + (len * static_cast< long >(sizeof(TIt) - 1) / static_cast< long >(sizeof(TIt)) + shuffle % SHUFFLE_MAX);
+            TIt i1 = first + (len * (IT_SIZE - 1) / IT_SIZE + shuffle % SHUFFLE_MAX);
 
             if (++shuffle >= SHUFFLE_MAX) {
                 shuffle = SHUFFLE_MIN;
