@@ -1,8 +1,8 @@
 diff --git a/include/aurora/dvd.h b/include/aurora/dvd.h
-index a352797..82b0203 100644
+index a352797..b217c80 100644
 --- a/include/aurora/dvd.h
 +++ b/include/aurora/dvd.h
-@@ -98,6 +98,28 @@ typedef struct AuroraOverlayCallbacks {
+@@ -98,6 +98,30 @@ typedef struct AuroraOverlayCallbacks {
   */
  void aurora_dvd_overlay_callbacks(const AuroraOverlayCallbacks* callbacks);
  
@@ -24,9 +24,11 @@ index a352797..82b0203 100644
 +/**
 + * \brief Adds the files of a second disc image whose paths start with `pathPrefix` on top of the opened disc
 + * (Galaxy PC addition). Fails if the image can't be opened or its game ID doesn't start with `requiredGameId`.
-+ * Loose files from aurora_dvd_overlay_directory take precedence.
++ * Loose files from aurora_dvd_overlay_directory take precedence. Files the second disc lacks are taken from the
++ * opened disc's `fallbackPrefix` folder, if given (e.g. "/UsEnglish/" files missing on the US disc from "/KrKorean/").
 + */
-+bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix);
++bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix,
++                             const char* fallbackPrefix);
 +
  /**
   * \brief Specify a set of overlay files to be used by the DVD layer.
@@ -45,7 +47,7 @@ index 01f52f8..453d4f2 100644
  #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
  #elif defined(_MSC_VER)
 diff --git a/lib/dolphin/dvd/dvd.cpp b/lib/dolphin/dvd/dvd.cpp
-index 94481a4..2d19f45 100644
+index 94481a4..a935a16 100644
 --- a/lib/dolphin/dvd/dvd.cpp
 +++ b/lib/dolphin/dvd/dvd.cpp
 @@ -1,3 +1,6 @@
@@ -120,7 +122,7 @@ index 94481a4..2d19f45 100644
    }
    return s_disc;
  }
-@@ -709,6 +744,235 @@ bool aurora_dvd_open(const char* disc_path) {
+@@ -709,6 +744,271 @@ bool aurora_dvd_open(const char* disc_path) {
    return true;
  }
  
@@ -199,6 +201,7 @@ index 94481a4..2d19f45 100644
 +  NodHandle* disc = nullptr;
 +  NodHandle* partition = nullptr;
 +  std::string prefix;
++  std::string fallbackPrefix;  // main-disc files under this prefix stand in for missing files under `prefix`
 +};
 +std::vector<OverlayDisc> s_overlayDiscs;
 +
@@ -268,6 +271,37 @@ index 94481a4..2d19f45 100644
 +    }
 +  }
 +
++  // Files the overlay disc lacks come from the main disc's equivalent folder.
++  for (const auto& d : s_overlayDiscs) {
++    if (d.fallbackPrefix.empty()) {
++      continue;
++    }
++    std::map<std::string, std::pair<std::string, size_t>> mainPaths;
++    std::map<std::string, std::pair<NodHandle*, uint32_t>> mainFiles;
++    if (s_partition != nullptr) {
++      FstWalk walk{.prefix = d.fallbackPrefix, .partition = s_partition, .byPath = &mainPaths, .discFiles = &mainFiles};
++      nod_partition_iterate_fst(s_partition, fstWalkCallback, &walk);
++    }
++    for (const auto& [path, v] : byPath) {
++      if (path.compare(0, d.fallbackPrefix.size(), d.fallbackPrefix) == 0 && !mainPaths.contains(path)) {
++        mainPaths[path] = v;
++        if (const auto it = discFiles.find(path); it != discFiles.end()) {
++          mainFiles[path] = it->second;
++        }
++      }
++    }
++    for (const auto& [path, v] : mainPaths) {
++      const std::string alias = d.prefix + path.substr(d.fallbackPrefix.size());
++      if (byPath.contains(alias)) {
++        continue;
++      }
++      byPath[alias] = v;
++      if (const auto it = mainFiles.find(path); it != mainFiles.end()) {
++        discFiles[alias] = it->second;
++      }
++    }
++  }
++
 +  s_dirFiles.clear();
 +  std::vector<AuroraOverlayFile> files;
 +  files.reserve(byPath.size());
@@ -324,7 +358,8 @@ index 94481a4..2d19f45 100644
 +  return ok;
 +}
 +
-+bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix) {
++bool aurora_dvd_overlay_disc(const char* discPath, const char* requiredGameId, const char* pathPrefix,
++                             const char* fallbackPrefix) {
 +  if (!s_initialized || discPath == nullptr) {
 +    return false;
 +  }
@@ -347,7 +382,10 @@ index 94481a4..2d19f45 100644
 +    return false;
 +  }
 +  s_worker.stop();
-+  s_overlayDiscs.push_back({.disc = disc, .partition = partition, .prefix = pathPrefix != nullptr ? pathPrefix : ""});
++  s_overlayDiscs.push_back({.disc = disc,
++                            .partition = partition,
++                            .prefix = pathPrefix != nullptr ? pathPrefix : "",
++                            .fallbackPrefix = fallbackPrefix != nullptr ? fallbackPrefix : ""});
 +  const bool ok = registerOverlayDirectory(nullptr);
 +  s_worker.start();
 +  return ok;
@@ -356,7 +394,7 @@ index 94481a4..2d19f45 100644
  void aurora_dvd_close(void) {
    s_worker.stop();
    clearState();
-@@ -1062,7 +1326,7 @@ BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
+@@ -1062,7 +1362,7 @@ BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen) {
  BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
    std::lock_guard lock(s_fstLock);
  
@@ -365,7 +403,7 @@ index 94481a4..2d19f45 100644
      return FALSE;
    }
  
-@@ -1084,7 +1348,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
+@@ -1084,7 +1384,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
        return FALSE;
      }
  
@@ -375,7 +413,7 @@ index 94481a4..2d19f45 100644
    } else {
      NodHandle* handle = nullptr;
      NodResult result = nod_partition_open_file(s_partition, entry.origEntryNum, &handle);
-@@ -1092,7 +1357,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
+@@ -1092,7 +1393,8 @@ BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo) {
        return FALSE;
      }
  
@@ -385,7 +423,7 @@ index 94481a4..2d19f45 100644
    }
  
    atomic_store_release(fileInfo->cb.state, DVD_STATE_END);
-@@ -1112,10 +1378,7 @@ BOOL DVDClose(DVDFileInfo* fileInfo) {
+@@ -1112,10 +1414,7 @@ BOOL DVDClose(DVDFileInfo* fileInfo) {
      return FALSE;
    }
    s_worker.drain_command(&fileInfo->cb);
@@ -397,7 +435,7 @@ index 94481a4..2d19f45 100644
    atomic_store_release(fileInfo->cb.state, DVD_STATE_END);
    return TRUE;
  }
-@@ -1294,7 +1557,7 @@ void* DVDGetFSTLocation(void) {
+@@ -1294,7 +1593,7 @@ void* DVDGetFSTLocation(void) {
  
  BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback) {
    ASSERTMSGLINE(0x46C, fileInfo, "DVDPrepareStreamAsync(): NULL file info was specified");

@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
                 if (!entry.is_regular_file(ec) || !hasDiscExtension(entry.path())) continue;
                 if (std::filesystem::equivalent(entry.path(), discPath, ec)) continue;
                 const std::string p = entry.path().string();
-                if (aurora_dvd_overlay_disc(p.c_str(), "RMGE01", "/UsEnglish/")) {
+                if (aurora_dvd_overlay_disc(p.c_str(), "RMGE01", "/UsEnglish/", "/KrKorean/")) {
                     pc_log("[main] English from: %s\n", p.c_str());
                     found = true;
                 }
