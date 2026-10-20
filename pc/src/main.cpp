@@ -122,6 +122,7 @@ int main(int argc, char* argv[]) {
     AuroraInfo info = aurora_initialize(argc, argv, &config);
     (void)info;
     pc::graphics::applyRuntime();
+    pc::graphics::loadReplacements();
 
     std::error_code dirEc;
     const bool isDir = !discPath.empty() && std::filesystem::is_directory(discPath, dirEc);

@@ -13,6 +13,7 @@ struct Settings {
     int anisotropy = 16;    // texture filtering: 1, 2, 4, 8, 16 — applied at startup
     bool vsync = true;
     bool fullscreen = false;  // start in fullscreen
+    bool dumpTextures = false;  // save every texture the game uses (for making replacements) — applied at startup
 };
 
 void load(const std::string& configDir);  // before aurora_initialize
@@ -20,6 +21,9 @@ void applyToConfig(AuroraConfig& config);  // startup-only settings
 void applyRuntime();                       // after aurora_initialize, and whenever a runtime setting changes
 void save();
 Settings& settings();
-const Settings& startupSettings();  // the values the game was started with (for "restart to apply")
+const Settings& startupSettings();
+std::string dumpFolder();         // where dumped textures go
+std::string replacementFolder();  // where replacement textures are loaded from
+void loadReplacements();          // after aurora_initialize  // the values the game was started with (for "restart to apply")
 
 }  // namespace pc::graphics

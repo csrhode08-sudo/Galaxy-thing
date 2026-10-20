@@ -3,9 +3,12 @@
 
 #include <aurora/aurora.h>
 #include <aurora/gfx.h>
+#include <revolution/gx.h>
+#include <aurora/texture.hpp>
 
 #include <algorithm>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 
 // Aurora's frame-buffer scale (0 = match the window); not in its public headers.
@@ -19,6 +22,7 @@ namespace {
 Settings sSettings;
 Settings sStartup;
 std::string sPath;
+std::string sDir;
 
 int clampChoice(int v, std::initializer_list<int> allowed, int fallback) {
     for (int a : allowed) {
@@ -37,6 +41,7 @@ const Settings& startupSettings() {
 }
 
 void load(const std::string& configDir) {
+    sDir = configDir;
     sPath = configDir + "/graphics.ini";
     std::ifstream f(sPath);
     std::string line;
@@ -52,6 +57,7 @@ void load(const std::string& configDir) {
         else if (k == "anisotropy") sSettings.anisotropy = clampChoice(v, {1, 2, 4, 8, 16}, 16);
         else if (k == "vsync") sSettings.vsync = v != 0;
         else if (k == "fullscreen") sSettings.fullscreen = v != 0;
+        else if (k == "dump_textures") sSettings.dumpTextures = v != 0;
     }
     sStartup = sSettings;
 }
@@ -61,11 +67,32 @@ void applyToConfig(AuroraConfig& config) {
     config.maxTextureAnisotropy = static_cast<uint16_t>(sSettings.anisotropy);
     config.vsync = sSettings.vsync;
     config.startFullscreen = sSettings.fullscreen;
+    config.allowTextureDumps = sSettings.dumpTextures;
 }
 
 void applyRuntime() {
     aurora::window::set_frame_buffer_scale(static_cast<float>(sSettings.resolution));
     aurora_enable_vsync(sSettings.vsync);
+}
+
+std::string dumpFolder() {
+    return sDir + "/texture_dumps";
+}
+
+std::string replacementFolder() {
+    return sDir + "/textures";
+}
+
+void loadReplacements() {
+    // Replacement images (.png or .dds, named like the dumped files) in the "textures" folder, including
+    // subfolders. The same names as Dolphin's texture packs.
+    std::error_code ec;
+    std::filesystem::create_directories(replacementFolder(), ec);
+    const auto group = aurora::texture::load_replacement_directory(std::filesystem::u8path(replacementFolder()));
+    pc_log("[graphics] %zu replacement textures from %s\n", group.registrations.size(), replacementFolder().c_str());
+    if (sSettings.dumpTextures) {
+        pc_log("[graphics] Dumping textures to %s\n", dumpFolder().c_str());
+    }
 }
 
 void save() {
@@ -81,6 +108,7 @@ void save() {
     f << "anisotropy=" << sSettings.anisotropy << '\n';
     f << "vsync=" << (sSettings.vsync ? 1 : 0) << '\n';
     f << "fullscreen=" << (sSettings.fullscreen ? 1 : 0) << '\n';
+    f << "dump_textures=" << (sSettings.dumpTextures ? 1 : 0) << '\n';
 }
 
 }  // namespace pc::graphics

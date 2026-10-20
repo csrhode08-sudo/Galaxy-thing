@@ -311,6 +311,34 @@ void drawGraphicsPage() {
     ImGui::Spacing();
     ImGui::TextColored(ImVec4(0.75f, 0.85f, 1.0f, 1.0f), "%.0f frames per second. The game runs at 60, like the Wii.",
                        ImGui::GetIO().Framerate);
+    ImGui::Spacing();
+
+    sectionHeading("Texture packs");
+    if (ImGui::Checkbox("Save the game's textures as you play (for making HD replacements)", &g.dumpTextures)) {
+        changed = true;
+    }
+    if (g.dumpTextures != start.dumpTextures) {
+        ImGui::TextColored(kGold, "Restart the game to apply.");
+    }
+    ImGui::TextColored(ImVec4(0.75f, 0.85f, 1.0f, 1.0f),
+                       "Edit a saved image, keep its file name (as .png or .dds, any size), and put it in the\n"
+                       "replacements folder; it is used the next time the game starts.");
+    auto openFolder = [](const std::string& dir) {
+        std::error_code ec;
+        std::filesystem::create_directories(std::filesystem::u8path(dir), ec);
+        std::string url = "file:///" + dir;
+        for (char& ch : url) {
+            if (ch == '\\') ch = '/';
+        }
+        SDL_OpenURL(url.c_str());
+    };
+    if (pillButton("Open saved textures", false)) {
+        openFolder(graphics::dumpFolder());
+    }
+    ImGui::SameLine();
+    if (pillButton("Open replacements folder", false)) {
+        openFolder(graphics::replacementFolder());
+    }
 
     if (changed) {
         graphics::save();

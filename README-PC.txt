@@ -35,6 +35,14 @@ F1 opens the settings menu: rebind keys, mouse and controller buttons, and (Grap
 resolution, anti-aliasing, texture filtering, VSync and fullscreen. Everything is saved automatically.
 F11 toggles fullscreen.
 
+HD texture packs
+----------------
+In F1 > Graphics, turn on "Save the game's textures as you play" and restart. Every image the game draws is
+saved (once) to %APPDATA%\GalaxyPC\SuperMarioGalaxy\texture_dumps\ as you play. To replace one, edit it at any
+size, keep the file name (save as .png or .dds) and put it in %APPDATA%\GalaxyPC\SuperMarioGalaxy\textures\
+(subfolders are fine). Replacements load when the game starts. The names follow Dolphin's texture-pack
+convention. The Graphics page has buttons that open both folders.
+
 Saves and settings live in %APPDATA%\GalaxyPC\SuperMarioGalaxy\.
 
 The game runs at the Wii's 60 frames per second whatever your monitor's refresh rate.
