@@ -206,6 +206,23 @@ void frameEnd() {
         aurora_end_frame();
         sFrameBegun = false;
     }
+    // The game advances one step per frame, like the console at 59.94 Hz: hold each frame to that, whatever the
+    // monitor's refresh rate (GALAXY_UNCAPPED=1 turns this off).
+    static const bool sUncapped = std::getenv("GALAXY_UNCAPPED") != nullptr;
+    if (!sUncapped) {
+        using clock = std::chrono::steady_clock;
+        static const auto kFrame = std::chrono::nanoseconds(16683350);
+        static auto sNext = clock::now() + kFrame;
+        const auto now = clock::now();
+        if (now < sNext) {
+            SDL_DelayPrecise(static_cast<Uint64>(std::chrono::duration_cast<std::chrono::nanoseconds>(sNext - now).count()));
+            sNext += kFrame;
+        } else if (now - sNext > kFrame * 6) {
+            sNext = now + kFrame;  // fell well behind (loading, slow GPU): don't rush to catch up
+        } else {
+            sNext += kFrame;
+        }
+    }
     // Stand in for the console's vertical retrace interrupt.
     VIWaitForRetrace();
 }
