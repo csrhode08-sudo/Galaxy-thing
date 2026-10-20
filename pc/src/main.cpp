@@ -3,6 +3,8 @@
 #include "pc/frame.h"
 #include "pc/input.h"
 #include "pc/platform.h"
+#include "pc/graphics.h"
+#include "pc/controls_menu.h"
 
 #include <revolution/os.h>
 
@@ -111,11 +113,15 @@ int main(int argc, char* argv[]) {
     config.logCallback = &logCallback;
     config.logLevel = LOG_INFO;
     config.allowCpuAdapter = true;
+    config.imGuiInitCallback = [](const AuroraWindowSize* size) { pc::ui::initImGui(size != nullptr ? size->scale : 1.0f); };
+    pc::graphics::load(userDir);
+    pc::graphics::applyToConfig(config);
     // The Wii has 24 MB MEM1 + 64 MB MEM2; 64-bit pointers make structures bigger, so give headroom.
     config.mem1Size = 96 * 1024 * 1024;
     config.mem2Size = 32 * 1024 * 1024;  // emulated ARAM
     AuroraInfo info = aurora_initialize(argc, argv, &config);
     (void)info;
+    pc::graphics::applyRuntime();
 
     std::error_code dirEc;
     const bool isDir = !discPath.empty() && std::filesystem::is_directory(discPath, dirEc);

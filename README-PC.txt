@@ -31,7 +31,8 @@ Default controls (change them any time with F1)
   1 / 2             1 / 2                       Y / B
   Pointer           Mouse                       Right stick (R3 re-centres)
 
-F1 opens the controls menu (rebind keys, mouse and controller buttons; saved automatically).
+F1 opens the settings menu: rebind keys, mouse and controller buttons, and (Graphics tab) choose the
+resolution, anti-aliasing, texture filtering, VSync and fullscreen. Everything is saved automatically.
 F11 toggles fullscreen.
 
 Saves and settings live in %APPDATA%\GalaxyPC\SuperMarioGalaxy\.

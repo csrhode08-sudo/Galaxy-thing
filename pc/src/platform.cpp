@@ -3,6 +3,7 @@
 #include "pc/controls_menu.h"
 #include "pc/frame.h"
 #include "pc/input.h"
+#include "pc/graphics.h"
 
 #include <revolution/gx.h>
 #include <revolution/os.h>
@@ -162,7 +163,12 @@ void frameBegin() {
                 pc::ui::toggleMenu();
             } else if (ev->sdl.type == SDL_EVENT_KEY_DOWN && !ev->sdl.key.repeat && ev->sdl.key.scancode == SDL_SCANCODE_F11) {
                 SDL_Window* w = SDL_GetWindowFromID(ev->sdl.key.windowID);
-                if (w) SDL_SetWindowFullscreen(w, !(SDL_GetWindowFlags(w) & SDL_WINDOW_FULLSCREEN));
+                if (w) {
+                    const bool full = !(SDL_GetWindowFlags(w) & SDL_WINDOW_FULLSCREEN);
+                    SDL_SetWindowFullscreen(w, full);
+                    pc::graphics::settings().fullscreen = full;
+                    pc::graphics::save();
+                }
             }
             // While the menu is open (and not capturing a rebind), the game doesn't see input.
             if (!pc::ui::isMenuOpen() || pc::input::isCapturing()) {
