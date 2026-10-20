@@ -542,7 +542,12 @@ wchar_t* PowerStarList::makeGalaxyNameText(wchar_t* pBuffer, const GalaxyStatusA
         offset = swprintf(pBuffer, 0x100, pName);
     } else {
         const wchar_t* pName = MR::getGalaxyNameShortOnCurrentLanguage(pAccessor->getName());
+#ifdef TARGET_PC
+        // Windows' wide printf reads %s as a wide string; write the newline directly.
+        offset = swprintf(pBuffer, 0x100, L"%ls\n%ls", pBuffer, pName);
+#else
         offset = swprintf(pBuffer, 0x100, L"%ls%s%ls", pBuffer, "\n", pName);
+#endif
     }
 
     return pBuffer + offset;
@@ -627,7 +632,12 @@ wchar_t* PowerStarList::makeRaceNameText(wchar_t* pBuffer, int raceId, bool isFi
         offset = swprintf(pBuffer, 0x100, pName);
     } else {
         const wchar_t* pName = MR::getRaceNameOnCurrentLanguage(raceId);
+#ifdef TARGET_PC
+        // Windows' wide printf reads %s as a wide string; write the newline directly.
+        offset = swprintf(pBuffer, 0x100, L"%ls\n%ls", pBuffer, pName);
+#else
         offset = swprintf(pBuffer, 0x100, L"%ls%s%ls", pBuffer, "\n", pName);
+#endif
     }
 
     return pBuffer + offset;
@@ -641,7 +651,12 @@ wchar_t* PowerStarList::makeRaceTimeText(wchar_t* pBuffer, int raceId, bool isFi
     if (isFirstLine) {
         offset = swprintf(pBuffer, 0x100, raceBest);
     } else {
+#ifdef TARGET_PC
+        // Windows' wide printf reads %s as a wide string; write the newline directly.
+        offset = swprintf(pBuffer, 0x100, L"%ls\n%ls", pBuffer, raceBest);
+#else
         offset = swprintf(pBuffer, 0x100, L"%ls%s%ls", pBuffer, "\n", raceBest);
+#endif
     }
 
     return pBuffer + offset;
