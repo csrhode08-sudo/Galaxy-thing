@@ -66,3 +66,14 @@ Dusklight (CC0) for reference PC fixes to the shared JSystem/nw4r code.
   they can be symbolized with `llvm-symbolizer --obj=SuperMarioGalaxy.exe 0x140000000+offset`.
 - Test automation: `GALAXY_AUTOINPUT` (pc/src/input.cpp) scripts buttons, stick and pointer; `PC_TEST_MOVIE=<frames>`
   starts the stage's movie; `PC_NO_SILHOUETTE`, `AURORA_DBG_SHADERS/NOLIGHT/TEX/REGS` are rendering debug switches.
+- **Wii-assembly-only functions.** Some functions are paired-single assembly under `#ifdef __MWERKS__` with no C
+  fallback, so on PC they silently did nothing (`JMAVECScaleAdd` behind every `killElement`/`orthogonalize`, the
+  dot product in `JMAQuatLerp`). Check new `__MWERKS__` blocks for an `#else`.
+- **Pointer size in arithmetic.** `msl::sort` picked its pivots with `sizeof(iterator)`; with 8-byte pointers the
+  pivots fall outside the range and the sort corrupts the heap.
+- **Out-of-range table lookups.** A NaN index reads `table[0]` on the Wii (32-bit address wrap) but crashes on PC;
+  the atan table keeps the index in range.
+- **Frame rate.** The game advances one step per frame; the PC build holds frames to 59.94 Hz
+  (`GALAXY_UNCAPPED=1` to turn off for testing).
+- Movies use the SDK's YUV→RGB TEV setup; Aurora updates a texture object's own texture in place when
+  `GXInitTexObjData` changes its data. `PC_THP_SELFTEST=1` draws a test frame.
