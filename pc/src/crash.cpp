@@ -11,6 +11,12 @@
 #include <cstring>
 #include <mutex>
 #include <string>
+#include <cstdint>
+
+#if defined(__linux__)
+#include <signal.h>
+#include <ucontext.h>
+#endif
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -58,6 +64,121 @@ void log(const char* fmt, ...) {
     logV(fmt, args);
     va_end(args);
 }
+
+// ---- Integer division by zero ------------------------------------------------------------------------------
+// The Wii's divw/divwu never trap: dividing by zero (or INT_MIN by -1) leaves 0 in the result, or -1 for a negative
+// dividend, and code built for it occasionally relies on that. x86 raises #DE instead, so the faulting DIV/IDIV is
+// decoded and completed the way the Wii would: quotient as above, remainder = the dividend (what a - (a/b)*b gives).
+namespace {
+
+// Returns the length of the DIV/IDIV instruction at `ip` (0 if it isn't one) and its operand size in bytes.
+int decodeDiv(const uint8_t* ip, int* opSize, bool* isSigned) {
+    int len = 0;
+    int size = 4;
+    bool rexW = false;
+    for (;;) {
+        const uint8_t b = ip[len];
+        if (b == 0x66) {
+            size = 2;
+            len++;
+        } else if (b >= 0x40 && b <= 0x4F) {
+            rexW = (b & 8) != 0;
+            len++;
+            break;  // REX is the last prefix
+        } else if (b == 0xF2 || b == 0xF3 || b == 0x2E || b == 0x3E || b == 0x26 || b == 0x64 || b == 0x65 || b == 0x36) {
+            len++;
+        } else {
+            break;
+        }
+    }
+    const uint8_t op = ip[len++];
+    if (op != 0xF7 && op != 0xF6) {
+        return 0;
+    }
+    if (op == 0xF6) {
+        size = 1;
+    } else if (rexW) {
+        size = 8;
+    }
+    const uint8_t modrm = ip[len++];
+    const int mod = modrm >> 6, reg = (modrm >> 3) & 7, rm = modrm & 7;
+    if (reg != 6 && reg != 7) {
+        return 0;
+    }
+    if (mod != 3) {
+        if (rm == 4) {
+            const uint8_t sib = ip[len++];
+            if (mod == 0 && (sib & 7) == 5) {
+                len += 4;
+            }
+        } else if (mod == 0 && rm == 5) {
+            len += 4;  // RIP-relative
+        }
+        if (mod == 1) {
+            len += 1;
+        } else if (mod == 2) {
+            len += 4;
+        }
+    }
+    *opSize = size;
+    *isSigned = reg == 7;
+    return len;
+}
+
+// Completes the division in the saved registers. Returns false if the instruction isn't understood.
+bool emulateDivide(uint64_t& rip, uint64_t& rax, uint64_t& rdx) {
+    int size = 0;
+    bool isSigned = false;
+    const int len = decodeDiv(reinterpret_cast<const uint8_t*>(rip), &size, &isSigned);
+    if (len == 0) {
+        return false;
+    }
+    switch (size) {
+    case 8: {
+        const bool neg = isSigned && static_cast<int64_t>(rdx) < 0;
+        rdx = rax;
+        rax = neg ? ~0ull : 0;
+        break;
+    }
+    case 4: {
+        const bool neg = isSigned && static_cast<int32_t>(rdx) < 0;
+        const uint32_t lo = static_cast<uint32_t>(rax);
+        rdx = lo;
+        rax = neg ? 0xFFFFFFFFull : 0;
+        break;
+    }
+    case 2: {
+        const bool neg = isSigned && static_cast<int16_t>(rdx) < 0;
+        const uint16_t lo = static_cast<uint16_t>(rax);
+        rdx = (rdx & ~0xFFFFull) | lo;
+        rax = (rax & ~0xFFFFull) | (neg ? 0xFFFFu : 0);
+        break;
+    }
+    default: {  // 8-bit: AX / r/m8 -> AL quotient, AH remainder
+        const bool neg = isSigned && static_cast<int16_t>(rax) < 0;
+        const uint8_t lo = static_cast<uint8_t>(rax);
+        rax = (rax & ~0xFFFFull) | (static_cast<uint64_t>(lo) << 8) | (neg ? 0xFFu : 0);
+        break;
+    }
+    }
+    rip += len;
+    return true;
+}
+
+void reportDivide(uint64_t rip) {
+    static int sReported = 0;
+    if (sReported < 16) {
+        sReported++;
+#ifdef _WIN32
+        log("[pc] integer division by zero at exe+0x%llx handled like the Wii\n",
+            (unsigned long long)(rip - reinterpret_cast<uint64_t>(GetModuleHandleA(nullptr))));
+#else
+        log("[pc] integer division by zero at %p handled like the Wii\n", reinterpret_cast<void*>(rip));
+#endif
+    }
+}
+
+}  // namespace
 
 #ifdef _WIN32
 namespace {
@@ -126,6 +247,22 @@ void printStack(CONTEXT* ctx) {
     }
 }
 
+LONG WINAPI onVectoredException(EXCEPTION_POINTERS* info) {
+    const DWORD code = info->ExceptionRecord->ExceptionCode;
+    if (code == EXCEPTION_INT_DIVIDE_BY_ZERO || code == EXCEPTION_INT_OVERFLOW) {
+        CONTEXT* c = info->ContextRecord;
+        uint64_t rip = c->Rip, rax = c->Rax, rdx = c->Rdx;
+        if (emulateDivide(rip, rax, rdx)) {
+            reportDivide(c->Rip);
+            c->Rip = rip;
+            c->Rax = rax;
+            c->Rdx = rdx;
+            return EXCEPTION_CONTINUE_EXECUTION;
+        }
+    }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
 LONG WINAPI onUnhandledException(EXCEPTION_POINTERS* info) {
     std::lock_guard lock(sLogMutex);
     if (sCrashed) {
@@ -168,8 +305,35 @@ void onThreadStart() {
 #endif
 }
 
+#if defined(__linux__) && defined(__x86_64__)
+namespace {
+void onSigFpe(int sig, siginfo_t* si, void* uctx) {
+    auto* uc = static_cast<ucontext_t*>(uctx);
+    greg_t* g = uc->uc_mcontext.gregs;
+    uint64_t rip = g[REG_RIP], rax = g[REG_RAX], rdx = g[REG_RDX];
+    if ((si->si_code == FPE_INTDIV || si->si_code == FPE_INTOVF) && emulateDivide(rip, rax, rdx)) {
+        reportDivide(g[REG_RIP]);
+        g[REG_RIP] = rip;
+        g[REG_RAX] = rax;
+        g[REG_RDX] = rdx;
+        return;
+    }
+    std::signal(sig, SIG_DFL);
+    std::raise(sig);
+}
+}  // namespace
+#endif
+
 void installCrashHandler() {
+#if defined(__linux__) && defined(__x86_64__)
+    struct sigaction sa {};
+    sa.sa_sigaction = onSigFpe;
+    sa.sa_flags = SA_SIGINFO | SA_NODEFER;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGFPE, &sa, nullptr);
+#endif
 #ifdef _WIN32
+    AddVectoredExceptionHandler(1, onVectoredException);
     SetUnhandledExceptionFilter(onUnhandledException);
     // Leave room on the stack for the handler itself when the crash is a stack overflow.
     ULONG guarantee = 64 * 1024;
@@ -177,6 +341,13 @@ void installCrashHandler() {
     std::signal(SIGABRT, onAbort);
     _set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 #endif
+    if (std::getenv("PC_DIV_SELFTEST") != nullptr) {
+        volatile int32_t a = 7, b = 0, n = -7;
+        volatile int64_t a64 = 9, b64 = 0;
+        volatile uint32_t ua = 5, ub = 0;
+        log("[pc] divide test: 7/0=%d 7%%0=%d -7/0=%d -7%%0=%d 9/0=%lld 5u/0=%u (expect 0 7 -1 -7 0 0)\n", a / b, a % b, n / b,
+            n % b, (long long)(a64 / b64), ua / ub);
+    }
 }
 
 }  // namespace pc
