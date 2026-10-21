@@ -1526,6 +1526,19 @@ JMapInfoIter KCollisionServer::getAttributes(u32 index) const {
     return JMapInfoIter(mapInfo, prism->mAttribute);
 }
 
+#ifdef TARGET_PC
+// PowerPC's slw/srw use six bits of the shift count and give 0 for 32-63; x86 uses only five bits.
+static inline u32 ppcShl(u32 v, s32 s) {
+    return (s & 0x20) ? 0 : v << (s & 0x1F);
+}
+static inline u32 ppcShr(u32 v, s32 s) {
+    return (s & 0x20) ? 0 : v >> (s & 0x1F);
+}
+#else
+#define ppcShl(v, s) ((v) << (s))
+#define ppcShr(v, s) ((v) >> (s))
+#endif
+
 s32* KCollisionServer::searchBlock(s32* pShift, const u32& rX, const u32& rY, const u32& rZ) const {
     KCLFile* file = mFile;
     u8* octree = reinterpret_cast< u8* >(file->mOctree);
@@ -1533,7 +1546,8 @@ s32* KCollisionServer::searchBlock(s32* pShift, const u32& rX, const u32& rY, co
 
     s32 xyShift = file->mBlockXYShift;
     s32 xShift = file->mBlockXShift;
-    s32 offset = (((rZ >> blockWidthShift) << xyShift) | ((rY >> blockWidthShift) << xShift) | (rX >> blockWidthShift)) * 4;
+    s32 offset = (ppcShl(ppcShr(rZ, blockWidthShift), xyShift) | ppcShl(ppcShr(rY, blockWidthShift), xShift) |
+                  ppcShr(rX, blockWidthShift)) * 4;
 
     if (xyShift == -1 && xShift == -1) {
         offset = 0;
@@ -1544,7 +1558,7 @@ s32* KCollisionServer::searchBlock(s32* pShift, const u32& rX, const u32& rY, co
         (*pShift)--;
         s32 shift = *pShift;
 
-        offset = ((((rZ >> shift) & 1) << 2) | (((rY >> shift) & 1) << 1) | ((rX >> shift) & 1)) * 4;
+        offset = (((ppcShr(rZ, shift) & 1) << 2) | ((ppcShr(rY, shift) & 1) << 1) | (ppcShr(rX, shift) & 1)) * 4;
     }
 
     return reinterpret_cast< s32* >(octree + (offset & 0x7FFFFFFF));
