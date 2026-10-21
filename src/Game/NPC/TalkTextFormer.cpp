@@ -123,6 +123,13 @@ void TalkTextFormer::setArg(const CustomTagArg& rTag, s32 argIndex) {
 }
 
 bool TalkTextFormer::nextPage() {
+#ifdef TARGET_PC
+    // A balloon can be opened while its talk node holds no message (mMsg null); hasNextPage() already treats that
+    // as "no more pages", so do the same here instead of reading through a null pointer.
+    if (mMsg == nullptr) {
+        return false;
+    }
+#endif
     const wchar_t* pMessage = MR::getNextMessagePage(mMsg);
     if (pMessage != nullptr) {
         mMsg = pMessage;

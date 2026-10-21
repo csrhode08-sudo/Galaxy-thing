@@ -196,6 +196,11 @@ namespace MR {
     }
 
     const wchar_t* getNextMessagePage(const wchar_t* pMessage) {
+#ifdef TARGET_PC
+        if (pMessage == nullptr) {
+            return nullptr;
+        }
+#endif
         while (*pMessage != 0) {
             if (*pMessage == 0x1A) {
                 pMessage++;

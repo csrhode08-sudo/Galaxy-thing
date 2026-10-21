@@ -2,6 +2,8 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
+#include "Game/NPC/TalkNodeCtrl.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/TalkState.hpp"
 #include "Game/NPC/TalkTextFormer.hpp"
 #include "Game/Screen/IconAButton.hpp"
@@ -256,6 +258,13 @@ void TalkBalloonEvent::open(TalkMessageCtrl* pCtrl) {
     mMessageCtrl = pCtrl;
     LayoutActor::appear();
     TalkMessageInfo* info = TalkFunction::getMessageInfo(pCtrl);
+#ifdef TARGET_PC
+    if (info->_0 == nullptr) {
+        OSReport("[talk] event balloon opened with no message: host %s, node %d (type %d)\n",
+                 pCtrl->mHostActor != nullptr ? pCtrl->mHostActor->mName : "?", pCtrl->mNodeCtrl->mCurrentNodeIdx,
+                 pCtrl->mNodeCtrl->mCurrentNode != nullptr ? pCtrl->mNodeCtrl->mCurrentNode->mNodeType : -1);
+    }
+#endif
     mTextFormer->formMessage(reinterpret_cast< const wchar_t* >(info->_0), _2C);
     mTextFormer->setArg(pCtrl->mTagArg, 0);
     mAButton->kill();
