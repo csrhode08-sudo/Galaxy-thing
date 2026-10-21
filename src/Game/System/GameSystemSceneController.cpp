@@ -114,7 +114,12 @@ void GameSystemSceneController::initializeScene() {
     mSceneInitializeState = SceneInitializeState_Init;
 
     if (SingletonHolder< HeapMemoryWatcher >::get()->mFileCacheHeap == nullptr || !isSameAtNextSceneAndStage()) {
+#ifdef TARGET_PC
+        // 64-bit archive bookkeeping is bigger; the largest galaxies (Gold Leaf, Good Egg) overflowed 16 MB.
+        SingletonHolder< HeapMemoryWatcher >::get()->createFileCacheHeapOnGameHeap(0x1040400 * 2);
+#else
         SingletonHolder< HeapMemoryWatcher >::get()->createFileCacheHeapOnGameHeap(0x1040400);
+#endif
     }
 
     SingletonHolder< HeapMemoryWatcher >::get()->createSceneHeapOnGameHeap();
