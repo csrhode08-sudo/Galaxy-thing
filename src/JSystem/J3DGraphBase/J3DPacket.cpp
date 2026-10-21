@@ -375,5 +375,10 @@ int J3DMatPacket::entry(J3DDrawBuffer* pBuffer) {
     return (pBuffer->*func)(this);
 }
 
+#ifdef TARGET_PC
+thread_local GDLObj J3DDisplayListObj::sGDLObj;
+thread_local s32 J3DDisplayListObj::sInterruptFlag;
+#else
 GDLObj J3DDisplayListObj::sGDLObj;
 s32 J3DDisplayListObj::sInterruptFlag;
+#endif

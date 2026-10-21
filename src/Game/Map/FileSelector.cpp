@@ -1201,6 +1201,11 @@ void FileSelector::exeDemo() {
         s32 scenario = 1;
         if (char* colon = std::strchr(sStage, ':')) {
             *colon = '\0';
+            if (std::strcmp(colon + 1, "select") == 0) {  // through the star select screen, as from the dome
+                OSReport("[warp] %s star select\n", sStage);
+                MR::requestStartScenarioSelect(sStage);
+                return;
+            }
             scenario = std::atoi(colon + 1);
         }
         OSReport("[warp] %s scenario %d\n", sStage, scenario);

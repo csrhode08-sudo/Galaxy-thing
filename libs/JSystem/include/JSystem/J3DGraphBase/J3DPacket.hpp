@@ -102,8 +102,14 @@ public:
         return mSize;
     }
 
+#ifdef TARGET_PC
+    // Per thread on PC: loader threads and the main thread build display lists at the same time here.
+    static thread_local GDLObj sGDLObj;
+    static thread_local s32 sInterruptFlag;
+#else
     static GDLObj sGDLObj;
     static s32 sInterruptFlag;
+#endif
 
     /* 0x0 */ void* mpDisplayList[2];
     /* 0x8 */ u32 mSize;
