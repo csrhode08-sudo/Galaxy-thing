@@ -161,6 +161,8 @@ void frameBegin() {
             if (ev->sdl.type == SDL_EVENT_KEY_DOWN && !ev->sdl.key.repeat && ev->sdl.key.scancode == SDL_SCANCODE_F1 &&
                 !pc::input::isCapturing()) {
                 pc::ui::toggleMenu();
+            } else if (ev->sdl.type == SDL_EVENT_KEY_DOWN && !ev->sdl.key.repeat && ev->sdl.key.scancode == SDL_SCANCODE_F5) {
+                pc::graphics::reloadReplacements();
             } else if (ev->sdl.type == SDL_EVENT_KEY_DOWN && !ev->sdl.key.repeat && ev->sdl.key.scancode == SDL_SCANCODE_F11) {
                 SDL_Window* w = SDL_GetWindowFromID(ev->sdl.key.windowID);
                 if (w) {

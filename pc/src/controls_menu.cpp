@@ -323,7 +323,7 @@ void drawGraphicsPage() {
     }
     ImGui::TextColored(ImVec4(0.75f, 0.85f, 1.0f, 1.0f),
                        "Edit a saved image, keep its file name (as .png or .dds, any size), and put it in the\n"
-                       "replacements folder; it is used the next time the game starts.");
+                       "replacements folder; press F5 (or Reload) to see it right away.");
     auto openFolder = [](const std::string& dir) {
         std::error_code ec;
         std::filesystem::create_directories(std::filesystem::u8path(dir), ec);
@@ -341,6 +341,14 @@ void drawGraphicsPage() {
     if (!sUiDumpStatus.empty()) {
         ImGui::SameLine();
         ImGui::TextColored(kGold, "%s", sUiDumpStatus.c_str());
+    }
+    static std::string sReloadStatus;
+    if (pillButton("Reload replacements (F5)", false)) {
+        sReloadStatus = std::to_string(graphics::reloadReplacements()) + " replacement images loaded.";
+    }
+    if (!sReloadStatus.empty()) {
+        ImGui::SameLine();
+        ImGui::TextColored(kGold, "%s", sReloadStatus.c_str());
     }
     if (pillButton("Open saved textures", false)) {
         openFolder(graphics::dumpFolder());

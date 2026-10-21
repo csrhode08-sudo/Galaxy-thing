@@ -23,6 +23,7 @@ Settings sSettings;
 Settings sStartup;
 std::string sPath;
 std::string sDir;
+aurora::texture::ReplacementGroup sReplacements;
 
 int clampChoice(int v, std::initializer_list<int> allowed, int fallback) {
     for (int a : allowed) {
@@ -92,11 +93,19 @@ void loadReplacements() {
     // subfolders. The same names as Dolphin's texture packs.
     std::error_code ec;
     std::filesystem::create_directories(replacementFolder(), ec);
-    const auto group = aurora::texture::load_replacement_directory(std::filesystem::u8path(replacementFolder()));
-    pc_log("[graphics] %zu replacement textures from %s\n", group.registrations.size(), replacementFolder().c_str());
+    sReplacements = aurora::texture::load_replacement_directory(std::filesystem::u8path(replacementFolder()));
+    pc_log("[graphics] %zu replacement textures from %s\n", sReplacements.registrations.size(), replacementFolder().c_str());
     if (sSettings.dumpTextures) {
         pc_log("[graphics] Dumping textures to %s\n", dumpFolder().c_str());
     }
+}
+
+size_t reloadReplacements() {
+    std::error_code ec;
+    std::filesystem::create_directories(replacementFolder(), ec);
+    aurora::texture::reload_replacement_directory(std::filesystem::u8path(replacementFolder()), sReplacements);
+    pc_log("[graphics] Reloaded %zu replacement textures\n", sReplacements.registrations.size());
+    return sReplacements.registrations.size();
 }
 
 void save() {

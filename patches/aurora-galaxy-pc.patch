@@ -604,6 +604,29 @@ index 029a3d0..c89a901 100644
    case GX_CLAMP:
      return wgpu::AddressMode::ClampToEdge;
    case GX_REPEAT:
+diff --git a/lib/gfx/texture.hpp b/lib/gfx/texture.hpp
+index 600a430..8bec271 100644
+--- a/lib/gfx/texture.hpp
++++ b/lib/gfx/texture.hpp
+@@ -97,7 +97,17 @@ struct GXTexObj_ {
+   }
+   GXTexFilter mag_filter() const noexcept { return get_bits(mode0, 1, 4) != 0 ? GX_LINEAR : GX_NEAR; }
+   GXBool has_mips() const noexcept { return (flags & 1u) != 0 ? GX_TRUE : GX_FALSE; }
+-  u32 mip_count() const noexcept { return has_mips() ? std::max<u32>(static_cast<u32>(max_lod()) + 1, 1u) : 1; }
++  u32 mip_count() const noexcept {
++    if (!has_mips()) {
++      return 1;
++    }
++    // Games often leave max LOD at its default (10); the hardware only uses the levels that exist.
++    u32 levels = 1;
++    for (u32 size = std::max<u32>(width(), height()); size > 1; size >>= 1) {
++      ++levels;
++    }
++    return std::clamp<u32>(static_cast<u32>(max_lod()) + 1, 1u, levels);
++  }
+   GXBool do_edge_lod() const noexcept { return get_bits(mode0, 1, 8) == 0 ? GX_TRUE : GX_FALSE; }
+   float lod_bias() const noexcept { return static_cast<float>(static_cast<int8_t>(get_bits(mode0, 8, 9))) / 32.0f; }
+   GXAnisotropy max_aniso() const noexcept { return static_cast<GXAnisotropy>(get_bits(mode0, 2, 19)); }
 diff --git a/lib/gx/gx.hpp b/lib/gx/gx.hpp
 index 9e85609..5b27680 100644
 --- a/lib/gx/gx.hpp
