@@ -605,10 +605,16 @@ index 029a3d0..c89a901 100644
      return wgpu::AddressMode::ClampToEdge;
    case GX_REPEAT:
 diff --git a/lib/gfx/texture.hpp b/lib/gfx/texture.hpp
-index 600a430..8bec271 100644
+index 600a430..1458718 100644
 --- a/lib/gfx/texture.hpp
 +++ b/lib/gfx/texture.hpp
-@@ -97,7 +97,17 @@ struct GXTexObj_ {
+@@ -1,4 +1,5 @@
+ #pragma once
++#include <algorithm>
+ #include <dolphin/gx.h>
+ 
+ #include <utility>
+@@ -97,7 +98,17 @@ struct GXTexObj_ {
    }
    GXTexFilter mag_filter() const noexcept { return get_bits(mode0, 1, 4) != 0 ? GX_LINEAR : GX_NEAR; }
    GXBool has_mips() const noexcept { return (flags & 1u) != 0 ? GX_TRUE : GX_FALSE; }
