@@ -1,4 +1,7 @@
 #include "Game/Map/FileSelector.hpp"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/FileSelectCameraController.hpp"
 #include "Game/Map/FileSelectEffect.hpp"
@@ -1190,6 +1193,21 @@ void FileSelector::exeDemo() {
     }
 
     GameSequenceFunction::reserveUserName(name);
+#ifdef TARGET_PC
+    // Test aid: GALAXY_WARP=<StageName>[:<scenario>] goes straight to a galaxy after picking a file.
+    if (const char* warp = std::getenv("GALAXY_WARP")) {
+        static char sStage[64];
+        std::snprintf(sStage, sizeof(sStage), "%s", warp);
+        s32 scenario = 1;
+        if (char* colon = std::strchr(sStage, ':')) {
+            *colon = '\0';
+            scenario = std::atoi(colon + 1);
+        }
+        OSReport("[warp] %s scenario %d\n", sStage, scenario);
+        MR::requestChangeStageInGameMoving(sStage, scenario);
+        return;
+    }
+#endif
     MR::requestChangeStageInGameAfterLoadingGameData();
 }
 
