@@ -627,6 +627,37 @@ index 600a430..8bec271 100644
    GXBool do_edge_lod() const noexcept { return get_bits(mode0, 1, 8) == 0 ? GX_TRUE : GX_FALSE; }
    float lod_bias() const noexcept { return static_cast<float>(static_cast<int8_t>(get_bits(mode0, 8, 9))) / 32.0f; }
    GXAnisotropy max_aniso() const noexcept { return static_cast<GXAnisotropy>(get_bits(mode0, 2, 19)); }
+diff --git a/lib/gfx/texture_replacement.cpp b/lib/gfx/texture_replacement.cpp
+index 03dda46..d05584e 100644
+--- a/lib/gfx/texture_replacement.cpp
++++ b/lib/gfx/texture_replacement.cpp
+@@ -1220,7 +1220,7 @@ bool report_missing_key(const TextureSourceKey& key, const GXTexObj_& obj) noexc
+     return false;
+   }
+ 
+-  Log.warn("texture_replacement: missing runtime key {}", format_source_key_for_log(key));
++  Log.debug("texture_replacement: missing runtime key {}", format_source_key_for_log(key));
+ 
+   size_t loggedCandidates = 0;
+   size_t omittedCandidates = 0;
+@@ -1248,7 +1248,7 @@ bool report_missing_key(const TextureSourceKey& key, const GXTexObj_& obj) noexc
+ 
+     const auto* selected = select_entry(entries);
+     if (loggedCandidates < 8) {
+-      Log.warn("texture_replacement: candidate ({}) {} path={}", reason, format_source_key_for_log(*candidate),
++      Log.debug("texture_replacement: candidate ({}) {} path={}", reason, format_source_key_for_log(*candidate),
+                selected != nullptr ? entry_path_for_log(*selected) : std::string{});
+       ++loggedCandidates;
+     } else {
+@@ -1256,7 +1256,7 @@ bool report_missing_key(const TextureSourceKey& key, const GXTexObj_& obj) noexc
+     }
+   }
+   if (omittedCandidates != 0) {
+-    Log.warn("texture_replacement: omitted {} additional candidate(s) for missing key {}", omittedCandidates,
++    Log.debug("texture_replacement: omitted {} additional candidate(s) for missing key {}", omittedCandidates,
+              format_source_key_for_log(key));
+   }
+ 
 diff --git a/lib/gx/gx.hpp b/lib/gx/gx.hpp
 index 9e85609..5b27680 100644
 --- a/lib/gx/gx.hpp
