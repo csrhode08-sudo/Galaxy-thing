@@ -163,8 +163,14 @@ void DynamicCollisionObj::createCollision() {
     u16* u16array = new (JKRHeapToken::Dummy, 4) u16[v + 3];
     mKCLFile->mOctree = u16array;
 
+#ifdef TARGET_PC
+    // The root node is one s32: a leaf (0x80000000) whose prism list starts 2 bytes in. Written as two u16 halves it
+    // only reads back as 0x80000002 on a big-endian CPU.
+    *reinterpret_cast< s32* >(u16array) = static_cast< s32 >(0x80000002);
+#else
     u16array[0] = 0x8000;
     u16array[1] = 2;
+#endif
 
     s32 count = v;
     for (s32 i = 0; i <= v; i++) {
