@@ -12,10 +12,16 @@
 #include <mutex>
 #include <string>
 #include <cstdint>
+#include <atomic>
+#include <chrono>
+#include <thread>
 
 #if defined(__linux__)
 #include <signal.h>
 #include <ucontext.h>
+#include <execinfo.h>
+#include <pthread.h>
+#include <unistd.h>
 #endif
 
 #ifdef _WIN32
@@ -348,6 +354,143 @@ void installCrashHandler() {
         log("[pc] divide test: 7/0=%d 7%%0=%d -7/0=%d -7%%0=%d 9/0=%lld 5u/0=%u (expect 0 7 -1 -7 0 0)\n", a / b, a % b, n / b,
             n % b, (long long)(a64 / b64), ua / ub);
     }
+}
+
+// ---- Freeze watchdog ----------------------------------------------------------------------------------------
+// If the game stops finishing frames, log where the main thread is so a freeze can be traced like a crash.
+namespace {
+std::atomic<uint64_t> sFramesDone{0};
+constexpr int kHangFrames = 48;
+
+#ifdef _WIN32
+HANDLE sMainThreadHandle = nullptr;
+
+int captureMainStack(void** out) {
+    if (sMainThreadHandle == nullptr || SuspendThread(sMainThreadHandle) == static_cast<DWORD>(-1)) {
+        return 0;
+    }
+    int n = 0;
+    CONTEXT c{};
+    c.ContextFlags = CONTEXT_FULL;
+    if (GetThreadContext(sMainThreadHandle, &c)) {
+        // Only record addresses while the thread is suspended; logging could need a lock it holds.
+        for (; n < kHangFrames && c.Rip != 0; n++) {
+            out[n] = reinterpret_cast<void*>(c.Rip);
+            DWORD64 imageBase = 0;
+            PRUNTIME_FUNCTION fn = RtlLookupFunctionEntry(c.Rip, &imageBase, nullptr);
+            if (fn == nullptr) {
+                c.Rip = *reinterpret_cast<DWORD64*>(c.Rsp);
+                c.Rsp += 8;
+                continue;
+            }
+            void* handlerData = nullptr;
+            DWORD64 establisher = 0;
+            RtlVirtualUnwind(UNW_FLAG_NHANDLER, imageBase, c.Rip, fn, &c, &handlerData, &establisher, nullptr);
+        }
+    }
+    ResumeThread(sMainThreadHandle);
+    return n;
+}
+
+void logHangStack(void** frames, int n) {
+    for (int i = 0; i < n; i++) {
+        HMODULE mod = nullptr;
+        char name[MAX_PATH] = "?";
+        if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                               static_cast<LPCSTR>(frames[i]), &mod) &&
+            mod != nullptr) {
+            GetModuleFileNameA(mod, name, sizeof(name));
+            const char* base = std::strrchr(name, '\\');
+            log("  %s+0x%llx\n", base ? base + 1 : name,
+                (unsigned long long)(reinterpret_cast<uintptr_t>(frames[i]) - reinterpret_cast<uintptr_t>(mod)));
+        } else {
+            log("  %p\n", frames[i]);
+        }
+    }
+}
+#elif defined(__linux__)
+pthread_t sMainThreadId;
+void* sHangBuf[kHangFrames];
+std::atomic<int> sHangCaptured{-1};
+
+void onHangSignal(int) {
+    sHangCaptured.store(backtrace(sHangBuf, kHangFrames));
+}
+
+int captureMainStack(void** out) {
+    sHangCaptured.store(-1);
+    pthread_kill(sMainThreadId, SIGUSR2);
+    for (int i = 0; i < 400 && sHangCaptured.load() < 0; i++) {
+        usleep(5000);
+    }
+    const int n = sHangCaptured.load();
+    if (n <= 0) {
+        return 0;
+    }
+    std::memcpy(out, sHangBuf, sizeof(void*) * n);
+    return n;
+}
+
+void logHangStack(void** frames, int n) {
+    char** names = backtrace_symbols(frames, n);
+    for (int i = 0; i < n; i++) {
+        log("  %s\n", names ? names[i] : "?");
+    }
+    std::free(names);
+}
+#else
+int captureMainStack(void**) { return 0; }
+void logHangStack(void**, int) {}
+#endif
+
+void watchdogMain() {
+    uint64_t last = 0;
+    int stalled = 0;
+    for (;;) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        const uint64_t now = sFramesDone.load(std::memory_order_relaxed);
+        if (now != last || now == 0) {
+            if (stalled >= 8) {
+                log("[hang] frames resumed after %d s\n", stalled);
+            }
+            last = now;
+            stalled = 0;
+            continue;
+        }
+        stalled++;
+        if (stalled == 8 || stalled == 30) {
+            void* frames[kHangFrames];
+            const int n = captureMainStack(frames);
+            log("[hang] no frame finished for %d s (frame %llu); main thread is at:\n", stalled, (unsigned long long)now);
+            logHangStack(frames, n);
+        }
+    }
+}
+}  // namespace
+
+void notifyFrameDone() {
+    sFramesDone.fetch_add(1, std::memory_order_relaxed);
+}
+
+// Call on the game's main thread.
+void startFreezeWatchdog() {
+    if (std::getenv("GALAXY_NO_WATCHDOG") != nullptr) {
+        return;
+    }
+#ifdef _WIN32
+    DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &sMainThreadHandle,
+                    THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION, FALSE, 0);
+#elif defined(__linux__)
+    sMainThreadId = pthread_self();
+    void* prime[2];
+    backtrace(prime, 2);  // load the unwinder now, not inside the signal handler
+    struct sigaction sa {};
+    sa.sa_handler = onHangSignal;
+    sa.sa_flags = SA_RESTART;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGUSR2, &sa, nullptr);
+#endif
+    std::thread(watchdogMain).detach();
 }
 
 }  // namespace pc

@@ -19,6 +19,8 @@ void setUserDir(const std::string& dir);
 void openLogFile(const std::string& exeDir, const std::string& userDir);
 void installCrashHandler();
 void onThreadStart();
+void startFreezeWatchdog();  // logs the main thread's stack if frames stop
+void notifyFrameDone();
 void log(const char* fmt, ...);
 void logV(const char* fmt, va_list args);
 }  // namespace pc

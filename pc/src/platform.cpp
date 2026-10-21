@@ -231,6 +231,13 @@ void frameEnd() {
             sNext += kFrame;
         }
     }
+    pc::notifyFrameDone();
+    static const bool sHangSelfTest = std::getenv("PC_HANG_SELFTEST") != nullptr;  // test aid for the freeze watchdog
+    if (sHangSelfTest && sFrames == 600) {
+        volatile bool spin = true;
+        while (spin) {
+        }
+    }
     // Stand in for the console's vertical retrace interrupt.
     VIWaitForRetrace();
 }

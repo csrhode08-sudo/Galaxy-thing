@@ -72,6 +72,7 @@ std::string findDisc(const char* exeDir) {
 
 int main(int argc, char* argv[]) {
     pc::installCrashHandler();
+    pc::startFreezeWatchdog();
     std::string discPath;
     std::string overlayPath;
     for (int i = 1; i < argc; i++) {
